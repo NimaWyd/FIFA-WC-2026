@@ -1,0 +1,30 @@
+project:
+  random_state: 42
+
+paths:
+  raw_matches_csv: "data/raw/demo_international_matches.csv"
+  processed_features_csv: "data/processed/features.csv"
+  trained_model_dir: "src/models/artifacts"
+  evaluation_dir: "data/processed/evaluation"
+
+features:
+  form_window: 5
+  elo_k_factor: 20.0
+  elo_home_advantage: 45.0
+  default_fifa_rank: 75
+
+model:
+  test_size: 0.15
+  val_size: 0.15
+  logistic_max_iter: 1500
+  xgb:
+    n_estimators: 350
+    learning_rate: 0.05
+    max_depth: 5
+    subsample: 0.9
+    colsample_bytree: 0.9
+    objective: "multi:softprob"
+
+inference:
+  default_competition: "FIFA World Cup Qualification"
+  default_neutral: false

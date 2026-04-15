@@ -1,0 +1,33 @@
+{
+  "model_type": "logistic_regression",
+  "features_csv": "data/processed/features.csv",
+  "split_sizes": {
+    "train": 10,
+    "val": 2,
+    "test": 3
+  },
+  "feature_columns": [
+    "home_team",
+    "away_team",
+    "competition",
+    "home_confederation",
+    "away_confederation",
+    "tournament_stage",
+    "neutral",
+    "home_fifa_rank",
+    "away_fifa_rank",
+    "home_form_last5",
+    "away_form_last5",
+    "home_goals_for_last5",
+    "away_goals_for_last5",
+    "home_goals_against_last5",
+    "away_goals_against_last5",
+    "home_rest_days",
+    "away_rest_days",
+    "home_elo_pre",
+    "away_elo_pre",
+    "elo_diff_home_away",
+    "form_diff_home_away",
+    "goal_balance_diff"
+  ]
+}

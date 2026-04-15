@@ -1,0 +1,11 @@
+pandas
+numpy
+scikit-learn
+xgboost
+requests
+matplotlib
+notebook
+python-dotenv
+pyyaml
+joblib
+scipy
