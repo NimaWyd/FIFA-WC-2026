@@ -97,6 +97,17 @@ If no API key is added, the MVP still runs with local CSV.
 
 ## Run the MVP locally (exact commands)
 
+### One-command orchestrator (recommended)
+
+```bash
+python -m src.pipeline.run_all --source local --input-csv data/raw/demo_international_matches.csv --model-name xgb
+```
+
+Optional flags:
+- `--skip-poisson`
+- `--skip-evaluation`
+- `--model-name logreg`
+
 ### A) Ingest and clean data
 
 Local CSV (default demo):
