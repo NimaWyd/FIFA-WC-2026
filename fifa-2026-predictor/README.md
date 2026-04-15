@@ -95,6 +95,21 @@ Set:
 
 If no API key is added, the MVP still runs with local CSV.
 
+### Windows PowerShell reliable path (no activation required)
+
+If `python` points to a different interpreter, use this explicit path:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m src.pipeline.run_all --source local --input-csv data/raw/demo_international_matches.csv --model-name xgb
+```
+
+Or run everything in one go:
+
+```powershell
+.\run_mvp.ps1
+```
+
 ## Run the MVP locally (exact commands)
 
 ### One-command orchestrator (recommended)

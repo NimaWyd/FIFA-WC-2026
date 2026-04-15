@@ -1,0 +1,21 @@
+# Python virtual environments
+.venv/
+venv/
+env/
+
+# Project-local virtual environments
+fifa-2026-predictor/.venv/
+fifa-2026-predictor/.venv_test/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Notebook checkpoints
+.ipynb_checkpoints/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
