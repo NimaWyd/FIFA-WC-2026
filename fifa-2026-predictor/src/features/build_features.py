@@ -10,18 +10,9 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+from src.features.competition_weights import COMPETITION_WEIGHTS, DEFAULT_COMPETITION_WEIGHT
 from src.features.elo import EloConfig, expected_score, update_ratings
 from src.utils import PROJECT_ROOT, ensure_parent_dir, load_config
-
-_COMPETITION_WEIGHTS: dict[str, int] = {
-    "FIFA World Cup": 5,
-    "UEFA Euro": 4,
-    "Copa America": 4,
-    "UEFA Nations League": 3,
-    "UEFA Euro Qualification": 2,
-    "FIFA World Cup Qualification": 2,
-    "International Friendly": 1,
-}
 
 
 def _result_label(home_score: int, away_score: int) -> str:
@@ -108,7 +99,7 @@ def build_feature_table(matches: pd.DataFrame, cfg: dict[str, Any]) -> pd.DataFr
             "form_diff_home_away": home_form - away_form,
             "goal_balance_diff": (home_gf_roll - home_ga_roll) - (away_gf_roll - away_ga_roll),
             "rank_diff": home_rank - away_rank,
-            "competition_weight": _COMPETITION_WEIGHTS.get(competition, 2),
+            "competition_weight": COMPETITION_WEIGHTS.get(competition, DEFAULT_COMPETITION_WEIGHT),
             "is_same_confederation": int(home_conf == away_conf),
             "home_score": int(row.home_score),
             "away_score": int(row.away_score),

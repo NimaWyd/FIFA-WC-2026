@@ -31,5 +31,7 @@
     "rank_diff",
     "competition_weight",
     "is_same_confederation"
-  ]
+  ],
+  "early_stopping_rounds": 25,
+  "best_iteration": 25
 }

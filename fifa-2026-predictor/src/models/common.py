@@ -96,7 +96,11 @@ def build_preprocessor(df: pd.DataFrame) -> tuple[ColumnTransformer, list[str]]:
 
 def to_xy(df: pd.DataFrame, feature_cols: list[str]) -> tuple[pd.DataFrame, np.ndarray]:
     x = df[feature_cols].copy()
-    y = df["target"].map(TARGET_MAP).values
+    y_series = df["target"].map(TARGET_MAP)
+    if y_series.isna().any():
+        bad = df.loc[y_series.isna(), "target"].unique().tolist()
+        raise ValueError(f"Unknown target label(s) in data: {bad}")
+    y = y_series.astype(int).values
     return x, y
 
 

@@ -41,30 +41,42 @@ def main() -> None:
     x_val, y_val = to_xy(val_df, feature_cols)
 
     xgb_cfg = cfg["model"]["xgb"]
+    esr = xgb_cfg.get("early_stopping_rounds")
+    early_stopping_rounds = int(esr) if esr is not None else None
+    if early_stopping_rounds is not None and early_stopping_rounds <= 0:
+        early_stopping_rounds = None
+
+    classifier = XGBClassifier(
+        n_estimators=int(xgb_cfg["n_estimators"]),
+        learning_rate=float(xgb_cfg["learning_rate"]),
+        max_depth=int(xgb_cfg["max_depth"]),
+        subsample=float(xgb_cfg["subsample"]),
+        colsample_bytree=float(xgb_cfg["colsample_bytree"]),
+        min_child_weight=int(xgb_cfg.get("min_child_weight", 1)),
+        gamma=float(xgb_cfg.get("gamma", 0.0)),
+        reg_alpha=float(xgb_cfg.get("reg_alpha", 0.0)),
+        reg_lambda=float(xgb_cfg.get("reg_lambda", 1.0)),
+        objective=str(xgb_cfg["objective"]),
+        num_class=3,
+        eval_metric="mlogloss",
+        random_state=int(cfg["project"]["random_state"]),
+        early_stopping_rounds=early_stopping_rounds,
+    )
+
+    preprocessor.fit(x_train, y_train)
+    x_train_t = preprocessor.transform(x_train)
+    x_val_t = preprocessor.transform(x_val)
+    fit_kwargs: dict = {"verbose": False}
+    if early_stopping_rounds is not None and early_stopping_rounds > 0:
+        fit_kwargs["eval_set"] = [(x_val_t, y_val)]
+    classifier.fit(x_train_t, y_train, **fit_kwargs)
+
     model = Pipeline(
         steps=[
             ("preprocessor", preprocessor),
-            (
-                "classifier",
-                XGBClassifier(
-                    n_estimators=int(xgb_cfg["n_estimators"]),
-                    learning_rate=float(xgb_cfg["learning_rate"]),
-                    max_depth=int(xgb_cfg["max_depth"]),
-                    subsample=float(xgb_cfg["subsample"]),
-                    colsample_bytree=float(xgb_cfg["colsample_bytree"]),
-                    min_child_weight=int(xgb_cfg.get("min_child_weight", 1)),
-                    gamma=float(xgb_cfg.get("gamma", 0.0)),
-                    reg_alpha=float(xgb_cfg.get("reg_alpha", 0.0)),
-                    reg_lambda=float(xgb_cfg.get("reg_lambda", 1.0)),
-                    objective=str(xgb_cfg["objective"]),
-                    num_class=3,
-                    eval_metric="mlogloss",
-                    random_state=int(cfg["project"]["random_state"]),
-                ),
-            ),
+            ("classifier", classifier),
         ]
     )
-    model.fit(x_train, y_train)
 
     artifact_dir = ensure_artifact_dir(cfg["paths"]["trained_model_dir"])
     model_path = artifact_dir / f"{args.model_name}.joblib"
@@ -79,7 +91,13 @@ def main() -> None:
             "test": len(test_df),
         },
         "feature_columns": feature_cols,
+        "early_stopping_rounds": early_stopping_rounds,
     }
+    if early_stopping_rounds is not None and early_stopping_rounds > 0:
+        try:
+            metadata["best_iteration"] = int(classifier.best_iteration)
+        except AttributeError:
+            pass
     meta_path.write_text(json.dumps(metadata, indent=2), encoding="utf-8")
     print(f"Saved model to {model_path}")
     print(f"Train: {len(train_df)} | Val: {len(val_df)} | Test: {len(test_df)}")

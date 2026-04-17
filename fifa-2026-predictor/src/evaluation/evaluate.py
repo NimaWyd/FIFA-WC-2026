@@ -11,7 +11,14 @@ import numpy as np
 from sklearn.calibration import calibration_curve
 from sklearn.metrics import accuracy_score, log_loss
 
-from src.models.common import TARGET_MAP, load_feature_data, make_chronological_split, to_xy
+from src.models.common import (
+    INV_TARGET_MAP,
+    TARGET_MAP,
+    build_preprocessor,
+    load_feature_data,
+    make_chronological_split,
+    to_xy,
+)
 from src.utils import PROJECT_ROOT, ensure_parent_dir, load_config
 
 
@@ -20,14 +27,25 @@ def multiclass_brier_score(y_true: np.ndarray, y_prob: np.ndarray) -> float:
     return float(np.mean(np.sum((y_prob - one_hot) ** 2, axis=1)))
 
 
+def align_predict_proba(y_prob: np.ndarray, classes: np.ndarray) -> np.ndarray:
+    """Reorder sklearn/XGBoost `predict_proba` columns to ascending class label 0, 1, …"""
+    classes = np.asarray(classes).astype(int).ravel()
+    if classes.size != y_prob.shape[1]:
+        raise ValueError("classes length must match number of probability columns.")
+    order = np.argsort(classes)
+    if np.array_equal(order, np.arange(len(classes))):
+        return y_prob
+    return y_prob[:, order]
+
+
 def save_calibration_plot(
     y_true: np.ndarray,
     y_prob: np.ndarray,
     output_png: str,
 ) -> None:
-    class_names = ["A", "D", "H"]
     plt.figure(figsize=(8, 6))
-    for idx, cls in enumerate(class_names):
+    for idx in range(y_prob.shape[1]):
+        cls = INV_TARGET_MAP[idx]
         binary_true = (y_true == idx).astype(int)
         frac_pos, mean_pred = calibration_curve(binary_true, y_prob[:, idx], n_bins=5)
         plt.plot(mean_pred, frac_pos, marker="o", label=f"Class {cls}")
@@ -64,11 +82,12 @@ def main() -> None:
     )
 
     model = joblib.load(PROJECT_ROOT / args.model_path)
-    feature_cols = [c for c in test_df.columns if c not in {"target", "home_score", "away_score", "date"}]
-    feature_cols = [c for c in feature_cols if c in test_df.columns]
+    _, feature_cols = build_preprocessor(df)
     x_test, y_test = to_xy(test_df, feature_cols)
 
-    y_prob = model.predict_proba(x_test)
+    y_prob_raw = model.predict_proba(x_test)
+    clf = model.named_steps["classifier"]
+    y_prob = align_predict_proba(y_prob_raw, clf.classes_)
     y_pred = np.argmax(y_prob, axis=1)
 
     metrics = {
