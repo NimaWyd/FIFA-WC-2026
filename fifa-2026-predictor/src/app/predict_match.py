@@ -13,7 +13,7 @@ import numpy as np
 import pandas as pd
 from scipy.stats import poisson
 
-from src.features.elo import EloConfig, update_ratings
+from src.features.elo import EloConfig, expected_score, update_ratings
 from src.models.common import INV_TARGET_MAP
 from src.utils import PROJECT_ROOT, load_config
 
@@ -91,6 +91,16 @@ def build_pre_match_row(
     home_elo = float(ratings[home_team])
     away_elo = float(ratings[away_team])
 
+    _competition_weights = {
+        "FIFA World Cup": 5,
+        "UEFA Euro": 4,
+        "Copa America": 4,
+        "UEFA Nations League": 3,
+        "UEFA Euro Qualification": 2,
+        "FIFA World Cup Qualification": 2,
+        "International Friendly": 1,
+    }
+    elo_adj = home_elo + (0.0 if neutral else elo_cfg.home_advantage)
     row = {
         "home_team": home_team,
         "away_team": away_team,
@@ -112,8 +122,12 @@ def build_pre_match_row(
         "home_elo_pre": home_elo,
         "away_elo_pre": away_elo,
         "elo_diff_home_away": home_elo - away_elo,
+        "elo_win_prob": expected_score(elo_adj, away_elo),
         "form_diff_home_away": home_form - away_form,
         "goal_balance_diff": (home_gf - home_ga) - (away_gf - away_ga),
+        "rank_diff": home_fifa_rank - away_fifa_rank,
+        "competition_weight": _competition_weights.get(competition, 2),
+        "is_same_confederation": int(home_confederation == away_confederation),
     }
     return pd.DataFrame([row])
 
