@@ -28,6 +28,8 @@ model:
     gamma: 0.1
     reg_alpha: 0.1
     reg_lambda: 1.0
+    # Stop if validation mlogloss does not improve for this many boosting rounds (null disables).
+    early_stopping_rounds: 25
 
 inference:
   default_competition: "FIFA World Cup Qualification"

@@ -13,8 +13,9 @@ import numpy as np
 import pandas as pd
 from scipy.stats import poisson
 
+from src.features.competition_weights import COMPETITION_WEIGHTS, DEFAULT_COMPETITION_WEIGHT
 from src.features.elo import EloConfig, expected_score, update_ratings
-from src.models.common import INV_TARGET_MAP
+from src.models.common import TARGET_MAP
 from src.utils import PROJECT_ROOT, load_config
 
 
@@ -91,15 +92,6 @@ def build_pre_match_row(
     home_elo = float(ratings[home_team])
     away_elo = float(ratings[away_team])
 
-    _competition_weights = {
-        "FIFA World Cup": 5,
-        "UEFA Euro": 4,
-        "Copa America": 4,
-        "UEFA Nations League": 3,
-        "UEFA Euro Qualification": 2,
-        "FIFA World Cup Qualification": 2,
-        "International Friendly": 1,
-    }
     elo_adj = home_elo + (0.0 if neutral else elo_cfg.home_advantage)
     row = {
         "home_team": home_team,
@@ -126,7 +118,7 @@ def build_pre_match_row(
         "form_diff_home_away": home_form - away_form,
         "goal_balance_diff": (home_gf - home_ga) - (away_gf - away_ga),
         "rank_diff": home_fifa_rank - away_fifa_rank,
-        "competition_weight": _competition_weights.get(competition, 2),
+        "competition_weight": COMPETITION_WEIGHTS.get(competition, DEFAULT_COMPETITION_WEIGHT),
         "is_same_confederation": int(home_confederation == away_confederation),
     }
     return pd.DataFrame([row])
@@ -186,16 +178,18 @@ def main() -> None:
         cfg=cfg,
     )
 
+    clf = model.named_steps["classifier"]
+    classes = clf.classes_
     probs = model.predict_proba(sample)[0]
-    ordered = [(INV_TARGET_MAP[idx], float(prob)) for idx, prob in enumerate(probs)]
+    prob_by_class = {int(c): float(p) for c, p in zip(classes, probs)}
     result = {
         "home_team": args.home_team,
         "away_team": args.away_team,
         "match_date": args.match_date,
         "probabilities": {
-            "away_win": ordered[0][1],
-            "draw": ordered[1][1],
-            "home_win": ordered[2][1],
+            "away_win": prob_by_class.get(TARGET_MAP["A"], 0.0),
+            "draw": prob_by_class.get(TARGET_MAP["D"], 0.0),
+            "home_win": prob_by_class.get(TARGET_MAP["H"], 0.0),
         },
     }
 
