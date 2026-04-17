@@ -1,10 +1,115 @@
 date,home_team,away_team,home_score,away_score,competition,neutral,home_confederation,away_confederation,home_fifa_rank,away_fifa_rank,tournament_stage
-2022-11-22,Argentina,Saudi Arabia,1,2,FIFA World Cup,False,CONMEBOL,AFC,3,51,Group
+2018-06-14,Russia,Saudi Arabia,5,0,FIFA World Cup,True,UEFA,AFC,70,67,Group
+2018-06-15,Portugal,Spain,3,3,FIFA World Cup,True,UEFA,UEFA,4,10,Group
+2018-06-16,France,Australia,2,1,FIFA World Cup,True,UEFA,AFC,7,36,Group
+2018-06-16,Argentina,Iceland,1,1,FIFA World Cup,True,CONMEBOL,UEFA,5,22,Group
+2018-06-17,Croatia,Nigeria,2,0,FIFA World Cup,True,UEFA,CAF,20,48,Group
+2018-06-17,Brazil,Switzerland,1,1,FIFA World Cup,True,CONMEBOL,UEFA,2,6,Group
+2018-06-18,Germany,Mexico,0,1,FIFA World Cup,True,UEFA,CONCACAF,1,15,Group
+2018-06-18,Sweden,South Korea,1,0,FIFA World Cup,True,UEFA,AFC,24,57,Group
+2018-06-19,Belgium,Panama,3,0,FIFA World Cup,True,UEFA,CONCACAF,3,55,Group
+2018-06-19,Tunisia,England,1,2,FIFA World Cup,True,CAF,UEFA,21,13,Group
+2018-06-19,Colombia,Japan,1,2,FIFA World Cup,True,CONMEBOL,AFC,16,60,Group
+2018-06-19,Poland,Senegal,1,2,FIFA World Cup,True,UEFA,CAF,8,28,Group
+2018-06-20,Russia,Egypt,3,0,FIFA World Cup,True,UEFA,CAF,70,46,Group
+2018-06-21,France,Peru,1,0,FIFA World Cup,True,UEFA,CONMEBOL,7,11,Group
+2018-06-21,Argentina,Croatia,0,3,FIFA World Cup,True,CONMEBOL,UEFA,5,20,Group
+2018-06-22,Nigeria,Iceland,2,0,FIFA World Cup,True,CAF,UEFA,48,22,Group
+2018-06-23,Germany,Sweden,2,1,FIFA World Cup,True,UEFA,UEFA,1,24,Group
+2018-06-23,England,Panama,6,1,FIFA World Cup,True,UEFA,CONCACAF,13,55,Group
+2018-06-24,Japan,Senegal,2,2,FIFA World Cup,True,AFC,CAF,60,28,Group
+2018-06-25,South Korea,Germany,2,0,FIFA World Cup,True,AFC,UEFA,57,1,Group
+2018-06-25,Mexico,Sweden,0,3,FIFA World Cup,True,CONCACAF,UEFA,15,24,Group
+2018-06-27,Japan,Poland,0,1,FIFA World Cup,True,AFC,UEFA,60,8,Group
+2018-06-27,Senegal,Colombia,0,1,FIFA World Cup,True,CAF,CONMEBOL,28,16,Group
+2018-06-28,Uruguay,Russia,3,0,FIFA World Cup,True,CONMEBOL,UEFA,17,70,Group
+2018-06-30,France,Argentina,4,3,FIFA World Cup,True,UEFA,CONMEBOL,7,5,Round of 16
+2018-06-30,Uruguay,Portugal,2,1,FIFA World Cup,True,CONMEBOL,UEFA,17,4,Round of 16
+2018-07-01,Spain,Russia,1,1,FIFA World Cup,True,UEFA,UEFA,10,70,Round of 16
+2018-07-01,Croatia,Denmark,1,1,FIFA World Cup,True,UEFA,UEFA,20,19,Round of 16
+2018-07-02,Brazil,Mexico,2,0,FIFA World Cup,True,CONMEBOL,CONCACAF,2,15,Round of 16
+2018-07-02,Belgium,Japan,3,2,FIFA World Cup,True,UEFA,AFC,3,60,Round of 16
+2018-07-03,Sweden,Switzerland,1,0,FIFA World Cup,True,UEFA,UEFA,24,6,Round of 16
+2018-07-03,Colombia,England,1,1,FIFA World Cup,True,CONMEBOL,UEFA,16,13,Round of 16
+2018-07-06,Uruguay,France,0,2,FIFA World Cup,True,CONMEBOL,UEFA,17,7,Quarter-final
+2018-07-06,Brazil,Belgium,1,2,FIFA World Cup,True,CONMEBOL,UEFA,2,3,Quarter-final
+2018-07-07,Sweden,England,0,2,FIFA World Cup,True,UEFA,UEFA,24,13,Quarter-final
+2018-07-07,Russia,Croatia,2,2,FIFA World Cup,True,UEFA,UEFA,70,20,Quarter-final
+2018-07-10,France,Belgium,1,0,FIFA World Cup,True,UEFA,UEFA,7,3,Semi-final
+2018-07-11,Croatia,England,2,1,FIFA World Cup,True,UEFA,UEFA,20,13,Semi-final
+2018-07-14,Belgium,England,2,0,FIFA World Cup,True,UEFA,UEFA,3,13,Third Place
+2018-07-15,France,Croatia,4,2,FIFA World Cup,True,UEFA,UEFA,7,20,Final
+2021-06-11,Turkey,Italy,0,3,UEFA Euro,True,UEFA,UEFA,29,7,Group
+2021-06-12,Wales,Switzerland,1,1,UEFA Euro,True,UEFA,UEFA,17,13,Group
+2021-06-12,Denmark,Finland,0,1,UEFA Euro,True,UEFA,UEFA,10,54,Group
+2021-06-12,Belgium,Russia,3,0,UEFA Euro,True,UEFA,UEFA,1,38,Group
+2021-06-13,Netherlands,Ukraine,3,2,UEFA Euro,True,UEFA,UEFA,16,24,Group
+2021-06-14,England,Croatia,1,0,UEFA Euro,True,UEFA,UEFA,4,14,Group
+2021-06-14,Argentina,Chile,1,1,Copa America,True,CONMEBOL,CONMEBOL,7,16,Group
+2021-06-15,Spain,Sweden,0,0,UEFA Euro,True,UEFA,UEFA,6,18,Group
+2021-06-15,Brazil,Venezuela,3,0,Copa America,True,CONMEBOL,CONMEBOL,3,32,Group
+2021-06-16,France,Germany,1,0,UEFA Euro,True,UEFA,UEFA,2,12,Group
+2021-06-16,Hungary,Portugal,0,3,UEFA Euro,True,UEFA,UEFA,37,5,Group
+2021-06-17,Italy,Switzerland,3,0,UEFA Euro,True,UEFA,UEFA,7,13,Group
+2021-06-18,Argentina,Uruguay,1,0,Copa America,True,CONMEBOL,CONMEBOL,7,17,Group
+2021-06-19,England,Scotland,0,0,UEFA Euro,True,UEFA,UEFA,4,44,Group
+2021-06-19,Netherlands,Austria,2,0,UEFA Euro,True,UEFA,UEFA,16,23,Group
+2021-06-21,Argentina,Paraguay,1,0,Copa America,True,CONMEBOL,CONMEBOL,7,27,Group
+2021-06-21,Hungary,France,1,1,UEFA Euro,True,UEFA,UEFA,37,2,Group
+2021-06-21,Portugal,Germany,2,4,UEFA Euro,True,UEFA,UEFA,5,12,Group
+2021-06-23,Sweden,Poland,3,2,UEFA Euro,True,UEFA,UEFA,18,22,Group
+2021-06-26,Wales,Denmark,0,4,UEFA Euro,True,UEFA,UEFA,17,10,Round of 16
+2021-06-27,Netherlands,Czech Republic,0,2,UEFA Euro,True,UEFA,UEFA,16,40,Round of 16
+2021-06-27,Belgium,Portugal,1,0,UEFA Euro,True,UEFA,UEFA,1,5,Round of 16
+2021-06-28,Croatia,Spain,3,5,UEFA Euro,True,UEFA,UEFA,14,6,Round of 16
+2021-06-28,France,Switzerland,3,3,UEFA Euro,True,UEFA,UEFA,2,13,Round of 16
+2021-06-29,England,Germany,2,0,UEFA Euro,True,UEFA,UEFA,4,12,Round of 16
+2021-07-02,Argentina,Ecuador,3,0,Copa America,True,CONMEBOL,CONMEBOL,7,44,Quarter-final
+2021-07-02,Belgium,Italy,1,2,UEFA Euro,True,UEFA,UEFA,1,7,Quarter-final
+2021-07-02,Switzerland,Spain,1,1,UEFA Euro,True,UEFA,UEFA,13,6,Quarter-final
+2021-07-03,Czech Republic,Denmark,1,2,UEFA Euro,True,UEFA,UEFA,40,10,Quarter-final
+2021-07-03,Ukraine,England,0,4,UEFA Euro,True,UEFA,UEFA,24,4,Quarter-final
+2021-07-05,Argentina,Colombia,1,1,Copa America,True,CONMEBOL,CONMEBOL,7,16,Semi-final
+2021-07-06,Brazil,Peru,1,0,Copa America,True,CONMEBOL,CONMEBOL,3,25,Semi-final
+2021-07-06,Italy,Spain,1,1,UEFA Euro,True,UEFA,UEFA,7,6,Semi-final
+2021-07-07,England,Denmark,1,1,UEFA Euro,True,UEFA,UEFA,4,10,Semi-final
+2021-07-10,Argentina,Brazil,1,0,Copa America,True,CONMEBOL,CONMEBOL,7,3,Final
+2021-07-11,Italy,England,1,1,UEFA Euro,True,UEFA,UEFA,7,4,Final
+2022-11-21,Senegal,Netherlands,0,2,FIFA World Cup,True,CAF,UEFA,18,8,Group
+2022-11-22,Argentina,Saudi Arabia,1,2,FIFA World Cup,True,CONMEBOL,AFC,3,51,Group
+2022-11-23,Australia,France,1,4,FIFA World Cup,True,AFC,UEFA,38,4,Group
+2022-11-24,Poland,Saudi Arabia,2,0,FIFA World Cup,True,UEFA,AFC,26,51,Group
+2022-11-24,France,Denmark,2,1,FIFA World Cup,True,UEFA,UEFA,4,10,Group
+2022-11-25,Germany,Japan,1,2,FIFA World Cup,True,UEFA,AFC,11,24,Group
+2022-11-25,Spain,Costa Rica,7,0,FIFA World Cup,True,UEFA,CONCACAF,7,31,Group
 2022-11-26,Argentina,Mexico,2,0,FIFA World Cup,True,CONMEBOL,CONCACAF,3,13,Group
+2022-11-26,Croatia,Canada,4,1,FIFA World Cup,True,UEFA,CONCACAF,12,41,Group
+2022-11-27,Brazil,Switzerland,1,0,FIFA World Cup,True,CONMEBOL,UEFA,1,15,Group
+2022-11-27,Portugal,Uruguay,2,0,FIFA World Cup,True,UEFA,CONMEBOL,9,14,Group
+2022-11-28,Netherlands,Ecuador,1,1,FIFA World Cup,True,UEFA,CONMEBOL,8,44,Group
+2022-11-28,England,USA,0,0,FIFA World Cup,True,UEFA,CONCACAF,5,16,Group
 2022-11-30,Poland,Argentina,0,2,FIFA World Cup,True,UEFA,CONMEBOL,26,3,Group
+2022-12-01,Japan,Spain,2,1,FIFA World Cup,True,AFC,UEFA,24,7,Group
+2022-12-01,Costa Rica,Germany,2,4,FIFA World Cup,True,CONCACAF,UEFA,31,11,Group
+2022-12-02,Morocco,Canada,2,1,FIFA World Cup,True,CAF,CONCACAF,22,41,Group
+2022-12-02,Croatia,Belgium,0,0,FIFA World Cup,True,UEFA,UEFA,12,2,Group
+2022-12-02,Brazil,Cameroon,0,1,FIFA World Cup,True,CONMEBOL,CAF,1,43,Group
+2022-12-02,Serbia,Switzerland,2,3,FIFA World Cup,True,UEFA,UEFA,21,15,Group
 2022-12-03,Netherlands,USA,3,1,FIFA World Cup,True,UEFA,CONCACAF,8,16,Round of 16
+2022-12-03,South Korea,Portugal,2,1,FIFA World Cup,True,AFC,UEFA,28,9,Group
 2022-12-04,England,Senegal,3,0,FIFA World Cup,True,UEFA,CAF,5,18,Round of 16
+2022-12-06,Japan,Croatia,1,1,FIFA World Cup,True,AFC,UEFA,24,12,Round of 16
+2022-12-06,Brazil,South Korea,4,1,FIFA World Cup,True,CONMEBOL,AFC,1,28,Round of 16
+2022-12-07,Morocco,Spain,0,0,FIFA World Cup,True,CAF,UEFA,22,7,Round of 16
+2022-12-07,Portugal,Switzerland,6,1,FIFA World Cup,True,UEFA,UEFA,9,15,Round of 16
+2022-12-09,Netherlands,Argentina,2,2,FIFA World Cup,True,UEFA,CONMEBOL,8,3,Quarter-final
+2022-12-09,Croatia,Brazil,0,0,FIFA World Cup,True,UEFA,CONMEBOL,12,1,Quarter-final
+2022-12-10,Morocco,Portugal,1,0,FIFA World Cup,True,CAF,UEFA,22,9,Quarter-final
 2022-12-10,England,France,1,2,FIFA World Cup,True,UEFA,UEFA,5,4,Quarter-final
+2022-12-13,Argentina,Croatia,3,0,FIFA World Cup,True,CONMEBOL,UEFA,3,12,Semi-final
+2022-12-14,France,Morocco,2,0,FIFA World Cup,True,UEFA,CAF,4,22,Semi-final
+2022-12-17,Croatia,Morocco,2,1,FIFA World Cup,True,UEFA,CAF,12,22,Third Place
+2022-12-18,Argentina,France,2,2,FIFA World Cup,True,CONMEBOL,UEFA,3,4,Final
 2023-03-24,France,Netherlands,4,0,UEFA Euro Qualification,False,UEFA,UEFA,4,8,Qualification
 2023-03-25,Spain,Norway,3,0,UEFA Euro Qualification,False,UEFA,UEFA,10,43,Qualification
 2023-06-15,Spain,Italy,2,1,UEFA Nations League,True,UEFA,UEFA,10,8,Semi-final
@@ -14,3 +119,44 @@ date,home_team,away_team,home_score,away_score,competition,neutral,home_confeder
 2023-11-21,Brazil,Argentina,0,1,FIFA World Cup Qualification,False,CONMEBOL,CONMEBOL,5,1,Qualification
 2024-03-23,France,Germany,0,2,International Friendly,False,UEFA,UEFA,2,16,Friendly
 2024-03-26,Spain,Brazil,3,3,International Friendly,False,UEFA,CONMEBOL,8,5,Friendly
+2024-06-14,Germany,Scotland,5,1,UEFA Euro,True,UEFA,UEFA,16,30,Group
+2024-06-15,Hungary,Switzerland,1,3,UEFA Euro,True,UEFA,UEFA,26,19,Group
+2024-06-15,Spain,Croatia,3,0,UEFA Euro,True,UEFA,UEFA,8,10,Group
+2024-06-16,Italy,Albania,2,1,UEFA Euro,True,UEFA,UEFA,9,66,Group
+2024-06-16,Poland,Netherlands,1,2,UEFA Euro,True,UEFA,UEFA,27,7,Group
+2024-06-17,Slovenia,Denmark,1,1,UEFA Euro,True,UEFA,UEFA,57,21,Group
+2024-06-17,Serbia,England,0,1,UEFA Euro,True,UEFA,UEFA,33,4,Group
+2024-06-18,Romania,Ukraine,3,0,UEFA Euro,True,UEFA,UEFA,46,22,Group
+2024-06-18,Belgium,Slovakia,0,1,UEFA Euro,True,UEFA,UEFA,3,49,Group
+2024-06-19,Austria,France,0,1,UEFA Euro,True,UEFA,UEFA,25,2,Group
+2024-06-19,Croatia,Albania,2,2,UEFA Euro,True,UEFA,UEFA,10,66,Group
+2024-06-19,Turkey,Georgia,3,1,UEFA Euro,True,UEFA,UEFA,40,74,Group
+2024-06-20,Argentina,Canada,2,0,Copa America,True,CONMEBOL,CONCACAF,1,47,Group
+2024-06-20,Portugal,Czech Republic,2,1,UEFA Euro,True,UEFA,UEFA,6,42,Group
+2024-06-21,Germany,Hungary,2,0,UEFA Euro,True,UEFA,UEFA,16,26,Group
+2024-06-22,Scotland,Switzerland,1,1,UEFA Euro,True,UEFA,UEFA,30,19,Group
+2024-06-22,Serbia,Slovenia,1,1,UEFA Euro,True,UEFA,UEFA,33,57,Group
+2024-06-24,Croatia,Italy,1,1,UEFA Euro,True,UEFA,UEFA,10,9,Group
+2024-06-24,England,Denmark,1,1,UEFA Euro,True,UEFA,UEFA,4,21,Group
+2024-06-25,France,Poland,1,1,UEFA Euro,True,UEFA,UEFA,2,27,Group
+2024-06-25,Brazil,Paraguay,4,1,Copa America,True,CONMEBOL,CONMEBOL,5,35,Group
+2024-06-26,Germany,Switzerland,0,0,UEFA Euro,True,UEFA,UEFA,16,19,Group
+2024-06-26,Albania,Spain,0,1,UEFA Euro,True,UEFA,UEFA,66,8,Group
+2024-06-29,Switzerland,Italy,2,0,UEFA Euro,True,UEFA,UEFA,19,9,Round of 16
+2024-06-29,Germany,Denmark,2,0,UEFA Euro,True,UEFA,UEFA,16,21,Round of 16
+2024-06-30,England,Slovakia,1,1,UEFA Euro,True,UEFA,UEFA,4,49,Round of 16
+2024-06-30,Spain,Georgia,4,1,UEFA Euro,True,UEFA,UEFA,8,74,Round of 16
+2024-07-01,France,Belgium,1,0,UEFA Euro,True,UEFA,UEFA,2,3,Round of 16
+2024-07-01,Portugal,Slovenia,0,0,UEFA Euro,True,UEFA,UEFA,6,57,Round of 16
+2024-07-02,Romania,Netherlands,0,3,UEFA Euro,True,UEFA,UEFA,46,7,Round of 16
+2024-07-02,Austria,Turkey,1,2,UEFA Euro,True,UEFA,UEFA,25,40,Round of 16
+2024-07-04,Argentina,Ecuador,1,0,Copa America,True,CONMEBOL,CONMEBOL,1,44,Quarter-final
+2024-07-05,Spain,Germany,1,1,UEFA Euro,True,UEFA,UEFA,8,16,Quarter-final
+2024-07-05,Portugal,France,0,0,UEFA Euro,True,UEFA,UEFA,6,2,Quarter-final
+2024-07-06,England,Switzerland,1,1,UEFA Euro,True,UEFA,UEFA,4,19,Quarter-final
+2024-07-06,Netherlands,Turkey,2,1,UEFA Euro,True,UEFA,UEFA,7,40,Quarter-final
+2024-07-09,Spain,France,2,1,UEFA Euro,True,UEFA,UEFA,8,2,Semi-final
+2024-07-09,Colombia,Uruguay,1,0,Copa America,True,CONMEBOL,CONMEBOL,12,11,Semi-final
+2024-07-10,Netherlands,England,1,2,UEFA Euro,True,UEFA,UEFA,7,4,Semi-final
+2024-07-14,Argentina,Colombia,1,0,Copa America,True,CONMEBOL,CONMEBOL,1,12,Final
+2024-07-14,Spain,England,2,1,UEFA Euro,True,UEFA,UEFA,8,4,Final

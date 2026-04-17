@@ -10,8 +10,18 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from src.features.elo import EloConfig, update_ratings
+from src.features.elo import EloConfig, expected_score, update_ratings
 from src.utils import PROJECT_ROOT, ensure_parent_dir, load_config
+
+_COMPETITION_WEIGHTS: dict[str, int] = {
+    "FIFA World Cup": 5,
+    "UEFA Euro": 4,
+    "Copa America": 4,
+    "UEFA Nations League": 3,
+    "UEFA Euro Qualification": 2,
+    "FIFA World Cup Qualification": 2,
+    "International Friendly": 1,
+}
 
 
 def _result_label(home_score: int, away_score: int) -> str:
@@ -39,7 +49,7 @@ def build_feature_table(matches: pd.DataFrame, cfg: dict[str, Any]) -> pd.DataFr
     form_points = defaultdict(lambda: deque(maxlen=form_window))
     goals_for = defaultdict(lambda: deque(maxlen=form_window))
     goals_against = defaultdict(lambda: deque(maxlen=form_window))
-    last_played = {}
+    last_played: dict[str, pd.Timestamp] = {}
 
     rows: list[dict[str, Any]] = []
     for row in matches.itertuples(index=False):
@@ -47,8 +57,13 @@ def build_feature_table(matches: pd.DataFrame, cfg: dict[str, Any]) -> pd.DataFr
         away_team = str(row.away_team)
         date = pd.Timestamp(row.date)
         neutral = bool(row.neutral)
-        home_rank = getattr(row, "home_fifa_rank", np.nan)
-        away_rank = getattr(row, "away_fifa_rank", np.nan)
+        home_rank_raw = getattr(row, "home_fifa_rank", np.nan)
+        away_rank_raw = getattr(row, "away_fifa_rank", np.nan)
+        home_rank = int(home_rank_raw) if pd.notna(home_rank_raw) else default_fifa_rank
+        away_rank = int(away_rank_raw) if pd.notna(away_rank_raw) else default_fifa_rank
+        home_conf = str(getattr(row, "home_confederation", "UNKNOWN"))
+        away_conf = str(getattr(row, "away_confederation", "UNKNOWN"))
+        competition = str(row.competition)
 
         home_form = float(np.mean(form_points[home_team])) if form_points[home_team] else 1.5
         away_form = float(np.mean(form_points[away_team])) if form_points[away_team] else 1.5
@@ -63,17 +78,21 @@ def build_feature_table(matches: pd.DataFrame, cfg: dict[str, Any]) -> pd.DataFr
         home_elo_pre = ratings[home_team]
         away_elo_pre = ratings[away_team]
 
+        # Direct Elo win probability (accounts for home advantage)
+        elo_adj = home_elo_pre + (0.0 if neutral else elo_cfg.home_advantage)
+        elo_win_prob = expected_score(elo_adj, away_elo_pre)
+
         record = {
             "date": date,
             "home_team": home_team,
             "away_team": away_team,
-            "competition": str(row.competition),
+            "competition": competition,
             "neutral": int(neutral),
-            "home_confederation": getattr(row, "home_confederation", "UNKNOWN"),
-            "away_confederation": getattr(row, "away_confederation", "UNKNOWN"),
-            "home_fifa_rank": int(home_rank) if pd.notna(home_rank) else default_fifa_rank,
-            "away_fifa_rank": int(away_rank) if pd.notna(away_rank) else default_fifa_rank,
-            "tournament_stage": getattr(row, "tournament_stage", "Unknown"),
+            "home_confederation": home_conf,
+            "away_confederation": away_conf,
+            "home_fifa_rank": home_rank,
+            "away_fifa_rank": away_rank,
+            "tournament_stage": str(getattr(row, "tournament_stage", "Unknown")),
             "home_form_last5": home_form,
             "away_form_last5": away_form,
             "home_goals_for_last5": home_gf_roll,
@@ -85,8 +104,12 @@ def build_feature_table(matches: pd.DataFrame, cfg: dict[str, Any]) -> pd.DataFr
             "home_elo_pre": home_elo_pre,
             "away_elo_pre": away_elo_pre,
             "elo_diff_home_away": home_elo_pre - away_elo_pre,
+            "elo_win_prob": elo_win_prob,
             "form_diff_home_away": home_form - away_form,
             "goal_balance_diff": (home_gf_roll - home_ga_roll) - (away_gf_roll - away_ga_roll),
+            "rank_diff": home_rank - away_rank,
+            "competition_weight": _COMPETITION_WEIGHTS.get(competition, 2),
+            "is_same_confederation": int(home_conf == away_conf),
             "home_score": int(row.home_score),
             "away_score": int(row.away_score),
         }
@@ -147,4 +170,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

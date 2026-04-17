@@ -2,13 +2,11 @@
   "model_type": "xgboost",
   "features_csv": "data/processed/features.csv",
   "split_sizes": {
-    "train": 10,
-    "val": 2,
-    "test": 3
+    "train": 112,
+    "val": 24,
+    "test": 25
   },
   "feature_columns": [
-    "home_team",
-    "away_team",
     "competition",
     "home_confederation",
     "away_confederation",
@@ -27,7 +25,11 @@
     "home_elo_pre",
     "away_elo_pre",
     "elo_diff_home_away",
+    "elo_win_prob",
     "form_diff_home_away",
-    "goal_balance_diff"
+    "goal_balance_diff",
+    "rank_diff",
+    "competition_weight",
+    "is_same_confederation"
   ]
 }
