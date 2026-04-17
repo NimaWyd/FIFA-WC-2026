@@ -38,6 +38,7 @@ def main() -> None:
     )
     preprocessor, feature_cols = build_preprocessor(df)
     x_train, y_train = to_xy(train_df, feature_cols)
+    x_val, y_val = to_xy(val_df, feature_cols)
 
     xgb_cfg = cfg["model"]["xgb"]
     model = Pipeline(
@@ -51,6 +52,10 @@ def main() -> None:
                     max_depth=int(xgb_cfg["max_depth"]),
                     subsample=float(xgb_cfg["subsample"]),
                     colsample_bytree=float(xgb_cfg["colsample_bytree"]),
+                    min_child_weight=int(xgb_cfg.get("min_child_weight", 1)),
+                    gamma=float(xgb_cfg.get("gamma", 0.0)),
+                    reg_alpha=float(xgb_cfg.get("reg_alpha", 0.0)),
+                    reg_lambda=float(xgb_cfg.get("reg_lambda", 1.0)),
                     objective=str(xgb_cfg["objective"]),
                     num_class=3,
                     eval_metric="mlogloss",
@@ -77,8 +82,8 @@ def main() -> None:
     }
     meta_path.write_text(json.dumps(metadata, indent=2), encoding="utf-8")
     print(f"Saved model to {model_path}")
+    print(f"Train: {len(train_df)} | Val: {len(val_df)} | Test: {len(test_df)}")
 
 
 if __name__ == "__main__":
     main()
-

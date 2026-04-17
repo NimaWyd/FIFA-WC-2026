@@ -9,8 +9,8 @@ paths:
 
 features:
   form_window: 5
-  elo_k_factor: 20.0
-  elo_home_advantage: 45.0
+  elo_k_factor: 40.0
+  elo_home_advantage: 100.0
   default_fifa_rank: 75
 
 model:
@@ -18,12 +18,16 @@ model:
   val_size: 0.15
   logistic_max_iter: 1500
   xgb:
-    n_estimators: 350
+    n_estimators: 300
     learning_rate: 0.05
-    max_depth: 5
-    subsample: 0.9
-    colsample_bytree: 0.9
+    max_depth: 3
+    subsample: 0.8
+    colsample_bytree: 0.8
     objective: "multi:softprob"
+    min_child_weight: 2
+    gamma: 0.1
+    reg_alpha: 0.1
+    reg_lambda: 1.0
 
 inference:
   default_competition: "FIFA World Cup Qualification"

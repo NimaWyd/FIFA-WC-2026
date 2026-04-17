@@ -48,9 +48,9 @@ def make_chronological_split(
 
 
 def build_preprocessor(df: pd.DataFrame) -> tuple[ColumnTransformer, list[str]]:
+    # Team names are dropped — Elo ratings already capture team strength and
+    # one-hot encoding sparse team indicators on limited data causes overfitting.
     categorical_features = [
-        "home_team",
-        "away_team",
         "competition",
         "home_confederation",
         "away_confederation",
@@ -71,8 +71,12 @@ def build_preprocessor(df: pd.DataFrame) -> tuple[ColumnTransformer, list[str]]:
         "home_elo_pre",
         "away_elo_pre",
         "elo_diff_home_away",
+        "elo_win_prob",
         "form_diff_home_away",
         "goal_balance_diff",
+        "rank_diff",
+        "competition_weight",
+        "is_same_confederation",
     ]
     used_features = categorical_features + numeric_features
 
@@ -101,4 +105,3 @@ def ensure_artifact_dir(path_str: str) -> Path:
     ensure_parent_dir(path / "keep.txt")
     path.mkdir(parents=True, exist_ok=True)
     return path
-
