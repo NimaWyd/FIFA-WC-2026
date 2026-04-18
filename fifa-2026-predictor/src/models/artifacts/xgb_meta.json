@@ -2,9 +2,9 @@
   "model_type": "xgboost",
   "features_csv": "data/processed/features.csv",
   "split_sizes": {
-    "train": 112,
-    "val": 24,
-    "test": 25
+    "train": 10942,
+    "val": 2345,
+    "test": 2345
   },
   "feature_columns": [
     "competition",
@@ -33,5 +33,5 @@
     "is_same_confederation"
   ],
   "early_stopping_rounds": 25,
-  "best_iteration": 25
+  "best_iteration": 120
 }

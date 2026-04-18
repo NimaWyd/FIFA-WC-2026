@@ -63,12 +63,22 @@ def main() -> None:
         early_stopping_rounds=early_stopping_rounds,
     )
 
+    # Extract time-decay sample weights if the feature table provides them
+    weights_train = (
+        train_df["match_weight"].values if "match_weight" in train_df.columns else None
+    )
+    if weights_train is not None:
+        print(f"Using time-decay sample weights "
+              f"(min={weights_train.min():.3f}, max={weights_train.max():.3f})")
+
     preprocessor.fit(x_train, y_train)
     x_train_t = preprocessor.transform(x_train)
     x_val_t = preprocessor.transform(x_val)
     fit_kwargs: dict = {"verbose": False}
     if early_stopping_rounds is not None and early_stopping_rounds > 0:
         fit_kwargs["eval_set"] = [(x_val_t, y_val)]
+    if weights_train is not None:
+        fit_kwargs["sample_weight"] = weights_train
     classifier.fit(x_train_t, y_train, **fit_kwargs)
 
     model = Pipeline(

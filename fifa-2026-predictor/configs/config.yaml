@@ -12,6 +12,10 @@ features:
   elo_k_factor: 40.0
   elo_home_advantage: 100.0
   default_fifa_rank: 75
+  # Time-decay for sample weights: a match this many days old gets half the weight
+  # of a match played today.  730 = 2-year half-life (recent matches weighted 2x
+  # more than matches from 2 years ago, ~7x more than matches from 5 years ago).
+  time_decay_halflife_days: 730
 
 model:
   test_size: 0.15

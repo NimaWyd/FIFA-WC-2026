@@ -40,6 +40,13 @@ def main() -> None:
     preprocessor, feature_cols = build_preprocessor(df)
     x_train, y_train = to_xy(train_df, feature_cols)
 
+    weights_train = (
+        train_df["match_weight"].values if "match_weight" in train_df.columns else None
+    )
+    if weights_train is not None:
+        print(f"Using time-decay sample weights "
+              f"(min={weights_train.min():.3f}, max={weights_train.max():.3f})")
+
     model = Pipeline(
         steps=[
             ("preprocessor", preprocessor),
@@ -52,7 +59,10 @@ def main() -> None:
             ),
         ]
     )
-    model.fit(x_train, y_train)
+    fit_kwargs: dict = {}
+    if weights_train is not None:
+        fit_kwargs["classifier__sample_weight"] = weights_train
+    model.fit(x_train, y_train, **fit_kwargs)
 
     artifact_dir = ensure_artifact_dir(cfg["paths"]["trained_model_dir"])
     model_path = artifact_dir / f"{args.model_name}.joblib"
