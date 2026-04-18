@@ -4,23 +4,18 @@ from __future__ import annotations
 
 import argparse
 import json
-from collections import defaultdict, deque
 from pathlib import Path
 from typing import Any
 
 import joblib
-import numpy as np
 import pandas as pd
 from scipy.stats import poisson
 
-from src.features.competition_weights import COMPETITION_WEIGHTS, DEFAULT_COMPETITION_WEIGHT
-from src.features.elo import EloConfig, expected_score, update_ratings
+from src.data.schema import normalize_team_name
+from src.features.match_row_builder import build_match_row
+from src.features.state_tracker import TeamStateTracker
 from src.models.common import TARGET_MAP
 from src.utils import PROJECT_ROOT, load_config
-
-
-def _rolling_mean(values: deque[int], default: float) -> float:
-    return float(np.mean(values)) if values else default
 
 
 def build_pre_match_row(
@@ -37,94 +32,42 @@ def build_pre_match_row(
     tournament_stage: str,
     cfg: dict[str, Any],
 ) -> pd.DataFrame:
-    """Build one leakage-safe feature row for a future fixture."""
-    form_window = int(cfg["features"]["form_window"])
-    elo_cfg = EloConfig(
-        k_factor=float(cfg["features"]["elo_k_factor"]),
-        home_advantage=float(cfg["features"]["elo_home_advantage"]),
-    )
+    """Build one leakage-safe feature row for a future fixture.
 
+    Replays all history strictly before *match_date* through TeamStateTracker
+    to derive consistent Elo, form, goals and rest-day features — the same
+    logic used during training via build_features.py.
+    """
     history = history_df.copy()
     history["date"] = pd.to_datetime(history["date"], errors="coerce")
     history = history[history["date"] < pd.to_datetime(match_date)].sort_values("date")
 
-    ratings = defaultdict(lambda: elo_cfg.base_rating)
-    form_points = defaultdict(lambda: deque(maxlen=form_window))
-    goals_for = defaultdict(lambda: deque(maxlen=form_window))
-    goals_against = defaultdict(lambda: deque(maxlen=form_window))
-    last_played = {}
+    tracker = TeamStateTracker(cfg)
+    tracker.replay_history(history)
 
-    for row in history.itertuples(index=False):
-        ht = str(row.home_team)
-        at = str(row.away_team)
-        date = pd.Timestamp(row.date)
-        home_new, away_new = update_ratings(
-            ratings[ht],
-            ratings[at],
-            int(row.home_score),
-            int(row.away_score),
-            bool(row.neutral),
-            elo_cfg,
-        )
-        ratings[ht] = home_new
-        ratings[at] = away_new
-
-        hp = 3 if row.home_score > row.away_score else 1 if row.home_score == row.away_score else 0
-        ap = 3 if row.home_score < row.away_score else 1 if row.home_score == row.away_score else 0
-        form_points[ht].append(hp)
-        form_points[at].append(ap)
-        goals_for[ht].append(int(row.home_score))
-        goals_for[at].append(int(row.away_score))
-        goals_against[ht].append(int(row.away_score))
-        goals_against[at].append(int(row.home_score))
-        last_played[ht] = date
-        last_played[at] = date
-
-    d = pd.to_datetime(match_date)
-    home_rest = (d - last_played[home_team]).days if home_team in last_played else 7
-    away_rest = (d - last_played[away_team]).days if away_team in last_played else 7
-    home_form = _rolling_mean(form_points[home_team], 1.5)
-    away_form = _rolling_mean(form_points[away_team], 1.5)
-    home_gf = _rolling_mean(goals_for[home_team], 1.0)
-    away_gf = _rolling_mean(goals_for[away_team], 1.0)
-    home_ga = _rolling_mean(goals_against[home_team], 1.0)
-    away_ga = _rolling_mean(goals_against[away_team], 1.0)
-    home_elo = float(ratings[home_team])
-    away_elo = float(ratings[away_team])
-
-    elo_adj = home_elo + (0.0 if neutral else elo_cfg.home_advantage)
-    row = {
-        "home_team": home_team,
-        "away_team": away_team,
-        "competition": competition,
-        "neutral": int(neutral),
-        "home_confederation": home_confederation,
-        "away_confederation": away_confederation,
-        "home_fifa_rank": home_fifa_rank,
-        "away_fifa_rank": away_fifa_rank,
-        "tournament_stage": tournament_stage,
-        "home_form_last5": home_form,
-        "away_form_last5": away_form,
-        "home_goals_for_last5": home_gf,
-        "away_goals_for_last5": away_gf,
-        "home_goals_against_last5": home_ga,
-        "away_goals_against_last5": away_ga,
-        "home_rest_days": max(0, int(home_rest)),
-        "away_rest_days": max(0, int(away_rest)),
-        "home_elo_pre": home_elo,
-        "away_elo_pre": away_elo,
-        "elo_diff_home_away": home_elo - away_elo,
-        "elo_win_prob": expected_score(elo_adj, away_elo),
-        "form_diff_home_away": home_form - away_form,
-        "goal_balance_diff": (home_gf - home_ga) - (away_gf - away_ga),
-        "rank_diff": home_fifa_rank - away_fifa_rank,
-        "competition_weight": COMPETITION_WEIGHTS.get(competition, DEFAULT_COMPETITION_WEIGHT),
-        "is_same_confederation": int(home_confederation == away_confederation),
-    }
-    return pd.DataFrame([row])
+    record = build_match_row(
+        tracker=tracker,
+        home_team=home_team,
+        away_team=away_team,
+        match_date=pd.to_datetime(match_date),
+        competition=competition,
+        neutral=neutral,
+        home_confederation=home_confederation,
+        away_confederation=away_confederation,
+        home_fifa_rank=home_fifa_rank,
+        away_fifa_rank=away_fifa_rank,
+        tournament_stage=tournament_stage,
+    )
+    return pd.DataFrame([record])
 
 
 def predict_scorelines(poisson_json: Path, top_n: int = 3) -> list[tuple[str, float]]:
+    """Return top scoreline probabilities from the experimental Poisson model.
+
+    NOTE: This model uses crude global goal averages with no team-strength
+    adjustment.  Probabilities are illustrative only and should not be
+    presented as calibrated predictions.
+    """
     if not poisson_json.exists():
         return []
     params = json.loads(poisson_json.read_text(encoding="utf-8"))
@@ -157,6 +100,11 @@ def main() -> None:
     args = parser.parse_args()
 
     cfg = load_config()
+
+    # Normalise team names so aliases resolve to canonical form
+    home_team = normalize_team_name(args.home_team)
+    away_team = normalize_team_name(args.away_team)
+
     history_path = PROJECT_ROOT / args.history_csv
     if not history_path.exists():
         raise FileNotFoundError(f"History CSV missing: {history_path}")
@@ -165,8 +113,8 @@ def main() -> None:
     model = joblib.load(PROJECT_ROOT / args.model_path)
     sample = build_pre_match_row(
         history_df=history_df,
-        home_team=args.home_team,
-        away_team=args.away_team,
+        home_team=home_team,
+        away_team=away_team,
         match_date=args.match_date,
         competition=args.competition,
         neutral=args.neutral,
@@ -182,9 +130,9 @@ def main() -> None:
     classes = clf.classes_
     probs = model.predict_proba(sample)[0]
     prob_by_class = {int(c): float(p) for c, p in zip(classes, probs)}
-    result = {
-        "home_team": args.home_team,
-        "away_team": args.away_team,
+    result: dict[str, Any] = {
+        "home_team": home_team,
+        "away_team": away_team,
         "match_date": args.match_date,
         "probabilities": {
             "away_win": prob_by_class.get(TARGET_MAP["A"], 0.0),
@@ -195,11 +143,13 @@ def main() -> None:
 
     if args.with_scorelines:
         poisson_path = PROJECT_ROOT / "src/models/artifacts/poisson_params.json"
-        result["top_scorelines"] = predict_scorelines(poisson_path, top_n=3)
+        scorelines = predict_scorelines(poisson_path, top_n=3)
+        result["top_scorelines"] = scorelines
+        # Scoreline model is based on global goal averages only — no team strength.
+        result["scorelines_experimental"] = True
 
     print(json.dumps(result, indent=2))
 
 
 if __name__ == "__main__":
     main()
-

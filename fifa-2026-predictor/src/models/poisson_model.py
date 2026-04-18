@@ -14,11 +14,12 @@ from src.utils import PROJECT_ROOT, ensure_parent_dir
 
 
 def fit_simple_poisson_goals(features_df: pd.DataFrame) -> dict[str, float]:
-    """
-    Fit a lightweight Poisson scoring model.
+    """Fit a crude Poisson scoring model from global goal averages.
 
-    This MVP estimates average home and away goals and applies simple attack/defense
-    strengths from rolling form proxies. It is intentionally simple but leakage-safe.
+    EXPERIMENTAL — this model uses only the dataset-wide mean home and away
+    goals with no team-strength, form or opponent adjustment.  Scoreline
+    probabilities are illustrative only.  Do not present them as calibrated
+    predictions until a proper Dixon-Coles or attack/defence model is in place.
     """
     home_lambda = float(features_df["home_score"].mean())
     away_lambda = float(features_df["away_score"].mean())

@@ -3,15 +3,13 @@
 from __future__ import annotations
 
 import argparse
-from collections import defaultdict, deque
-from pathlib import Path
 from typing import Any
 
 import numpy as np
 import pandas as pd
 
-from src.features.competition_weights import COMPETITION_WEIGHTS, DEFAULT_COMPETITION_WEIGHT
-from src.features.elo import EloConfig, expected_score, update_ratings
+from src.features.match_row_builder import build_match_row
+from src.features.state_tracker import TeamStateTracker
 from src.utils import PROJECT_ROOT, ensure_parent_dir, load_config
 
 
@@ -24,111 +22,63 @@ def _result_label(home_score: int, away_score: int) -> str:
 
 
 def build_feature_table(matches: pd.DataFrame, cfg: dict[str, Any]) -> pd.DataFrame:
-    """Convert ordered historical matches into supervised rows."""
-    form_window = int(cfg["features"]["form_window"])
-    elo_cfg = EloConfig(
-        k_factor=float(cfg["features"]["elo_k_factor"]),
-        home_advantage=float(cfg["features"]["elo_home_advantage"]),
-    )
+    """Convert ordered historical matches into supervised feature rows.
+
+    Processes matches strictly in chronological order.  For each match the
+    pre-match state snapshot is captured via build_match_row() before
+    tracker.update() advances the rolling state.  This guarantees no leakage.
+    """
     default_fifa_rank = int(cfg["features"]["default_fifa_rank"])
 
     matches = matches.copy()
     matches["date"] = pd.to_datetime(matches["date"], errors="coerce")
     matches = matches.sort_values("date").reset_index(drop=True)
 
-    ratings = defaultdict(lambda: elo_cfg.base_rating)
-    form_points = defaultdict(lambda: deque(maxlen=form_window))
-    goals_for = defaultdict(lambda: deque(maxlen=form_window))
-    goals_against = defaultdict(lambda: deque(maxlen=form_window))
-    last_played: dict[str, pd.Timestamp] = {}
-
+    tracker = TeamStateTracker(cfg)
     rows: list[dict[str, Any]] = []
+
     for row in matches.itertuples(index=False):
         home_team = str(row.home_team)
         away_team = str(row.away_team)
         date = pd.Timestamp(row.date)
         neutral = bool(row.neutral)
+
         home_rank_raw = getattr(row, "home_fifa_rank", np.nan)
         away_rank_raw = getattr(row, "away_fifa_rank", np.nan)
         home_rank = int(home_rank_raw) if pd.notna(home_rank_raw) else default_fifa_rank
         away_rank = int(away_rank_raw) if pd.notna(away_rank_raw) else default_fifa_rank
+
         home_conf = str(getattr(row, "home_confederation", "UNKNOWN"))
         away_conf = str(getattr(row, "away_confederation", "UNKNOWN"))
         competition = str(row.competition)
+        tournament_stage = str(getattr(row, "tournament_stage", "Unknown"))
 
-        home_form = float(np.mean(form_points[home_team])) if form_points[home_team] else 1.5
-        away_form = float(np.mean(form_points[away_team])) if form_points[away_team] else 1.5
-        home_gf_roll = float(np.mean(goals_for[home_team])) if goals_for[home_team] else 1.0
-        away_gf_roll = float(np.mean(goals_for[away_team])) if goals_for[away_team] else 1.0
-        home_ga_roll = float(np.mean(goals_against[home_team])) if goals_against[home_team] else 1.0
-        away_ga_roll = float(np.mean(goals_against[away_team])) if goals_against[away_team] else 1.0
-
-        home_rest = (date - last_played[home_team]).days if home_team in last_played else 7
-        away_rest = (date - last_played[away_team]).days if away_team in last_played else 7
-
-        home_elo_pre = ratings[home_team]
-        away_elo_pre = ratings[away_team]
-
-        # Direct Elo win probability (accounts for home advantage)
-        elo_adj = home_elo_pre + (0.0 if neutral else elo_cfg.home_advantage)
-        elo_win_prob = expected_score(elo_adj, away_elo_pre)
-
-        record = {
-            "date": date,
-            "home_team": home_team,
-            "away_team": away_team,
-            "competition": competition,
-            "neutral": int(neutral),
-            "home_confederation": home_conf,
-            "away_confederation": away_conf,
-            "home_fifa_rank": home_rank,
-            "away_fifa_rank": away_rank,
-            "tournament_stage": str(getattr(row, "tournament_stage", "Unknown")),
-            "home_form_last5": home_form,
-            "away_form_last5": away_form,
-            "home_goals_for_last5": home_gf_roll,
-            "away_goals_for_last5": away_gf_roll,
-            "home_goals_against_last5": home_ga_roll,
-            "away_goals_against_last5": away_ga_roll,
-            "home_rest_days": max(0, int(home_rest)),
-            "away_rest_days": max(0, int(away_rest)),
-            "home_elo_pre": home_elo_pre,
-            "away_elo_pre": away_elo_pre,
-            "elo_diff_home_away": home_elo_pre - away_elo_pre,
-            "elo_win_prob": elo_win_prob,
-            "form_diff_home_away": home_form - away_form,
-            "goal_balance_diff": (home_gf_roll - home_ga_roll) - (away_gf_roll - away_ga_roll),
-            "rank_diff": home_rank - away_rank,
-            "competition_weight": COMPETITION_WEIGHTS.get(competition, DEFAULT_COMPETITION_WEIGHT),
-            "is_same_confederation": int(home_conf == away_conf),
-            "home_score": int(row.home_score),
-            "away_score": int(row.away_score),
-        }
+        record = build_match_row(
+            tracker=tracker,
+            home_team=home_team,
+            away_team=away_team,
+            match_date=date,
+            competition=competition,
+            neutral=neutral,
+            home_confederation=home_conf,
+            away_confederation=away_conf,
+            home_fifa_rank=home_rank,
+            away_fifa_rank=away_rank,
+            tournament_stage=tournament_stage,
+        )
+        record["home_score"] = int(row.home_score)
+        record["away_score"] = int(row.away_score)
         record["target"] = _result_label(record["home_score"], record["away_score"])
         rows.append(record)
 
-        home_new, away_new = update_ratings(
-            home_rating=home_elo_pre,
-            away_rating=away_elo_pre,
+        tracker.update(
+            home_team=home_team,
+            away_team=away_team,
             home_goals=int(row.home_score),
             away_goals=int(row.away_score),
             neutral=neutral,
-            cfg=elo_cfg,
+            date=date,
         )
-        ratings[home_team] = home_new
-        ratings[away_team] = away_new
-
-        home_points = 3 if row.home_score > row.away_score else 1 if row.home_score == row.away_score else 0
-        away_points = 3 if row.home_score < row.away_score else 1 if row.home_score == row.away_score else 0
-        form_points[home_team].append(home_points)
-        form_points[away_team].append(away_points)
-
-        goals_for[home_team].append(int(row.home_score))
-        goals_for[away_team].append(int(row.away_score))
-        goals_against[home_team].append(int(row.away_score))
-        goals_against[away_team].append(int(row.home_score))
-        last_played[home_team] = date
-        last_played[away_team] = date
 
     return pd.DataFrame(rows)
 
