@@ -80,7 +80,21 @@ def build_feature_table(matches: pd.DataFrame, cfg: dict[str, Any]) -> pd.DataFr
             date=date,
         )
 
-    return pd.DataFrame(rows)
+    result = pd.DataFrame(rows)
+
+    # Time-decay sample weights: recent matches contribute more to training.
+    # Weight = 2^(-(days_before_last_match / halflife)).  A match played at the
+    # same date as the newest match gets weight 1.0; one played `halflife` days
+    # earlier gets 0.5; one played 2*halflife days earlier gets 0.25, etc.
+    halflife = float(cfg["features"].get("time_decay_halflife_days", 730))
+    if len(result) > 0 and halflife > 0:
+        reference = result["date"].max()
+        days_ago = (reference - result["date"]).dt.days.clip(lower=0)
+        result["match_weight"] = (2.0 ** (-days_ago / halflife)).round(6)
+    else:
+        result["match_weight"] = 1.0
+
+    return result
 
 
 def parse_args() -> argparse.Namespace:
