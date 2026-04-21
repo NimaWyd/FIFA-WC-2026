@@ -257,6 +257,61 @@ class TestBuildMatchRow(unittest.TestCase):
 
 
 # ---------------------------------------------------------------------------
+# build_features.py
+# ---------------------------------------------------------------------------
+
+class TestBuildFeatureTable(unittest.TestCase):
+    def test_normalizes_team_aliases_in_training(self):
+        """build_feature_table must apply alias normalization so tracker keys are canonical."""
+        from src.features.build_features import build_feature_table
+
+        df = pd.DataFrame({
+            "date": ["2026-05-01", "2026-05-10"],
+            "home_team": ["USA", "Mexico"],
+            "away_team": ["Mexico", "USA"],
+            "home_score": [1, 0],
+            "away_score": [0, 1],
+            "neutral": [False, False],
+        })
+        features = build_feature_table(df, _cfg())
+        # Alias USA → United States must have been applied before building rows.
+        self.assertIn("United States", features["home_team"].values)
+        self.assertNotIn("USA", features["home_team"].values)
+
+    def test_missing_optional_columns_do_not_crash(self):
+        """Matches with only required columns must not raise in build_feature_table."""
+        from src.features.build_features import build_feature_table
+
+        df = pd.DataFrame({
+            "date": ["2026-05-01"],
+            "home_team": ["Brazil"],
+            "away_team": ["France"],
+            "home_score": [1],
+            "away_score": [0],
+        })
+        # Should complete without KeyError or ValueError.
+        features = build_feature_table(df, _cfg())
+        self.assertEqual(len(features), 1)
+        self.assertIn("home_elo_pre", features.columns)
+
+    def test_target_labels_are_correct(self):
+        from src.features.build_features import build_feature_table
+
+        df = pd.DataFrame({
+            "date": ["2026-05-01", "2026-05-02", "2026-05-03"],
+            "home_team": ["Brazil", "France", "Spain"],
+            "away_team": ["Germany", "England", "Italy"],
+            "home_score": [2, 1, 0],
+            "away_score": [0, 1, 1],
+            "neutral": [False, False, False],
+        })
+        features = build_feature_table(df, _cfg())
+        self.assertEqual(features.iloc[0]["target"], "H")
+        self.assertEqual(features.iloc[1]["target"], "D")
+        self.assertEqual(features.iloc[2]["target"], "A")
+
+
+# ---------------------------------------------------------------------------
 # Training + inference consistency
 # ---------------------------------------------------------------------------
 
@@ -310,6 +365,52 @@ class TestTrainingInferenceConsistency(unittest.TestCase):
         self.assertAlmostEqual(train_row["away_elo_pre"], infer_row["away_elo_pre"], places=6)
         self.assertAlmostEqual(train_row["elo_win_prob"], infer_row["elo_win_prob"], places=6)
         self.assertAlmostEqual(train_row["home_form_last5"], infer_row["home_form_last5"], places=6)
+
+    def test_alias_in_history_resolves_to_same_state_as_canonical(self):
+        """History with aliased names must produce identical tracker state to canonical names.
+
+        If history CSV has 'USA' and the caller passes 'United States', both paths
+        must normalise before replay so the tracker key is always 'United States'.
+        """
+        from src.features.build_features import build_feature_table
+        from src.app.predict_match import build_pre_match_row
+
+        # Training data uses the alias "USA"
+        training_df = pd.DataFrame({
+            "date": ["2026-05-01", "2026-05-10"],
+            "home_team": ["USA", "Mexico"],
+            "away_team": ["Mexico", "USA"],
+            "home_score": [2, 1],
+            "away_score": [0, 2],
+            "neutral": [False, False],
+        })
+        features = build_feature_table(training_df, _cfg())
+        # After training normalization the second row has "United States" as away_team.
+        train_row_usa = features[features["away_team"] == "United States"].iloc[0]
+
+        # Inference: history also has "USA"; caller asks for "United States"
+        history_alias = training_df.iloc[:1].copy()  # only the first match
+        infer_row = build_pre_match_row(
+            history_df=history_alias,
+            home_team="Mexico",
+            away_team="United States",
+            match_date="2026-05-10",
+            competition="Friendly",
+            neutral=False,
+            home_confederation="CONCACAF",
+            away_confederation="CONCACAF",
+            home_fifa_rank=20,
+            away_fifa_rank=13,
+            tournament_stage="Unknown",
+            cfg=_cfg(),
+        )
+
+        self.assertAlmostEqual(
+            float(train_row_usa["away_elo_pre"]),
+            float(infer_row["away_elo_pre"].iloc[0]),
+            places=6,
+            msg="Elo state for 'United States' must match whether history used 'USA' or 'United States'",
+        )
 
 
 # ---------------------------------------------------------------------------

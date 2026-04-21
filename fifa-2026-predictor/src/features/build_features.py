@@ -8,6 +8,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+from src.data.schema import ensure_match_schema
 from src.features.match_row_builder import build_match_row
 from src.features.state_tracker import TeamStateTracker
 from src.utils import PROJECT_ROOT, ensure_parent_dir, load_config
@@ -30,8 +31,10 @@ def build_feature_table(matches: pd.DataFrame, cfg: dict[str, Any]) -> pd.DataFr
     """
     default_fifa_rank = int(cfg["features"]["default_fifa_rank"])
 
-    matches = matches.copy()
-    matches["date"] = pd.to_datetime(matches["date"], errors="coerce")
+    # Normalize team aliases, fill optional defaults, coerce types — single
+    # source of truth shared with the inference path.
+    matches = ensure_match_schema(matches)
+    matches = matches.dropna(subset=["date", "home_score", "away_score"])
     matches = matches.sort_values("date").reset_index(drop=True)
 
     tracker = TeamStateTracker(cfg)
