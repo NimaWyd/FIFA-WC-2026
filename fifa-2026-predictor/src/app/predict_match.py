@@ -11,7 +11,7 @@ import joblib
 import pandas as pd
 from scipy.stats import poisson
 
-from src.data.schema import normalize_team_name
+from src.data.schema import ensure_match_schema, normalize_team_name
 from src.features.match_row_builder import build_match_row
 from src.features.state_tracker import TeamStateTracker
 from src.models.common import TARGET_MAP
@@ -38,8 +38,9 @@ def build_pre_match_row(
     to derive consistent Elo, form, goals and rest-day features — the same
     logic used during training via build_features.py.
     """
-    history = history_df.copy()
-    history["date"] = pd.to_datetime(history["date"], errors="coerce")
+    # Normalize aliases so tracker state aligns with any canonical name the
+    # caller passes — e.g. history "USA" and caller "United States" must match.
+    history = ensure_match_schema(history_df)
     history = history[history["date"] < pd.to_datetime(match_date)].sort_values("date")
 
     tracker = TeamStateTracker(cfg)

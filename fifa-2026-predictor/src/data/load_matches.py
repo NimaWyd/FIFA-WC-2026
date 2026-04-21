@@ -9,6 +9,7 @@ import pandas as pd
 
 from src.data.load_football_data_api import fetch_international_matches_from_api
 from src.data.load_statsbomb import fetch_statsbomb_open_matches
+from src.data.schema import normalize_team_name
 from src.utils import PROJECT_ROOT, ensure_parent_dir, load_config
 
 
@@ -29,6 +30,9 @@ def save_processed_matches(df: pd.DataFrame, output_csv: str) -> None:
     cleaned["date"] = pd.to_datetime(cleaned["date"], errors="coerce")
     cleaned = cleaned.dropna(subset=["date", "home_team", "away_team", "home_score", "away_score"])
     cleaned["neutral"] = cleaned["neutral"].astype(str).str.lower().isin(["true", "1", "yes"])
+    # Normalize team name aliases so CSVs persist canonical names.
+    cleaned["home_team"] = cleaned["home_team"].map(normalize_team_name)
+    cleaned["away_team"] = cleaned["away_team"].map(normalize_team_name)
     cleaned = cleaned.sort_values("date").reset_index(drop=True)
     cleaned.to_csv(output_path, index=False)
 
