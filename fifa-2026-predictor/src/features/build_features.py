@@ -3,13 +3,14 @@
 from __future__ import annotations
 
 import argparse
-from typing import Any
+from typing import Any, Optional
 
 import numpy as np
 import pandas as pd
 
 from src.data.schema import ensure_match_schema
 from src.features.match_row_builder import build_match_row
+from src.features.registry import get_registry
 from src.features.state_tracker import TeamStateTracker
 from src.utils import PROJECT_ROOT, ensure_parent_dir, load_config
 
@@ -22,12 +23,25 @@ def _result_label(home_score: int, away_score: int) -> str:
     return "D"
 
 
-def build_feature_table(matches: pd.DataFrame, cfg: dict[str, Any]) -> pd.DataFrame:
+def build_feature_table(
+    matches: pd.DataFrame,
+    cfg: dict[str, Any],
+    *,
+    rosters_df: Optional[pd.DataFrame] = None,
+    ratings_df: Optional[pd.DataFrame] = None,
+    injuries_df: Optional[pd.DataFrame] = None,
+    lineups_df: Optional[pd.DataFrame] = None,
+) -> pd.DataFrame:
     """Convert ordered historical matches into supervised feature rows.
 
     Processes matches strictly in chronological order.  For each match the
     pre-match state snapshot is captured via build_match_row() before
     tracker.update() advances the rolling state.  This guarantees no leakage.
+
+    Optional player data arguments (rosters_df, ratings_df, injuries_df,
+    lineups_df) are passed to the feature registry's player_aggregate block
+    when that block is enabled.  When all are None the pipeline runs exactly
+    as before Phase 5.
     """
     default_fifa_rank = int(cfg["features"]["default_fifa_rank"])
 
@@ -69,6 +83,24 @@ def build_feature_table(matches: pd.DataFrame, cfg: dict[str, Any]) -> pd.DataFr
             away_fifa_rank=away_rank,
             tournament_stage=tournament_stage,
         )
+        # Registry: merge any extra features from enabled blocks.
+        # The player_aggregate block is disabled by default; enabling it
+        # requires populated player data passed in via the keyword arguments.
+        registry = get_registry()
+        if registry.enabled_blocks() != ["form", "elo", "tournament"]:
+            context: dict[str, Any] = {
+                "home_team": home_team,
+                "away_team": away_team,
+                "match_date": str(date.date()),
+                "rosters_df": rosters_df,
+                "ratings_df": ratings_df,
+                "injuries_df": injuries_df,
+                "lineups_df": lineups_df,
+            }
+            extra = registry.build_all(context)
+            if extra:
+                record.update(extra)
+
         record["home_score"] = int(row.home_score)
         record["away_score"] = int(row.away_score)
         record["target"] = _result_label(record["home_score"], record["away_score"])
