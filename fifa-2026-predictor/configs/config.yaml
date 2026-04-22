@@ -38,3 +38,9 @@ model:
 inference:
   default_competition: "FIFA World Cup Qualification"
   default_neutral: false
+
+evaluation:
+  # Rolling-origin backtest settings
+  n_backtest_windows: 5
+  min_train_frac: 0.60        # Minimum fraction of data used as initial training window
+  reports_dir: "reports"      # All Phase 2 outputs land here
