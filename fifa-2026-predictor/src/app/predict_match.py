@@ -5,13 +5,14 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 import joblib
 import pandas as pd
 
 from src.data.schema import ensure_match_schema, normalize_team_name
 from src.features.match_row_builder import build_match_row
+from src.features.registry import get_registry
 from src.features.state_tracker import TeamStateTracker
 from src.models.common import TARGET_MAP
 from src.models.scoreline_model import TeamDependentScoreModel
@@ -31,12 +32,20 @@ def build_pre_match_row(
     away_fifa_rank: int,
     tournament_stage: str,
     cfg: dict[str, Any],
+    *,
+    rosters_df: Optional[pd.DataFrame] = None,
+    ratings_df: Optional[pd.DataFrame] = None,
+    injuries_df: Optional[pd.DataFrame] = None,
+    lineups_df: Optional[pd.DataFrame] = None,
 ) -> pd.DataFrame:
     """Build one leakage-safe feature row for a future fixture.
 
     Replays all history strictly before *match_date* through TeamStateTracker
     to derive consistent Elo, form, goals and rest-day features — the same
     logic used during training via build_features.py.
+
+    Optional player data keyword arguments are forwarded to the feature
+    registry's player_aggregate block when it is enabled.
     """
     # Normalize aliases so tracker state aligns with any canonical name the
     # caller passes — e.g. history "USA" and caller "United States" must match.
@@ -59,6 +68,23 @@ def build_pre_match_row(
         away_fifa_rank=away_fifa_rank,
         tournament_stage=tournament_stage,
     )
+
+    # Registry: merge any extra features from enabled blocks (e.g. player_aggregate).
+    registry = get_registry()
+    if registry.enabled_blocks() != ["form", "elo", "tournament"]:
+        context: dict[str, Any] = {
+            "home_team": home_team,
+            "away_team": away_team,
+            "match_date": match_date,
+            "rosters_df": rosters_df,
+            "ratings_df": ratings_df,
+            "injuries_df": injuries_df,
+            "lineups_df": lineups_df,
+        }
+        extra = registry.build_all(context)
+        if extra:
+            record.update(extra)
+
     return pd.DataFrame([record])
 
 
