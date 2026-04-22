@@ -1,17 +1,25 @@
 """Prepare the open international football results CSV for this pipeline.
 
 Works with both the auto-downloaded file (download_open_data.py) and a
-manually downloaded Kaggle CSV.
+manually downloaded Kaggle CSV (martj42/international_results).
+
+Default start year is 1993 — the year FIFA rankings were introduced.  Going
+back further adds Elo warm-up depth without meaningful pre-match metadata.
 
 Usage:
     # After running download_open_data.py:
     python -m src.data.prepare_kaggle_data
 
     # Custom paths / year filter:
-    python -m src.data.prepare_kaggle_data \
-        --input-csv data/raw/results.csv \
-        --output-csv data/raw/open_data_prepared.csv \
-        --from-year 2014
+    python -m src.data.prepare_kaggle_data \\
+        --input-csv data/raw/results.csv \\
+        --output-csv data/raw/open_data_prepared.csv \\
+        --from-year 1993
+
+Deduplication key: (date, home_team, away_team) after canonical normalization.
+FIFA ranks are a static mid-2025 snapshot used as a proxy for all years —
+this is a documented limitation; historical ranks are not available in the
+open dataset.
 """
 
 from __future__ import annotations
@@ -20,103 +28,131 @@ import argparse
 
 import pandas as pd
 
-from src.data.confederation_lookup import lookup_confederation
-from src.data.schema import normalize_team_name
+from src.data.team_identity import get_confederation, get_fifa_rank, resolve_team
 from src.utils import PROJECT_ROOT, ensure_parent_dir
 
 # ---------------------------------------------------------------------------
-# Competition name mapping (Kaggle / martj42 → project names)
+# Competition name mapping (martj42 tournament column → project names)
 # ---------------------------------------------------------------------------
 TOURNAMENT_MAP: dict[str, str] = {
+    # World Cup
     "FIFA World Cup": "FIFA World Cup",
     "FIFA World Cup qualification": "FIFA World Cup Qualification",
     "FIFA World Cup Qualification": "FIFA World Cup Qualification",
+    "FIFA World Cup qualification (CONCACAF)": "FIFA World Cup Qualification",
+    "FIFA World Cup qualification (UEFA)": "FIFA World Cup Qualification",
+    "FIFA World Cup qualification (CAF)": "FIFA World Cup Qualification",
+    "FIFA World Cup qualification (AFC)": "FIFA World Cup Qualification",
+    "FIFA World Cup qualification (CONMEBOL)": "FIFA World Cup Qualification",
+    "FIFA World Cup qualification (OFC)": "FIFA World Cup Qualification",
+    # UEFA
     "UEFA Euro": "UEFA Euro",
     "UEFA Euro qualification": "UEFA Euro Qualification",
+    "UEFA Euro Qualification": "UEFA Euro Qualification",
+    "UEFA Nations League": "UEFA Nations League",
+    "UEFA Nations League A": "UEFA Nations League",
+    "UEFA Nations League B": "UEFA Nations League",
+    "UEFA Nations League C": "UEFA Nations League",
+    "UEFA Nations League D": "UEFA Nations League",
+    # CONMEBOL
     "Copa América": "Copa America",
+    "Copa America": "Copa America",
+    "Copa América qualification": "Copa America Qualification",
+    # AFC
     "AFC Asian Cup": "AFC Asian Cup",
     "AFC Asian Cup qualification": "AFC Asian Cup Qualification",
+    "AFC Asian Cup Qualification": "AFC Asian Cup Qualification",
+    "AFC Challenge Cup": "AFC Challenge Cup",
+    "AFC Challenge Cup qualification": "AFC Challenge Cup Qualification",
+    "AFC Solidarity Cup": "AFC Solidarity Cup",
+    "AFF Championship": "AFF Championship",
+    "SAFF Championship": "SAFF Championship",
+    # CAF
     "Africa Cup of Nations": "Africa Cup of Nations",
     "Africa Cup of Nations qualification": "Africa Cup of Nations Qualification",
+    "Africa Cup of Nations Qualification": "Africa Cup of Nations Qualification",
+    "African Cup of Nations": "Africa Cup of Nations",
+    "African Cup of Nations qualification": "Africa Cup of Nations Qualification",
+    "CECAFA Cup": "CECAFA Cup",
+    "COSAFA Cup": "COSAFA Cup",
+    "WAFU Cup of Nations": "WAFU Cup of Nations",
+    "WAFU Cup": "WAFU Cup of Nations",
+    # CONCACAF
     "CONCACAF Gold Cup": "CONCACAF Gold Cup",
     "CONCACAF Championship": "CONCACAF Gold Cup",
-    "UEFA Nations League": "UEFA Nations League",
+    "Gold Cup": "CONCACAF Gold Cup",
+    "CONCACAF Nations League": "CONCACAF Nations League",
+    "CONCACAF Nations League A": "CONCACAF Nations League",
+    "CONCACAF Nations League B": "CONCACAF Nations League",
+    "CONCACAF Nations League C": "CONCACAF Nations League",
+    "CFU Caribbean Cup": "CFU Caribbean Cup",
+    "Caribbean Cup": "CFU Caribbean Cup",
+    # OFC
+    "OFC Nations Cup": "OFC Nations Cup",
+    "OFC Nations Cup qualification": "OFC Nations Cup Qualification",
+    # Arab
+    "Arab Cup": "Arab Cup",
+    "Arabian Gulf Cup": "Arabian Gulf Cup",
+    "Gulf Cup": "Arabian Gulf Cup",
+    # Other regional
+    "Intercontinental Cup": "Intercontinental Cup",
+    "King's Cup": "King's Cup",
+    "Copa Centroamericana": "CONCACAF Gold Cup",
+    "CONCACAF Championship qualification": "CONCACAF Gold Cup Qualification",
+    # Friendlies
     "Friendly": "International Friendly",
     "Friendlies": "International Friendly",
+    "International Friendly": "International Friendly",
 }
 
+# Map raw tournament name → default tournament_stage label
 STAGE_MAP: dict[str, str] = {
     "FIFA World Cup": "Group Stage",
     "UEFA Euro": "Group Stage",
     "Copa América": "Group Stage",
+    "Copa America": "Group Stage",
     "AFC Asian Cup": "Group Stage",
     "Africa Cup of Nations": "Group Stage",
+    "African Cup of Nations": "Group Stage",
     "CONCACAF Gold Cup": "Group Stage",
     "UEFA Nations League": "Group Stage",
+    "CONCACAF Nations League": "Group Stage",
+    "OFC Nations Cup": "Group Stage",
     "Friendly": "Unknown",
     "Friendlies": "Unknown",
+    "International Friendly": "Unknown",
 }
 
-# ---------------------------------------------------------------------------
-# Static FIFA World Rankings snapshot (approximate mid-2025)
-# Update these if you want more accurate rank features.
-# ---------------------------------------------------------------------------
-FIFA_RANKINGS: dict[str, int] = {
-    "Argentina": 1, "France": 2, "Spain": 3, "England": 4, "Brazil": 5,
-    "Portugal": 6, "Belgium": 7, "Netherlands": 8, "Germany": 9, "Italy": 10,
-    "Croatia": 11, "Morocco": 12, "United States": 13, "Colombia": 14,
-    "Japan": 15, "Uruguay": 16, "Switzerland": 17, "Mexico": 18,
-    "Senegal": 19, "Denmark": 20, "Ecuador": 21, "Austria": 22,
-    "Serbia": 23, "Poland": 24, "Turkey": 25, "Korea Republic": 26,
-    "Australia": 27, "Canada": 28, "Ukraine": 29, "Hungary": 30,
-    "IR Iran": 31, "Scotland": 32, "Côte d'Ivoire": 33, "Czechia": 34,
-    "Nigeria": 35, "Venezuela": 36, "Romania": 37, "Slovakia": 38,
-    "Peru": 39, "Chile": 40, "South Africa": 41, "Egypt": 42,
-    "Ghana": 43, "Algeria": 44, "Paraguay": 45, "Panama": 46,
-    "Cameroon": 47, "Tunisia": 48, "Honduras": 49, "Costa Rica": 50,
-    "Bolivia": 51, "Greece": 52, "Sweden": 53, "Norway": 54,
-    "Albania": 55, "Mali": 56, "DR Congo": 57, "Burkina Faso": 58,
-    "Slovenia": 59, "Jamaica": 60, "Iraq": 61, "Guinea": 62,
-    "Saudi Arabia": 63, "Israel": 64, "Finland": 65, "Uzbekistan": 66,
-    "Bosnia and Herzegovina": 67, "Iceland": 68, "Georgia": 69,
-    "Cape Verde Islands": 70, "Jordan": 71, "New Zealand": 72,
-    "Montenegro": 73, "North Macedonia": 74, "Armenia": 75,
-    "Qatar": 76, "Oman": 77, "Benin": 78, "Zimbabwe": 79, "Congo": 80,
-    "El Salvador": 81, "Cuba": 82, "Trinidad and Tobago": 83,
-    "Mozambique": 84, "Rwanda": 85, "Libya": 86, "Zambia": 87,
-    "Tanzania": 88, "Uganda": 89, "Comoros": 90, "Gambia": 91,
-    "Ethiopia": 92, "Malawi": 93, "Afghanistan": 94, "India": 95,
-    "Thailand": 96, "Vietnam": 97, "Indonesia": 98, "China": 99,
-    "Philippines": 100,
-}
-
-# The 48 confirmed / likely WC 2026 teams (used to flag rows for enriched focus)
+# WC 2026 confirmed / likely participants — used only for reporting
 WC_2026_TEAMS = {
-    # Hosts
     "United States", "Canada", "Mexico",
-    # UEFA
     "Spain", "France", "England", "Germany", "Portugal", "Netherlands",
     "Belgium", "Italy", "Croatia", "Switzerland", "Denmark", "Austria",
     "Scotland", "Turkey", "Slovakia", "Poland", "Serbia", "Hungary",
     "Slovenia", "Albania", "Czechia", "Georgia", "Ukraine",
-    # CONMEBOL
     "Argentina", "Brazil", "Colombia", "Uruguay", "Ecuador", "Venezuela",
     "Paraguay",
-    # CAF
     "Morocco", "Senegal", "Nigeria", "Cameroon", "Egypt", "Côte d'Ivoire",
     "DR Congo", "Tunisia", "Ghana", "Algeria", "South Africa", "Mali",
-    # AFC
     "Japan", "Korea Republic", "IR Iran", "Australia", "Saudi Arabia",
     "Iraq", "Jordan", "Uzbekistan",
-    # CONCACAF (non-hosts)
     "Panama", "Honduras", "Costa Rica", "Jamaica",
-    # OFC
     "New Zealand",
 }
 
 
-def lookup_fifa_rank(team: str, default: int = 75) -> int:
-    return FIFA_RANKINGS.get(team, default)
+def _map_tournament(raw: str) -> str:
+    raw = str(raw).strip()
+    return TOURNAMENT_MAP.get(raw, raw)
+
+
+def _map_stage(raw: str) -> str:
+    raw = str(raw).strip()
+    # First try exact match, then try mapping via the competition name
+    if raw in STAGE_MAP:
+        return STAGE_MAP[raw]
+    competition = _map_tournament(raw)
+    return STAGE_MAP.get(competition, "Unknown")
 
 
 def prepare(input_csv: str, output_csv: str, from_year: int) -> pd.DataFrame:
@@ -134,7 +170,6 @@ def prepare(input_csv: str, output_csv: str, from_year: int) -> pd.DataFrame:
     # Score columns may be named differently across sources
     for col in ["home_score", "away_score"]:
         if col not in df.columns:
-            # Try alternative Kaggle column names
             alt = {"home_score": "home_goals", "away_score": "away_goals"}.get(col, col)
             if alt in df.columns:
                 df[col] = df[alt]
@@ -144,41 +179,49 @@ def prepare(input_csv: str, output_csv: str, from_year: int) -> pd.DataFrame:
 
     df = df[df["date"].dt.year >= from_year].copy()
 
-    # Normalise team names
-    df["home_team"] = df["home_team"].map(normalize_team_name)
-    df["away_team"] = df["away_team"].map(normalize_team_name)
+    # Canonicalize team names via team_identity (covers all registered aliases)
+    df["home_team"] = df["home_team"].map(resolve_team)
+    df["away_team"] = df["away_team"].map(resolve_team)
 
-    # Tournament column may be "tournament" (martj42) or "competition"
+    # Tournament / stage mapping
     tournament_col = "tournament" if "tournament" in df.columns else "competition"
-    df["competition"] = df[tournament_col].map(
-        lambda t: TOURNAMENT_MAP.get(str(t).strip(), str(t).strip())
-    )
-    df["tournament_stage"] = df[tournament_col].map(
-        lambda t: STAGE_MAP.get(str(t).strip(), "Unknown")
-    )
+    df["competition"] = df[tournament_col].map(_map_tournament)
+    df["tournament_stage"] = df[tournament_col].map(_map_stage)
 
-    # Confederations from lookup table
-    df["home_confederation"] = df["home_team"].map(lookup_confederation)
-    df["away_confederation"] = df["away_team"].map(lookup_confederation)
+    # Confederations from canonical registry
+    df["home_confederation"] = df["home_team"].map(get_confederation)
+    df["away_confederation"] = df["away_team"].map(get_confederation)
 
-    # FIFA ranks from static snapshot
-    df["home_fifa_rank"] = df["home_team"].map(lookup_fifa_rank)
-    df["away_fifa_rank"] = df["away_team"].map(lookup_fifa_rank)
+    # FIFA ranks — static 2025 snapshot used as proxy for all years
+    df["home_fifa_rank"] = df["home_team"].map(get_fifa_rank)
+    df["away_fifa_rank"] = df["away_team"].map(get_fifa_rank)
 
-    # Neutral
+    # Neutral venue
     if "neutral" in df.columns:
         df["neutral"] = df["neutral"].astype(str).str.lower().isin(["true", "1", "yes"])
     else:
         df["neutral"] = False
+
+    # Source provenance
+    df["source"] = "martj42"
 
     keep = [
         "date", "home_team", "away_team", "home_score", "away_score",
         "competition", "neutral",
         "home_confederation", "away_confederation",
         "home_fifa_rank", "away_fifa_rank",
-        "tournament_stage",
+        "tournament_stage", "source",
     ]
     df = df[keep].sort_values("date").reset_index(drop=True)
+
+    # Deduplication: canonical key is (date, home_team, away_team)
+    before = len(df)
+    df = df.drop_duplicates(subset=["date", "home_team", "away_team"], keep="first")
+    after = len(df)
+    if before > after:
+        print(f"Removed {before - after:,} duplicate match rows (same date+teams)")
+
+    df = df.sort_values("date").reset_index(drop=True)
 
     out = PROJECT_ROOT / output_csv
     ensure_parent_dir(out)
@@ -188,24 +231,23 @@ def prepare(input_csv: str, output_csv: str, from_year: int) -> pd.DataFrame:
     teams = set(df["home_team"]) | set(df["away_team"])
     wc_covered = WC_2026_TEAMS & teams
     wc_missing = WC_2026_TEAMS - teams
-    conf_map = (
-        pd.concat([
-            df[["home_team", "home_confederation"]].rename(columns={"home_team": "team", "home_confederation": "conf"}),
-            df[["away_team", "away_confederation"]].rename(columns={"away_team": "team", "away_confederation": "conf"}),
-        ])
-        .drop_duplicates(subset=["team"], keep="last")
-        .set_index("team")["conf"]
-        .to_dict()
-    )
-    unknown_conf = {t for t in teams if conf_map.get(t) == "UNKNOWN"}
+    conf_counts = df[["home_confederation"]].rename(
+        columns={"home_confederation": "conf"}
+    ).value_counts().to_dict()
+    unknown_conf_teams = {
+        t for t in teams
+        if get_confederation(t) == "UNKNOWN"
+    }
 
     print(f"\nSaved {len(df):,} matches ({from_year}-present) -> {out}")
     print(f"Unique teams:              {len(teams)}")
+    print(f"Date range:                {df['date'].min().date()} – {df['date'].max().date()}")
     print(f"WC 2026 teams covered:     {len(wc_covered)} / {len(WC_2026_TEAMS)}")
     if wc_missing:
         print(f"WC 2026 teams missing:     {sorted(wc_missing)}")
-    if unknown_conf:
-        print(f"UNKNOWN confederation ({len(unknown_conf)}): {sorted(unknown_conf)[:8]}")
+    if unknown_conf_teams:
+        sample = sorted(unknown_conf_teams)[:8]
+        print(f"UNKNOWN confederation ({len(unknown_conf_teams)}): {sample}")
 
     return df
 
@@ -215,9 +257,9 @@ def main() -> None:
     parser.add_argument("--input-csv", default="data/raw/results.csv")
     parser.add_argument("--output-csv", default="data/raw/open_data_prepared.csv")
     parser.add_argument(
-        "--from-year", type=int, default=2010,
-        help="Drop matches before this year (default 2010). "
-             "Going back further adds Elo stability but dilutes recent signal.",
+        "--from-year", type=int, default=1993,
+        help="Drop matches before this year (default 1993 — FIFA ranking era). "
+             "Going further back adds Elo warm-up but pre-dates FIFA rankings.",
     )
     args = parser.parse_args()
     prepare(args.input_csv, args.output_csv, args.from_year)

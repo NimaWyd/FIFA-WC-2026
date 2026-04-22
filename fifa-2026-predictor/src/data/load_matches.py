@@ -12,6 +12,9 @@ from src.data.load_statsbomb import fetch_statsbomb_open_matches
 from src.data.schema import normalize_team_name
 from src.utils import PROJECT_ROOT, ensure_parent_dir, load_config
 
+# Composite key used to detect duplicate matches across sources.
+_DEDUP_KEY = ["date", "home_team", "away_team"]
+
 
 def load_local_matches(input_csv: str) -> pd.DataFrame:
     """Load local CSV into dataframe."""
@@ -34,6 +37,14 @@ def save_processed_matches(df: pd.DataFrame, output_csv: str) -> None:
     cleaned["home_team"] = cleaned["home_team"].map(normalize_team_name)
     cleaned["away_team"] = cleaned["away_team"].map(normalize_team_name)
     cleaned = cleaned.sort_values("date").reset_index(drop=True)
+
+    # Dedup by canonical key after normalization so overlapping sources don't
+    # inflate the training set or corrupt rolling Elo state.
+    before = len(cleaned)
+    cleaned = cleaned.drop_duplicates(subset=_DEDUP_KEY, keep="first")
+    if len(cleaned) < before:
+        print(f"load_matches: removed {before - len(cleaned):,} duplicate rows")
+
     cleaned.to_csv(output_path, index=False)
 
 

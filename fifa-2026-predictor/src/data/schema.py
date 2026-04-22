@@ -1,30 +1,20 @@
-"""Explicit schema definitions and normalization helpers for match and team data."""
+"""Explicit schema definitions and normalization helpers for match and team data.
+
+Team name normalization is delegated to team_identity.py — this module exposes
+the same public API as before so all callers continue to work unchanged.
+"""
 
 from __future__ import annotations
 
 import pandas as pd
 
+from src.data.team_identity import resolve_team
+
 # ---------------------------------------------------------------------------
-# Team name aliases — maps unofficial / variant names to canonical form
+# Team name aliases — kept as a backward-compatible shim.
+# The canonical alias table lives in team_identity.ALIAS_TO_CANONICAL.
 # ---------------------------------------------------------------------------
-TEAM_NAME_ALIASES: dict[str, str] = {
-    "USA": "United States",
-    "US": "United States",
-    "Republic of Ireland": "Ireland",
-    "Czech Republic": "Czechia",
-    "South Korea": "Korea Republic",
-    "Iran": "IR Iran",
-    "North Korea": "Korea DPR",
-    "Trinidad & Tobago": "Trinidad and Tobago",
-    "Ivory Coast": "Côte d'Ivoire",
-    "Cote d'Ivoire": "Côte d'Ivoire",
-    "Cape Verde": "Cape Verde Islands",
-    "Bosnia": "Bosnia and Herzegovina",
-    "Bosnia & Herzegovina": "Bosnia and Herzegovina",
-    "United Arab Emirates": "UAE",
-    "Congo DR": "DR Congo",
-    "Congo, DR": "DR Congo",
-}
+from src.data.team_identity import ALIAS_TO_CANONICAL as TEAM_NAME_ALIASES  # noqa: F401
 
 # ---------------------------------------------------------------------------
 # Column definitions
@@ -45,6 +35,7 @@ OPTIONAL_MATCH_DEFAULTS: dict[str, object] = {
     "home_fifa_rank": 75,
     "away_fifa_rank": 75,
     "tournament_stage": "Unknown",
+    "source": "unknown",
 }
 
 MATCH_NUMERIC_COLUMNS = ["home_score", "away_score", "home_fifa_rank", "away_fifa_rank"]
@@ -62,9 +53,8 @@ OPTIONAL_TEAM_DEFAULTS: dict[str, object] = {
 # ---------------------------------------------------------------------------
 
 def normalize_team_name(name: str) -> str:
-    """Return the canonical team name, applying known aliases."""
-    name = str(name).strip()
-    return TEAM_NAME_ALIASES.get(name, name)
+    """Return the canonical team name, applying all registered aliases."""
+    return resolve_team(name)
 
 
 def fill_missing_defaults(df: pd.DataFrame, defaults: dict[str, object]) -> pd.DataFrame:
@@ -106,7 +96,7 @@ def ensure_match_schema(df: pd.DataFrame) -> pd.DataFrame:
     else:
         df["neutral"] = neutral.astype(bool)
 
-    # Normalise team names through alias table
+    # Normalise team names through canonical identity registry
     df["home_team"] = df["home_team"].map(normalize_team_name)
     df["away_team"] = df["away_team"].map(normalize_team_name)
 
