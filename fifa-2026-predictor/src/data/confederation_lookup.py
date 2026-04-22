@@ -1,84 +1,26 @@
-"""Static confederation membership for national teams."""
+"""Confederation membership lookup — derived from team_identity canonical registry.
+
+All callers use lookup_confederation(team_name); the underlying mapping is
+built from team_identity.CANONICAL_TEAMS so there is one source of truth.
+"""
 
 from __future__ import annotations
 
-TEAM_CONFEDERATION: dict[str, str] = {
-    # UEFA
-    "Albania": "UEFA", "Andorra": "UEFA", "Armenia": "UEFA", "Austria": "UEFA",
-    "Azerbaijan": "UEFA", "Belarus": "UEFA", "Belgium": "UEFA", "Bosnia and Herzegovina": "UEFA",
-    "Bulgaria": "UEFA", "Croatia": "UEFA", "Cyprus": "UEFA", "Czechia": "UEFA",
-    "Czech Republic": "UEFA", "Denmark": "UEFA", "England": "UEFA", "Estonia": "UEFA",
-    "Faroe Islands": "UEFA", "Finland": "UEFA", "France": "UEFA", "Georgia": "UEFA",
-    "Germany": "UEFA", "Gibraltar": "UEFA", "Greece": "UEFA", "Hungary": "UEFA",
-    "Iceland": "UEFA", "Ireland": "UEFA", "Republic of Ireland": "UEFA",
-    "Israel": "UEFA", "Italy": "UEFA", "Kazakhstan": "UEFA", "Kosovo": "UEFA",
-    "Latvia": "UEFA", "Liechtenstein": "UEFA", "Lithuania": "UEFA", "Luxembourg": "UEFA",
-    "Malta": "UEFA", "Moldova": "UEFA", "Montenegro": "UEFA", "Netherlands": "UEFA",
-    "North Macedonia": "UEFA", "Norway": "UEFA", "Poland": "UEFA", "Portugal": "UEFA",
-    "Romania": "UEFA", "Russia": "UEFA", "San Marino": "UEFA", "Scotland": "UEFA",
-    "Serbia": "UEFA", "Slovakia": "UEFA", "Slovenia": "UEFA", "Spain": "UEFA",
-    "Sweden": "UEFA", "Switzerland": "UEFA", "Turkey": "UEFA", "Türkiye": "UEFA",
-    "Ukraine": "UEFA", "Wales": "UEFA",
+from src.data.team_identity import CANONICAL_TEAMS, ALIAS_TO_CANONICAL
 
-    # CONMEBOL
-    "Argentina": "CONMEBOL", "Bolivia": "CONMEBOL", "Brazil": "CONMEBOL",
-    "Chile": "CONMEBOL", "Colombia": "CONMEBOL", "Ecuador": "CONMEBOL",
-    "Paraguay": "CONMEBOL", "Peru": "CONMEBOL", "Uruguay": "CONMEBOL",
-    "Venezuela": "CONMEBOL",
+# ---------------------------------------------------------------------------
+# Build flat {any_name: confederation} lookup at import time
+# ---------------------------------------------------------------------------
+TEAM_CONFEDERATION: dict[str, str] = {}
 
-    # CONCACAF
-    "Antigua and Barbuda": "CONCACAF", "Aruba": "CONCACAF", "Bahamas": "CONCACAF",
-    "Barbados": "CONCACAF", "Belize": "CONCACAF", "Bermuda": "CONCACAF",
-    "Canada": "CONCACAF", "Cayman Islands": "CONCACAF", "Costa Rica": "CONCACAF",
-    "Cuba": "CONCACAF", "Curaçao": "CONCACAF", "Dominican Republic": "CONCACAF",
-    "El Salvador": "CONCACAF", "Grenada": "CONCACAF", "Guatemala": "CONCACAF",
-    "Guyana": "CONCACAF", "Haiti": "CONCACAF", "Honduras": "CONCACAF",
-    "Jamaica": "CONCACAF", "Mexico": "CONCACAF", "Nicaragua": "CONCACAF",
-    "Panama": "CONCACAF", "Puerto Rico": "CONCACAF", "Saint Kitts and Nevis": "CONCACAF",
-    "Saint Lucia": "CONCACAF", "Saint Vincent and the Grenadines": "CONCACAF",
-    "Suriname": "CONCACAF", "Trinidad and Tobago": "CONCACAF",
-    "United States": "CONCACAF", "US Virgin Islands": "CONCACAF",
-
-    # CAF
-    "Algeria": "CAF", "Angola": "CAF", "Benin": "CAF", "Botswana": "CAF",
-    "Burkina Faso": "CAF", "Burundi": "CAF", "Cameroon": "CAF",
-    "Cape Verde Islands": "CAF", "Central African Republic": "CAF", "Chad": "CAF",
-    "Comoros": "CAF", "Congo": "CAF", "DR Congo": "CAF", "Djibouti": "CAF",
-    "Egypt": "CAF", "Equatorial Guinea": "CAF", "Eritrea": "CAF",
-    "Eswatini": "CAF", "Ethiopia": "CAF", "Gabon": "CAF", "Gambia": "CAF",
-    "Ghana": "CAF", "Guinea": "CAF", "Guinea-Bissau": "CAF",
-    "Côte d'Ivoire": "CAF", "Kenya": "CAF", "Lesotho": "CAF", "Liberia": "CAF",
-    "Libya": "CAF", "Madagascar": "CAF", "Malawi": "CAF", "Mali": "CAF",
-    "Mauritania": "CAF", "Mauritius": "CAF", "Morocco": "CAF", "Mozambique": "CAF",
-    "Namibia": "CAF", "Niger": "CAF", "Nigeria": "CAF", "Rwanda": "CAF",
-    "São Tomé and Príncipe": "CAF", "Senegal": "CAF", "Seychelles": "CAF",
-    "Sierra Leone": "CAF", "Somalia": "CAF", "South Africa": "CAF",
-    "South Sudan": "CAF", "Sudan": "CAF", "Tanzania": "CAF", "Togo": "CAF",
-    "Tunisia": "CAF", "Uganda": "CAF", "Zambia": "CAF", "Zimbabwe": "CAF",
-
-    # AFC
-    "Afghanistan": "AFC", "Australia": "AFC", "Bahrain": "AFC", "Bangladesh": "AFC",
-    "Bhutan": "AFC", "Brunei": "AFC", "Cambodia": "AFC", "China": "AFC",
-    "Chinese Taipei": "AFC", "Guam": "AFC", "Hong Kong": "AFC", "India": "AFC",
-    "Indonesia": "AFC", "IR Iran": "AFC", "Iraq": "AFC", "Japan": "AFC",
-    "Jordan": "AFC", "Korea DPR": "AFC", "Korea Republic": "AFC",
-    "Kuwait": "AFC", "Kyrgyzstan": "AFC", "Laos": "AFC", "Lebanon": "AFC",
-    "Macau": "AFC", "Malaysia": "AFC", "Maldives": "AFC", "Mongolia": "AFC",
-    "Myanmar": "AFC", "Nepal": "AFC", "Oman": "AFC", "Pakistan": "AFC",
-    "Palestine": "AFC", "Philippines": "AFC", "Qatar": "AFC", "Saudi Arabia": "AFC",
-    "Singapore": "AFC", "Sri Lanka": "AFC", "Syria": "AFC", "Tajikistan": "AFC",
-    "Thailand": "AFC", "Timor-Leste": "AFC", "Turkmenistan": "AFC",
-    "United Arab Emirates": "AFC", "UAE": "AFC", "Uzbekistan": "AFC",
-    "Vietnam": "AFC", "Yemen": "AFC",
-
-    # OFC
-    "American Samoa": "OFC", "Cook Islands": "OFC", "Fiji": "OFC",
-    "New Caledonia": "OFC", "New Zealand": "OFC", "Papua New Guinea": "OFC",
-    "Samoa": "OFC", "Solomon Islands": "OFC", "Tahiti": "OFC", "Tonga": "OFC",
-    "Vanuatu": "OFC",
-}
+for _canonical, _meta in CANONICAL_TEAMS.items():
+    _conf = _meta.get("confederation", "UNKNOWN")
+    TEAM_CONFEDERATION[_canonical] = _conf
+    for _alias in _meta.get("aliases", []):
+        TEAM_CONFEDERATION[_alias] = _conf
 
 
 def lookup_confederation(team: str) -> str:
-    """Return the confederation for *team*, or 'UNKNOWN' if not found."""
-    return TEAM_CONFEDERATION.get(team, "UNKNOWN")
+    """Return the confederation for *team* (any alias), or 'UNKNOWN'."""
+    canonical = ALIAS_TO_CANONICAL.get(str(team).strip(), str(team).strip())
+    return TEAM_CONFEDERATION.get(canonical, "UNKNOWN")
