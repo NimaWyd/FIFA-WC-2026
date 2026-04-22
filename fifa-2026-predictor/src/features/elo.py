@@ -44,14 +44,20 @@ def update_ratings(
     away_goals: int,
     neutral: bool,
     cfg: EloConfig,
+    competition_k_multiplier: float = 1.0,
 ) -> tuple[float, float]:
-    """Update two team ratings after a match."""
+    """Update two team ratings after a match.
+
+    *competition_k_multiplier* scales the K-factor by competition importance:
+    >1 for high-stakes tournaments, <1 for friendlies.
+    """
     adjusted_home = home_rating + (0.0 if neutral else cfg.home_advantage)
     exp_home = expected_score(adjusted_home, away_rating)
     exp_away = 1.0 - exp_home
     act_home, act_away = actual_score(home_goals, away_goals)
     mult = goal_margin_multiplier(home_goals, away_goals)
+    effective_k = cfg.k_factor * competition_k_multiplier
 
-    new_home = home_rating + cfg.k_factor * mult * (act_home - exp_home)
-    new_away = away_rating + cfg.k_factor * mult * (act_away - exp_away)
+    new_home = home_rating + effective_k * mult * (act_home - exp_home)
+    new_away = away_rating + effective_k * mult * (act_away - exp_away)
     return new_home, new_away

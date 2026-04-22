@@ -81,6 +81,7 @@ def build_feature_table(matches: pd.DataFrame, cfg: dict[str, Any]) -> pd.DataFr
             away_goals=int(row.away_score),
             neutral=neutral,
             date=date,
+            competition=competition,
         )
 
     result = pd.DataFrame(rows)

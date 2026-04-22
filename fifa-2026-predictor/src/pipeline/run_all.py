@@ -88,11 +88,11 @@ def main() -> None:
     if not args.skip_poisson:
         run_step(
             [
-                "src.models.poisson_model",
+                "src.models.scoreline_model",
                 "--features-csv",
                 args.output_features_csv,
                 "--output-json",
-                "src/models/artifacts/poisson_params.json",
+                "src/models/artifacts/scoreline_params.json",
             ]
         )
 

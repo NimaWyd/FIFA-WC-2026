@@ -56,7 +56,8 @@ def build_preprocessor(df: pd.DataFrame) -> tuple[ColumnTransformer, list[str]]:
         "away_confederation",
         "tournament_stage",
     ]
-    numeric_features = [
+    # Phase 1–3 core numeric features
+    _base_numeric = [
         "neutral",
         "home_fifa_rank",
         "away_fifa_rank",
@@ -78,6 +79,38 @@ def build_preprocessor(df: pd.DataFrame) -> tuple[ColumnTransformer, list[str]]:
         "competition_weight",
         "is_same_confederation",
     ]
+    # Phase 4 extended features (included when present)
+    _phase4_numeric = [
+        "stage_importance",
+        "home_form_w3",
+        "away_form_w3",
+        "home_form_w10",
+        "away_form_w10",
+        "home_form_rw5",
+        "away_form_rw5",
+        "home_attack_w5",
+        "away_attack_w5",
+        "home_defense_w5",
+        "away_defense_w5",
+        "home_attack_rw5",
+        "away_attack_rw5",
+        "home_defense_rw5",
+        "away_defense_rw5",
+        "home_adj_form_w5",
+        "away_adj_form_w5",
+        "home_adj_attack_w5",
+        "away_adj_attack_w5",
+        "home_adj_defense_w5",
+        "away_adj_defense_w5",
+        "attack_diff_w5",
+        "defense_diff_w5",
+        "adj_form_diff_w5",
+        "form_diff_w3",
+        "form_diff_w10",
+    ]
+    # Only include Phase 4 columns that actually exist in this DataFrame
+    present_phase4 = [c for c in _phase4_numeric if c in df.columns]
+    numeric_features = _base_numeric + present_phase4
     used_features = categorical_features + numeric_features
 
     missing = sorted(set(used_features) - set(df.columns))

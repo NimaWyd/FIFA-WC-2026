@@ -9,12 +9,12 @@ from typing import Any
 
 import joblib
 import pandas as pd
-from scipy.stats import poisson
 
 from src.data.schema import ensure_match_schema, normalize_team_name
 from src.features.match_row_builder import build_match_row
 from src.features.state_tracker import TeamStateTracker
 from src.models.common import TARGET_MAP
+from src.models.scoreline_model import TeamDependentScoreModel
 from src.utils import PROJECT_ROOT, load_config
 
 
@@ -62,25 +62,22 @@ def build_pre_match_row(
     return pd.DataFrame([record])
 
 
-def predict_scorelines(poisson_json: Path, top_n: int = 3) -> list[tuple[str, float]]:
-    """Return top scoreline probabilities from the experimental Poisson model.
+def predict_scorelines(
+    scoreline_params_path: Path,
+    feature_row: pd.DataFrame,
+    top_n: int = 3,
+) -> list[tuple[str, float]]:
+    """Return top scoreline probabilities using the team-dependent model.
 
-    NOTE: This model uses crude global goal averages with no team-strength
-    adjustment.  Probabilities are illustrative only and should not be
-    presented as calibrated predictions.
+    Uses per-team attack/defense ratings from the feature row to produce
+    team-specific expected goals — replacing the old global-average approach.
     """
-    if not poisson_json.exists():
+    if not scoreline_params_path.exists():
         return []
-    params = json.loads(poisson_json.read_text(encoding="utf-8"))
-    home_lambda = float(params["base_home_lambda"])
-    away_lambda = float(params["base_away_lambda"])
-    values: list[tuple[str, float]] = []
-    for h in range(6):
-        for a in range(6):
-            p = float(poisson.pmf(h, home_lambda) * poisson.pmf(a, away_lambda))
-            values.append((f"{h}-{a}", p))
-    values.sort(key=lambda item: item[1], reverse=True)
-    return values[:top_n]
+    model = TeamDependentScoreModel.load(scoreline_params_path)
+    row = feature_row.iloc[0].to_dict()
+    lambda_home, lambda_away = model.predict_lambdas_from_row(row)
+    return TeamDependentScoreModel.top_scorelines(lambda_home, lambda_away, top_n=top_n)
 
 
 def main() -> None:
@@ -143,11 +140,9 @@ def main() -> None:
     }
 
     if args.with_scorelines:
-        poisson_path = PROJECT_ROOT / "src/models/artifacts/poisson_params.json"
-        scorelines = predict_scorelines(poisson_path, top_n=3)
+        scoreline_path = PROJECT_ROOT / "src/models/artifacts/scoreline_params.json"
+        scorelines = predict_scorelines(scoreline_path, sample, top_n=3)
         result["top_scorelines"] = scorelines
-        # Scoreline model is based on global goal averages only — no team strength.
-        result["scorelines_experimental"] = True
 
     print(json.dumps(result, indent=2))
 
