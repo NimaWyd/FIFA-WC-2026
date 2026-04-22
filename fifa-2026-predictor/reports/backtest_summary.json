@@ -1,0 +1,247 @@
+{
+  "window_results": [
+    {
+      "window_idx": 0,
+      "train_start": "2010-01-02",
+      "train_end": "2019-10-05",
+      "test_start": "2019-10-05",
+      "test_end": "2021-07-13",
+      "n_train": 9379,
+      "n_test": 1250,
+      "models": {
+        "most_frequent": {
+          "accuracy": 0.4904,
+          "log_loss": 11.733974,
+          "brier_score": 1.0192
+        },
+        "class_prior": {
+          "accuracy": 0.4904,
+          "log_loss": 1.0435,
+          "brier_score": 0.62836
+        },
+        "elo_only": {
+          "accuracy": 0.604,
+          "log_loss": 0.880954,
+          "brier_score": 0.517612
+        },
+        "logreg": {
+          "accuracy": 0.5808,
+          "log_loss": 0.860517,
+          "brier_score": 0.508311
+        },
+        "xgboost": {
+          "accuracy": 0.6128,
+          "log_loss": 0.835982,
+          "brier_score": 0.489389
+        }
+      }
+    },
+    {
+      "window_idx": 1,
+      "train_start": "2010-01-02",
+      "train_end": "2021-07-13",
+      "test_start": "2021-07-13",
+      "test_end": "2022-09-22",
+      "n_train": 10629,
+      "n_test": 1250,
+      "models": {
+        "most_frequent": {
+          "accuracy": 0.4768,
+          "log_loss": 12.047125,
+          "brier_score": 1.0464
+        },
+        "class_prior": {
+          "accuracy": 0.4768,
+          "log_loss": 1.050759,
+          "brier_score": 0.63373
+        },
+        "elo_only": {
+          "accuracy": 0.5808,
+          "log_loss": 0.913325,
+          "brier_score": 0.541176
+        },
+        "logreg": {
+          "accuracy": 0.5584,
+          "log_loss": 0.909098,
+          "brier_score": 0.537391
+        },
+        "xgboost": {
+          "accuracy": 0.6024,
+          "log_loss": 0.863274,
+          "brier_score": 0.506356
+        }
+      }
+    },
+    {
+      "window_idx": 2,
+      "train_start": "2010-01-02",
+      "train_end": "2022-09-22",
+      "test_start": "2022-09-22",
+      "test_end": "2023-11-19",
+      "n_train": 11879,
+      "n_test": 1250,
+      "models": {
+        "most_frequent": {
+          "accuracy": 0.484,
+          "log_loss": 11.881339,
+          "brier_score": 1.032
+        },
+        "class_prior": {
+          "accuracy": 0.484,
+          "log_loss": 1.044692,
+          "brier_score": 0.629728
+        },
+        "elo_only": {
+          "accuracy": 0.5664,
+          "log_loss": 0.930125,
+          "brier_score": 0.545315
+        },
+        "logreg": {
+          "accuracy": 0.5752,
+          "log_loss": 0.922068,
+          "brier_score": 0.539475
+        },
+        "xgboost": {
+          "accuracy": 0.6072,
+          "log_loss": 0.891721,
+          "brier_score": 0.52055
+        }
+      }
+    },
+    {
+      "window_idx": 3,
+      "train_start": "2010-01-02",
+      "train_end": "2023-11-19",
+      "test_start": "2023-11-19",
+      "test_end": "2024-11-19",
+      "n_train": 13129,
+      "n_test": 1250,
+      "models": {
+        "most_frequent": {
+          "accuracy": 0.4528,
+          "log_loss": 12.599746,
+          "brier_score": 1.0944
+        },
+        "class_prior": {
+          "accuracy": 0.4528,
+          "log_loss": 1.066588,
+          "brier_score": 0.644789
+        },
+        "elo_only": {
+          "accuracy": 0.58,
+          "log_loss": 0.92996,
+          "brier_score": 0.547987
+        },
+        "logreg": {
+          "accuracy": 0.5704,
+          "log_loss": 0.930627,
+          "brier_score": 0.5485
+        },
+        "xgboost": {
+          "accuracy": 0.588,
+          "log_loss": 0.89923,
+          "brier_score": 0.530537
+        }
+      }
+    },
+    {
+      "window_idx": 4,
+      "train_start": "2010-01-02",
+      "train_end": "2024-11-19",
+      "test_start": "2024-11-19",
+      "test_end": "2026-03-31",
+      "n_train": 14379,
+      "n_test": 1253,
+      "models": {
+        "most_frequent": {
+          "accuracy": 0.476457,
+          "log_loss": 12.055034,
+          "brier_score": 1.047087
+        },
+        "class_prior": {
+          "accuracy": 0.476457,
+          "log_loss": 1.0509,
+          "brier_score": 0.633837
+        },
+        "elo_only": {
+          "accuracy": 0.574621,
+          "log_loss": 0.884528,
+          "brier_score": 0.520546
+        },
+        "logreg": {
+          "accuracy": 0.582602,
+          "log_loss": 0.87521,
+          "brier_score": 0.516408
+        },
+        "xgboost": {
+          "accuracy": 0.612929,
+          "log_loss": 0.847418,
+          "brier_score": 0.496501
+        }
+      }
+    }
+  ],
+  "aggregate": {
+    "per_model": {
+      "elo_only": {
+        "mean_accuracy": 0.581164,
+        "std_accuracy": 0.01252,
+        "mean_log_loss": 0.907778,
+        "std_log_loss": 0.021365,
+        "mean_brier_score": 0.534527,
+        "std_brier_score": 0.012832,
+        "n_windows": 5
+      },
+      "class_prior": {
+        "mean_accuracy": 0.476091,
+        "std_accuracy": 0.012731,
+        "mean_log_loss": 1.051288,
+        "std_log_loss": 0.00823,
+        "mean_brier_score": 0.634089,
+        "std_brier_score": 0.005771,
+        "n_windows": 5
+      },
+      "most_frequent": {
+        "mean_accuracy": 0.476091,
+        "std_accuracy": 0.012731,
+        "mean_log_loss": 12.063444,
+        "std_log_loss": 0.293145,
+        "mean_brier_score": 1.047817,
+        "std_brier_score": 0.025462,
+        "n_windows": 5
+      },
+      "xgboost": {
+        "mean_accuracy": 0.604666,
+        "std_accuracy": 0.009206,
+        "mean_log_loss": 0.867525,
+        "std_log_loss": 0.024527,
+        "mean_brier_score": 0.508667,
+        "std_brier_score": 0.015129,
+        "n_windows": 5
+      },
+      "logreg": {
+        "mean_accuracy": 0.57348,
+        "std_accuracy": 0.008679,
+        "mean_log_loss": 0.899504,
+        "std_log_loss": 0.027129,
+        "mean_brier_score": 0.530017,
+        "std_brier_score": 0.015112,
+        "n_windows": 5
+      }
+    },
+    "ranking_by_accuracy": [
+      "xgboost",
+      "elo_only",
+      "logreg",
+      "class_prior",
+      "most_frequent"
+    ],
+    "ranking_by_log_loss": [
+      "xgboost",
+      "logreg",
+      "elo_only",
+      "class_prior",
+      "most_frequent"
+    ]
+  }
+}
