@@ -2,9 +2,9 @@
   "model_type": "xgboost",
   "features_csv": "data/processed/features.csv",
   "split_sizes": {
-    "train": 10942,
-    "val": 2345,
-    "test": 2345
+    "train": 112,
+    "val": 24,
+    "test": 25
   },
   "feature_columns": [
     "competition",
