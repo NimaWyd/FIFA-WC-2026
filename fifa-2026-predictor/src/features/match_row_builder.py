@@ -24,8 +24,8 @@ from typing import Any
 import pandas as pd
 
 from src.features.competition_weights import (
-    COMPETITION_WEIGHTS,
     DEFAULT_COMPETITION_WEIGHT,
+    get_competition_weight,
     get_stage_importance,
     normalize_tournament_stage,
 )
@@ -44,6 +44,7 @@ def build_match_row(
     home_fifa_rank: int,
     away_fifa_rank: int,
     tournament_stage: str,
+    h2h_window: int = 10,
 ) -> dict[str, Any]:
     """Return a pre-match feature dict from the current tracker state.
 
@@ -105,6 +106,15 @@ def build_match_row(
     stage_norm = normalize_tournament_stage(tournament_stage)
     stage_imp = get_stage_importance(tournament_stage)
 
+    # --- Phase 7: draw-rate features ---
+
+    home_draw_rate_w5 = tracker.draw_rate(home_team, 5)
+    away_draw_rate_w5 = tracker.draw_rate(away_team, 5)
+
+    # --- Phase 7: head-to-head features ---
+
+    h2h = tracker.h2h_stats(home_team, away_team, window=h2h_window)
+
     return {
         # Match metadata
         "date": match_date,
@@ -138,9 +148,7 @@ def build_match_row(
         "away_rest_days": away_rest,
         # Derived team context
         "rank_diff": int(home_fifa_rank) - int(away_fifa_rank),
-        "competition_weight": COMPETITION_WEIGHTS.get(
-            competition, DEFAULT_COMPETITION_WEIGHT
-        ),
+        "competition_weight": get_competition_weight(competition),
         "is_same_confederation": int(home_confederation == away_confederation),
         # --- Phase 4 new features ---
         # Multi-horizon form
@@ -173,4 +181,13 @@ def build_match_row(
         "adj_form_diff_w5": home_adj_form_w5 - away_adj_form_w5,
         "form_diff_w3": home_form_w3 - away_form_w3,
         "form_diff_w10": home_form_w10 - away_form_w10,
+        # --- Phase 7: draw rate ---
+        "home_draw_rate_w5": home_draw_rate_w5,
+        "away_draw_rate_w5": away_draw_rate_w5,
+        "draw_rate_diff": home_draw_rate_w5 - away_draw_rate_w5,
+        # --- Phase 7: head-to-head ---
+        "h2h_home_win_rate": h2h["home_win_rate"],
+        "h2h_draw_rate": h2h["draw_rate"],
+        "h2h_goal_diff": h2h["goal_diff"],
+        "h2h_n_matches": float(h2h["n_matches"]),
     }

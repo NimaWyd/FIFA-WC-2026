@@ -44,6 +44,11 @@ def build_feature_table(
     as before Phase 5.
     """
     default_fifa_rank = int(cfg["features"]["default_fifa_rank"])
+    h2h_window = int(cfg["features"].get("h2h_window", 10))
+
+    # Rename 'tournament' → 'competition' when results.csv is the source
+    if "tournament" in matches.columns and "competition" not in matches.columns:
+        matches = matches.rename(columns={"tournament": "competition"})
 
     # Normalize team aliases, fill optional defaults, coerce types — single
     # source of truth shared with the inference path.
@@ -82,6 +87,7 @@ def build_feature_table(
             home_fifa_rank=home_rank,
             away_fifa_rank=away_rank,
             tournament_stage=tournament_stage,
+            h2h_window=h2h_window,
         )
         # Registry: merge any extra features from enabled blocks.
         # The player_aggregate block is disabled by default; enabling it

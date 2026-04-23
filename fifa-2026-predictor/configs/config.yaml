@@ -19,6 +19,10 @@ features:
   # Phase 4: half-life for recency-weighting within form/attack/defense windows.
   # 180 days means a match 6 months ago counts half as much as the most recent one.
   recency_halflife_days: 180
+  # Phase 7: head-to-head window (last N encounters between the two teams)
+  h2h_window: 10
+  # Phase 7: draw-rate window (last N matches per team)
+  draw_rate_window: 5
 
 model:
   test_size: 0.15

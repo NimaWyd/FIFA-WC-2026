@@ -15,8 +15,8 @@ import numpy as np
 import pandas as pd
 
 from src.features.competition_weights import (
-    COMPETITION_K_MULTIPLIERS,
     DEFAULT_COMPETITION_K_MULTIPLIER,
+    get_competition_k_multiplier,
 )
 from src.features.elo import EloConfig, expected_score, update_ratings
 
@@ -51,7 +51,9 @@ class TeamStateTracker:
     """
 
     # Entries in _history beyond _MAX_HISTORY are silently dropped.
-    _MAX_HISTORY: int = 20
+    _MAX_HISTORY: int = 30
+    # Separate H2H deque per canonical pair (sorted tuple of names).
+    _MAX_H2H: int = 15
 
     def __init__(self, cfg: dict[str, Any]) -> None:
         form_window = int(cfg["features"]["form_window"])
@@ -79,9 +81,16 @@ class TeamStateTracker:
         self._last_played: dict[str, pd.Timestamp] = {}
 
         # Extended history for Phase 4 features.
-        # Each entry is a dict: {date, points, gf, ga, opp_elo_pre}
+        # Each entry is a dict: {date, points, gf, ga, opp_elo_pre, opponent, is_draw}
         self._history: dict[str, deque] = defaultdict(
             lambda: deque(maxlen=self._MAX_HISTORY)
+        )
+
+        # Head-to-head history per canonical pair (sorted tuple → deque).
+        # Each entry: {date, home_team, away_team, home_goals, away_goals}
+        # Stored once per match regardless of home/away assignment.
+        self._h2h: dict[tuple, deque] = defaultdict(
+            lambda: deque(maxlen=self._MAX_H2H)
         )
 
     # ------------------------------------------------------------------
@@ -244,6 +253,61 @@ class TeamStateTracker:
             sum(h["ga"] * (base / h["opp_elo_pre"]) for h in hist) / len(hist)
         )
 
+    def draw_rate(self, team: str, window: int = 5) -> float:
+        """Fraction of last *window* matches that ended in a draw.
+
+        Returns 0.25 (historical average) when history is empty.
+        """
+        hist = self._history_slice(team, window)
+        if not hist:
+            return 0.25
+        return sum(1 for h in hist if h.get("is_draw", False)) / len(hist)
+
+    def h2h_stats(
+        self,
+        home_team: str,
+        away_team: str,
+        window: int = 10,
+    ) -> dict:
+        """Head-to-head stats for the pair in the last *window* encounters.
+
+        Returns stats from the perspective of *home_team* (wins = home wins).
+        When no h2h history exists all values fall back to sensible priors.
+        """
+        pair = tuple(sorted([home_team, away_team]))
+        entries = list(self._h2h.get(pair, deque()))[-window:]
+
+        if not entries:
+            return {
+                "home_win_rate": 0.45,
+                "draw_rate": 0.25,
+                "goal_diff": 0.0,
+                "n_matches": 0,
+            }
+
+        home_wins = draws = 0
+        goal_diff_total = 0.0
+        for e in entries:
+            hg, ag = e["home_goals"], e["away_goals"]
+            # Reframe from home_team's perspective
+            if e["home_team"] == home_team:
+                team_goals, opp_goals = hg, ag
+            else:
+                team_goals, opp_goals = ag, hg
+            goal_diff_total += team_goals - opp_goals
+            if team_goals > opp_goals:
+                home_wins += 1
+            elif team_goals == opp_goals:
+                draws += 1
+
+        n = len(entries)
+        return {
+            "home_win_rate": home_wins / n,
+            "draw_rate": draws / n,
+            "goal_diff": goal_diff_total / n,
+            "n_matches": n,
+        }
+
     # ------------------------------------------------------------------
     # State mutation
     # ------------------------------------------------------------------
@@ -267,10 +331,8 @@ class TeamStateTracker:
         home_elo_pre = float(self._ratings[home_team])
         away_elo_pre = float(self._ratings[away_team])
 
-        # Competition-aware Elo update
-        comp_k = COMPETITION_K_MULTIPLIERS.get(
-            competition, DEFAULT_COMPETITION_K_MULTIPLIER
-        )
+        # Competition-aware Elo update (normalise name before lookup)
+        comp_k = get_competition_k_multiplier(competition)
         home_new, away_new = update_ratings(
             home_rating=home_elo_pre,
             away_rating=away_elo_pre,
@@ -294,7 +356,9 @@ class TeamStateTracker:
         self._goals_against[home_team].append(away_goals)
         self._goals_against[away_team].append(home_goals)
 
-        # Extended history with opponent Elo context
+        is_draw = home_goals == away_goals
+
+        # Extended history with opponent Elo context + draw/opponent fields
         self._history[home_team].append(
             {
                 "date": date,
@@ -302,6 +366,8 @@ class TeamStateTracker:
                 "gf": home_goals,
                 "ga": away_goals,
                 "opp_elo_pre": away_elo_pre,
+                "opponent": away_team,
+                "is_draw": is_draw,
             }
         )
         self._history[away_team].append(
@@ -311,6 +377,20 @@ class TeamStateTracker:
                 "gf": away_goals,
                 "ga": home_goals,
                 "opp_elo_pre": home_elo_pre,
+                "opponent": home_team,
+                "is_draw": is_draw,
+            }
+        )
+
+        # Head-to-head history (canonical pair key, independent of home/away)
+        pair = tuple(sorted([home_team, away_team]))
+        self._h2h[pair].append(
+            {
+                "date": date,
+                "home_team": home_team,
+                "away_team": away_team,
+                "home_goals": home_goals,
+                "away_goals": away_goals,
             }
         )
 

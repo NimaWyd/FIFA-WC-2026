@@ -9,3 +9,6 @@ python-dotenv
 pyyaml
 joblib
 scipy
+fastapi
+uvicorn[standard]
+httpx

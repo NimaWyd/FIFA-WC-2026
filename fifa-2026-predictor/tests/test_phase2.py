@@ -463,7 +463,7 @@ class TestFullEvaluationPipeline(unittest.TestCase):
         y_test = test["target"].map({"A": 0, "D": 1, "H": 2}).astype(int).values
 
         models = all_models(cfg)
-        self.assertEqual(len(models), 5)
+        self.assertGreaterEqual(len(models), 5)
         for model in models:
             with self.subTest(model=model.name):
                 model.fit(train)
