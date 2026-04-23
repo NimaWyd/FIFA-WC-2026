@@ -221,6 +221,138 @@ class XGBoostModel(BaseModel):
         return _reorder_to_012(raw, self._pipeline.named_steps["classifier"].classes_)
 
 
+class XGBoostTunedModel(BaseModel):
+    """XGBoost with hyperparameters loaded from tuning results (Issue 4).
+
+    Falls back to default config params when no tuning results file exists.
+    """
+
+    name = "xgboost_tuned"
+    _TUNING_RESULTS_PATH = "reports/xgb_tuning_results.json"
+
+    def __init__(self, cfg: dict | None = None, tuning_path: str | None = None) -> None:
+        from src.utils import PROJECT_ROOT
+        self._cfg = cfg or {}
+        path = PROJECT_ROOT / (tuning_path or self._TUNING_RESULTS_PATH)
+        self._tuned_params: dict = {}
+        if path.exists():
+            import json
+            try:
+                data = json.loads(path.read_text(encoding="utf-8"))
+                self._tuned_params = data.get("best_params", {})
+            except Exception:
+                pass
+        self._pipeline = None
+        self._feature_cols = None
+
+    def _merged_params(self) -> dict:
+        """Merge tuned params on top of config defaults."""
+        base = dict(self._cfg.get("model", {}).get("xgb", {}))
+        base.update(self._tuned_params)
+        return base
+
+    def fit(self, train_df: pd.DataFrame) -> None:
+        from xgboost import XGBClassifier
+
+        preprocessor, feature_cols = build_preprocessor(train_df)
+        self._feature_cols = feature_cols
+        X_train, y_train = to_xy(train_df, feature_cols)
+        weights = (
+            train_df["match_weight"].values if "match_weight" in train_df.columns else None
+        )
+
+        p = self._merged_params()
+        classifier = XGBClassifier(
+            n_estimators=int(p.get("n_estimators", 300)),
+            learning_rate=float(p.get("learning_rate", 0.05)),
+            max_depth=int(p.get("max_depth", 3)),
+            subsample=float(p.get("subsample", 0.8)),
+            colsample_bytree=float(p.get("colsample_bytree", 0.8)),
+            min_child_weight=int(p.get("min_child_weight", 2)),
+            gamma=float(p.get("gamma", 0.1)),
+            reg_alpha=float(p.get("reg_alpha", 0.1)),
+            reg_lambda=float(p.get("reg_lambda", 1.0)),
+            objective="multi:softprob",
+            num_class=3,
+            eval_metric="mlogloss",
+            random_state=int(self._cfg.get("project", {}).get("random_state", 42)),
+        )
+
+        preprocessor.fit(X_train)
+        X_train_t = preprocessor.transform(X_train)
+        fit_kwargs: dict = {"verbose": False}
+        if weights is not None:
+            fit_kwargs["sample_weight"] = weights
+        classifier.fit(X_train_t, y_train, **fit_kwargs)
+
+        self._pipeline = Pipeline([
+            ("preprocessor", preprocessor),
+            ("classifier", classifier),
+        ])
+
+    def predict_proba(self, df: pd.DataFrame) -> np.ndarray:
+        if self._pipeline is None:
+            raise RuntimeError("Call fit() before predict_proba().")
+        X, _ = to_xy(df, self._feature_cols)
+        raw = self._pipeline.predict_proba(X)
+        return _reorder_to_012(raw, self._pipeline.named_steps["classifier"].classes_)
+
+
+class MLPModel(BaseModel):
+    """Multi-layer perceptron classifier (Issue 6).
+
+    Uses sklearn MLPClassifier with two hidden layers.  Class-balanced
+    sample weights are applied when available.
+    """
+
+    name = "mlp"
+
+    def __init__(self) -> None:
+        self._pipeline = None
+        self._feature_cols = None
+
+    def fit(self, train_df: pd.DataFrame) -> None:
+        from sklearn.neural_network import MLPClassifier
+
+        preprocessor, feature_cols = build_preprocessor(train_df)
+        self._feature_cols = feature_cols
+        X_train, y_train = to_xy(train_df, feature_cols)
+        weights = (
+            train_df["match_weight"].values if "match_weight" in train_df.columns else None
+        )
+
+        clf = MLPClassifier(
+            hidden_layer_sizes=(128, 64),
+            activation="relu",
+            solver="adam",
+            alpha=0.01,
+            learning_rate_init=0.001,
+            max_iter=300,
+            early_stopping=True,
+            validation_fraction=0.1,
+            random_state=42,
+        )
+
+        preprocessor.fit(X_train)
+        X_train_t = preprocessor.transform(X_train)
+        fit_kwargs: dict = {}
+        if weights is not None:
+            fit_kwargs["sample_weight"] = weights
+        clf.fit(X_train_t, y_train, **fit_kwargs)
+
+        self._pipeline = Pipeline([
+            ("preprocessor", preprocessor),
+            ("classifier", clf),
+        ])
+
+    def predict_proba(self, df: pd.DataFrame) -> np.ndarray:
+        if self._pipeline is None:
+            raise RuntimeError("Call fit() before predict_proba().")
+        X, _ = to_xy(df, self._feature_cols)
+        raw = self._pipeline.predict_proba(X)
+        return _reorder_to_012(raw, self._pipeline.named_steps["classifier"].classes_)
+
+
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
@@ -243,4 +375,6 @@ def all_models(cfg: dict | None = None) -> list[BaseModel]:
         EloOnlyBaseline(),
         LogRegModel(max_iter=max_iter),
         XGBoostModel(cfg=cfg),
+        XGBoostTunedModel(cfg=cfg),
+        MLPModel(),
     ]
