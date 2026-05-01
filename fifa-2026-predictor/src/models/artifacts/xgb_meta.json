@@ -2,9 +2,9 @@
   "model_type": "xgboost",
   "features_csv": "data/processed/features.csv",
   "split_sizes": {
-    "train": 112,
-    "val": 24,
-    "test": 25
+    "train": 34450,
+    "val": 7382,
+    "test": 7383
   },
   "feature_columns": [
     "competition",
@@ -30,8 +30,41 @@
     "goal_balance_diff",
     "rank_diff",
     "competition_weight",
-    "is_same_confederation"
+    "is_same_confederation",
+    "stage_importance",
+    "home_form_w3",
+    "away_form_w3",
+    "home_form_w10",
+    "away_form_w10",
+    "home_form_rw5",
+    "away_form_rw5",
+    "home_attack_w5",
+    "away_attack_w5",
+    "home_defense_w5",
+    "away_defense_w5",
+    "home_attack_rw5",
+    "away_attack_rw5",
+    "home_defense_rw5",
+    "away_defense_rw5",
+    "home_adj_form_w5",
+    "away_adj_form_w5",
+    "home_adj_attack_w5",
+    "away_adj_attack_w5",
+    "home_adj_defense_w5",
+    "away_adj_defense_w5",
+    "attack_diff_w5",
+    "defense_diff_w5",
+    "adj_form_diff_w5",
+    "form_diff_w3",
+    "form_diff_w10",
+    "home_draw_rate_w5",
+    "away_draw_rate_w5",
+    "draw_rate_diff",
+    "h2h_home_win_rate",
+    "h2h_draw_rate",
+    "h2h_goal_diff",
+    "h2h_n_matches"
   ],
   "early_stopping_rounds": 25,
-  "best_iteration": 120
+  "best_iteration": 68
 }
