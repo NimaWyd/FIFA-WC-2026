@@ -53,7 +53,7 @@ export default function GroupStandings({ standings, groupId }: Props) {
           >
             <span
               className={`text-xs font-bold w-4 text-center ${
-                i < 2 ? "text-[#d4af37]" : "text-slate-500"
+                i < 2 ? "text-[#d4af37]" : i === 2 ? "text-slate-400" : "text-slate-500"
               }`}
             >
               {i + 1}
@@ -65,6 +65,9 @@ export default function GroupStandings({ standings, groupId }: Props) {
               </span>
               {i < 2 && (
                 <span className="text-[9px] text-[#d4af37]/70 flex-shrink-0">ADV</span>
+              )}
+              {i === 2 && (
+                <span className="text-[9px] text-amber-400/70 flex-shrink-0">3RD?</span>
               )}
             </div>
             <span className="text-center text-slate-400 text-xs">{s.played}</span>
@@ -84,7 +87,7 @@ export default function GroupStandings({ standings, groupId }: Props) {
         ))}
       </div>
       <p className="text-[10px] text-slate-600">
-        Top 2 teams advance · Based on most likely predicted scorelines
+        Top 2 advance automatically · Best 8 third-place teams across all groups also advance
       </p>
     </div>
   );
