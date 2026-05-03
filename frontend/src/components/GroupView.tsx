@@ -81,36 +81,28 @@ export default function GroupView({ group, onBack, onPredict }: Props) {
         });
 
         const p = res.probabilities;
-        const dominant =
-          p.home_win >= p.draw && p.home_win >= p.away_win ? "H" :
-          p.away_win >= p.draw && p.away_win >= p.home_win ? "A" : "D";
 
         let homeGoals: number;
         let awayGoals: number;
 
         if (res.top_scorelines.length > 0) {
-          // Pick the best scoreline that matches the dominant outcome
-          const matching = res.top_scorelines.find((s) => {
-            const [hg, ag] = parseScoreline(s.scoreline);
-            if (dominant === "H") return hg > ag;
-            if (dominant === "A") return ag > hg;
-            return hg === ag;
-          });
-          if (matching) {
-            [homeGoals, awayGoals] = parseScoreline(matching.scoreline);
-          } else {
-            // No scoreline in top-5 matches dominant outcome — use default
-            if (dominant === "H") { homeGoals = 1; awayGoals = 0; }
-            else if (dominant === "A") { homeGoals = 0; awayGoals = 1; }
-            else { homeGoals = 1; awayGoals = 1; }
-          }
+          // Trust the scoreline model directly — most probable scoreline wins
+          [homeGoals, awayGoals] = parseScoreline(res.top_scorelines[0].scoreline);
         } else if (res.expected_goals) {
+          // xG fallback: round, then nudge based on dominant outcome
+          const dominant =
+            p.home_win > p.draw && p.home_win > p.away_win ? "H" :
+            p.away_win > p.draw && p.away_win > p.home_win ? "A" : "D";
           homeGoals = Math.round(res.expected_goals.home);
           awayGoals = Math.round(res.expected_goals.away);
           if (dominant === "H" && homeGoals <= awayGoals) homeGoals = awayGoals + 1;
           if (dominant === "A" && awayGoals <= homeGoals) awayGoals = homeGoals + 1;
           if (dominant === "D") homeGoals = awayGoals = Math.round((homeGoals + awayGoals) / 2);
         } else {
+          // Last resort defaults
+          const dominant =
+            p.home_win > p.draw && p.home_win > p.away_win ? "H" :
+            p.away_win > p.draw && p.away_win > p.home_win ? "A" : "D";
           if (dominant === "H") { homeGoals = 1; awayGoals = 0; }
           else if (dominant === "A") { homeGoals = 0; awayGoals = 1; }
           else { homeGoals = 1; awayGoals = 1; }
