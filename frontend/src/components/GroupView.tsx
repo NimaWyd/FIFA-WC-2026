@@ -112,7 +112,7 @@ export default function GroupView({ group, onBack, onPredict }: Props) {
         }
 
         results.push({ match, homeGoals, awayGoals });
-        const matchKey = `${match.home}_${match.away}`;
+        const matchKey = `${match.home}|${match.away}`;
         setMatchResults((prev) => ({ ...prev, [matchKey]: { homeGoals, awayGoals } }));
         setProgress((prev) => prev + 1);
       } catch {
@@ -208,7 +208,7 @@ export default function GroupView({ group, onBack, onPredict }: Props) {
               </div>
 
               {(() => {
-                const matchKey = `${match.home}_${match.away}`;
+                const matchKey = `${match.home}|${match.away}`;
                 const mr = matchResults[matchKey];
                 return mr ? (
                   <div className="flex flex-col items-center gap-0.5 flex-shrink-0 px-2">
