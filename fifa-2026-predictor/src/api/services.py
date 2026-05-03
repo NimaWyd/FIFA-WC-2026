@@ -194,6 +194,8 @@ def predict(
     expected_goals: dict[str, float] = {}
     scoreline_status = "unavailable"
     scoreline_path = PROJECT_ROOT / "src/models/artifacts/scoreline_params.json"
+    if not scoreline_path.exists():
+        scoreline_path = PROJECT_ROOT / "src/models/artifacts/poisson_params.json"
     if scoreline_path.exists():
         try:
             score_model = TeamDependentScoreModel.load(scoreline_path)
