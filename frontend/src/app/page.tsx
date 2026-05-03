@@ -282,9 +282,21 @@ export default function Home() {
                 </div>
 
                 {result.top_scorelines.length > 0 && (() => {
-                  const parts = result.top_scorelines[0].scoreline.split("-");
-                  const hg = parseInt(parts[0] ?? "0", 10);
-                  const ag = parseInt(parts[1] ?? "0", 10);
+                  const p = result.probabilities;
+                  const dominant =
+                    p.home_win > p.draw && p.home_win > p.away_win ? "H" :
+                    p.away_win > p.draw && p.away_win > p.home_win ? "A" : "D";
+                  const matching = result.top_scorelines.find((s) => {
+                    const parts = s.scoreline.split("-");
+                    const hg = parseInt(parts[0] ?? "0", 10);
+                    const ag = parseInt(parts[1] ?? "0", 10);
+                    if (dominant === "H") return hg > ag;
+                    if (dominant === "A") return ag > hg;
+                    return hg === ag;
+                  });
+                  const scoreline = (matching ?? result.top_scorelines[0]).scoreline.split("-");
+                  const hg = parseInt(scoreline[0] ?? "0", 10);
+                  const ag = parseInt(scoreline[1] ?? "0", 10);
                   return (
                     <div className="bg-[#0d1428] rounded-2xl border border-slate-800 p-6">
                       <MatchScoreboard
