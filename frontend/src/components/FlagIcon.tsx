@@ -161,25 +161,6 @@ export default function FlagIcon({ team, className }: Props) {
   if (!iso) {
     return <span className={clsx("text-slate-500 text-xs", className)}>–</span>;
   }
-  // GB subdivisions and Kosovo need special handling
-  const SPECIAL: Record<string, string> = {
-    "gb-eng": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
-    "gb-sct": "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
-    "gb-wls": "🏴󠁧󠁢󠁷󠁬󠁳󠁿",
-    "gb-nir": "🇬🇧",
-    "xk": "🇽🇰",
-  };
-  if (iso in SPECIAL) {
-    // Fall back to emoji for these — flag-icons CSS also supports them
-    // but the class names differ (fi-gb-eng etc.)
-    return (
-      <span
-        className={clsx("fi", `fi-${iso}`, "rounded-sm", className)}
-        title={team}
-        aria-label={`${team} flag`}
-      />
-    );
-  }
   return (
     <span
       className={clsx("fi", `fi-${iso}`, "rounded-sm", className)}
