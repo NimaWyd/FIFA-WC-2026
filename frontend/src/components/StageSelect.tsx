@@ -3,7 +3,14 @@ import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from "@headless
 import { ChevronUpDownIcon, CheckIcon } from "@heroicons/react/20/solid";
 import clsx from "clsx";
 
-const STAGES = ["Group Stage", "Round of 16", "Quarter-Final", "Semi-Final", "Final"];
+const STAGES = [
+  "Group Stage",
+  "Round of 32",
+  "Round of 16",
+  "Quarter-Final",
+  "Semi-Final",
+  "Final",
+];
 
 interface Props {
   value: string;
@@ -27,16 +34,10 @@ export default function StageSelect({ value, onChange }: Props) {
               <ListboxOption
                 key={s}
                 value={s}
-                className={({ active }) =>
-                  clsx("flex items-center gap-3 px-4 py-2.5 cursor-pointer text-white", active && "bg-navy-600")
-                }
+                className="group flex items-center gap-3 px-4 py-2.5 cursor-pointer text-white data-[active]:bg-navy-600"
               >
-                {({ selected }) => (
-                  <>
-                    <span className="flex-1">{s}</span>
-                    {selected && <CheckIcon className="h-4 w-4 text-gold-400" />}
-                  </>
-                )}
+                <span className="flex-1">{s}</span>
+                <CheckIcon className="h-4 w-4 text-gold-400 invisible group-data-[selected]:visible" />
               </ListboxOption>
             ))}
           </ListboxOptions>
