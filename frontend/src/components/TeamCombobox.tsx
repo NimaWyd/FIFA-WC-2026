@@ -89,7 +89,7 @@ export default function TeamCombobox({
                     key={team.canonical_name}
                     value={team}
                     disabled={isDisabled}
-                    className="flex items-center gap-3 px-4 py-2.5 cursor-pointer data-[active]:bg-[#111d3c] data-[disabled]:opacity-40 data-[disabled]:cursor-not-allowed"
+                    className="group flex items-center gap-3 px-4 py-2.5 cursor-pointer data-[active]:bg-[#111d3c] data-[disabled]:opacity-40 data-[disabled]:cursor-not-allowed"
                   >
                     <FlagIcon team={team.display_name} className="w-5 h-4 rounded-sm shrink-0" />
                     <span className="flex-1 text-white">{team.display_name}</span>
