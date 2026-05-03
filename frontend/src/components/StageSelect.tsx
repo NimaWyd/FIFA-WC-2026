@@ -1,7 +1,6 @@
 "use client";
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from "@headlessui/react";
 import { ChevronUpDownIcon, CheckIcon } from "@heroicons/react/20/solid";
-import clsx from "clsx";
 
 const STAGES = [
   "Group Stage",
