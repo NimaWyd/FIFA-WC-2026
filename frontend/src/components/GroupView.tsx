@@ -93,9 +93,9 @@ export default function GroupView({ group, onBack, onPredict }: Props) {
           p.away_win > p.draw && p.away_win > p.home_win ? "A" : "D";
 
         if (res.top_scorelines.length > 0) {
-          // Pick the most probable scoreline that matches the dominant outcome
           const matching = res.top_scorelines.find((s) => {
             const [hg, ag] = parseScoreline(s.scoreline);
+            if (hg + ag > 4) return false;
             if (dominant === "H") return hg > ag;
             if (dominant === "A") return ag > hg;
             return hg === ag;

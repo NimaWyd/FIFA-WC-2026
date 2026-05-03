@@ -290,6 +290,7 @@ export default function Home() {
                     const parts = s.scoreline.split("-");
                     const hg = parseInt(parts[0] ?? "0", 10);
                     const ag = parseInt(parts[1] ?? "0", 10);
+                    if (hg + ag > 4) return false;
                     if (dominant === "H") return hg > ag;
                     if (dominant === "A") return ag > hg;
                     return hg === ag;
