@@ -13,6 +13,7 @@ import ExplanationPanel from "@/components/ExplanationPanel";
 import MetadataBadge from "@/components/MetadataBadge";
 import GroupBracket from "@/components/GroupBracket";
 import GroupView from "@/components/GroupView";
+import MatchScoreboard from "@/components/MatchScoreboard";
 import { WC2026_TEAMS } from "@/lib/wc2026Teams";
 import { WCGroup, WCMatch } from "@/lib/wc2026Groups";
 import FlagIcon from "@/components/FlagIcon";
@@ -279,6 +280,22 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
+
+                {result.top_scorelines.length > 0 && (() => {
+                  const parts = result.top_scorelines[0].scoreline.split("-");
+                  const hg = parseInt(parts[0] ?? "0", 10);
+                  const ag = parseInt(parts[1] ?? "0", 10);
+                  return (
+                    <div className="bg-[#0d1428] rounded-2xl border border-slate-800 p-6">
+                      <MatchScoreboard
+                        homeTeam={result.home_team}
+                        awayTeam={result.away_team}
+                        homeGoals={isNaN(hg) ? 0 : hg}
+                        awayGoals={isNaN(ag) ? 0 : ag}
+                      />
+                    </div>
+                  );
+                })()}
 
                 <div className="bg-[#0d1428] rounded-2xl border border-slate-800 p-6">
                   <ProbabilityBars
