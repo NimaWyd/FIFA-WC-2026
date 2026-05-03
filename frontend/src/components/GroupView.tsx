@@ -5,6 +5,7 @@ import { WCGroup, WCMatch } from "@/lib/wc2026Groups";
 import FlagIcon from "@/components/FlagIcon";
 import GroupStandings, { Standing } from "@/components/GroupStandings";
 import { predict } from "@/lib/api";
+import MatchScoreboard from "@/components/MatchScoreboard";
 
 interface Props {
   group: WCGroup;
@@ -60,12 +61,14 @@ export default function GroupView({ group, onBack, onPredict }: Props) {
   const [predicting, setPredicting] = useState(false);
   const [progress, setProgress] = useState(0);
   const [predError, setPredError] = useState<string | null>(null);
+  const [matchResults, setMatchResults] = useState<Record<string, { homeGoals: number; awayGoals: number }>>({});
 
   async function handlePredictAll() {
     setPredicting(true);
     setProgress(0);
     setPredError(null);
     setStandings(null);
+    setMatchResults({});
 
     const results: Array<{ match: WCMatch; homeGoals: number; awayGoals: number }> = [];
 
@@ -109,6 +112,8 @@ export default function GroupView({ group, onBack, onPredict }: Props) {
         }
 
         results.push({ match, homeGoals, awayGoals });
+        const matchKey = `${match.home}_${match.away}`;
+        setMatchResults((prev) => ({ ...prev, [matchKey]: { homeGoals, awayGoals } }));
         setProgress((prev) => prev + 1);
       } catch {
         setPredError("Prediction failed — is the backend running?");
@@ -202,10 +207,26 @@ export default function GroupView({ group, onBack, onPredict }: Props) {
                 </span>
               </div>
 
-              <div className="flex flex-col items-center gap-0.5 flex-shrink-0 px-2">
-                <span className="text-xs font-bold text-slate-500">VS</span>
-                <span className="sm:hidden text-[10px] text-slate-600">{formatDate(match.date)}</span>
-              </div>
+              {(() => {
+                const matchKey = `${match.home}_${match.away}`;
+                const mr = matchResults[matchKey];
+                return mr ? (
+                  <div className="flex flex-col items-center gap-0.5 flex-shrink-0 px-2">
+                    <MatchScoreboard
+                      homeTeam={match.home}
+                      awayTeam={match.away}
+                      homeGoals={mr.homeGoals}
+                      awayGoals={mr.awayGoals}
+                      compact
+                    />
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center gap-0.5 flex-shrink-0 px-2">
+                    <span className="text-xs font-bold text-slate-500">VS</span>
+                    <span className="sm:hidden text-[10px] text-slate-600">{formatDate(match.date)}</span>
+                  </div>
+                );
+              })()}
 
               <div className="flex items-center gap-2 flex-1 justify-end">
                 <span className="text-sm font-semibold text-white truncate text-right">
