@@ -2,10 +2,31 @@ import type { TeamInfo, PredictRequest, PredictResponse, ModelInfo } from "./typ
 
 const BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:8000/api/v1";
 
+const DEFAULT_TIMEOUT_MS = 12_000;
+
 export class ApiError extends Error {
   constructor(public status: number, message: string) {
     super(message);
     this.name = "ApiError";
+  }
+}
+
+async function fetchWithTimeout(
+  url: string,
+  options: RequestInit = {},
+  timeoutMs = DEFAULT_TIMEOUT_MS
+): Promise<Response> {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } catch (e) {
+    if (e instanceof Error && e.name === "AbortError") {
+      throw new Error("Request timed out — the backend took too long to respond.");
+    }
+    throw e;
+  } finally {
+    clearTimeout(id);
   }
 }
 
@@ -29,7 +50,7 @@ let teamsCache: TeamInfo[] | null = null;
 
 export async function fetchTeams(): Promise<TeamInfo[]> {
   if (teamsCache) return teamsCache;
-  const res = await fetch(`${BASE}/teams`);
+  const res = await fetchWithTimeout(`${BASE}/teams`);
   const teams = await handleResponse<TeamInfo[]>(res);
   teams.sort((a, b) => {
     const ca = confOrder[a.confederation] ?? 6;
@@ -45,7 +66,7 @@ export async function fetchTeams(): Promise<TeamInfo[]> {
 }
 
 export async function predict(req: PredictRequest): Promise<PredictResponse> {
-  const res = await fetch(`${BASE}/predict`, {
+  const res = await fetchWithTimeout(`${BASE}/predict`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(req),
@@ -54,6 +75,6 @@ export async function predict(req: PredictRequest): Promise<PredictResponse> {
 }
 
 export async function fetchModelInfo(): Promise<ModelInfo> {
-  const res = await fetch(`${BASE}/model-info`);
+  const res = await fetchWithTimeout(`${BASE}/model-info`);
   return handleResponse<ModelInfo>(res);
 }

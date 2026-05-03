@@ -7,8 +7,8 @@ interface Props {
 }
 
 export default function ExpectedGoals({ xg, homeTeam, awayTeam }: Props) {
-  const total = xg.home + xg.away || 1;
-  const homePct = (xg.home / total) * 100;
+  const total = xg.home + xg.away;
+  const homePct = total === 0 ? 50 : (xg.home / total) * 100;
 
   return (
     <div className="flex flex-col gap-3">

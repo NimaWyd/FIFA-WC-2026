@@ -7,8 +7,14 @@ interface Props {
 export default function MetadataBadge({ result }: Props) {
   const modelType = result.metadata?.model_type as string | undefined;
   const trainingCutoff = result.metadata?.training_cutoff as string | undefined;
-  const scoreline = result.metadata?.scoreline_model as string | undefined;
+  const scoreline = result.metadata?.scoreline_model_status as string | undefined;
   const available = scoreline !== "unavailable";
+  const predictionTs = result.metadata?.prediction_timestamp as string | undefined;
+
+  const timeLabel = predictionTs
+    ? new Date(predictionTs).toLocaleTimeString()
+    : new Date().toLocaleTimeString();
+  const timePrefix = predictionTs ? "Predicted at" : "Viewed at";
 
   return (
     <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500">
@@ -25,7 +31,7 @@ export default function MetadataBadge({ result }: Props) {
         Scoreline model {available ? "active" : "inactive"}
       </span>
       <span className="bg-navy-700 border border-slate-700 px-2 py-1 rounded-full">
-        {new Date().toLocaleTimeString()}
+        {timePrefix} {timeLabel}
       </span>
     </div>
   );

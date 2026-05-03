@@ -39,6 +39,7 @@ export default function TeamCombobox({
   disabledTeam,
 }: Props) {
   const [query, setQuery] = useState("");
+  const inputId = `combobox-${label.toLowerCase().replace(/\s+/g, "-")}`;
 
   const filtered =
     query === ""
@@ -54,16 +55,18 @@ export default function TeamCombobox({
 
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-sm font-semibold text-slate-300 uppercase tracking-wider">
+      <label htmlFor={inputId} className="text-sm font-semibold text-slate-300 uppercase tracking-wider">
         {label}
       </label>
       <Combobox value={value} onChange={onChange}>
         <div className="relative">
           <ComboboxInput
+            id={inputId}
             className={`w-full rounded-lg bg-[#111d3c] border border-slate-600 text-white ${value ? "pl-10" : "pl-4"} py-3 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-[#d4af37] placeholder-slate-500`}
             displayValue={(t: TeamInfo | null) => t?.display_name ?? ""}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={placeholder}
+            aria-label={label}
           />
           {/* Show flag of selected team inside input */}
           {value && (

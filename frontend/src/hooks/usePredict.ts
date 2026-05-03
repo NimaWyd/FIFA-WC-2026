@@ -14,9 +14,6 @@ export function usePredict() {
     try {
       const res = await apiPredict(req);
       setResult(res);
-      setTimeout(() => {
-        document.getElementById("results")?.scrollIntoView({ behavior: "smooth" });
-      }, 100);
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Prediction failed");
     } finally {

@@ -7,12 +7,22 @@ interface Props {
 }
 
 export default function ScorelineGrid({ scorelines }: Props) {
+  if (!scorelines || scorelines.length === 0) {
+    return (
+      <div className="flex flex-col gap-3">
+        <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider">Top Scorelines</h3>
+        <p className="text-slate-500 text-sm">No scoreline probabilities available.</p>
+      </div>
+    );
+  }
+
   const max = Math.max(...scorelines.map((s) => s.probability));
+  const safeMax = max > 0 ? max : 1;
 
   return (
     <div className="flex flex-col gap-3">
       <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider">Top Scorelines</h3>
-      <div className="grid grid-cols-5 gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
         {scorelines.map((s, i) => (
           <div
             key={s.scoreline}
@@ -28,7 +38,7 @@ export default function ScorelineGrid({ scorelines }: Props) {
             <div className="w-full bg-navy-800 rounded-full h-1 mt-2">
               <div
                 className={clsx("h-1 rounded-full", i === 0 ? "bg-gold-500" : "bg-slate-500")}
-                style={{ width: `${(s.probability / max) * 100}%` }}
+                style={{ width: `${(s.probability / safeMax) * 100}%` }}
               />
             </div>
           </div>
