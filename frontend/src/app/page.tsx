@@ -197,7 +197,8 @@ export default function Home() {
                     />
                     <button
                       onClick={swap}
-                      className="mb-0.5 p-2.5 rounded-lg bg-[#111d3c] border border-slate-700 text-slate-400 hover:text-white hover:border-slate-500 transition-colors"
+                      disabled={!homeTeam && !awayTeam}
+                      className="mb-0.5 p-2.5 rounded-lg bg-[#111d3c] border border-slate-700 text-slate-400 hover:text-white hover:border-slate-500 transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:text-slate-400 disabled:hover:border-slate-700"
                       title="Swap teams"
                       aria-label="Swap home and away teams"
                     >

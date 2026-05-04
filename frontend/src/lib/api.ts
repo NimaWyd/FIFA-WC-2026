@@ -2,6 +2,19 @@ import type { TeamInfo, PredictRequest, PredictResponse, ModelInfo } from "./typ
 
 const BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:8000/api/v1";
 
+if (
+  typeof window !== "undefined" &&
+  !process.env.NEXT_PUBLIC_API_BASE_URL &&
+  window.location.hostname !== "localhost" &&
+  window.location.hostname !== "127.0.0.1"
+) {
+  console.warn(
+    "[FIFA Predictor] NEXT_PUBLIC_API_BASE_URL is not set. " +
+    "API calls will target http://127.0.0.1:8000 which will fail in production. " +
+    "Set this variable in your deployment environment."
+  );
+}
+
 const DEFAULT_TIMEOUT_MS = 12_000;
 
 export class ApiError extends Error {

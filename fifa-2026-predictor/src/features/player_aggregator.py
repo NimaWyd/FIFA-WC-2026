@@ -220,7 +220,10 @@ def aggregate_team_player_features(
     # -----------------------------------------------------------------------
     try:
         from src.data.player_identity import CANONICAL_PLAYERS
+    except ImportError:
+        return feats
 
+    try:
         gk_ratings: List[float] = []
         fwd_ratings: List[float] = []
         def_ratings: List[float] = []
@@ -243,8 +246,8 @@ def aggregate_team_player_features(
         if def_ratings:
             feats["defense_player_rating"] = float(np.mean(def_ratings))
 
-    except Exception as exc:
-        log.debug("Position-specific rating aggregation skipped: %s", exc)
+    except (KeyError, TypeError, ValueError) as exc:
+        log.warning("Position-specific rating aggregation failed: %s", exc)
 
     return feats
 
