@@ -418,15 +418,15 @@ class TestTeamDependentScoreModel(unittest.TestCase):
         )
         self.assertGreater(lh_strong, lh_weak)
 
-        # Keep attack constant; weaker away defense → higher home lambda
+        # Keep attack constant; weaker away defense (concedes more) → higher home lambda
         lh_easy, _ = model.predict_lambdas(
             home_attack=1.5, away_attack=1.0,
-            home_defense=1.0, away_defense=0.4,
+            home_defense=1.0, away_defense=2.5,  # weak defense: concedes a lot
             neutral=True,
         )
         lh_hard, _ = model.predict_lambdas(
             home_attack=1.5, away_attack=1.0,
-            home_defense=1.0, away_defense=2.5,
+            home_defense=1.0, away_defense=0.4,  # strong defense: concedes little
             neutral=True,
         )
         self.assertGreater(lh_easy, lh_hard)

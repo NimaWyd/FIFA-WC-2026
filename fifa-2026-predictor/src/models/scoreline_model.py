@@ -5,8 +5,8 @@ whose expected goals depend on each team's attack and defense ratings.
 
 Expected goals formula
 ----------------------
-λ_home = base_home × (home_attack / μ_atk) × (μ_def / away_defense) × home_factor
-λ_away = base_away × (away_attack / μ_atk) × (μ_def / home_defense)
+λ_home = base_home × (home_attack / μ_atk) × (away_defense / μ_def) × home_factor
+λ_away = base_away × (away_attack / μ_atk) × (home_defense / μ_def)
 
 where:
   base_home / base_away  — calibrated from historical average goals
@@ -137,13 +137,13 @@ class TeamDependentScoreModel:
         lambda_home = (
             self.params.base_home_lambda
             * (home_attack / mean_atk)
-            * (mean_def / away_def_safe)
+            * (away_def_safe / mean_def)
             * home_factor
         )
         lambda_away = (
             self.params.base_away_lambda
             * (away_attack / mean_atk)
-            * (mean_def / home_def_safe)
+            * (home_def_safe / mean_def)
         )
         lambda_home = float(np.clip(lambda_home, 0.05, 8.0))
         lambda_away = float(np.clip(lambda_away, 0.05, 8.0))
