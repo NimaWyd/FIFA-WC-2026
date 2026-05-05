@@ -619,6 +619,7 @@ class TestClassWeightTuning:
     def test_draw_probability_lifted_by_class_weights(self):
         """Class weighting must lift draw predictions above unweighted baseline."""
         from src.models.common import (
+            TARGET_MAP,
             build_preprocessor,
             make_chronological_split,
             to_xy,
@@ -647,7 +648,7 @@ class TestClassWeightTuning:
             clf.fit(x_train_t, y_train, sample_weight=sample_weight, verbose=False)
             return clf
 
-        draw_idx = 1  # TARGET_MAP: D=1
+        draw_idx = TARGET_MAP["D"]
 
         clf_weighted = _train_xgb(sample_weight=weights)
         clf_unweighted = _train_xgb()
