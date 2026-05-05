@@ -11,6 +11,7 @@ from sklearn.utils.class_weight import compute_sample_weight
 from xgboost import XGBClassifier
 
 from src.models.common import (
+    IsotonicCalibrationWrapper,
     build_preprocessor,
     ensure_artifact_dir,
     load_feature_data,
@@ -52,6 +53,11 @@ def main() -> None:
         val_size=float(cfg["model"]["val_size"]),
         test_size=float(cfg["model"]["test_size"]),
     )
+    if "date" in train_df.columns and "date" in val_df.columns:
+        assert train_df["date"].max() <= val_df["date"].min(), (
+            f"Chronological split violated: train max ({train_df['date'].max()}) "
+            f"> val min ({val_df['date'].min()})"
+        )
     preprocessor, feature_cols = build_preprocessor(df)
     x_train, y_train = to_xy(train_df, feature_cols)
     x_val, y_val = to_xy(val_df, feature_cols)
@@ -94,10 +100,14 @@ def main() -> None:
     fit_kwargs["sample_weight"] = weights_train
     classifier.fit(x_train_t, y_train, **fit_kwargs)
 
+    calibrated_classifier = IsotonicCalibrationWrapper(classifier)
+    calibrated_classifier.fit(x_val_t, y_val)
+    print("Fitted isotonic calibration on validation set.")
+
     model = Pipeline(
         steps=[
             ("preprocessor", preprocessor),
-            ("classifier", classifier),
+            ("classifier", calibrated_classifier),
         ]
     )
 
@@ -107,6 +117,7 @@ def main() -> None:
     joblib.dump(model, model_path)
     metadata = {
         "model_type": "xgboost",
+        "calibration": "isotonic",
         "features_csv": args.features_csv,
         "split_sizes": {
             "train": len(train_df),
