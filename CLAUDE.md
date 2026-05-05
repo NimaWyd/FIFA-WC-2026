@@ -77,6 +77,12 @@ cp .env.example .env            # set FOOTBALL_DATA_API_KEY if needed
 
 **Config** (`configs/config.yaml`) controls Elo K-factor, form window, recency half-life, H2H window, XGBoost hyperparameters, and backtest settings. Load via `src/utils.py`.
 
+**Rest-days features (issue #48):** raw linear `rest_days` is kept in `TeamStateTracker` internal state but is NOT emitted as a feature. `match_row_builder.py` emits `home/away_rest_days_log = log(1 + rest_days)` and `home/away_long_break = int(rest_days > 21)` instead. Do not add `home_rest_days` / `away_rest_days` back to the feature dict.
+
+**Probability calibration (issue #44):** `xgb.joblib` contains a `sklearn.pipeline.Pipeline` whose `"classifier"` step is an `IsotonicCalibrationWrapper` (defined in `src/models/common.py`), not a raw `XGBClassifier`. The wrapper holds the fitted XGBoost model plus per-class OvR isotonic calibrators. `sklearn.calibration.CalibratedClassifierCV(cv='prefit')` was removed in sklearn 1.6+ — use `IsotonicCalibrationWrapper` instead. After any retraining, the model artifact must be regenerated via `python -m src.models.train_xgb`.
+
+**Val split size (issue #51):** `configs/config.yaml` `model.val_size` is 0.20 (was 0.15). `train_xgb.py` asserts `train_df["date"].max() <= val_df["date"].min()` after the split.
+
 ---
 
 ## Frontend (`frontend/`)
