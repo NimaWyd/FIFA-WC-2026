@@ -571,3 +571,92 @@ class TestTrainingInferenceConsistency:
             if key in inference_row and key in train_row:
                 assert abs(float(inference_row[key]) - float(train_row[key])) < 1e-6, \
                     f"Mismatch for {key}: inference={inference_row[key]}, train={train_row[key]}"
+
+
+# ---------------------------------------------------------------------------
+# Class-weight tuning — draws should be lifted above naive frequency
+# ---------------------------------------------------------------------------
+
+class TestClassWeightTuning:
+    def _make_imbalanced_df(self, n: int = 200) -> pd.DataFrame:
+        """Synthetic feature table with heavy draw underrepresentation (10%)."""
+        np.random.seed(0)
+        dates = pd.date_range("2010-01-01", periods=n, freq="7D")
+        # 60% H, 10% D, 30% A
+        targets = np.random.choice(["H", "D", "A"], size=n, p=[0.60, 0.10, 0.30])
+        return pd.DataFrame({
+            "date": dates,
+            "home_team": "TeamA",
+            "away_team": "TeamB",
+            "competition": "Friendly",
+            "home_confederation": "UEFA",
+            "away_confederation": "UEFA",
+            "tournament_stage": "unknown",
+            "neutral": 0,
+            "home_fifa_rank": 10,
+            "away_fifa_rank": 20,
+            "home_form_last5": np.random.uniform(0.5, 2.5, n),
+            "away_form_last5": np.random.uniform(0.5, 2.5, n),
+            "home_goals_for_last5": np.random.uniform(0.5, 2.5, n),
+            "away_goals_for_last5": np.random.uniform(0.5, 2.5, n),
+            "home_goals_against_last5": np.random.uniform(0.5, 2.0, n),
+            "away_goals_against_last5": np.random.uniform(0.5, 2.0, n),
+            "home_rest_days": 7,
+            "away_rest_days": 7,
+            "home_elo_pre": 1500.0,
+            "away_elo_pre": 1490.0,
+            "elo_diff_home_away": 10.0,
+            "elo_win_prob": 0.51,
+            "form_diff_home_away": 0.0,
+            "goal_balance_diff": 0.0,
+            "rank_diff": -10,
+            "competition_weight": 1,
+            "is_same_confederation": 1,
+            "target": targets,
+            "match_weight": 1.0,
+        })
+
+    def test_draw_probability_lifted_by_class_weights(self):
+        """Class weighting must lift draw predictions above unweighted baseline."""
+        from src.models.common import (
+            build_preprocessor,
+            make_chronological_split,
+            to_xy,
+        )
+        from src.models.train_xgb import build_weighted_sample_weights
+        from xgboost import XGBClassifier
+
+        df = self._make_imbalanced_df(200)
+        train_df, _, _ = make_chronological_split(df, val_size=0.15, test_size=0.15)
+        preprocessor, feature_cols = build_preprocessor(df)
+        x_train, y_train = to_xy(train_df, feature_cols)
+
+        weights = build_weighted_sample_weights(y_train, train_df)
+
+        preprocessor.fit(x_train, y_train)
+        x_train_t = preprocessor.transform(x_train)
+
+        def _train_xgb(sample_weight=None):
+            clf = XGBClassifier(
+                n_estimators=100,
+                objective="multi:softprob",
+                num_class=3,
+                eval_metric="mlogloss",
+                random_state=42,
+            )
+            clf.fit(x_train_t, y_train, sample_weight=sample_weight, verbose=False)
+            return clf
+
+        draw_idx = 1  # TARGET_MAP: D=1
+
+        clf_weighted = _train_xgb(sample_weight=weights)
+        clf_unweighted = _train_xgb()
+
+        mean_draw_prob_weighted = clf_weighted.predict_proba(x_train_t)[:, draw_idx].mean()
+        mean_draw_prob_unweighted = clf_unweighted.predict_proba(x_train_t)[:, draw_idx].mean()
+
+        # Class weighting must lift draw predictions above the unweighted baseline
+        assert mean_draw_prob_weighted > mean_draw_prob_unweighted, (
+            f"weighted draw prob={mean_draw_prob_weighted:.4f} not > "
+            f"unweighted draw prob={mean_draw_prob_unweighted:.4f}"
+        )
