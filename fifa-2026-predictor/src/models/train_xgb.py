@@ -7,6 +7,7 @@ import json
 
 import joblib
 from sklearn.pipeline import Pipeline
+from sklearn.utils.class_weight import compute_sample_weight
 from xgboost import XGBClassifier
 
 from src.models.common import (
@@ -24,6 +25,21 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--features-csv", default="data/processed/features.csv")
     parser.add_argument("--model-name", default="xgb")
     return parser.parse_args()
+
+
+def build_weighted_sample_weights(
+    y: "np.ndarray",
+    df: "pd.DataFrame",
+) -> "np.ndarray":
+    """Return sample weights combining class balance and time-decay.
+
+    Multiplies inverse-frequency class weights by the per-row ``match_weight``
+    column when present, so recent draws are weighted highest.
+    """
+    class_weights = compute_sample_weight("balanced", y)
+    if "match_weight" in df.columns:
+        return df["match_weight"].values * class_weights
+    return class_weights
 
 
 def main() -> None:
@@ -63,13 +79,11 @@ def main() -> None:
         early_stopping_rounds=early_stopping_rounds,
     )
 
-    # Extract time-decay sample weights if the feature table provides them
-    weights_train = (
-        train_df["match_weight"].values if "match_weight" in train_df.columns else None
+    weights_train = build_weighted_sample_weights(y_train, train_df)
+    print(
+        f"Using combined class+time-decay sample weights "
+        f"(min={weights_train.min():.3f}, max={weights_train.max():.3f})"
     )
-    if weights_train is not None:
-        print(f"Using time-decay sample weights "
-              f"(min={weights_train.min():.3f}, max={weights_train.max():.3f})")
 
     preprocessor.fit(x_train, y_train)
     x_train_t = preprocessor.transform(x_train)
@@ -77,8 +91,7 @@ def main() -> None:
     fit_kwargs: dict = {"verbose": False}
     if early_stopping_rounds is not None and early_stopping_rounds > 0:
         fit_kwargs["eval_set"] = [(x_val_t, y_val)]
-    if weights_train is not None:
-        fit_kwargs["sample_weight"] = weights_train
+    fit_kwargs["sample_weight"] = weights_train
     classifier.fit(x_train_t, y_train, **fit_kwargs)
 
     model = Pipeline(
