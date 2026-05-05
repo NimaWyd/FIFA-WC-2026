@@ -15,10 +15,16 @@ Phase 4 additions
 - Derived difference features: attack_diff_w5, defense_diff_w5,
   adj_form_diff_w5, form_diff_w3, form_diff_w10
 - Tournament stage normalization + stage_importance numeric feature
+
+Issue #48
+---------
+- rest_days replaced with log-scale: home/away_rest_days_log = log(1 + rest_days)
+- Added binary long-break flag: home/away_long_break = int(rest_days > 21)
 """
 
 from __future__ import annotations
 
+import math
 from typing import Any
 
 import pandas as pd
@@ -115,6 +121,13 @@ def build_match_row(
 
     h2h = tracker.h2h_stats(home_team, away_team, window=h2h_window)
 
+    # --- Issue #48: log-scale rest days + long-break flag ---
+
+    home_rest_days_log = math.log(1 + home_rest)
+    away_rest_days_log = math.log(1 + away_rest)
+    home_long_break = int(home_rest > 21)
+    away_long_break = int(away_rest > 21)
+
     return {
         # Match metadata
         "date": match_date,
@@ -143,9 +156,11 @@ def build_match_row(
         "away_goals_against_last5": away_ga,
         "form_diff_home_away": home_form - away_form,
         "goal_balance_diff": (home_gf - home_ga) - (away_gf - away_ga),
-        # Rest
-        "home_rest_days": home_rest,
-        "away_rest_days": away_rest,
+        # Rest (Issue #48: log-scale + long-break flag; raw linear removed)
+        "home_rest_days_log": home_rest_days_log,
+        "away_rest_days_log": away_rest_days_log,
+        "home_long_break": home_long_break,
+        "away_long_break": away_long_break,
         # Derived team context
         "rank_diff": int(home_fifa_rank) - int(away_fifa_rank),
         "competition_weight": get_competition_weight(competition),

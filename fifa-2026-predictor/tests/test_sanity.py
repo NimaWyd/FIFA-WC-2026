@@ -234,7 +234,8 @@ class TestBuildMatchRow(unittest.TestCase):
             "home_form_last5", "away_form_last5",
             "home_goals_for_last5", "away_goals_for_last5",
             "home_goals_against_last5", "away_goals_against_last5",
-            "home_rest_days", "away_rest_days",
+            "home_rest_days_log", "away_rest_days_log",
+            "home_long_break", "away_long_break",
             "elo_diff_home_away", "form_diff_home_away", "goal_balance_diff",
             "rank_diff", "competition_weight", "is_same_confederation",
         ]

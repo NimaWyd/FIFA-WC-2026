@@ -9,6 +9,7 @@ Run with pytest:
 
 from __future__ import annotations
 
+import math
 import sys
 import tempfile
 import unittest
@@ -73,6 +74,8 @@ def _make_feature_df(n: int = 300, seed: int = 0) -> pd.DataFrame:
     dates = pd.date_range("2010-01-01", periods=n, freq="3D")
     base_elo = 1500 + rng.normal(0, 100, n)
     elo_diff = rng.normal(0, 50, n)
+    rest_days_home = rng.integers(1, 30, n).astype(float)
+    rest_days_away = rng.integers(1, 30, n).astype(float)
     return pd.DataFrame({
         "date": dates,
         "home_team": rng.choice(["Brazil", "France", "Germany", "Spain"], n),
@@ -95,8 +98,10 @@ def _make_feature_df(n: int = 300, seed: int = 0) -> pd.DataFrame:
         "away_goals_for_last5": rng.uniform(0, 3, n),
         "home_goals_against_last5": rng.uniform(0, 3, n),
         "away_goals_against_last5": rng.uniform(0, 3, n),
-        "home_rest_days": rng.integers(1, 30, n).astype(float),
-        "away_rest_days": rng.integers(1, 30, n).astype(float),
+        "home_rest_days_log": np.log1p(rest_days_home),
+        "away_rest_days_log": np.log1p(rest_days_away),
+        "home_long_break": (rest_days_home > 21).astype(int),
+        "away_long_break": (rest_days_away > 21).astype(int),
         "form_diff_home_away": rng.normal(0, 1, n),
         "goal_balance_diff": rng.normal(0, 1, n),
         "rank_diff": rng.integers(-50, 50, n).astype(float),

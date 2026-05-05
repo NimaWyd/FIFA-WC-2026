@@ -13,6 +13,7 @@ Covers:
 
 from __future__ import annotations
 
+import math
 import sys
 from pathlib import Path
 
@@ -377,6 +378,7 @@ class TestNewModelsInEvaluationFramework:
         np.random.seed(42)
         dates = pd.date_range("2015-01-01", periods=n, freq="7D")
         targets = np.random.choice(["H", "D", "A"], size=n, p=[0.45, 0.25, 0.30])
+        rest_days = 7
         df = pd.DataFrame({
             "date": dates,
             "home_team": "TeamA",
@@ -394,8 +396,10 @@ class TestNewModelsInEvaluationFramework:
             "away_goals_for_last5": np.random.uniform(0.5, 2.5, n),
             "home_goals_against_last5": np.random.uniform(0.5, 2.0, n),
             "away_goals_against_last5": np.random.uniform(0.5, 2.0, n),
-            "home_rest_days": 7,
-            "away_rest_days": 7,
+            "home_rest_days_log": math.log(1 + rest_days),
+            "away_rest_days_log": math.log(1 + rest_days),
+            "home_long_break": int(rest_days > 21),
+            "away_long_break": int(rest_days > 21),
             "home_elo_pre": 1500.0,
             "away_elo_pre": 1490.0,
             "elo_diff_home_away": 10.0,
@@ -584,6 +588,7 @@ class TestClassWeightTuning:
         dates = pd.date_range("2010-01-01", periods=n, freq="7D")
         # 60% H, 10% D, 30% A
         targets = np.random.choice(["H", "D", "A"], size=n, p=[0.60, 0.10, 0.30])
+        rest_days = 7
         return pd.DataFrame({
             "date": dates,
             "home_team": "TeamA",
@@ -601,8 +606,10 @@ class TestClassWeightTuning:
             "away_goals_for_last5": np.random.uniform(0.5, 2.5, n),
             "home_goals_against_last5": np.random.uniform(0.5, 2.0, n),
             "away_goals_against_last5": np.random.uniform(0.5, 2.0, n),
-            "home_rest_days": 7,
-            "away_rest_days": 7,
+            "home_rest_days_log": math.log(1 + rest_days),
+            "away_rest_days_log": math.log(1 + rest_days),
+            "home_long_break": int(rest_days > 21),
+            "away_long_break": int(rest_days > 21),
             "home_elo_pre": 1500.0,
             "away_elo_pre": 1490.0,
             "elo_diff_home_away": 10.0,

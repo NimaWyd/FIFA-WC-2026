@@ -7,6 +7,7 @@ from typing import Any
 
 import numpy as np
 import pandas as pd
+from sklearn.base import BaseEstimator
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
@@ -67,8 +68,10 @@ def build_preprocessor(df: pd.DataFrame) -> tuple[ColumnTransformer, list[str]]:
         "away_goals_for_last5",
         "home_goals_against_last5",
         "away_goals_against_last5",
-        "home_rest_days",
-        "away_rest_days",
+        "home_rest_days_log",
+        "away_rest_days_log",
+        "home_long_break",
+        "away_long_break",
         "home_elo_pre",
         "away_elo_pre",
         "elo_diff_home_away",
@@ -146,6 +149,43 @@ def to_xy(df: pd.DataFrame, feature_cols: list[str]) -> tuple[pd.DataFrame, np.n
         raise ValueError(f"Unknown target label(s) in data: {bad}")
     y = y_series.astype(int).values
     return x, y
+
+
+class IsotonicCalibrationWrapper(BaseEstimator):
+    """Wraps a fitted classifier with per-class OvR isotonic calibration.
+
+    Replaces sklearn's CalibratedClassifierCV(cv='prefit') which was removed
+    in sklearn 1.6+. Fits one IsotonicRegression per class on the validation
+    set probabilities, then renormalizes to a valid probability simplex.
+    """
+
+    def __init__(self, classifier: Any) -> None:
+        self.classifier = classifier
+        self._calibrators: list[Any] | None = None
+        self.classes_: np.ndarray | None = None
+
+    def fit(self, X: Any, y: np.ndarray) -> "IsotonicCalibrationWrapper":
+        from sklearn.isotonic import IsotonicRegression
+
+        probs = self.classifier.predict_proba(X)
+        self.classes_ = self.classifier.classes_
+        self._calibrators = []
+        for i, cls in enumerate(self.classes_):
+            ir = IsotonicRegression(out_of_bounds="clip")
+            ir.fit(probs[:, i], (y == cls).astype(int))
+            self._calibrators.append(ir)
+        return self
+
+    def predict_proba(self, X: Any) -> np.ndarray:
+        probs = self.classifier.predict_proba(X)
+        cal = np.column_stack(
+            [c.predict(probs[:, i]) for i, c in enumerate(self._calibrators)]
+        )
+        row_sums = cal.sum(axis=1, keepdims=True)
+        return cal / np.maximum(row_sums, 1e-9)
+
+    def predict(self, X: Any) -> np.ndarray:
+        return self.classes_[self.predict_proba(X).argmax(axis=1)]
 
 
 def ensure_artifact_dir(path_str: str) -> Path:
