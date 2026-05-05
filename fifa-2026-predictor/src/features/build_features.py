@@ -45,6 +45,7 @@ def build_feature_table(
     """
     default_fifa_rank = int(cfg["features"]["default_fifa_rank"])
     h2h_window = int(cfg["features"].get("h2h_window", 10))
+    elo_inactivity_halflife = float(cfg["features"].get("elo_inactivity_halflife", 0.0))
 
     # Rename 'tournament' → 'competition' when results.csv is the source
     if "tournament" in matches.columns and "competition" not in matches.columns:
@@ -88,6 +89,7 @@ def build_feature_table(
             away_fifa_rank=away_rank,
             tournament_stage=tournament_stage,
             h2h_window=h2h_window,
+            elo_inactivity_halflife=elo_inactivity_halflife,
         )
         # Registry: merge any extra features from enabled blocks.
         # The player_aggregate block is disabled by default; enabling it

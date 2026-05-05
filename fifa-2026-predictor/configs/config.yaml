@@ -23,6 +23,10 @@ features:
   h2h_window: 10
   # Phase 7: draw-rate window (last N matches per team)
   draw_rate_window: 5
+  # Issue #50: Elo inactivity decay — Elo regresses toward base rating (1500)
+  # the longer a team has been inactive.  Half-life in days: after this many
+  # days of rest the gap from 1500 is halved.  Set to 0 to disable.
+  elo_inactivity_halflife: 180
 
 model:
   test_size: 0.15

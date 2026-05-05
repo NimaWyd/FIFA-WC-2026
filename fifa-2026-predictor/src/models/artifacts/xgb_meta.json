@@ -66,7 +66,10 @@
     "h2h_home_win_rate",
     "h2h_draw_rate",
     "h2h_goal_diff",
-    "h2h_n_matches"
+    "h2h_n_matches",
+    "home_elo_effective",
+    "away_elo_effective",
+    "elo_diff_effective"
   ],
   "early_stopping_rounds": 25,
   "best_iteration": 0

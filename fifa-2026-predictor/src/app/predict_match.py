@@ -67,6 +67,7 @@ def build_pre_match_row(
         home_fifa_rank=home_fifa_rank,
         away_fifa_rank=away_fifa_rank,
         tournament_stage=tournament_stage,
+        elo_inactivity_halflife=float(cfg["features"].get("elo_inactivity_halflife", 0.0)),
     )
 
     # Registry: merge any extra features from enabled blocks (e.g. player_aggregate).

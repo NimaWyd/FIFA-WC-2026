@@ -111,6 +111,12 @@ def build_preprocessor(df: pd.DataFrame) -> tuple[ColumnTransformer, list[str]]:
         "form_diff_w3",
         "form_diff_w10",
     ]
+    # Issue #50: inactivity-decayed Elo (included when present)
+    _phase8_numeric = [
+        "home_elo_effective",
+        "away_elo_effective",
+        "elo_diff_effective",
+    ]
     # Phase 7: draw-rate and head-to-head features (included when present)
     _phase7_numeric = [
         "home_draw_rate_w5",
@@ -121,10 +127,11 @@ def build_preprocessor(df: pd.DataFrame) -> tuple[ColumnTransformer, list[str]]:
         "h2h_goal_diff",
         "h2h_n_matches",
     ]
-    # Only include Phase 4 / Phase 7 columns that actually exist in this DataFrame
+    # Only include Phase 4 / Phase 7 / Phase 8 columns that actually exist in this DataFrame
     present_phase4 = [c for c in _phase4_numeric if c in df.columns]
     present_phase7 = [c for c in _phase7_numeric if c in df.columns]
-    numeric_features = _base_numeric + present_phase4 + present_phase7
+    present_phase8 = [c for c in _phase8_numeric if c in df.columns]
+    numeric_features = _base_numeric + present_phase4 + present_phase7 + present_phase8
     used_features = categorical_features + numeric_features
 
     missing = sorted(set(used_features) - set(df.columns))

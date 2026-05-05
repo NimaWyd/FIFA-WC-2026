@@ -20,6 +20,13 @@ Issue #48
 ---------
 - rest_days replaced with log-scale: home/away_rest_days_log = log(1 + rest_days)
 - Added binary long-break flag: home/away_long_break = int(rest_days > 21)
+
+Issue #50
+---------
+- Added elo_inactivity_halflife parameter (default 0 = disabled).
+- When enabled, home/away_elo_effective regresses toward 1500 as rest_days
+  increases: elo_effective = 1500 + (elo - 1500) * exp(-rest_days / halflife).
+  Emits home_elo_effective, away_elo_effective, elo_diff_effective.
 """
 
 from __future__ import annotations
@@ -38,6 +45,9 @@ from src.features.competition_weights import (
 from src.features.state_tracker import TeamStateTracker
 
 
+_ELO_BASE = 1500.0  # matches EloConfig.base_rating
+
+
 def build_match_row(
     tracker: TeamStateTracker,
     home_team: str,
@@ -51,6 +61,7 @@ def build_match_row(
     away_fifa_rank: int,
     tournament_stage: str,
     h2h_window: int = 10,
+    elo_inactivity_halflife: float = 0.0,
 ) -> dict[str, Any]:
     """Return a pre-match feature dict from the current tracker state.
 
@@ -128,6 +139,16 @@ def build_match_row(
     home_long_break = int(home_rest > 21)
     away_long_break = int(away_rest > 21)
 
+    # --- Issue #50: time-decayed Elo (regresses toward base rating on inactivity) ---
+
+    if elo_inactivity_halflife > 0.0:
+        decay_h = math.exp(-home_rest / elo_inactivity_halflife)
+        decay_a = math.exp(-away_rest / elo_inactivity_halflife)
+    else:
+        decay_h = decay_a = 1.0
+    home_elo_effective = _ELO_BASE + (home_elo - _ELO_BASE) * decay_h
+    away_elo_effective = _ELO_BASE + (away_elo - _ELO_BASE) * decay_a
+
     return {
         # Match metadata
         "date": match_date,
@@ -147,6 +168,10 @@ def build_match_row(
         "away_elo_pre": away_elo,
         "elo_diff_home_away": home_elo - away_elo,
         "elo_win_prob": tracker.elo_win_prob(home_team, away_team, neutral),
+        # Issue #50: inactivity-decayed Elo
+        "home_elo_effective": home_elo_effective,
+        "away_elo_effective": away_elo_effective,
+        "elo_diff_effective": home_elo_effective - away_elo_effective,
         # Legacy form / goals (Phase 1–3 backward compat, window = form_window=5)
         "home_form_last5": home_form,
         "away_form_last5": away_form,

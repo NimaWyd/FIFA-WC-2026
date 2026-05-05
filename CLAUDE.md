@@ -83,6 +83,8 @@ cp .env.example .env            # set FOOTBALL_DATA_API_KEY if needed
 
 **Val split size (issue #51):** `configs/config.yaml` `model.val_size` is 0.20 (was 0.15). `train_xgb.py` asserts `train_df["date"].max() <= val_df["date"].min()` after the split.
 
+**Time-decayed Elo (issue #50):** `build_match_row()` accepts `elo_inactivity_halflife: float = 0.0`. When >0, emits `home/away_elo_effective = 1500 + (elo - 1500) * exp(-rest_days / halflife)` and `elo_diff_effective`. Config sets `features.elo_inactivity_halflife: 180`. These features are optional in `common.py` (present_phase8 block) so test fixtures without them still work. Both `build_features.py` and `predict_match.py` pass the config value.
+
 ---
 
 ## Frontend (`frontend/`)
