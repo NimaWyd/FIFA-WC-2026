@@ -639,7 +639,7 @@ class TestClassWeightTuning:
         preprocessor, feature_cols = build_preprocessor(df)
         x_train, y_train = to_xy(train_df, feature_cols)
 
-        weights = build_weighted_sample_weights(y_train, train_df)
+        weights = build_weighted_sample_weights(y_train)
 
         preprocessor.fit(x_train, y_train)
         x_train_t = preprocessor.transform(x_train)

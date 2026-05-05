@@ -3,9 +3,9 @@
   "calibration": "isotonic",
   "features_csv": "data/processed/features.csv",
   "split_sizes": {
-    "train": 31989,
-    "val": 9842,
-    "test": 7383
+    "train": 19832,
+    "val": 6102,
+    "test": 4577
   },
   "feature_columns": [
     "competition",
@@ -72,5 +72,5 @@
     "elo_diff_effective"
   ],
   "early_stopping_rounds": 25,
-  "best_iteration": 0
+  "best_iteration": 149
 }

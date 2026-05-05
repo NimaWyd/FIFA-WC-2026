@@ -6,6 +6,7 @@ import argparse
 import json
 
 import joblib
+import pandas as pd
 from sklearn.pipeline import Pipeline
 from sklearn.utils.class_weight import compute_sample_weight
 from xgboost import XGBClassifier
@@ -28,19 +29,16 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def build_weighted_sample_weights(
-    y: "np.ndarray",
-    df: "pd.DataFrame",
-) -> "np.ndarray":
-    """Return sample weights combining class balance and time-decay.
+def build_weighted_sample_weights(y: "np.ndarray") -> "np.ndarray":
+    """Return balanced class weights for XGBoost training.
 
-    Multiplies inverse-frequency class weights by the per-row ``match_weight``
-    column when present, so recent draws are weighted highest.
+    Time-decay (match_weight) is intentionally excluded: multiplying class
+    weights by near-zero time-decay values for training data from 1993-2015
+    collapses gradients to ~0, causing early stopping at round 0.  The
+    recency signal is already captured by Elo ratings and rolling form
+    features; class balance is the only correction needed here.
     """
-    class_weights = compute_sample_weight("balanced", y)
-    if "match_weight" in df.columns:
-        return df["match_weight"].values * class_weights
-    return class_weights
+    return compute_sample_weight("balanced", y)
 
 
 def main() -> None:
@@ -48,6 +46,12 @@ def main() -> None:
     args = parse_args()
 
     df = load_feature_data(args.features_csv)
+    min_train_year = int(cfg["model"].get("min_train_year", 0))
+    if min_train_year > 0:
+        n_before = len(df)
+        df = df[pd.to_datetime(df["date"]).dt.year >= min_train_year].reset_index(drop=True)
+        print(f"Filtered to {min_train_year}+: {n_before} -> {len(df)} rows")
+
     train_df, val_df, test_df = make_chronological_split(
         df,
         val_size=float(cfg["model"]["val_size"]),
@@ -85,11 +89,8 @@ def main() -> None:
         early_stopping_rounds=early_stopping_rounds,
     )
 
-    weights_train = build_weighted_sample_weights(y_train, train_df)
-    print(
-        f"Using combined class+time-decay sample weights "
-        f"(min={weights_train.min():.3f}, max={weights_train.max():.3f})"
-    )
+    weights_train = build_weighted_sample_weights(y_train)
+    print(f"Using balanced class weights (min={weights_train.min():.3f}, max={weights_train.max():.3f})")
 
     preprocessor.fit(x_train, y_train)
     x_train_t = preprocessor.transform(x_train)

@@ -81,6 +81,10 @@ cp .env.example .env            # set FOOTBALL_DATA_API_KEY if needed
 
 **Probability calibration (issue #44):** `xgb.joblib` contains a `sklearn.pipeline.Pipeline` whose `"classifier"` step is an `IsotonicCalibrationWrapper` (defined in `src/models/common.py`), not a raw `XGBClassifier`. The wrapper holds the fitted XGBoost model plus per-class OvR isotonic calibrators. `sklearn.calibration.CalibratedClassifierCV(cv='prefit')` was removed in sklearn 1.6+ — use `IsotonicCalibrationWrapper` instead. After any retraining, the model artifact must be regenerated via `python -m src.models.train_xgb`.
 
+**Training data filter (`model.min_train_year: 1993`):** `train_xgb.py` filters `features.csv` to 1993+ before splitting. `features.csv` still contains all history (needed for accurate Elo tracker state). Pre-1993 data is excluded from XGBoost training because (a) pre-modern football is fundamentally different and (b) near-zero time-decay weights on ancient matches collapse XGBoost gradients → `best_iteration=0`. Without this filter the model degenerates to always predicting "Home" (0.478 accuracy).
+
+**XGBoost sample weights:** `build_weighted_sample_weights()` now uses only balanced class weights (not `match_weight * class_weight`). Time-decay multiplying class weights caused gradients to collapse when training on pre-2015 data. The recency signal is already captured by Elo/form features.
+
 **Val split size (issue #51):** `configs/config.yaml` `model.val_size` is 0.20 (was 0.15). `train_xgb.py` asserts `train_df["date"].max() <= val_df["date"].min()` after the split.
 
 **Time-decayed Elo (issue #50):** `build_match_row()` accepts `elo_inactivity_halflife: float = 0.0`. When >0, emits `home/away_elo_effective = 1500 + (elo - 1500) * exp(-rest_days / halflife)` and `elo_diff_effective`. Config sets `features.elo_inactivity_halflife: 180`. These features are optional in `common.py` (present_phase8 block) so test fixtures without them still work. Both `build_features.py` and `predict_match.py` pass the config value.

@@ -29,6 +29,11 @@ features:
   elo_inactivity_halflife: 180
 
 model:
+  # Only use matches from this year onward for XGB training/val/test splits.
+  # features.csv still contains all history (needed for accurate Elo tracker
+  # state), but pre-modern football is too different to be useful as training
+  # signal and its near-zero time-decay weights cause XGBoost to not learn.
+  min_train_year: 1993
   test_size: 0.15
   val_size: 0.20
   logistic_max_iter: 1500
