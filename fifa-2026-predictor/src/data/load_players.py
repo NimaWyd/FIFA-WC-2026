@@ -124,6 +124,12 @@ def load_player_match_stats(csv_path: Optional[str] = None) -> pd.DataFrame:
     if missing:
         log.warning("Player match stats missing columns %s – returning empty frame", missing)
         return pd.DataFrame(columns=PLAYER_MATCH_STAT_COLUMNS)
+    stat_cols = ["minutes_played", "goals", "assists", "yellow_cards", "red_cards"]
+    missing_stats = [c for c in stat_cols if c not in raw.columns]
+    if missing_stats:
+        log.warning(
+            "Player match stats missing stat columns %s — these will be NaN", missing_stats
+        )
     for col in PLAYER_MATCH_STAT_COLUMNS:
         if col not in raw.columns:
             raw[col] = None
