@@ -72,8 +72,12 @@ class EnsembleModel:
         """Get (n, 3) probabilities ordered [A=0, D=1, H=2] from any model type."""
         from src.evaluation.baselines import MLPModel
         if isinstance(model, MLPModel):
-            # MLPModel.predict_proba already reorders to [A=0, D=1, H=2]
-            return model.predict_proba(X)
+            # MLPModel.predict_proba calls to_xy which requires a 'target' column.
+            # Add a dummy column when absent (inference path); to_xy discards it anyway.
+            X_in = X.copy() if "target" not in X.columns else X
+            if "target" not in X_in.columns:
+                X_in["target"] = "H"
+            return model.predict_proba(X_in)
         # sklearn Pipeline: reorder by classes_ to guarantee [A=0, D=1, H=2]
         raw = model.predict_proba(X)
         classes = np.asarray(model.named_steps["classifier"].classes_).astype(int).ravel()
