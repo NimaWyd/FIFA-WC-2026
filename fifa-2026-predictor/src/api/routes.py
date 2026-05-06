@@ -6,9 +6,12 @@ typed response objects.  No feature engineering or model logic here.
 
 from __future__ import annotations
 
+import logging
 from typing import Optional
 
 from fastapi import APIRouter, HTTPException, Query
+
+log = logging.getLogger(__name__)
 
 from src.api import schemas, services
 
@@ -83,8 +86,16 @@ def predict(request: schemas.PredictRequest) -> schemas.PredictResponse:
             tournament_stage=request.tournament_stage,
         )
     except RuntimeError as exc:
+        log.error(
+            "Prediction service unavailable — home=%s away=%s date=%s: %s",
+            request.home_team, request.away_team, request.match_date, exc,
+        )
         raise HTTPException(status_code=503, detail=str(exc))
     except Exception as exc:
+        log.error(
+            "Prediction failed unexpectedly — home=%s away=%s date=%s: %s",
+            request.home_team, request.away_team, request.match_date, exc,
+        )
         raise HTTPException(status_code=500, detail=f"Prediction failed: {exc}")
 
     return schemas.PredictResponse(
