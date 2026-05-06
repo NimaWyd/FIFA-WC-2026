@@ -9,6 +9,9 @@ interface Props {
 }
 
 export default function ProbabilityBars({ probabilities, homeTeam, awayTeam }: Props) {
+  const sum = probabilities.home_win + probabilities.draw + probabilities.away_win;
+  const malformed = Math.abs(sum - 1.0) > 0.01;
+
   const bars = [
     { label: homeTeam, value: probabilities.home_win, color: "bg-pitch-400", glow: "shadow-pitch-400/50" },
     { label: "Draw", value: probabilities.draw, color: "bg-slate-500", glow: "" },
@@ -19,6 +22,11 @@ export default function ProbabilityBars({ probabilities, homeTeam, awayTeam }: P
   return (
     <div className="flex flex-col gap-3">
       <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider">Match Outcome</h3>
+      {malformed && (
+        <p className="text-xs text-amber-400">
+          Warning: probabilities sum to {(sum * 100).toFixed(1)}% — data may be malformed.
+        </p>
+      )}
       {bars.map((bar, i) => (
         <div key={bar.label} className="flex items-center gap-3">
           <span className="w-32 text-sm text-slate-300 truncate text-right">{bar.label}</span>
