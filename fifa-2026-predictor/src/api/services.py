@@ -57,7 +57,7 @@ def _get_model() -> Any:
 
     artifact_dir = PROJECT_ROOT / _get_cfg()["paths"]["trained_model_dir"]
     # Prefer XGBoost; fall back to logistic regression
-    for name in ("xgb.joblib", "logreg.joblib"):
+    for name in ("ensemble.joblib", "xgb.joblib", "logreg.joblib"):
         path = artifact_dir / name
         if path.exists():
             _model = joblib.load(path)
