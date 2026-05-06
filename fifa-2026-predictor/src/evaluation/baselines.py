@@ -129,12 +129,17 @@ class LogRegModel(BaseModel):
 
     name = "logreg"
 
-    def __init__(self, max_iter: int = 1500) -> None:
+    def __init__(self, max_iter: int = 1500, min_train_year: int = 0) -> None:
         self._max_iter = max_iter
+        self._min_train_year = min_train_year
         self._pipeline: Pipeline | None = None
         self._feature_cols: list[str] | None = None
 
     def fit(self, train_df: pd.DataFrame) -> None:
+        if self._min_train_year > 0 and "date" in train_df.columns:
+            train_df = train_df[
+                pd.to_datetime(train_df["date"]).dt.year >= self._min_train_year
+            ].reset_index(drop=True)
         preprocessor, feature_cols = build_preprocessor(train_df)
         self._feature_cols = feature_cols
         X, y = to_xy(train_df, feature_cols)
@@ -307,11 +312,16 @@ class MLPModel(BaseModel):
 
     name = "mlp"
 
-    def __init__(self) -> None:
+    def __init__(self, min_train_year: int = 0) -> None:
+        self._min_train_year = min_train_year
         self._pipeline = None
         self._feature_cols = None
 
     def fit(self, train_df: pd.DataFrame) -> None:
+        if self._min_train_year > 0 and "date" in train_df.columns:
+            train_df = train_df[
+                pd.to_datetime(train_df["date"]).dt.year >= self._min_train_year
+            ].reset_index(drop=True)
         from sklearn.neural_network import MLPClassifier
 
         preprocessor, feature_cols = build_preprocessor(train_df)
@@ -368,13 +378,15 @@ def _reorder_to_012(raw: np.ndarray, classes: np.ndarray) -> np.ndarray:
 
 def all_models(cfg: dict | None = None) -> list[BaseModel]:
     """Return one fresh instance of every model in the evaluation suite."""
-    max_iter = int((cfg or {}).get("model", {}).get("logistic_max_iter", 1500))
+    _cfg = cfg or {}
+    max_iter = int(_cfg.get("model", {}).get("logistic_max_iter", 1500))
+    min_train_year = int(_cfg.get("model", {}).get("min_train_year", 0))
     return [
         MostFrequentBaseline(),
         ClassPriorBaseline(),
         EloOnlyBaseline(),
-        LogRegModel(max_iter=max_iter),
+        LogRegModel(max_iter=max_iter, min_train_year=min_train_year),
         XGBoostModel(cfg=cfg),
         XGBoostTunedModel(cfg=cfg),
-        MLPModel(),
+        MLPModel(min_train_year=min_train_year),
     ]
