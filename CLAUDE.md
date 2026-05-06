@@ -69,7 +69,9 @@ cp .env.example .env            # set FOOTBALL_DATA_API_KEY if needed
 - `src/data/schema.py` — defines the canonical column names and dtypes for `matches_clean.csv` and `features.csv`.
 
 **Models saved under** `src/models/artifacts/`:
-- `xgb.joblib` / `logreg.joblib` — outcome classifier (H/D/A probabilities)
+- `ensemble.joblib` — **default model served by the API**; `EnsembleModel` (defined in `src/models/ensemble_model.py`) blending XGBoost + LogReg + MLP with per-class weights + draw submodel adjustment. Retrain via `python -m src.models.train_ensemble` (requires xgb, logreg, and draw_submodel artifacts to exist first).
+- `draw_submodel.joblib` — binary LogReg classifier for P(Draw); retrain via `python -m src.models.train_draw_submodel`
+- `xgb.joblib` / `logreg.joblib` — individual outcome classifiers (H/D/A probabilities)
 - `poisson_params.json` — legacy global Poisson params
 - `scoreline_params.json` — team-dependent Poisson params (used at inference)
 
@@ -88,6 +90,8 @@ cp .env.example .env            # set FOOTBALL_DATA_API_KEY if needed
 **Val split size (issue #51):** `configs/config.yaml` `model.val_size` is 0.20 (was 0.15). `train_xgb.py` asserts `train_df["date"].max() <= val_df["date"].min()` after the split.
 
 **Time-decayed Elo (issue #50):** `build_match_row()` accepts `elo_inactivity_halflife: float = 0.0`. When >0, emits `home/away_elo_effective = 1500 + (elo - 1500) * exp(-rest_days / halflife)` and `elo_diff_effective`. Config sets `features.elo_inactivity_halflife: 180`. These features are optional in `common.py` (present_phase8 block) so test fixtures without them still work. Both `build_features.py` and `predict_match.py` pass the config value.
+
+**Ensemble model (issues #43, #46):** `EnsembleModel` in `src/models/ensemble_model.py` blends XGBoost + LogReg + MLP with per-class weights optimized on the val set via SLSQP, then applies a post-hoc draw probability adjustment using a dedicated binary draw submodel (`draw_submodel.joblib`). `services.py` loads `ensemble.joblib` first (preference order: ensemble → xgb → logreg). `EnsembleModel` exposes `named_steps["classifier"]` and `classes_` for drop-in compatibility with the existing sklearn Pipeline interface. Full retraining order: `train_xgb` → `train_logreg` → `train_draw_submodel` → `train_ensemble`. The `MLPModel` (from `baselines.py`) is trained fresh inside `train_ensemble.py` and stored in the ensemble artifact — it is not saved as a standalone `.joblib`. When calling `EnsembleModel.predict_proba` at inference time, a dummy `target` column is added internally before passing to `MLPModel` (which calls `to_xy` expecting that column).
 
 ---
 
