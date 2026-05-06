@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+from typing import Optional
+
 import numpy as np
+import pandas as pd
 from sklearn.calibration import calibration_curve
 from sklearn.metrics import (
     accuracy_score,
@@ -125,4 +128,76 @@ def compute_metrics(
         "confusion_matrix": cm.tolist(),
         "calibration": calibration,
         "n_samples": int(len(y_true)),
+    }
+
+
+def compute_metrics_by_group(
+    y_true: np.ndarray,
+    y_prob: np.ndarray,
+    groups: "pd.Series",
+    min_samples: int = 30,
+    flag_threshold: float = 0.10,
+) -> dict:
+    """Compute accuracy, precision, recall, and F1 broken down by group label.
+
+    Intended for confederation-pair analysis but works with any string grouping.
+
+    Parameters
+    ----------
+    y_true:
+        Integer labels in {0=A, 1=D, 2=H}.
+    y_prob:
+        (n, 3) probability array ordered [A, D, H].
+    groups:
+        Series of group labels aligned with y_true / y_prob rows.
+    min_samples:
+        Groups with fewer samples are reported but marked ``low_sample=True``.
+    flag_threshold:
+        Groups whose accuracy is more than this fraction below the global
+        average are flagged with ``flagged=True``.
+
+    Returns
+    -------
+    dict with keys:
+        global_accuracy : float
+        by_group        : {group_label: {accuracy, n_samples, precision_macro,
+                           recall_macro, f1_macro, low_sample, flagged}}
+        flagged_groups  : list of group labels below threshold
+    """
+    groups = pd.Series(groups).reset_index(drop=True)
+    y_true_s = pd.Series(y_true)
+    y_prob_arr = np.asarray(y_prob)
+
+    global_acc = float(accuracy_score(y_true, np.argmax(y_prob_arr, axis=1)))
+
+    by_group: dict = {}
+    for label in sorted(groups.unique()):
+        mask = (groups == label).values
+        if mask.sum() == 0:
+            continue
+        yt = y_true_s[mask].values
+        yp = y_prob_arr[mask]
+        y_pred = np.argmax(yp, axis=1)
+
+        acc = float(accuracy_score(yt, y_pred))
+        precision, recall, f1, _ = precision_recall_fscore_support(
+            yt, y_pred, labels=[0, 1, 2], zero_division=0, average="macro"
+        )
+        n = int(mask.sum())
+        by_group[label] = {
+            "accuracy": round(acc, 6),
+            "n_samples": n,
+            "precision_macro": round(float(precision), 6),
+            "recall_macro": round(float(recall), 6),
+            "f1_macro": round(float(f1), 6),
+            "low_sample": n < min_samples,
+            "flagged": (global_acc - acc) > flag_threshold,
+        }
+
+    flagged = [g for g, v in by_group.items() if v["flagged"]]
+
+    return {
+        "global_accuracy": round(global_acc, 6),
+        "by_group": by_group,
+        "flagged_groups": flagged,
     }
