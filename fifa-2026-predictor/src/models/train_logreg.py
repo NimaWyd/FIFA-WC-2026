@@ -6,6 +6,7 @@ import argparse
 import json
 
 import joblib
+import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 
@@ -31,6 +32,12 @@ def main() -> None:
     args = parse_args()
 
     df = load_feature_data(args.features_csv)
+    min_train_year = int(cfg["model"].get("min_train_year", 0))
+    if min_train_year > 0:
+        n_before = len(df)
+        df = df[pd.to_datetime(df["date"]).dt.year >= min_train_year].reset_index(drop=True)
+        print(f"Filtered to {min_train_year}+: {n_before} -> {len(df)} rows")
+
     train_df, val_df, test_df = make_chronological_split(
         df,
         val_size=float(cfg["model"]["val_size"]),
