@@ -187,21 +187,35 @@ class FeatureRegistry:
 # ---------------------------------------------------------------------------
 
 def _form_block(context: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    Structural placeholder. Form features are built by match_row_builder.
-    Registering the block makes the feature family visible in the registry
-    without duplicating logic.
+    """Intentional no-op placeholder.
+
+    Form features are assembled by ``match_row_builder.build_match_row`` — not
+    here — to keep training and inference in a single code path and prevent
+    train/serve skew. This block exists so that "form" appears in
+    ``list_blocks()`` / ``enabled_blocks()`` for introspection; it will never
+    contribute features through ``build_all()``.
     """
     return {}
 
 
 def _elo_block(context: Dict[str, Any]) -> Dict[str, Any]:
-    """Structural placeholder – Elo features come from match_row_builder."""
+    """Intentional no-op placeholder.
+
+    Elo features are assembled by ``match_row_builder.build_match_row``.
+    This block exists only for registry introspection — it never contributes
+    features through ``build_all()``.
+    """
     return {}
 
 
 def _tournament_block(context: Dict[str, Any]) -> Dict[str, Any]:
-    """Structural placeholder – tournament features come from match_row_builder."""
+    """Intentional no-op placeholder.
+
+    Tournament/competition context features are assembled by
+    ``match_row_builder.build_match_row``. This block exists only for
+    registry introspection — it never contributes features through
+    ``build_all()``.
+    """
     return {}
 
 
