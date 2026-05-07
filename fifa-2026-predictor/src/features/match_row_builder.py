@@ -149,6 +149,14 @@ def build_match_row(
     home_elo_effective = _ELO_BASE + (home_elo - _ELO_BASE) * decay_h
     away_elo_effective = _ELO_BASE + (away_elo - _ELO_BASE) * decay_a
 
+    # --- Issue #57: neutral-venue interaction features ---
+
+    elo_diff = home_elo - away_elo
+    rank_diff = int(home_fifa_rank) - int(away_fifa_rank)
+    neutral_flag = int(neutral)
+    neutral_x_elo_diff = neutral_flag * elo_diff
+    neutral_x_rank_diff = neutral_flag * rank_diff
+
     return {
         # Match metadata
         "date": match_date,
@@ -166,7 +174,7 @@ def build_match_row(
         # Elo
         "home_elo_pre": home_elo,
         "away_elo_pre": away_elo,
-        "elo_diff_home_away": home_elo - away_elo,
+        "elo_diff_home_away": elo_diff,
         "elo_win_prob": tracker.elo_win_prob(home_team, away_team, neutral),
         # Issue #50: inactivity-decayed Elo
         "home_elo_effective": home_elo_effective,
@@ -187,7 +195,7 @@ def build_match_row(
         "home_long_break": home_long_break,
         "away_long_break": away_long_break,
         # Derived team context
-        "rank_diff": int(home_fifa_rank) - int(away_fifa_rank),
+        "rank_diff": rank_diff,
         "competition_weight": get_competition_weight(competition),
         "is_same_confederation": int(home_confederation == away_confederation),
         # --- Phase 4 new features ---
@@ -230,4 +238,7 @@ def build_match_row(
         "h2h_draw_rate": h2h["draw_rate"],
         "h2h_goal_diff": h2h["goal_diff"],
         "h2h_n_matches": float(h2h["n_matches"]),
+        # --- Issue #57: neutral-venue interaction features ---
+        "neutral_x_elo_diff": float(neutral_x_elo_diff),
+        "neutral_x_rank_diff": float(neutral_x_rank_diff),
     }

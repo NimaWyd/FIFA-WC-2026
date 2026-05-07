@@ -668,3 +668,65 @@ class TestClassWeightTuning:
             f"weighted draw prob={mean_draw_prob_weighted:.4f} not > "
             f"unweighted draw prob={mean_draw_prob_unweighted:.4f}"
         )
+
+
+# ---------------------------------------------------------------------------
+# Issue #57: neutral-venue interaction features
+# ---------------------------------------------------------------------------
+
+class TestNeutralVenueInteractionFeatures:
+    """neutral_x_elo_diff and neutral_x_rank_diff must be zero for home matches
+    and equal to elo_diff / rank_diff on neutral ground."""
+
+    def _make_row(self, neutral: bool) -> dict:
+        tracker = _make_tracker()
+        tracker.update(
+            "Brazil", "Argentina",
+            home_goals=2, away_goals=1,
+            neutral=False,
+            date=pd.Timestamp("2024-01-01"),
+            competition="Friendly",
+        )
+        return build_match_row(
+            tracker,
+            home_team="Brazil",
+            away_team="Argentina",
+            match_date=pd.Timestamp("2024-06-01"),
+            competition="FIFA World Cup",
+            neutral=neutral,
+            home_confederation="CONMEBOL",
+            away_confederation="CONMEBOL",
+            home_fifa_rank=5,
+            away_fifa_rank=3,
+            tournament_stage="Final",
+        )
+
+    def test_neutral_x_elo_diff_is_zero_for_home_match(self):
+        row = self._make_row(neutral=False)
+        assert "neutral_x_elo_diff" in row, "neutral_x_elo_diff missing from feature row"
+        assert row["neutral_x_elo_diff"] == 0.0
+
+    def test_neutral_x_rank_diff_is_zero_for_home_match(self):
+        row = self._make_row(neutral=False)
+        assert "neutral_x_rank_diff" in row, "neutral_x_rank_diff missing from feature row"
+        assert row["neutral_x_rank_diff"] == 0.0
+
+    def test_neutral_x_elo_diff_equals_elo_diff_on_neutral_ground(self):
+        row = self._make_row(neutral=True)
+        assert row["neutral_x_elo_diff"] == pytest.approx(row["elo_diff_home_away"])
+
+    def test_neutral_x_rank_diff_equals_rank_diff_on_neutral_ground(self):
+        row = self._make_row(neutral=True)
+        assert row["neutral_x_rank_diff"] == pytest.approx(float(row["rank_diff"]))
+
+    def test_neutral_interaction_features_present_in_preprocessor(self):
+        """build_preprocessor must recognise neutral_x_elo_diff and neutral_x_rank_diff."""
+        from src.models.common import build_preprocessor
+        import numpy as np
+
+        row = self._make_row(neutral=True)
+        df = pd.DataFrame([row])
+        df["target"] = "H"
+        preprocessor, used_features = build_preprocessor(df)
+        assert "neutral_x_elo_diff" in used_features
+        assert "neutral_x_rank_diff" in used_features
