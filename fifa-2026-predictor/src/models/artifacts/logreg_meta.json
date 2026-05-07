@@ -2,9 +2,9 @@
   "model_type": "logistic_regression",
   "features_csv": "data/processed/features.csv",
   "split_sizes": {
-    "train": 19832,
-    "val": 6102,
-    "test": 4577
+    "train": 8877,
+    "val": 2731,
+    "test": 2049
   },
   "feature_columns": [
     "competition",
@@ -33,6 +33,7 @@
     "rank_diff",
     "competition_weight",
     "is_same_confederation",
+    "match_weight",
     "stage_importance",
     "home_form_w3",
     "away_form_w3",
@@ -68,6 +69,17 @@
     "h2h_n_matches",
     "home_elo_effective",
     "away_elo_effective",
-    "elo_diff_effective"
+    "elo_diff_effective",
+    "neutral_x_elo_diff",
+    "neutral_x_rank_diff",
+    "home_win_streak",
+    "away_win_streak",
+    "home_unbeaten_streak",
+    "away_unbeaten_streak",
+    "home_loss_streak",
+    "away_loss_streak",
+    "tier_home_rate",
+    "tier_draw_rate",
+    "tier_away_rate"
   ]
 }
