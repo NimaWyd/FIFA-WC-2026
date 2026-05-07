@@ -983,3 +983,45 @@ class TestMatchWeightFeature:
         df["target"] = "H"
         _, used_features = build_preprocessor(df)
         assert "match_weight" in used_features, "match_weight missing from preprocessor base features"
+
+
+# ---------------------------------------------------------------------------
+# Issue #45: validate and tune time-decay halflife
+# ---------------------------------------------------------------------------
+
+class TestHalflifeSensitivity:
+    """run_halflife_sensitivity returns a dict mapping halflife → metrics dict
+    with at least 'log_loss' and 'accuracy' keys for each requested halflife."""
+
+    @pytest.fixture
+    def small_df(self):
+        from src.models.common import load_feature_data
+        df = load_feature_data("data/processed/features.csv")
+        return df[df["date"].dt.year >= 2018].reset_index(drop=True)
+
+    def test_sensitivity_returns_result_for_each_halflife(self, small_df):
+        from src.evaluation.tune_halflife import run_halflife_sensitivity
+        halflives = [365, 730]
+        results = run_halflife_sensitivity(small_df, halflives=halflives, n_estimators=30)
+        assert set(results.keys()) == set(halflives)
+
+    def test_sensitivity_result_contains_log_loss(self, small_df):
+        from src.evaluation.tune_halflife import run_halflife_sensitivity
+        results = run_halflife_sensitivity(small_df, halflives=[730], n_estimators=30)
+        assert "log_loss" in results[730]
+        assert isinstance(results[730]["log_loss"], float)
+        assert results[730]["log_loss"] > 0
+
+    def test_sensitivity_result_contains_accuracy(self, small_df):
+        from src.evaluation.tune_halflife import run_halflife_sensitivity
+        results = run_halflife_sensitivity(small_df, halflives=[730], n_estimators=30)
+        assert "accuracy" in results[730]
+        assert 0.0 <= results[730]["accuracy"] <= 1.0
+
+    def test_best_halflife_is_lowest_log_loss(self, small_df):
+        from src.evaluation.tune_halflife import run_halflife_sensitivity, best_halflife
+        halflives = [365, 730]
+        results = run_halflife_sensitivity(small_df, halflives=halflives, n_estimators=30)
+        best = best_halflife(results)
+        assert best in halflives
+        assert results[best]["log_loss"] == min(r["log_loss"] for r in results.values())
