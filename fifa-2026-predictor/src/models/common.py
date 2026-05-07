@@ -81,6 +81,7 @@ def build_preprocessor(df: pd.DataFrame) -> tuple[ColumnTransformer, list[str]]:
         "rank_diff",
         "competition_weight",
         "is_same_confederation",
+        "match_weight",
     ]
     # Phase 4 extended features (included when present)
     _phase4_numeric = [

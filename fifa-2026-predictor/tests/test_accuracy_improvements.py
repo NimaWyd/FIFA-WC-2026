@@ -935,3 +935,51 @@ class TestTierBaseRateFeatures:
         _, used_features = build_preprocessor(df)
         for key in ("tier_home_rate", "tier_draw_rate", "tier_away_rate"):
             assert key in used_features, f"{key} missing from preprocessor"
+
+
+# ---------------------------------------------------------------------------
+# Issue #55: match_weight as explicit recency feature
+# ---------------------------------------------------------------------------
+
+class TestMatchWeightFeature:
+    """match_weight must be emitted by build_match_row (default 1.0 at inference)
+    and recognised as a base numeric feature by build_preprocessor."""
+
+    def _make_row(self) -> dict:
+        tracker = _make_tracker()
+        tracker.update(
+            "Brazil", "Germany",
+            home_goals=1, away_goals=0,
+            neutral=False,
+            date=pd.Timestamp("2024-01-01"),
+            competition="Friendly",
+        )
+        return build_match_row(
+            tracker,
+            home_team="Brazil",
+            away_team="Germany",
+            match_date=pd.Timestamp("2024-06-01"),
+            competition="FIFA World Cup",
+            neutral=False,
+            home_confederation="CONMEBOL",
+            away_confederation="UEFA",
+            home_fifa_rank=5,
+            away_fifa_rank=4,
+            tournament_stage="group_stage",
+        )
+
+    def test_match_weight_present_in_row(self):
+        row = self._make_row()
+        assert "match_weight" in row, "match_weight missing from feature row"
+
+    def test_match_weight_defaults_to_one_at_inference(self):
+        row = self._make_row()
+        assert row["match_weight"] == pytest.approx(1.0)
+
+    def test_match_weight_in_preprocessor_base_features(self):
+        from src.models.common import build_preprocessor
+        row = self._make_row()
+        df = pd.DataFrame([row])
+        df["target"] = "H"
+        _, used_features = build_preprocessor(df)
+        assert "match_weight" in used_features, "match_weight missing from preprocessor base features"

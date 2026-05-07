@@ -267,4 +267,6 @@ def build_match_row(
         "tier_home_rate": tier_rates["home_rate"],
         "tier_draw_rate": tier_rates["draw_rate"],
         "tier_away_rate": tier_rates["away_rate"],
+        # --- Issue #55: match_weight (1.0 at inference; overwritten by build_features.py) ---
+        "match_weight": 1.0,
     }
