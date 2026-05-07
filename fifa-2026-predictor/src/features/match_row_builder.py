@@ -40,6 +40,7 @@ from src.features.competition_weights import (
     DEFAULT_COMPETITION_WEIGHT,
     get_competition_weight,
     get_stage_importance,
+    get_stage_sample_weight,
     get_tier_base_rates,
     normalize_tournament_stage,
 )
@@ -269,4 +270,6 @@ def build_match_row(
         "tier_away_rate": tier_rates["away_rate"],
         # --- Issue #55: match_weight (1.0 at inference; overwritten by build_features.py) ---
         "match_weight": 1.0,
+        # --- Issue #47: tournament-stage sample weight multiplier ---
+        "stage_weight": get_stage_sample_weight(tournament_stage),
     }

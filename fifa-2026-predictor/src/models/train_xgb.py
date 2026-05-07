@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import argparse
 import json
+from typing import Optional
 
 import joblib
+import numpy as np
 import pandas as pd
 from sklearn.pipeline import Pipeline
 from sklearn.utils.class_weight import compute_sample_weight
@@ -29,16 +31,25 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def build_weighted_sample_weights(y: "np.ndarray") -> "np.ndarray":
-    """Return balanced class weights for XGBoost training.
+def build_weighted_sample_weights(
+    y: "np.ndarray",
+    stage_weights: "Optional[np.ndarray]" = None,
+) -> "np.ndarray":
+    """Return balanced class weights for XGBoost training, optionally scaled
+    by per-match stage importance.
 
     Time-decay (match_weight) is intentionally excluded: multiplying class
     weights by near-zero time-decay values for training data from 1993-2015
-    collapses gradients to ~0, causing early stopping at round 0.  The
-    recency signal is already captured by Elo ratings and rolling form
-    features; class balance is the only correction needed here.
+    collapses gradients to ~0.  Stage weights are safe to include because
+    they are bounded away from zero (minimum 0.5 for unknown/qualification).
     """
-    return compute_sample_weight("balanced", y)
+    class_w = compute_sample_weight("balanced", y)
+    if stage_weights is not None:
+        combined = class_w * stage_weights
+        # Renormalize so mean weight stays at 1.0 (avoids scaling lr implicitly)
+        combined = combined / combined.mean()
+        return combined
+    return class_w
 
 
 def main() -> None:

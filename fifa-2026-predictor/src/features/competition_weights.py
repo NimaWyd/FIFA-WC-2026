@@ -271,3 +271,36 @@ _DEFAULT_TIER_BASE_RATES = {"home_rate": 0.47, "draw_rate": 0.25, "away_rate": 0
 def get_tier_base_rates(competition_weight: int) -> dict[str, float]:
     """Return empirical H/D/A base rates for the given competition-weight tier."""
     return _TIER_BASE_RATES.get(competition_weight, _DEFAULT_TIER_BASE_RATES)
+
+
+# ---------------------------------------------------------------------------
+# Issue #47: per-stage sample weight multipliers
+# Maps canonical stage → weight multiplier so knockout matches influence
+# training more than group-stage or friendly matches.
+# Minimum is 0.5 (unknown/qualification) to avoid zeroing out old matches.
+# ---------------------------------------------------------------------------
+
+_STAGE_SAMPLE_WEIGHTS: dict[str, float] = {
+    "unknown": 0.5,
+    "qualification": 0.5,
+    "group_stage": 1.0,
+    "round_of_64": 1.25,
+    "round_of_32": 1.25,
+    "round_of_16": 1.5,
+    "playoff": 1.5,
+    "quarterfinal": 1.75,
+    "semifinal": 2.0,
+    "third_place": 1.5,
+    "final": 2.5,
+}
+
+_DEFAULT_STAGE_SAMPLE_WEIGHT: float = 1.0
+
+
+def get_stage_sample_weight(stage: str) -> float:
+    """Return sample-weight multiplier for the given tournament stage.
+
+    Accepts both raw and canonical stage strings.
+    """
+    norm = normalize_tournament_stage(stage)
+    return _STAGE_SAMPLE_WEIGHTS.get(norm, _DEFAULT_STAGE_SAMPLE_WEIGHT)

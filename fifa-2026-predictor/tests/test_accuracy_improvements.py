@@ -1065,3 +1065,74 @@ class TestMinTrainYearSensitivity:
         best = best_cutoff_year(results)
         assert best in years
         assert results[best]["log_loss"] == min(r["log_loss"] for r in results.values())
+
+
+# ---------------------------------------------------------------------------
+# Issue #47: tournament-stage-specific sample weighting
+# ---------------------------------------------------------------------------
+
+class TestStageWeighting:
+    """get_stage_sample_weight returns a normalized multiplier so that
+    World Cup knockout matches get higher sample weight than group-stage
+    or friendly matches."""
+
+    def test_get_stage_sample_weight_exists(self):
+        from src.features.competition_weights import get_stage_sample_weight
+        weight = get_stage_sample_weight("final")
+        assert isinstance(weight, float)
+        assert weight > 0
+
+    def test_final_has_higher_weight_than_group_stage(self):
+        from src.features.competition_weights import get_stage_sample_weight
+        assert get_stage_sample_weight("final") > get_stage_sample_weight("group_stage")
+
+    def test_group_stage_has_higher_weight_than_friendly(self):
+        from src.features.competition_weights import get_stage_sample_weight
+        assert get_stage_sample_weight("group_stage") > get_stage_sample_weight("unknown")
+
+    def test_all_weights_are_positive(self):
+        from src.features.competition_weights import get_stage_sample_weight
+        for stage in ("unknown", "qualification", "group_stage",
+                      "round_of_16", "quarterfinal", "semifinal", "final"):
+            assert get_stage_sample_weight(stage) > 0, f"weight for {stage} must be > 0"
+
+    def test_stage_weight_in_match_row(self):
+        tracker = _make_tracker()
+        row = build_match_row(
+            tracker,
+            home_team="Brazil", away_team="Germany",
+            match_date=pd.Timestamp("2024-06-01"),
+            competition="FIFA World Cup",
+            neutral=False,
+            home_confederation="CONMEBOL", away_confederation="UEFA",
+            home_fifa_rank=5, away_fifa_rank=4,
+            tournament_stage="final",
+        )
+        assert "stage_weight" in row, "stage_weight missing from feature row"
+        assert row["stage_weight"] > 0
+
+    def test_stage_weight_higher_for_final_than_group(self):
+        tracker = _make_tracker()
+        base = dict(
+            tracker=tracker,
+            home_team="Brazil", away_team="Germany",
+            match_date=pd.Timestamp("2024-06-01"),
+            competition="FIFA World Cup",
+            neutral=False,
+            home_confederation="CONMEBOL", away_confederation="UEFA",
+            home_fifa_rank=5, away_fifa_rank=4,
+        )
+        row_final = build_match_row(**base, tournament_stage="final")
+        row_group = build_match_row(**base, tournament_stage="group_stage")
+        assert row_final["stage_weight"] > row_group["stage_weight"]
+
+    def test_build_weighted_sample_weights_uses_stage_weights(self):
+        import numpy as np
+        from src.models.train_xgb import build_weighted_sample_weights
+        y = np.array([0, 1, 2, 0, 1, 2, 0, 1])
+        stage_w = np.array([1.0, 2.0, 1.0, 2.0, 1.0, 2.0, 1.0, 2.0])
+        w_with = build_weighted_sample_weights(y, stage_weights=stage_w)
+        w_without = build_weighted_sample_weights(y)
+        assert not np.allclose(w_with, w_without), (
+            "stage_weights should change the sample weight values"
+        )
