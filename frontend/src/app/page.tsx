@@ -18,6 +18,7 @@ import { WC2026_TEAMS } from "@/lib/wc2026Teams";
 import { WCGroup, WCMatch } from "@/lib/wc2026Groups";
 import FlagIcon from "@/components/FlagIcon";
 import type { TeamInfo } from "@/lib/types";
+import { selectScoreline } from "@/lib/scoreline";
 
 const TOURNAMENT_START = "2026-06-11";
 const TOURNAMENT_END = "2026-07-19";
@@ -287,25 +288,19 @@ export default function Home() {
                   const dominant =
                     p.home_win > p.draw && p.home_win > p.away_win ? "H" :
                     p.away_win > p.draw && p.away_win > p.home_win ? "A" : "D";
-                  const matching = result.top_scorelines.find((s) => {
-                    const parts = s.scoreline.split("-");
-                    const hg = parseInt(parts[0] ?? "0", 10);
-                    const ag = parseInt(parts[1] ?? "0", 10);
-                    if (hg + ag > 4) return false;
-                    if (dominant === "H") return hg > ag;
-                    if (dominant === "A") return ag > hg;
-                    return hg === ag;
-                  });
-                  const scoreline = (matching ?? result.top_scorelines[0]).scoreline.split("-");
-                  const hg = parseInt(scoreline[0] ?? "0", 10);
-                  const ag = parseInt(scoreline[1] ?? "0", 10);
+                  const [hg, ag] = selectScoreline(
+                    dominant,
+                    result.top_scorelines,
+                    result.expected_goals?.home ?? 1,
+                    result.expected_goals?.away ?? 1,
+                  );
                   return (
                     <div className="bg-[#0d1428] rounded-2xl border border-slate-800 p-6">
                       <MatchScoreboard
                         homeTeam={result.home_team}
                         awayTeam={result.away_team}
-                        homeGoals={isNaN(hg) ? 0 : hg}
-                        awayGoals={isNaN(ag) ? 0 : ag}
+                        homeGoals={hg}
+                        awayGoals={ag}
                       />
                     </div>
                   );
