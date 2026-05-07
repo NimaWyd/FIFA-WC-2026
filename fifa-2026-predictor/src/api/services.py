@@ -67,6 +67,41 @@ def _get_model() -> Any:
     return _model
 
 
+_REQUIRED_HISTORY_COLUMNS = {"home_team", "away_team", "home_score", "away_score"}
+
+
+def normalize_history_csv(df: pd.DataFrame) -> pd.DataFrame:
+    """Normalize a raw match history DataFrame loaded from any candidate CSV.
+
+    Raises ValueError if critical columns (home_team, away_team) are missing.
+    Drops rows with missing scores silently (state_tracker requires int goals).
+    """
+    missing = _REQUIRED_HISTORY_COLUMNS - {"home_score", "away_score"} - set(df.columns)
+    if missing:
+        raise ValueError(f"Match history CSV is missing required columns: {sorted(missing)}")
+
+    df = df.copy()
+
+    # Drop rows with missing scores — state_tracker requires integer goals
+    for col in ("home_score", "away_score"):
+        if col in df.columns:
+            df = df.dropna(subset=[col])
+
+    # Normalise the 'neutral' column (TRUE/FALSE strings from results.csv)
+    if "neutral" in df.columns:
+        df["neutral"] = (
+            df["neutral"].astype(str).str.upper()
+            .map({"TRUE": True, "FALSE": False, "1": True, "0": False})
+            .fillna(False)
+        )
+
+    # Map results.csv 'tournament' column to 'competition' if needed
+    if "tournament" in df.columns and "competition" not in df.columns:
+        df = df.rename(columns={"tournament": "competition"})
+
+    return df.reset_index(drop=True)
+
+
 def _get_history() -> Optional[pd.DataFrame]:
     """Lazy-load match history, trying several candidate paths."""
     global _history_df
@@ -80,19 +115,12 @@ def _get_history() -> Optional[pd.DataFrame]:
     ]
     for path in candidates:
         if path.exists():
-            _history_df = pd.read_csv(path)
-            # Drop rows with missing scores — state_tracker requires integer goals
-            for col in ("home_score", "away_score"):
-                if col in _history_df.columns:
-                    _history_df = _history_df.dropna(subset=[col])
-            # Normalise the 'neutral' column coming from results.csv (TRUE/FALSE strings)
-            if "neutral" in _history_df.columns:
-                _history_df["neutral"] = _history_df["neutral"].astype(str).str.upper().map(
-                    {"TRUE": True, "FALSE": False, "1": True, "0": False}
-                ).fillna(False)
-            # Map results.csv 'tournament' column to 'competition' if needed
-            if "tournament" in _history_df.columns and "competition" not in _history_df.columns:
-                _history_df = _history_df.rename(columns={"tournament": "competition"})
+            raw = pd.read_csv(path)
+            try:
+                _history_df = normalize_history_csv(raw)
+            except ValueError as exc:
+                log.warning("Skipping %s: %s", path, exc)
+                continue
             break
 
     return _history_df

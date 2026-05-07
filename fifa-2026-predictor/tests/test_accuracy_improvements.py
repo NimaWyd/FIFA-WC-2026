@@ -1136,3 +1136,78 @@ class TestStageWeighting:
         assert not np.allclose(w_with, w_without), (
             "stage_weights should change the sample weight values"
         )
+
+
+# ---------------------------------------------------------------------------
+# Issue #39: edge case tests for malformed match history CSV
+# ---------------------------------------------------------------------------
+
+class TestMalformedHistoryCSV:
+    """normalize_history_csv() must handle malformed CSVs without silent failures."""
+
+    def _valid_df(self) -> pd.DataFrame:
+        return pd.DataFrame({
+            "date": ["2024-01-01", "2024-02-01"],
+            "home_team": ["Brazil", "France"],
+            "away_team": ["Germany", "Spain"],
+            "home_score": [2.0, 1.0],
+            "away_score": [1.0, 1.0],
+            "neutral": [False, True],
+            "competition": ["Friendly", "Friendly"],
+        })
+
+    def test_valid_csv_passes_through_unchanged_row_count(self):
+        from src.api.services import normalize_history_csv
+        df = self._valid_df()
+        result = normalize_history_csv(df)
+        assert len(result) == 2
+
+    def test_rows_with_missing_home_score_are_dropped(self):
+        from src.api.services import normalize_history_csv
+        df = self._valid_df()
+        df.loc[0, "home_score"] = float("nan")
+        result = normalize_history_csv(df)
+        assert len(result) == 1
+
+    def test_rows_with_missing_away_score_are_dropped(self):
+        from src.api.services import normalize_history_csv
+        df = self._valid_df()
+        df.loc[1, "away_score"] = float("nan")
+        result = normalize_history_csv(df)
+        assert len(result) == 1
+
+    def test_all_rows_missing_scores_returns_empty_df(self):
+        from src.api.services import normalize_history_csv
+        df = self._valid_df()
+        df["home_score"] = float("nan")
+        result = normalize_history_csv(df)
+        assert len(result) == 0
+
+    def test_tournament_column_renamed_to_competition(self):
+        from src.api.services import normalize_history_csv
+        df = self._valid_df().rename(columns={"competition": "tournament"})
+        result = normalize_history_csv(df)
+        assert "competition" in result.columns
+        assert "tournament" not in result.columns
+
+    def test_neutral_string_true_parsed_as_bool(self):
+        from src.api.services import normalize_history_csv
+        df = self._valid_df()
+        df["neutral"] = ["TRUE", "FALSE"]
+        result = normalize_history_csv(df)
+        assert bool(result["neutral"].iloc[0]) is True
+        assert bool(result["neutral"].iloc[1]) is False
+
+    def test_neutral_string_false_parsed_correctly(self):
+        from src.api.services import normalize_history_csv
+        df = self._valid_df()
+        df["neutral"] = ["0", "1"]
+        result = normalize_history_csv(df)
+        assert bool(result["neutral"].iloc[0]) is False
+        assert bool(result["neutral"].iloc[1]) is True
+
+    def test_missing_critical_column_home_team_raises(self):
+        from src.api.services import normalize_history_csv
+        df = self._valid_df().drop(columns=["home_team"])
+        with pytest.raises((KeyError, ValueError)):
+            normalize_history_csv(df)
