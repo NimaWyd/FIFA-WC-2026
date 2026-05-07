@@ -1025,3 +1025,43 @@ class TestHalflifeSensitivity:
         best = best_halflife(results)
         assert best in halflives
         assert results[best]["log_loss"] == min(r["log_loss"] for r in results.values())
+
+
+# ---------------------------------------------------------------------------
+# Issue #56: tune min_train_year cutoff via sensitivity analysis
+# ---------------------------------------------------------------------------
+
+class TestMinTrainYearSensitivity:
+    """run_min_year_sensitivity returns a dict mapping year → metrics dict."""
+
+    @pytest.fixture
+    def full_df(self):
+        from src.models.common import load_feature_data
+        return load_feature_data("data/processed/features.csv")
+
+    def test_sensitivity_returns_result_for_each_year(self, full_df):
+        from src.evaluation.tune_min_year import run_min_year_sensitivity
+        years = [2005, 2010]
+        results = run_min_year_sensitivity(full_df, cutoff_years=years, n_estimators=30)
+        assert set(results.keys()) == set(years)
+
+    def test_sensitivity_result_contains_log_loss(self, full_df):
+        from src.evaluation.tune_min_year import run_min_year_sensitivity
+        results = run_min_year_sensitivity(full_df, cutoff_years=[2010], n_estimators=30)
+        assert "log_loss" in results[2010]
+        assert isinstance(results[2010]["log_loss"], float)
+        assert results[2010]["log_loss"] > 0
+
+    def test_sensitivity_result_contains_accuracy(self, full_df):
+        from src.evaluation.tune_min_year import run_min_year_sensitivity
+        results = run_min_year_sensitivity(full_df, cutoff_years=[2010], n_estimators=30)
+        assert "accuracy" in results[2010]
+        assert 0.0 <= results[2010]["accuracy"] <= 1.0
+
+    def test_best_year_is_lowest_log_loss(self, full_df):
+        from src.evaluation.tune_min_year import run_min_year_sensitivity, best_cutoff_year
+        years = [2005, 2010]
+        results = run_min_year_sensitivity(full_df, cutoff_years=years, n_estimators=30)
+        best = best_cutoff_year(results)
+        assert best in years
+        assert results[best]["log_loss"] == min(r["log_loss"] for r in results.values())
