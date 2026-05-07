@@ -263,6 +263,42 @@ class TeamStateTracker:
             return 0.25
         return sum(1 for h in hist if h.get("is_draw", False)) / len(hist)
 
+    # Issue #58: consecutive-result streak features
+    _STREAK_CAP: int = 10
+
+    def win_streak(self, team: str) -> int:
+        """Current consecutive-win streak, capped at _STREAK_CAP."""
+        hist = list(self._history[team])
+        count = 0
+        for h in reversed(hist):
+            if h["points"] == 3:
+                count += 1
+            else:
+                break
+        return min(count, self._STREAK_CAP)
+
+    def unbeaten_streak(self, team: str) -> int:
+        """Current consecutive unbeaten streak (wins + draws), capped at _STREAK_CAP."""
+        hist = list(self._history[team])
+        count = 0
+        for h in reversed(hist):
+            if h["points"] > 0:
+                count += 1
+            else:
+                break
+        return min(count, self._STREAK_CAP)
+
+    def loss_streak(self, team: str) -> int:
+        """Current consecutive-loss streak, capped at _STREAK_CAP."""
+        hist = list(self._history[team])
+        count = 0
+        for h in reversed(hist):
+            if h["points"] == 0:
+                count += 1
+            else:
+                break
+        return min(count, self._STREAK_CAP)
+
     def h2h_stats(
         self,
         home_team: str,

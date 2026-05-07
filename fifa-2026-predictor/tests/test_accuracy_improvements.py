@@ -730,3 +730,131 @@ class TestNeutralVenueInteractionFeatures:
         preprocessor, used_features = build_preprocessor(df)
         assert "neutral_x_elo_diff" in used_features
         assert "neutral_x_rank_diff" in used_features
+
+
+# ---------------------------------------------------------------------------
+# Issue #58: consecutive-result streak features
+# ---------------------------------------------------------------------------
+
+class TestStreakFeatures:
+    """win_streak, unbeaten_streak, loss_streak on TeamStateTracker,
+    and their presence in the feature row and preprocessor."""
+
+    _STREAK_CAP = 10
+
+    def _tracker_with_results(self, results: list[str]) -> TeamStateTracker:
+        """results: list of 'W', 'D', 'L' from oldest to newest for 'Team'."""
+        tracker = TeamStateTracker(_cfg())
+        base = pd.Timestamp("2024-01-01")
+        for i, r in enumerate(results):
+            if r == "W":
+                hg, ag = 2, 0
+            elif r == "D":
+                hg, ag = 1, 1
+            else:
+                hg, ag = 0, 2
+            tracker.update(
+                "Team", "Opp",
+                home_goals=hg, away_goals=ag,
+                neutral=False,
+                date=base + pd.Timedelta(days=10 * i),
+                competition="Friendly",
+            )
+        return tracker
+
+    # --- win_streak ---
+
+    def test_win_streak_five_consecutive_wins(self):
+        tracker = self._tracker_with_results(["W", "W", "W", "W", "W"])
+        assert tracker.win_streak("Team") == 5
+
+    def test_win_streak_resets_on_draw(self):
+        tracker = self._tracker_with_results(["W", "W", "D", "W", "W"])
+        assert tracker.win_streak("Team") == 2
+
+    def test_win_streak_zero_when_last_was_loss(self):
+        tracker = self._tracker_with_results(["W", "W", "L"])
+        assert tracker.win_streak("Team") == 0
+
+    def test_win_streak_zero_with_no_history(self):
+        tracker = TeamStateTracker(_cfg())
+        assert tracker.win_streak("Team") == 0
+
+    def test_win_streak_capped_at_max(self):
+        tracker = self._tracker_with_results(["W"] * 15)
+        assert tracker.win_streak("Team") == self._STREAK_CAP
+
+    # --- unbeaten_streak ---
+
+    def test_unbeaten_streak_wins_and_draws(self):
+        tracker = self._tracker_with_results(["W", "D", "W", "D", "W"])
+        assert tracker.unbeaten_streak("Team") == 5
+
+    def test_unbeaten_streak_resets_on_loss(self):
+        tracker = self._tracker_with_results(["W", "W", "L", "W", "D"])
+        assert tracker.unbeaten_streak("Team") == 2
+
+    def test_unbeaten_streak_zero_when_last_was_loss(self):
+        tracker = self._tracker_with_results(["W", "W", "L"])
+        assert tracker.unbeaten_streak("Team") == 0
+
+    # --- loss_streak ---
+
+    def test_loss_streak_three_consecutive_losses(self):
+        tracker = self._tracker_with_results(["L", "L", "L"])
+        assert tracker.loss_streak("Team") == 3
+
+    def test_loss_streak_resets_on_draw(self):
+        tracker = self._tracker_with_results(["L", "L", "D", "L"])
+        assert tracker.loss_streak("Team") == 1
+
+    def test_loss_streak_zero_when_last_was_win(self):
+        tracker = self._tracker_with_results(["L", "L", "W"])
+        assert tracker.loss_streak("Team") == 0
+
+    # --- feature row presence ---
+
+    def test_streak_features_present_in_match_row(self):
+        tracker = self._tracker_with_results(["W", "W", "W"])
+        row = build_match_row(
+            tracker,
+            home_team="Team",
+            away_team="Opp",
+            match_date=pd.Timestamp("2025-01-01"),
+            competition="Friendly",
+            neutral=False,
+            home_confederation="UEFA",
+            away_confederation="UEFA",
+            home_fifa_rank=10,
+            away_fifa_rank=20,
+            tournament_stage="unknown",
+        )
+        for key in ("home_win_streak", "away_win_streak",
+                    "home_unbeaten_streak", "away_unbeaten_streak",
+                    "home_loss_streak", "away_loss_streak"):
+            assert key in row, f"{key} missing from feature row"
+
+    def test_streak_features_in_preprocessor(self):
+        from src.models.common import build_preprocessor
+
+        tracker = self._tracker_with_results(["W", "W"])
+        row = build_match_row(
+            tracker,
+            home_team="Team",
+            away_team="Opp",
+            match_date=pd.Timestamp("2025-01-01"),
+            competition="Friendly",
+            neutral=False,
+            home_confederation="UEFA",
+            away_confederation="UEFA",
+            home_fifa_rank=10,
+            away_fifa_rank=20,
+            tournament_stage="unknown",
+        )
+        df = pd.DataFrame([row])
+        df["target"] = "H"
+        _, used_features = build_preprocessor(df)
+        for key in ("home_win_streak", "away_win_streak",
+                    "home_unbeaten_streak", "away_unbeaten_streak",
+                    "home_loss_streak", "away_loss_streak"):
+            assert key in used_features, f"{key} missing from preprocessor features"

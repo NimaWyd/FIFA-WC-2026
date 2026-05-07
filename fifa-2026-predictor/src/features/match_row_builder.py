@@ -149,6 +149,15 @@ def build_match_row(
     home_elo_effective = _ELO_BASE + (home_elo - _ELO_BASE) * decay_h
     away_elo_effective = _ELO_BASE + (away_elo - _ELO_BASE) * decay_a
 
+    # --- Issue #58: consecutive-result streak features ---
+
+    home_win_streak = tracker.win_streak(home_team)
+    away_win_streak = tracker.win_streak(away_team)
+    home_unbeaten_streak = tracker.unbeaten_streak(home_team)
+    away_unbeaten_streak = tracker.unbeaten_streak(away_team)
+    home_loss_streak = tracker.loss_streak(home_team)
+    away_loss_streak = tracker.loss_streak(away_team)
+
     # --- Issue #57: neutral-venue interaction features ---
 
     elo_diff = home_elo - away_elo
@@ -241,4 +250,11 @@ def build_match_row(
         # --- Issue #57: neutral-venue interaction features ---
         "neutral_x_elo_diff": float(neutral_x_elo_diff),
         "neutral_x_rank_diff": float(neutral_x_rank_diff),
+        # --- Issue #58: consecutive-result streak features ---
+        "home_win_streak": float(home_win_streak),
+        "away_win_streak": float(away_win_streak),
+        "home_unbeaten_streak": float(home_unbeaten_streak),
+        "away_unbeaten_streak": float(away_unbeaten_streak),
+        "home_loss_streak": float(home_loss_streak),
+        "away_loss_streak": float(away_loss_streak),
     }
