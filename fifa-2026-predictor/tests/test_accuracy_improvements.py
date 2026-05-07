@@ -858,3 +858,80 @@ class TestStreakFeatures:
                     "home_unbeaten_streak", "away_unbeaten_streak",
                     "home_loss_streak", "away_loss_streak"):
             assert key in used_features, f"{key} missing from preprocessor features"
+
+
+# ---------------------------------------------------------------------------
+# Issue #59: competition-tier base rates as features
+# ---------------------------------------------------------------------------
+
+class TestTierBaseRateFeatures:
+    """tier_home_rate, tier_draw_rate, tier_away_rate in feature row and preprocessor.
+
+    Rates represent historical H/D/A frequencies for each competition-weight tier.
+    Each tier's rates must sum to 1.0.
+    """
+
+    from src.features.competition_weights import get_competition_weight
+
+    def _make_row(self, competition: str) -> dict:
+        tracker = _make_tracker()
+        tracker.update(
+            "Brazil", "Argentina",
+            home_goals=1, away_goals=0,
+            neutral=False,
+            date=pd.Timestamp("2024-01-01"),
+            competition="Friendly",
+        )
+        return build_match_row(
+            tracker,
+            home_team="Brazil",
+            away_team="Argentina",
+            match_date=pd.Timestamp("2024-06-01"),
+            competition=competition,
+            neutral=False,
+            home_confederation="CONMEBOL",
+            away_confederation="CONMEBOL",
+            home_fifa_rank=5,
+            away_fifa_rank=3,
+            tournament_stage="group_stage",
+        )
+
+    def test_tier_rate_keys_present_in_row(self):
+        row = self._make_row("FIFA World Cup")
+        for key in ("tier_home_rate", "tier_draw_rate", "tier_away_rate"):
+            assert key in row, f"{key} missing from feature row"
+
+    def test_tier_rates_sum_to_one_for_world_cup(self):
+        row = self._make_row("FIFA World Cup")
+        total = row["tier_home_rate"] + row["tier_draw_rate"] + row["tier_away_rate"]
+        assert total == pytest.approx(1.0, abs=1e-6)
+
+    def test_tier_rates_sum_to_one_for_friendly(self):
+        row = self._make_row("International Friendly")
+        total = row["tier_home_rate"] + row["tier_draw_rate"] + row["tier_away_rate"]
+        assert total == pytest.approx(1.0, abs=1e-6)
+
+    def test_tier_draw_rate_varies_by_tier(self):
+        """Different competition tiers should have different draw rates."""
+        from src.features.competition_weights import get_tier_base_rates
+        wc_rates = get_tier_base_rates(5)
+        friendly_rates = get_tier_base_rates(1)
+        assert wc_rates["draw_rate"] != friendly_rates["draw_rate"]
+
+    def test_get_tier_base_rates_returns_all_keys(self):
+        from src.features.competition_weights import get_tier_base_rates
+        for tier in (1, 2, 3, 4, 5):
+            rates = get_tier_base_rates(tier)
+            assert "home_rate" in rates
+            assert "draw_rate" in rates
+            assert "away_rate" in rates
+            assert rates["home_rate"] + rates["draw_rate"] + rates["away_rate"] == pytest.approx(1.0, abs=1e-6)
+
+    def test_tier_features_in_preprocessor(self):
+        from src.models.common import build_preprocessor
+        row = self._make_row("FIFA World Cup")
+        df = pd.DataFrame([row])
+        df["target"] = "H"
+        _, used_features = build_preprocessor(df)
+        for key in ("tier_home_rate", "tier_draw_rate", "tier_away_rate"):
+            assert key in used_features, f"{key} missing from preprocessor"

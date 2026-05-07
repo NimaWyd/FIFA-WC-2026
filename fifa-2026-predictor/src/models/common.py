@@ -141,13 +141,20 @@ def build_preprocessor(df: pd.DataFrame) -> tuple[ColumnTransformer, list[str]]:
         "home_loss_streak",
         "away_loss_streak",
     ]
+    # Issue #59: competition-tier base rates (included when present)
+    _issue59_numeric = [
+        "tier_home_rate",
+        "tier_draw_rate",
+        "tier_away_rate",
+    ]
     # Only include Phase 4 / Phase 7 / Phase 8 columns that actually exist in this DataFrame
     present_phase4 = [c for c in _phase4_numeric if c in df.columns]
     present_phase7 = [c for c in _phase7_numeric if c in df.columns]
     present_phase8 = [c for c in _phase8_numeric if c in df.columns]
     present_issue57 = [c for c in _issue57_numeric if c in df.columns]
     present_issue58 = [c for c in _issue58_numeric if c in df.columns]
-    numeric_features = _base_numeric + present_phase4 + present_phase7 + present_phase8 + present_issue57 + present_issue58
+    present_issue59 = [c for c in _issue59_numeric if c in df.columns]
+    numeric_features = _base_numeric + present_phase4 + present_phase7 + present_phase8 + present_issue57 + present_issue58 + present_issue59
     used_features = categorical_features + numeric_features
 
     missing = sorted(set(used_features) - set(df.columns))

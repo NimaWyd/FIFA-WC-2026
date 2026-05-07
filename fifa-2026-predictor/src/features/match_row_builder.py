@@ -40,6 +40,7 @@ from src.features.competition_weights import (
     DEFAULT_COMPETITION_WEIGHT,
     get_competition_weight,
     get_stage_importance,
+    get_tier_base_rates,
     normalize_tournament_stage,
 )
 from src.features.state_tracker import TeamStateTracker
@@ -149,6 +150,11 @@ def build_match_row(
     home_elo_effective = _ELO_BASE + (home_elo - _ELO_BASE) * decay_h
     away_elo_effective = _ELO_BASE + (away_elo - _ELO_BASE) * decay_a
 
+    # --- Issue #59: competition-tier base rates ---
+
+    comp_weight = get_competition_weight(competition)
+    tier_rates = get_tier_base_rates(comp_weight)
+
     # --- Issue #58: consecutive-result streak features ---
 
     home_win_streak = tracker.win_streak(home_team)
@@ -205,7 +211,7 @@ def build_match_row(
         "away_long_break": away_long_break,
         # Derived team context
         "rank_diff": rank_diff,
-        "competition_weight": get_competition_weight(competition),
+        "competition_weight": comp_weight,
         "is_same_confederation": int(home_confederation == away_confederation),
         # --- Phase 4 new features ---
         # Multi-horizon form
@@ -257,4 +263,8 @@ def build_match_row(
         "away_unbeaten_streak": float(away_unbeaten_streak),
         "home_loss_streak": float(home_loss_streak),
         "away_loss_streak": float(away_loss_streak),
+        # --- Issue #59: competition-tier base rates ---
+        "tier_home_rate": tier_rates["home_rate"],
+        "tier_draw_rate": tier_rates["draw_rate"],
+        "tier_away_rate": tier_rates["away_rate"],
     }
