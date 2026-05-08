@@ -145,8 +145,8 @@ class TeamDependentScoreModel:
             * (away_attack / mean_atk)
             * (home_def_safe / mean_def)
         )
-        lambda_home = float(np.clip(lambda_home, 0.05, 8.0))
-        lambda_away = float(np.clip(lambda_away, 0.05, 8.0))
+        lambda_home = float(np.clip(lambda_home, 0.5, 4.0))
+        lambda_away = float(np.clip(lambda_away, 0.5, 4.0))
         return lambda_home, lambda_away
 
     def predict_lambdas_from_row(

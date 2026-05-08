@@ -680,5 +680,33 @@ class TestSchemaStability(unittest.TestCase):
             self.assertIn(k, row, f"Legacy key removed: {k}")
 
 
+class TestLambdaBounds(unittest.TestCase):
+    """λ values must stay within realistic football bounds."""
+
+    def setUp(self):
+        self.model = TeamDependentScoreModel()
+        self.model.fit(_features_df(50))
+
+    def test_lambda_floor_extreme_weak_teams(self):
+        """Very weak attack / very strong defence must not produce λ below 0.5."""
+        lh, la = self.model.predict_lambdas(
+            home_attack=0.01, away_attack=0.01,
+            home_defense=10.0, away_defense=10.0,
+            neutral=True,
+        )
+        self.assertGreaterEqual(lh, 0.5, f"λ_home={lh:.4f} below 0.5 floor")
+        self.assertGreaterEqual(la, 0.5, f"λ_away={la:.4f} below 0.5 floor")
+
+    def test_lambda_ceiling_extreme_strong_teams(self):
+        """Very strong attack / very weak defence must not produce λ above 4.0."""
+        lh, la = self.model.predict_lambdas(
+            home_attack=20.0, away_attack=20.0,
+            home_defense=10.0, away_defense=10.0,
+            neutral=False,
+        )
+        self.assertLessEqual(lh, 4.0, f"λ_home={lh:.4f} exceeds 4.0 ceiling")
+        self.assertLessEqual(la, 4.0, f"λ_away={la:.4f} exceeds 4.0 ceiling")
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
