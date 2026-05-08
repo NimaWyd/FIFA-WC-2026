@@ -7,6 +7,7 @@ import TeamCombobox from "@/components/TeamCombobox";
 import StageSelect from "@/components/StageSelect";
 import PredictButton from "@/components/PredictButton";
 import ProbabilityBars from "@/components/ProbabilityBars";
+import WinnerCallout from "@/components/WinnerCallout";
 import ScorelineGrid from "@/components/ScorelineGrid";
 import ExpectedGoals from "@/components/ExpectedGoals";
 import ExplanationPanel from "@/components/ExplanationPanel";
@@ -307,6 +308,11 @@ export default function Home() {
                 })()}
 
                 <div className="bg-[#0d1428] rounded-2xl border border-slate-800 p-6">
+                  <WinnerCallout
+                    probabilities={result.probabilities}
+                    homeTeam={result.home_team}
+                    awayTeam={result.away_team}
+                  />
                   <ProbabilityBars
                     probabilities={result.probabilities}
                     homeTeam={result.home_team}
