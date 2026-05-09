@@ -708,5 +708,81 @@ class TestLambdaBounds(unittest.TestCase):
         self.assertLessEqual(la, 4.0, f"λ_away={la:.4f} exceeds 4.0 ceiling")
 
 
+# ---------------------------------------------------------------------------
+# Issue #69: scoreline/outcome consistency
+# ---------------------------------------------------------------------------
+
+class TestScorelineConsistencyFix(unittest.TestCase):
+    """Outcome probs derived by integrating Poisson; calibrated lambdas keep
+    scorelines consistent with ensemble win-probability output."""
+
+    # --- outcome_probs_from_poisson ---
+
+    def test_outcome_probs_sum_to_one(self):
+        probs = TeamDependentScoreModel.outcome_probs_from_poisson(1.5, 1.2)
+        total = probs["home_win"] + probs["draw"] + probs["away_win"]
+        self.assertAlmostEqual(total, 1.0, places=6)
+
+    def test_higher_home_lambda_favors_home(self):
+        probs = TeamDependentScoreModel.outcome_probs_from_poisson(2.5, 0.5)
+        self.assertGreater(probs["home_win"], probs["away_win"])
+
+    def test_higher_away_lambda_favors_away(self):
+        probs = TeamDependentScoreModel.outcome_probs_from_poisson(0.5, 2.5)
+        self.assertGreater(probs["away_win"], probs["home_win"])
+
+    def test_equal_lambdas_symmetric_win_probs(self):
+        probs = TeamDependentScoreModel.outcome_probs_from_poisson(1.5, 1.5)
+        self.assertAlmostEqual(probs["home_win"], probs["away_win"], places=6)
+
+    def test_all_probs_are_non_negative(self):
+        for lh, la in [(0.5, 0.5), (3.0, 0.1), (0.1, 3.0), (1.5, 1.5)]:
+            probs = TeamDependentScoreModel.outcome_probs_from_poisson(lh, la)
+            self.assertGreaterEqual(probs["home_win"], 0.0)
+            self.assertGreaterEqual(probs["draw"], 0.0)
+            self.assertGreaterEqual(probs["away_win"], 0.0)
+
+    # --- calibrate_lambdas_to_outcomes ---
+
+    def test_calibrated_lambdas_reproduce_home_dominant_probs(self):
+        target_h, target_d, target_a = 0.55, 0.25, 0.20
+        lh, la = TeamDependentScoreModel.calibrate_lambdas_to_outcomes(
+            target_h, target_d, target_a,
+            lambda_home_init=1.5, lambda_away_init=1.0,
+        )
+        result = TeamDependentScoreModel.outcome_probs_from_poisson(lh, la)
+        self.assertAlmostEqual(result["home_win"], target_h, delta=0.02)
+        self.assertAlmostEqual(result["away_win"], target_a, delta=0.02)
+
+    def test_calibrated_lambdas_reproduce_away_dominant_probs(self):
+        target_h, target_d, target_a = 0.25, 0.28, 0.47
+        lh, la = TeamDependentScoreModel.calibrate_lambdas_to_outcomes(
+            target_h, target_d, target_a,
+            lambda_home_init=1.2, lambda_away_init=1.8,
+        )
+        result = TeamDependentScoreModel.outcome_probs_from_poisson(lh, la)
+        self.assertAlmostEqual(result["away_win"], target_a, delta=0.02)
+        self.assertAlmostEqual(result["home_win"], target_h, delta=0.02)
+
+    def test_calibrated_lambdas_are_positive(self):
+        lh, la = TeamDependentScoreModel.calibrate_lambdas_to_outcomes(
+            0.40, 0.30, 0.30,
+            lambda_home_init=1.5, lambda_away_init=1.5,
+        )
+        self.assertGreater(lh, 0.0)
+        self.assertGreater(la, 0.0)
+
+    def test_home_dominant_target_gives_higher_lambda_ratio(self):
+        lh_dom, la_dom = TeamDependentScoreModel.calibrate_lambdas_to_outcomes(
+            0.60, 0.20, 0.20,
+            lambda_home_init=1.5, lambda_away_init=1.2,
+        )
+        lh_eq, la_eq = TeamDependentScoreModel.calibrate_lambdas_to_outcomes(
+            0.33, 0.34, 0.33,
+            lambda_home_init=1.5, lambda_away_init=1.2,
+        )
+        self.assertGreater(lh_dom / la_dom, lh_eq / la_eq)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

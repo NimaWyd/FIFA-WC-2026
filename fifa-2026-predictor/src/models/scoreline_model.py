@@ -194,6 +194,69 @@ class TeamDependentScoreModel:
         probs.sort(key=lambda x: x[1], reverse=True)
         return probs[:top_n]
 
+    @staticmethod
+    def outcome_probs_from_poisson(
+        lambda_home: float,
+        lambda_away: float,
+        max_goals: int = 10,
+    ) -> dict[str, float]:
+        """Derive P(home_win), P(draw), P(away_win) by integrating over Poisson.
+
+        Provides a mathematically consistent bridge between expected-goals and
+        outcome probabilities — used by calibrate_lambdas_to_outcomes.
+        """
+        home_win = draw = away_win = 0.0
+        for h in range(max_goals + 1):
+            ph = float(poisson.pmf(h, lambda_home))
+            for a in range(max_goals + 1):
+                p = ph * float(poisson.pmf(a, lambda_away))
+                if h > a:
+                    home_win += p
+                elif h == a:
+                    draw += p
+                else:
+                    away_win += p
+        total = home_win + draw + away_win
+        if total > 0:
+            home_win /= total
+            draw /= total
+            away_win /= total
+        return {"home_win": home_win, "draw": draw, "away_win": away_win}
+
+    @staticmethod
+    def calibrate_lambdas_to_outcomes(
+        p_home_win: float,
+        p_draw: float,
+        p_away_win: float,
+        lambda_home_init: float,
+        lambda_away_init: float,
+        max_goals: int = 10,
+    ) -> tuple[float, float]:
+        """Find (λ_h, λ_a) whose Poisson outcome dist best matches target probs.
+
+        Uses the scoreline model's natural lambdas as starting point so the
+        calibrated values stay close to the team's actual goal rates.
+        """
+        from scipy.optimize import minimize
+
+        target = np.array([p_home_win, p_draw, p_away_win])
+
+        def _loss(params: np.ndarray) -> float:
+            probs = TeamDependentScoreModel.outcome_probs_from_poisson(
+                float(params[0]), float(params[1]), max_goals
+            )
+            predicted = np.array([probs["home_win"], probs["draw"], probs["away_win"]])
+            return float(np.sum((predicted - target) ** 2))
+
+        result = minimize(
+            _loss,
+            x0=np.array([lambda_home_init, lambda_away_init]),
+            method="L-BFGS-B",
+            bounds=[(0.05, 8.0), (0.05, 8.0)],
+            options={"ftol": 1e-10, "gtol": 1e-7},
+        )
+        return float(result.x[0]), float(result.x[1])
+
     # ------------------------------------------------------------------
     # Persistence
     # ------------------------------------------------------------------

@@ -232,7 +232,16 @@ def predict(
         try:
             score_model = TeamDependentScoreModel.load(scoreline_path)
             row_dict = feature_row.iloc[0].to_dict()
-            lh, la = score_model.predict_lambdas_from_row(row_dict)
+            lh_raw, la_raw = score_model.predict_lambdas_from_row(row_dict)
+            # Calibrate lambdas so Poisson-derived outcome probs match the
+            # ensemble — keeps scorelines and win probabilities consistent.
+            lh, la = TeamDependentScoreModel.calibrate_lambdas_to_outcomes(
+                probabilities["home_win"],
+                probabilities["draw"],
+                probabilities["away_win"],
+                lambda_home_init=lh_raw,
+                lambda_away_init=la_raw,
+            )
             expected_goals = {"home": round(lh, 3), "away": round(la, 3)}
             raw_scorelines = TeamDependentScoreModel.top_scorelines(lh, la, top_n=5)
             top_scorelines = [
