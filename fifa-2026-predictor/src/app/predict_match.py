@@ -93,18 +93,30 @@ def predict_scorelines(
     scoreline_params_path: Path,
     feature_row: pd.DataFrame,
     top_n: int = 3,
+    outcome_probs: Optional[dict[str, float]] = None,
 ) -> list[tuple[str, float]]:
     """Return top scoreline probabilities using the team-dependent model.
 
-    Uses per-team attack/defense ratings from the feature row to produce
-    team-specific expected goals — replacing the old global-average approach.
+    When *outcome_probs* (home_win, draw, away_win) are supplied the Poisson
+    lambdas are calibrated so that integrating over the distribution reproduces
+    those probabilities — keeping scorelines and win-probability consistent.
     """
     if not scoreline_params_path.exists():
         return []
     model = TeamDependentScoreModel.load(scoreline_params_path)
     row = feature_row.iloc[0].to_dict()
-    lambda_home, lambda_away = model.predict_lambdas_from_row(row)
-    return TeamDependentScoreModel.top_scorelines(lambda_home, lambda_away, top_n=top_n)
+    lh_raw, la_raw = model.predict_lambdas_from_row(row)
+    if outcome_probs is not None:
+        lh, la = TeamDependentScoreModel.calibrate_lambdas_to_outcomes(
+            outcome_probs["home_win"],
+            outcome_probs["draw"],
+            outcome_probs["away_win"],
+            lambda_home_init=lh_raw,
+            lambda_away_init=la_raw,
+        )
+    else:
+        lh, la = lh_raw, la_raw
+    return TeamDependentScoreModel.top_scorelines(lh, la, top_n=top_n)
 
 
 def main() -> None:
@@ -168,7 +180,9 @@ def main() -> None:
 
     if args.with_scorelines:
         scoreline_path = PROJECT_ROOT / "src/models/artifacts/scoreline_params.json"
-        scorelines = predict_scorelines(scoreline_path, sample, top_n=3)
+        scorelines = predict_scorelines(
+            scoreline_path, sample, top_n=3, outcome_probs=result["probabilities"]
+        )
         result["top_scorelines"] = scorelines
 
     print(json.dumps(result, indent=2))
