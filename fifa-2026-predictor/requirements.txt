@@ -9,6 +9,7 @@ python-dotenv
 pyyaml
 joblib
 scipy
+shap
 fastapi
 uvicorn[standard]
 httpx
