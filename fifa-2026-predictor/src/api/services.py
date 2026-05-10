@@ -17,6 +17,7 @@ from typing import Any, Optional
 log = logging.getLogger(__name__)
 
 import joblib
+import numpy as np
 import pandas as pd
 
 from src.app.predict_match import build_pre_match_row
@@ -29,6 +30,7 @@ from src.data.team_identity import (
 )
 from src.features.registry import get_registry
 from src.models.common import TARGET_MAP
+from src.models.ensemble_model import EnsembleModel
 from src.models.scoreline_model import TeamDependentScoreModel
 from src.utils import PROJECT_ROOT, load_config
 
@@ -172,6 +174,25 @@ def resolve_team_metadata(
 # /predict service
 # ---------------------------------------------------------------------------
 
+def _extract_ensemble_ci(
+    model: Any, feature_row: "pd.DataFrame"
+) -> Optional[dict[str, tuple[float, float]]]:
+    if not isinstance(model, EnsembleModel):
+        return None
+    try:
+        p_xgb = model._get_base_proba(model.xgb_pipeline, feature_row)[0]
+        p_logreg = model._get_base_proba(model.logreg_pipeline, feature_row)[0]
+        p_mlp = model._get_base_proba(model.mlp_pipeline, feature_row)[0]
+        all_p = np.array([p_xgb, p_logreg, p_mlp])
+        return {
+            "home_win": (float(all_p[:, 2].min()), float(all_p[:, 2].max())),
+            "draw":     (float(all_p[:, 1].min()), float(all_p[:, 1].max())),
+            "away_win": (float(all_p[:, 0].min()), float(all_p[:, 0].max())),
+        }
+    except Exception:
+        return None
+
+
 def predict(
     home_team: str,
     away_team: str,
@@ -286,6 +307,9 @@ def predict(
     else:
         log.warning("Scoreline model params not found at %s — scoreline predictions unavailable", scoreline_path)
 
+    # Confidence intervals derived from per-model probability spread
+    confidence = _extract_ensemble_ci(model, feature_row)
+
     # Explanation derived directly from the computed feature row — no fabrication
     row = feature_row.iloc[0].to_dict()
     explanation = _build_explanation(row, home_rank, away_rank)
@@ -300,6 +324,7 @@ def predict(
         "top_scorelines": top_scorelines,
         "expected_goals": expected_goals,
         "explanation": explanation,
+        "confidence": confidence,
         "metadata": {
             "model_version": "1.0.0",
             "model_type": model_type,

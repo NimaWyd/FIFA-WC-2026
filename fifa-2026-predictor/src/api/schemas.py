@@ -31,6 +31,12 @@ class Probabilities(BaseModel):
     away_win: float
 
 
+class ConfidenceInterval(BaseModel):
+    home_win: tuple[float, float]
+    draw: tuple[float, float]
+    away_win: tuple[float, float]
+
+
 class Scoreline(BaseModel):
     scoreline: str
     probability: float
@@ -61,6 +67,7 @@ class PredictResponse(BaseModel):
     expected_goals: dict[str, float]
     explanation: Explanation
     metadata: dict[str, Any]
+    confidence: Optional[ConfidenceInterval] = None
 
 
 # ---------------------------------------------------------------------------

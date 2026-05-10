@@ -107,4 +107,5 @@ def predict(request: schemas.PredictRequest) -> schemas.PredictResponse:
         expected_goals=result["expected_goals"],
         explanation=schemas.Explanation(**result["explanation"]),
         metadata=result["metadata"],
+        confidence=schemas.ConfidenceInterval(**result["confidence"]) if result.get("confidence") else None,
     )
