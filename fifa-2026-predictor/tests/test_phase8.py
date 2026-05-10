@@ -147,3 +147,42 @@ class TestTournamentFilter:
         df = self._sample_df()
         result = _apply_tournament_filter(df, min_weight=5)
         assert len(result) == 1
+
+
+from unittest.mock import MagicMock, patch
+from src.api import services as svc
+
+
+class TestTournamentModelRouting:
+    def _make_mock_model(self):
+        m = MagicMock()
+        m.named_steps = {"classifier": MagicMock(classes_=[0, 1, 2])}
+        m.predict_proba.return_value = [[0.4, 0.3, 0.3]]
+        return m
+
+    def test_get_tournament_model_returns_none_when_absent(self, tmp_path):
+        with patch.object(svc, "_tournament_model", None), \
+             patch.object(svc, "_tournament_model_loaded", False), \
+             patch("src.api.services._get_cfg", return_value={
+                 "paths": {"trained_model_dir": str(tmp_path)},
+                 "model": {"tournament_model_min_weight": 3},
+             }):
+            result = svc._get_tournament_model()
+            assert result is None
+
+    def test_select_model_uses_tournament_when_available(self):
+        base = self._make_mock_model()
+        tournament = self._make_mock_model()
+        result = svc._select_model(base, tournament, competition_weight=5, min_weight=3)
+        assert result is tournament
+
+    def test_select_model_uses_base_when_tournament_absent(self):
+        base = self._make_mock_model()
+        result = svc._select_model(base, None, competition_weight=5, min_weight=3)
+        assert result is base
+
+    def test_select_model_uses_base_when_weight_below_threshold(self):
+        base = self._make_mock_model()
+        tournament = self._make_mock_model()
+        result = svc._select_model(base, tournament, competition_weight=2, min_weight=3)
+        assert result is base

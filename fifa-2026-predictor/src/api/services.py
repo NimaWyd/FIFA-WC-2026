@@ -40,6 +40,8 @@ _model: Any = None
 _model_artifact_name: str = "none"
 _history_df: Optional[pd.DataFrame] = None
 _cfg: Optional[dict] = None
+_tournament_model: Any = None
+_tournament_model_loaded: bool = False
 
 
 def _get_cfg() -> dict:
@@ -65,6 +67,30 @@ def _get_model() -> Any:
             break
 
     return _model
+
+
+def _get_tournament_model() -> Any:
+    """Lazy-load xgb_tournament.joblib if it exists; returns None if absent."""
+    global _tournament_model, _tournament_model_loaded
+    if _tournament_model_loaded:
+        return _tournament_model
+
+    _tournament_model_loaded = True
+    artifact_dir = PROJECT_ROOT / _get_cfg()["paths"]["trained_model_dir"]
+    path = artifact_dir / "xgb_tournament.joblib"
+    if path.exists():
+        _tournament_model = joblib.load(path)
+        log.info("Loaded tournament model: %s", path)
+    else:
+        log.warning("xgb_tournament.joblib not found — all requests use ensemble model")
+    return _tournament_model
+
+
+def _select_model(base_model: Any, tournament_model: Any, competition_weight: float, min_weight: int) -> Any:
+    """Return tournament model when available and competition qualifies; otherwise base."""
+    if tournament_model is not None and competition_weight >= min_weight:
+        return tournament_model
+    return base_model
 
 
 _REQUIRED_HISTORY_COLUMNS = {"home_team", "away_team", "home_score", "away_score"}
@@ -165,8 +191,8 @@ def predict(
     by the same ``build_pre_match_row`` function used by the CLI, ensuring
     training-inference consistency.
     """
-    model = _get_model()
-    if model is None:
+    base_model = _get_model()
+    if base_model is None:
         raise RuntimeError(
             "No trained model artifact found. "
             "Run training first (python -m src.models.train_xgb or train_logreg)."
@@ -210,6 +236,11 @@ def predict(
         tournament_stage=stage,
         cfg=cfg,
     )
+
+    cfg_min = int(cfg["model"].get("tournament_model_min_weight", 3))
+    comp_weight = float(feature_row.iloc[0].get("competition_weight", 1))
+    model = _select_model(base_model, _get_tournament_model(), comp_weight, cfg_min)
+    log.debug("Using model: %s (competition_weight=%.0f)", type(model).__name__, comp_weight)
 
     # Outcome probabilities
     clf = model.named_steps["classifier"]
