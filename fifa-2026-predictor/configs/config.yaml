@@ -2,7 +2,7 @@ project:
   random_state: 42
 
 paths:
-  raw_matches_csv: "data/raw/demo_international_matches.csv"
+  raw_matches_csv: "data/raw/results.csv"
   processed_features_csv: "data/processed/features.csv"
   trained_model_dir: "src/models/artifacts"
   evaluation_dir: "data/processed/evaluation"

@@ -3,9 +3,9 @@
   "calibration": "isotonic",
   "features_csv": "data/processed/features.csv",
   "split_sizes": {
-    "train": 104,
-    "val": 32,
-    "test": 25
+    "train": 19832,
+    "val": 6102,
+    "test": 4577
   },
   "feature_columns": [
     "competition",
@@ -81,8 +81,19 @@
     "away_loss_streak",
     "tier_home_rate",
     "tier_draw_rate",
-    "tier_away_rate"
+    "tier_away_rate",
+    "home_clean_sheet_rate_w5",
+    "away_clean_sheet_rate_w5",
+    "home_gd_form_w5",
+    "away_gd_form_w5",
+    "gd_form_diff",
+    "home_home_form_w5",
+    "home_away_form_w5",
+    "away_home_form_w5",
+    "away_away_form_w5",
+    "home_venue_form_diff",
+    "away_venue_form_diff"
   ],
   "early_stopping_rounds": 25,
-  "best_iteration": 23
+  "best_iteration": 99
 }

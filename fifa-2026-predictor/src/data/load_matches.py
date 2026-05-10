@@ -54,6 +54,9 @@ def save_processed_matches(df: pd.DataFrame, output_csv: str) -> None:
     ensure_parent_dir(output_path)
 
     cleaned = df.copy()
+    # results.csv uses 'tournament'; normalise to canonical 'competition' column.
+    if "tournament" in cleaned.columns and "competition" not in cleaned.columns:
+        cleaned = cleaned.rename(columns={"tournament": "competition"})
     cleaned["date"] = pd.to_datetime(cleaned["date"], errors="coerce")
     cleaned = cleaned.dropna(subset=["date", "home_team", "away_team", "home_score", "away_score"])
     cleaned["neutral"] = cleaned["neutral"].astype(str).str.lower().isin(["true", "1", "yes"])
