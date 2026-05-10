@@ -96,8 +96,48 @@ def test_ci_is_narrow_when_dominant_model_has_high_weight():
     ci = _extract_ensemble_ci(ensemble, X)
     assert ci is not None
 
-    # Old raw min/max would give away_win CI width = 0.99 - 0.50 = 0.49
-    # New weighted-std should give width < 0.35
+    # For away_win, both LogReg (0.05) and MLP (0.05) are below the 0.15 per-class threshold.
+    # Only XGB (0.9) is retained → CI collapses to a point (std=0), lo≈hi≈XGB away_win prob.
     lo, hi = ci["away_win"]
-    assert hi - lo < 0.35, f"CI width {hi - lo:.3f} too wide; expected < 0.35 with XGB weight=0.9"
+    assert hi - lo < 0.05, f"CI width {hi - lo:.3f} should be ~0 when only XGB is retained"
     assert 0.0 <= lo <= hi <= 1.0
+
+
+def test_ci_filters_per_class_not_globally():
+    """Models are filtered per outcome class: a model below threshold for class A is still
+    included for class H if its H-class weight meets the threshold."""
+    from unittest.mock import MagicMock
+    from src.api.services import _extract_ensemble_ci
+
+    def _make_pipeline(probs):
+        p = MagicMock()
+        p.predict_proba.return_value = np.array([probs])
+        clf = MagicMock()
+        clf.classes_ = np.array([0, 1, 2])
+        p.named_steps = {"classifier": clf}
+        return p
+
+    draw_sub = MagicMock()
+    draw_sub.predict_proba.return_value = np.array([[0.3, 0.3]])
+
+    # MLP has low weight for A/D (0.05) but meaningful weight for H (0.30).
+    # It gives 99% away_win — should NOT affect away_win CI (A class, weight=0.05).
+    ensemble = EnsembleModel(
+        xgb_pipeline=_make_pipeline([0.50, 0.25, 0.25]),
+        mlp_pipeline=_make_pipeline([0.99, 0.005, 0.005]),   # extreme for A, low H weight
+        logreg_pipeline=_make_pipeline([0.40, 0.30, 0.30]),
+        draw_submodel=draw_sub,
+        per_class_weights=np.array([[0.65, 0.65, 0.55],      # XGB
+                                     [0.30, 0.30, 0.15],      # LogReg: above threshold for all
+                                     [0.05, 0.05, 0.30]]),    # MLP: below for A/D, above for H
+        draw_blend_weight=0.0,
+        feature_cols=["elo_diff_home_away"],
+    )
+    X = pd.DataFrame([{"elo_diff_home_away": 0.0}])
+    ci = _extract_ensemble_ci(ensemble, X)
+    assert ci is not None
+
+    # MLP excluded from away_win (A class, weight=0.05 < 0.15) — 99% outlier has no effect.
+    lo_a, hi_a = ci["away_win"]
+    assert hi_a <= 0.70, f"MLP outlier should be excluded from away_win; hi={hi_a:.3f}"
+    assert 0.0 <= lo_a <= hi_a <= 1.0
