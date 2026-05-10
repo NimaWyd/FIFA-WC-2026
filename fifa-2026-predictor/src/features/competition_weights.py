@@ -177,6 +177,7 @@ _STAGE_NORM_MAP: dict[str, str] = {
     "quarter-final": "quarterfinal",
     "quarter-finals": "quarterfinal",
     "quarterfinal": "quarterfinal",
+    "quarterfinals": "quarterfinal",
     "quarterfinales": "quarterfinal",
     "quarter final": "quarterfinal",
     "round of 4": "semifinal",
