@@ -218,6 +218,26 @@ class TeamStateTracker:
             return 0.0
         return sum(1 for h in hist if h["ga"] == 0) / len(hist)
 
+    def gd_form(self, team: str, window: int = 5) -> float:
+        """Average goal difference over last *window* matches, capped per-match at ±4."""
+        hist = self._history_slice(team, window)
+        if not hist:
+            return 0.0
+        capped = [max(-4, min(4, h["gf"] - h["ga"])) for h in hist]
+        return sum(capped) / len(capped)
+
+    def form_by_venue(self, team: str, home: bool, window: int = 5) -> float:
+        """Average points-per-game over last *window* home or away matches.
+
+        Neutral-venue matches (is_home=None) are excluded from both splits.
+        Returns 1.5 when no qualifying matches are found.
+        """
+        venue_hist = [h for h in self._history[team] if h.get("is_home") == home]
+        hist = venue_hist[-window:]
+        if not hist:
+            return 1.5
+        return sum(h["points"] for h in hist) / len(hist)
+
     def opp_adjusted_form(self, team: str, window: int = 5) -> float:
         """Form adjusted proportionally by opponent Elo strength.
 
@@ -401,7 +421,9 @@ class TeamStateTracker:
 
         is_draw = home_goals == away_goals
 
-        # Extended history with opponent Elo context + draw/opponent fields
+        # Extended history with opponent Elo context + draw/opponent fields.
+        # is_home is None for neutral-venue matches so they're excluded from
+        # venue-split form calculations.
         self._history[home_team].append(
             {
                 "date": date,
@@ -411,6 +433,7 @@ class TeamStateTracker:
                 "opp_elo_pre": away_elo_pre,
                 "opponent": away_team,
                 "is_draw": is_draw,
+                "is_home": None if neutral else True,
             }
         )
         self._history[away_team].append(
@@ -422,6 +445,7 @@ class TeamStateTracker:
                 "opp_elo_pre": home_elo_pre,
                 "opponent": home_team,
                 "is_draw": is_draw,
+                "is_home": None if neutral else False,
             }
         )
 
