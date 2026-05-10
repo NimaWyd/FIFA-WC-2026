@@ -1,11 +1,11 @@
 {
-  "accuracy": 0.47798997697412976,
-  "log_loss": 1.0501172425364216,
-  "brier_score": 0.633253611281922,
+  "accuracy": 0.36,
+  "log_loss": 2.290389745128849,
+  "brier_score": 0.7658706564402334,
   "class_mapping": {
     "A": 0,
     "D": 1,
     "H": 2
   },
-  "test_rows": 7383
+  "test_rows": 25
 }

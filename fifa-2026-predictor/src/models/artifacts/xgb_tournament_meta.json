@@ -3,9 +3,9 @@
   "calibration": "isotonic",
   "features_csv": "data/processed/features.csv",
   "split_sizes": {
-    "train": 104,
-    "val": 32,
-    "test": 25
+    "train": 100,
+    "val": 30,
+    "test": 24
   },
   "feature_columns": [
     "competition",
@@ -84,5 +84,5 @@
     "tier_away_rate"
   ],
   "early_stopping_rounds": 25,
-  "best_iteration": 23
+  "best_iteration": 26
 }
