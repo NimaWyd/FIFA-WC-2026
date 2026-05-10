@@ -2,7 +2,7 @@
 """Monte Carlo simulation of the WC2026 tournament."""
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any
 
 import numpy as np
@@ -271,5 +271,5 @@ def run_simulation(
     return {
         "n_simulations": n,
         "teams": teams_out,
-        "generated_at": datetime.utcnow().isoformat() + "Z",
+        "generated_at": datetime.now(tz=timezone.utc).isoformat().replace("+00:00", "Z"),
     }
