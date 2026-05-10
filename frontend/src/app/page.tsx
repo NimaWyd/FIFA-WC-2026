@@ -16,6 +16,7 @@ import MetadataBadge from "@/components/MetadataBadge";
 import GroupBracket from "@/components/GroupBracket";
 import GroupView from "@/components/GroupView";
 import MatchScoreboard from "@/components/MatchScoreboard";
+import SimulationPanel from "@/components/SimulationPanel";
 import { WC2026_TEAMS } from "@/lib/wc2026Teams";
 import { WCGroup, WCMatch } from "@/lib/wc2026Groups";
 import FlagIcon from "@/components/FlagIcon";
@@ -26,7 +27,7 @@ const TOURNAMENT_START = "2026-06-11";
 const TOURNAMENT_END = "2026-07-19";
 const MIN_WC_FILTER_TEAMS = 10;
 
-type Tab = "bracket" | "predictor";
+type Tab = "bracket" | "predictor" | "simulate";
 
 export default function Home() {
   const { teams: allTeams, loading: teamsLoading, error: teamsError } = useTeams();
@@ -168,6 +169,16 @@ export default function Home() {
           >
             Predict Match
           </button>
+          <button
+            onClick={() => setTab("simulate")}
+            className={`px-5 py-3.5 text-sm font-semibold border-b-[3px] transition-colors ${
+              tab === "simulate"
+                ? "border-fifa-blue text-white"
+                : "border-transparent text-slate-500 hover:text-slate-300"
+            }`}
+          >
+            Simulate
+          </button>
           {tab === "predictor" && (
             <div className="ml-auto flex items-center gap-2 py-2">
               <span className="text-xs text-slate-500">
@@ -202,6 +213,9 @@ export default function Home() {
             <GroupBracket onSelectGroup={handleSelectGroup} />
           )
         )}
+
+        {/* ── Simulate tab ── */}
+        {tab === "simulate" && <SimulationPanel />}
 
         {/* ── Predict Match tab ── */}
         {tab === "predictor" && (
