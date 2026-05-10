@@ -112,7 +112,7 @@ def main() -> None:
     logreg_pipeline = joblib.load(artifact_dir / "logreg.joblib")
 
     print("Training MLP on train split...")
-    mlp = MLPModel(min_train_year=min_train_year)
+    mlp = MLPModel(min_train_year=min_train_year, cfg=cfg)
     mlp.fit(train_df)
 
     print("Loading draw submodel...")

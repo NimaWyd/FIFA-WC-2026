@@ -61,6 +61,7 @@ def main() -> None:
                 "classifier",
                 LogisticRegression(
                     max_iter=int(cfg["model"]["logistic_max_iter"]),
+                    C=float(cfg["model"].get("logreg_C", 1.0)),
                     class_weight="balanced",
                 ),
             ),

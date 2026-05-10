@@ -312,8 +312,9 @@ class MLPModel(BaseModel):
 
     name = "mlp"
 
-    def __init__(self, min_train_year: int = 0) -> None:
+    def __init__(self, min_train_year: int = 0, cfg: dict | None = None) -> None:
         self._min_train_year = min_train_year
+        self._cfg = cfg or {}
         self._pipeline = None
         self._feature_cols = None
 
@@ -331,8 +332,9 @@ class MLPModel(BaseModel):
             train_df["match_weight"].values if "match_weight" in train_df.columns else None
         )
 
+        hidden_layers = self._cfg.get("model", {}).get("mlp_hidden_layers", [128, 64])
         clf = MLPClassifier(
-            hidden_layer_sizes=(128, 64),
+            hidden_layer_sizes=tuple(hidden_layers),
             activation="relu",
             solver="adam",
             alpha=0.01,

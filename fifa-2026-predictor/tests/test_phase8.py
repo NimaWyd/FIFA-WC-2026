@@ -72,3 +72,28 @@ class TestApplyStageLookup:
         result = pd.read_csv(out)
         assert "tournament_stage" in result.columns
         assert result["tournament_stage"].iloc[0] == "Final"
+
+
+from src.utils import load_config
+
+
+class TestConfigKeys:
+    def test_logreg_c_present_in_config(self):
+        cfg = load_config()
+        assert "logreg_C" in cfg["model"], "logreg_C missing from config"
+        assert cfg["model"]["logreg_C"] == 1.0
+
+    def test_min_model_weight_present_in_config(self):
+        cfg = load_config()
+        assert "min_model_weight" in cfg["model"]
+        assert cfg["model"]["min_model_weight"] == 0.05
+
+    def test_mlp_hidden_layers_present_in_config(self):
+        cfg = load_config()
+        assert "mlp_hidden_layers" in cfg["model"]
+        assert cfg["model"]["mlp_hidden_layers"] == [64, 32]
+
+    def test_tournament_model_min_weight_present_in_config(self):
+        cfg = load_config()
+        assert "tournament_model_min_weight" in cfg["model"]
+        assert cfg["model"]["tournament_model_min_weight"] == 3
