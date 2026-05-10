@@ -218,6 +218,14 @@ class TeamStateTracker:
             return 0.0
         return sum(1 for h in hist if h["ga"] == 0) / len(hist)
 
+    def gd_form(self, team: str, window: int = 5) -> float:
+        """Average goal difference over last *window* matches, capped per-match at ±4."""
+        hist = self._history_slice(team, window)
+        if not hist:
+            return 0.0
+        capped = [max(-4, min(4, h["gf"] - h["ga"])) for h in hist]
+        return sum(capped) / len(capped)
+
     def opp_adjusted_form(self, team: str, window: int = 5) -> float:
         """Form adjusted proportionally by opponent Elo strength.
 

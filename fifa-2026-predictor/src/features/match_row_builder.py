@@ -104,6 +104,11 @@ def build_match_row(
     home_clean_sheet_rate_w5 = tracker.clean_sheet_rate(home_team, 5)
     away_clean_sheet_rate_w5 = tracker.clean_sheet_rate(away_team, 5)
 
+    # --- Issue #84: goal-difference form ---
+
+    home_gd_form_w5 = tracker.gd_form(home_team, 5)
+    away_gd_form_w5 = tracker.gd_form(away_team, 5)
+
     # --- Phase 4: attack / defense decomposition ---
 
     home_attack_w5 = tracker.attack_rating(home_team, 5, recency=False)
@@ -231,6 +236,10 @@ def build_match_row(
         # Issue #88: clean sheet rate
         "home_clean_sheet_rate_w5": float(home_clean_sheet_rate_w5),
         "away_clean_sheet_rate_w5": float(away_clean_sheet_rate_w5),
+        # Issue #84: goal-difference form
+        "home_gd_form_w5": float(home_gd_form_w5),
+        "away_gd_form_w5": float(away_gd_form_w5),
+        "gd_form_diff": float(home_gd_form_w5 - away_gd_form_w5),
         # Attack / defense decomposition
         "home_attack_w5": home_attack_w5,
         "away_attack_w5": away_attack_w5,
