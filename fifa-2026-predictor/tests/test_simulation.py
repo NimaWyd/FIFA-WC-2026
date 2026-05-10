@@ -40,21 +40,20 @@ import numpy as np
 from unittest.mock import MagicMock, patch
 
 
-def _make_stub_model():
-    """Stub model that always returns 60% home / 20% draw / 20% away."""
-    model = MagicMock()
-    model.predict_proba.return_value = np.array([[0.20, 0.20, 0.60]])
-    clf = MagicMock()
-    clf.classes_ = np.array([0, 1, 2])
-    model.named_steps = {"classifier": clf}
-    return model
-
-
 def _make_stub_tracker():
     return MagicMock()
 
 
-_DUMMY_FEATURE_ROW = {"elo_diff_home_away": 0.0, "home_form": 1.5, "away_form": 1.5}
+def _make_stub_prob_cache():
+    """Return a fixed prob_cache for all 48×47 pairs (60% home win)."""
+    from src.simulation.wc2026_bracket import WC2026_GROUPS
+    all_teams = [t for g in WC2026_GROUPS for t in g["teams"]]
+    cache = {}
+    for home in all_teams:
+        for away in all_teams:
+            if home != away:
+                cache[(home, away)] = {"home_win": 0.60, "draw": 0.20, "away_win": 0.20}
+    return cache
 
 
 def test_simulate_once_returns_all_48_teams():
@@ -62,8 +61,7 @@ def test_simulate_once_returns_all_48_teams():
     from src.simulation.wc2026_bracket import WC2026_GROUPS
     all_teams = {t for g in WC2026_GROUPS for t in g["teams"]}
     rng = np.random.default_rng(42)
-    with patch("src.simulation.tournament.build_match_row", return_value=_DUMMY_FEATURE_ROW):
-        result = simulate_once(_make_stub_tracker(), _make_stub_model(), {}, rng)
+    result = simulate_once(_make_stub_tracker(), None, {}, rng, prob_cache=_make_stub_prob_cache())
     assert set(result.keys()) == all_teams
 
 
@@ -71,8 +69,7 @@ def test_simulate_once_returns_valid_stages():
     from src.simulation.tournament import simulate_once
     valid_stages = {"group_exit", "round_of_32", "quarter_final", "semi_final", "final", "champion"}
     rng = np.random.default_rng(42)
-    with patch("src.simulation.tournament.build_match_row", return_value=_DUMMY_FEATURE_ROW):
-        result = simulate_once(_make_stub_tracker(), _make_stub_model(), {}, rng)
+    result = simulate_once(_make_stub_tracker(), None, {}, rng, prob_cache=_make_stub_prob_cache())
     for team, stage in result.items():
         assert stage in valid_stages, f"{team} has invalid stage: {stage}"
 
@@ -80,16 +77,15 @@ def test_simulate_once_returns_valid_stages():
 def test_simulate_once_exactly_one_champion():
     from src.simulation.tournament import simulate_once
     rng = np.random.default_rng(42)
-    with patch("src.simulation.tournament.build_match_row", return_value=_DUMMY_FEATURE_ROW):
-        result = simulate_once(_make_stub_tracker(), _make_stub_model(), {}, rng)
+    result = simulate_once(_make_stub_tracker(), None, {}, rng, prob_cache=_make_stub_prob_cache())
     champions = [t for t, s in result.items() if s == "champion"]
     assert len(champions) == 1
 
 
 def test_run_simulation_probabilities_sum_to_one_per_team():
     from src.simulation.tournament import run_simulation
-    with patch("src.simulation.tournament.build_match_row", return_value=_DUMMY_FEATURE_ROW):
-        results = run_simulation(_make_stub_tracker(), _make_stub_model(), {}, n=50)
+    with patch("src.simulation.tournament.precompute_all_probabilities", return_value=_make_stub_prob_cache()):
+        results = run_simulation(_make_stub_tracker(), None, {}, n=50)
     for team_result in results["teams"]:
         total = (
             team_result["group_exit"] + team_result["round_of_32"] +

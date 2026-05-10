@@ -16,6 +16,9 @@ from src.simulation.wc2026_bracket import WC2026_GROUPS, WC2026_R32
 _TOURNAMENT_DATE = pd.Timestamp("2026-06-11")
 _COMPETITION = "FIFA World Cup"
 
+# Type alias for the pre-computed probability cache
+ProbCache = dict[tuple[str, str], dict[str, float]]
+
 
 def build_tournament_states(history_df: pd.DataFrame, cfg: dict) -> TeamStateTracker:
     """Replay all match history before the tournament start; return the tracker snapshot."""
@@ -32,7 +35,7 @@ def predict_match_proba(
     match_date: pd.Timestamp = _TOURNAMENT_DATE,
     stage: str = "Group Stage",
 ) -> dict[str, float]:
-    """Return {home_win, draw, away_win} using the pre-built tracker snapshot."""
+    """Return {home_win, draw, away_win} for a single match. Used for one-off predictions."""
     from src.models.common import TARGET_MAP
     record = build_match_row(
         tracker=tracker,
@@ -57,6 +60,59 @@ def predict_match_proba(
         "draw":     prob_by_class.get(TARGET_MAP["D"], 0.0),
         "away_win": prob_by_class.get(TARGET_MAP["A"], 0.0),
     }
+
+
+def precompute_all_probabilities(
+    tracker: TeamStateTracker, model: Any, cfg: dict,
+) -> ProbCache:
+    """Build feature rows for all 48×47 ordered team pairs and run ONE batched predict_proba.
+
+    Returns {(home, away): {home_win, draw, away_win}} for every possible matchup.
+    Reduces simulation time from O(n * matches) model calls to O(1) amortized.
+    """
+    from src.models.common import TARGET_MAP
+
+    all_teams = [t for g in WC2026_GROUPS for t in g["teams"]]
+    halflife = float(cfg.get("features", {}).get("elo_inactivity_halflife", 0.0))
+
+    pairs: list[tuple[str, str]] = []
+    rows: list[dict] = []
+    for home in all_teams:
+        for away in all_teams:
+            if home == away:
+                continue
+            pairs.append((home, away))
+            rows.append(build_match_row(
+                tracker=tracker,
+                home_team=home,
+                away_team=away,
+                match_date=_TOURNAMENT_DATE,
+                competition=_COMPETITION,
+                neutral=True,
+                home_confederation=get_confederation(home),
+                away_confederation=get_confederation(away),
+                home_fifa_rank=get_fifa_rank(home),
+                away_fifa_rank=get_fifa_rank(away),
+                tournament_stage="Group Stage",
+                elo_inactivity_halflife=halflife,
+            ))
+
+    feature_df = pd.DataFrame(rows)
+    probs_matrix = model.predict_proba(feature_df)  # (n_pairs, 3)
+
+    clf = model.named_steps["classifier"]
+    classes = [int(c) for c in clf.classes_]
+
+    cache: ProbCache = {}
+    for i, (home, away) in enumerate(pairs):
+        prob_by_class = {c: float(probs_matrix[i, j]) for j, c in enumerate(classes)}
+        cache[(home, away)] = {
+            "home_win": prob_by_class.get(TARGET_MAP["H"], 0.0),
+            "draw":     prob_by_class.get(TARGET_MAP["D"], 0.0),
+            "away_win": prob_by_class.get(TARGET_MAP["A"], 0.0),
+        }
+
+    return cache
 
 
 def _sample_goals(outcome: str, rng: np.random.Generator) -> tuple[int, int]:
@@ -124,11 +180,19 @@ def _assign_third_place_teams(
     return assigned
 
 
+def _knockout_winner(home: str, away: str, prob_cache: ProbCache, rng: np.random.Generator) -> tuple[str, str]:
+    """Return (winner, loser) for a single knockout match (no draws)."""
+    probs = prob_cache[(home, away)]
+    p_h = probs["home_win"] + probs["draw"] / 2
+    p_a = probs["away_win"] + probs["draw"] / 2
+    total = p_h + p_a
+    winner = home if rng.random() < p_h / total else away
+    return winner, (away if winner == home else home)
+
+
 def _simulate_knockout_round(
     matchups: list[tuple[str, str]],
-    tracker: TeamStateTracker,
-    model: Any,
-    cfg: dict,
+    prob_cache: ProbCache,
     stage: str,
     rng: np.random.Generator,
 ) -> tuple[list[str], dict[str, str]]:
@@ -136,12 +200,7 @@ def _simulate_knockout_round(
     winners = []
     eliminated = {}
     for home, away in matchups:
-        probs = predict_match_proba(home, away, tracker, model, cfg, stage=stage)
-        p_h = probs["home_win"] + probs["draw"] / 2
-        p_a = probs["away_win"] + probs["draw"] / 2
-        total = p_h + p_a
-        winner = home if rng.random() < p_h / total else away
-        loser = away if winner == home else home
+        winner, loser = _knockout_winner(home, away, prob_cache, rng)
         winners.append(winner)
         eliminated[loser] = stage
     return winners, eliminated
@@ -152,8 +211,16 @@ def simulate_once(
     model: Any,
     cfg: dict,
     rng: np.random.Generator,
+    prob_cache: ProbCache | None = None,
 ) -> dict[str, str]:
-    """Run one full WC2026 simulation. Returns {team: stage_reached} for all 48 teams."""
+    """Run one full WC2026 simulation. Returns {team: stage_reached} for all 48 teams.
+
+    If prob_cache is provided (pre-computed via precompute_all_probabilities), no model
+    calls are made during the simulation — all probability lookups are O(1) dict access.
+    """
+    if prob_cache is None:
+        prob_cache = precompute_all_probabilities(tracker, model, cfg)
+
     results: dict[str, str] = {}
     records: dict[str, dict] = {}
 
@@ -163,7 +230,7 @@ def simulate_once(
             records[team] = {"pts": 0, "gd": 0, "gf": 0}
         for match in group["matches"]:
             h, a = match["home"], match["away"]
-            probs = predict_match_proba(h, a, tracker, model, cfg)
+            probs = prob_cache[(h, a)]
             outcome = rng.choice(
                 ["H", "D", "A"],
                 p=[probs["home_win"], probs["draw"], probs["away_win"]],
@@ -220,11 +287,11 @@ def simulate_once(
 
     # -- Knockout rounds ------------------------------------------------------
     # WC2026 48-team bracket: R32 (16 matches) -> R16 (8) -> QF (4) -> SF (2) -> Final (1)
-    # R32 and R16 losers are both labeled "round_of_32" (first two knockout rounds)
-    round_names = ["round_of_32", "round_of_32", "quarter_final", "semi_final", "final"]
+    # R32 and R16 losers are both labeled "round_of_32"
+    round_names = ["round_of_32", "round_of_32", "quarter_final", "semi_final"]
     current = r32_matchups
-    for round_name in round_names[:-1]:
-        survivors, elim = _simulate_knockout_round(current, tracker, model, cfg, round_name, rng)
+    for round_name in round_names:
+        survivors, elim = _simulate_knockout_round(current, prob_cache, round_name, rng)
         results.update(elim)
         current = [(survivors[i], survivors[i + 1]) for i in range(0, len(survivors), 2)]
 
@@ -234,13 +301,8 @@ def simulate_once(
             f"Bracket reduction failed: expected 1 finalist pair, got {len(current)}"
         )
     (finalist1, finalist2) = current[0]
-    probs = predict_match_proba(finalist1, finalist2, tracker, model, cfg, stage="Final")
-    p_h = probs["home_win"] + probs["draw"] / 2
-    p_a = probs["away_win"] + probs["draw"] / 2
-    total = p_h + p_a
-    champion = finalist1 if rng.random() < p_h / total else finalist2
-    runner_up = finalist2 if champion == finalist1 else finalist1
-    results[champion] = "champion"
+    winner, runner_up = _knockout_winner(finalist1, finalist2, prob_cache, rng)
+    results[winner] = "champion"
     results[runner_up] = "final"
 
     return results
@@ -252,14 +314,17 @@ def run_simulation(
     cfg: dict,
     n: int = 1000,
 ) -> dict:
-    """Run n simulations. Returns dict ready for SimulationResponse."""
+    """Run n simulations. Pre-computes all match probabilities once before the loop."""
     all_teams = {t: g["id"] for g in WC2026_GROUPS for t in g["teams"]}
     stage_keys = ["group_exit", "round_of_32", "quarter_final", "semi_final", "final", "champion"]
     counts: dict[str, dict[str, int]] = {t: {s: 0 for s in stage_keys} for t in all_teams}
 
+    # Single batched model call covering all 48×47 pairs — O(1) lookups during simulation
+    prob_cache = precompute_all_probabilities(tracker, model, cfg)
+
     rng = np.random.default_rng()
     for _ in range(n):
-        sim_result = simulate_once(tracker, model, cfg, rng)
+        sim_result = simulate_once(tracker, model, cfg, rng, prob_cache=prob_cache)
         for team, stage in sim_result.items():
             counts[team][stage] += 1
 
