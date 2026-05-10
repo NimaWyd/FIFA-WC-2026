@@ -28,6 +28,11 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Train XGBoost model.")
     parser.add_argument("--features-csv", default="data/processed/features.csv")
     parser.add_argument("--model-name", default="xgb")
+    parser.add_argument(
+        "--tournament-only",
+        action="store_true",
+        help="Train on tournament matches only (competition_weight >= tournament_model_min_weight).",
+    )
     return parser.parse_args()
 
 
@@ -52,6 +57,11 @@ def build_weighted_sample_weights(
     return class_w
 
 
+def _apply_tournament_filter(df: pd.DataFrame, min_weight: int) -> pd.DataFrame:
+    """Keep only rows with competition_weight >= min_weight."""
+    return df[df["competition_weight"] >= min_weight].reset_index(drop=True)
+
+
 def main() -> None:
     cfg = load_config()
     args = parse_args()
@@ -62,6 +72,12 @@ def main() -> None:
         n_before = len(df)
         df = df[pd.to_datetime(df["date"]).dt.year >= min_train_year].reset_index(drop=True)
         print(f"Filtered to {min_train_year}+: {n_before} -> {len(df)} rows")
+
+    if args.tournament_only:
+        tournament_min = int(cfg["model"].get("tournament_model_min_weight", 3))
+        n_before = len(df)
+        df = _apply_tournament_filter(df, min_weight=tournament_min)
+        print(f"Tournament-only filter (weight>={tournament_min}): {n_before} -> {len(df)} rows")
 
     train_df, val_df, test_df = make_chronological_split(
         df,

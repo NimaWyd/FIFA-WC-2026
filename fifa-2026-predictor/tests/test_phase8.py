@@ -123,3 +123,27 @@ class TestEnsembleWeights:
         y = np.random.default_rng(0).integers(0, 3, size=50)
         weights = _optimize_per_class_weights(p, p, p, y, min_weight=0.05)
         assert weights.min() >= 0.05 - 1e-6, f"weight below floor: {weights.min()}"
+
+
+import pandas as pd
+from src.models.train_xgb import _apply_tournament_filter
+
+
+class TestTournamentFilter:
+    def _sample_df(self) -> pd.DataFrame:
+        return pd.DataFrame({
+            "date": ["2020-01-01", "2020-06-01", "2021-01-01"],
+            "competition_weight": [1, 3, 5],
+            "target": ["H", "D", "A"],
+        })
+
+    def test_filter_keeps_rows_at_or_above_threshold(self):
+        df = self._sample_df()
+        result = _apply_tournament_filter(df, min_weight=3)
+        assert len(result) == 2
+        assert all(result["competition_weight"] >= 3)
+
+    def test_filter_with_threshold_5_keeps_only_wc(self):
+        df = self._sample_df()
+        result = _apply_tournament_filter(df, min_weight=5)
+        assert len(result) == 1
