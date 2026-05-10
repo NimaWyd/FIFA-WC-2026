@@ -38,14 +38,32 @@ POST /api/v1/predict             →   Existing results panel
 
 ### New module: `src/simulation/wc2026_bracket.py`
 
-Defines the WC2026 group structure as a Python constant — mirrors `frontend/src/lib/wc2026Groups.ts` but kept in the backend to avoid any frontend/backend coupling:
+Defines both the group structure and the exact R32 bracket as Python constants — mirrors `frontend/src/lib/wc2026Groups.ts` on the backend.
 
-```python
-WC2026_GROUPS: list[dict] = [
-    {"id": "A", "teams": ["Mexico", "Korea Republic", "South Africa", "Czechia"], "matches": [...]},
-    ...  # all 12 groups, 48 group stage matches with home/away/date
-]
-```
+**Group structure:** 12 groups (A–L), 4 teams each, 48 group stage matches.
+
+**R32 bracket** (WC2026 format — different from all previous World Cups):
+
+| Match | Matchup |
+|-------|---------|
+| 73 | Runner-up A vs Runner-up B |
+| 74 | Winner E vs Best 3rd (A/B/C/D/F) |
+| 75 | Winner F vs Runner-up C |
+| 76 | Winner C vs Runner-up F |
+| 77 | Winner I vs Best 3rd (C/D/F/G/H) |
+| 78 | Runner-up E vs Runner-up I |
+| 79 | Winner A vs Best 3rd (C/E/F/H/I) |
+| 80 | Winner L vs Best 3rd (E/H/I/J/K) |
+| 81 | Winner D vs Best 3rd (B/E/F/I/J) |
+| 82 | Winner G vs Best 3rd (A/E/H/I/J) |
+| 83 | Runner-up K vs Runner-up L |
+| 84 | Winner H vs Runner-up J |
+| 85 | Winner B vs Best 3rd (E/F/G/I/J) |
+| 86 | Winner J vs Runner-up H |
+| 87 | Winner K vs Best 3rd (D/E/I/J/L) |
+| 88 | Runner-up D vs Runner-up G |
+
+**3rd-place seeding:** Each "Best 3rd" slot has an eligible group list (shown above). After identifying the 8 best third-place teams, assign each to the slot whose eligible groups include their origin group. Where multiple slots are eligible, assign randomly — this matches FIFA's Annex C logic at a level of precision acceptable for Monte Carlo averaging.
 
 This is the single source of truth for the simulation bracket on the backend.
 
