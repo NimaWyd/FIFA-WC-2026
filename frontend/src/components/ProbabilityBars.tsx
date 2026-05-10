@@ -33,13 +33,25 @@ export default function ProbabilityBars({ probabilities, homeTeam, awayTeam, con
         </p>
       )}
       {bars.map((bar, i) => {
-        const ci = confidence?.[bar.ciKey] as [number, number] | undefined;
+        const rawCi = confidence?.[bar.ciKey];
+        const ci = rawCi
+          ? ([
+              Math.min(Math.max(rawCi[0], 0), 1),
+              Math.min(Math.max(rawCi[1], rawCi[0]), 1),
+            ] as [number, number])
+          : undefined;
         const halfSpread = ci ? (((ci[1] - ci[0]) / 2) * 100).toFixed(1) : null;
 
         return (
           <div key={bar.label} className="flex items-center gap-3">
             <span className="w-32 text-sm text-slate-300 truncate text-right">{bar.label}</span>
             <div className="flex-1 bg-navy-600 rounded-full h-7 overflow-hidden relative">
+              <motion.div
+                className={`h-full rounded-full bg-gradient-to-r ${bar.color}`}
+                initial={{ width: 0 }}
+                animate={{ width: `${(bar.value * 100).toFixed(1)}%` }}
+                transition={{ duration: 0.6, delay: i * 0.15, ease: "easeOut" }}
+              />
               {ci && (
                 <div
                   className="absolute top-0 h-full bg-white/10 rounded-full"
@@ -49,12 +61,6 @@ export default function ProbabilityBars({ probabilities, homeTeam, awayTeam, con
                   }}
                 />
               )}
-              <motion.div
-                className={`h-full rounded-full bg-gradient-to-r ${bar.color}`}
-                initial={{ width: 0 }}
-                animate={{ width: `${(bar.value * 100).toFixed(1)}%` }}
-                transition={{ duration: 0.6, delay: i * 0.15, ease: "easeOut" }}
-              />
             </div>
             <span className="w-14 text-sm font-bold text-white text-right">
               {(bar.value * 100).toFixed(1)}%
