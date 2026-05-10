@@ -1,4 +1,4 @@
-import type { TeamInfo, PredictRequest, PredictResponse, ModelInfo } from "./types";
+import type { TeamInfo, PredictRequest, PredictResponse, ModelInfo, SimulationResponse } from "./types";
 
 const BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:8000/api/v1";
 
@@ -90,4 +90,9 @@ export async function predict(req: PredictRequest): Promise<PredictResponse> {
 export async function fetchModelInfo(): Promise<ModelInfo> {
   const res = await fetchWithTimeout(`${BASE}/model-info`);
   return handleResponse<ModelInfo>(res);
+}
+
+export async function fetchSimulation(): Promise<SimulationResponse> {
+  const res = await fetchWithTimeout(`${BASE}/simulate`, {}, 90_000);
+  return handleResponse<SimulationResponse>(res);
 }

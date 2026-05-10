@@ -71,3 +71,20 @@ export interface ModelInfo {
   scoreline_model_status: string;
   config_summary: Record<string, unknown>;
 }
+
+export interface TeamSimResult {
+  team: string;
+  group: string;
+  group_exit: number;
+  round_of_32: number;
+  quarter_final: number;
+  semi_final: number;
+  final: number;
+  champion: number;
+}
+
+export interface SimulationResponse {
+  n_simulations: number;
+  teams: TeamSimResult[];
+  generated_at: string;
+}
