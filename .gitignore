@@ -31,3 +31,4 @@ fifa-2026-predictor/src/models/artifacts/*.joblib
 
 *.md
 *.claude
+.superpowers/
