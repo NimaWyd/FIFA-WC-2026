@@ -68,6 +68,14 @@ class EnsembleModel:
         row_sums = result.sum(axis=1, keepdims=True)
         return result / np.maximum(row_sums, 1e-9)
 
+    def base_probas(self, X: pd.DataFrame) -> np.ndarray:
+        """Return (3, n, 3) array of per-model probabilities: [xgb, logreg, mlp] × [A=0, D=1, H=2]."""
+        return np.array([
+            self._get_base_proba(self.xgb_pipeline, X),
+            self._get_base_proba(self.logreg_pipeline, X),
+            self._get_base_proba(self.mlp_pipeline, X),
+        ])
+
     def _get_base_proba(self, model: Any, X: pd.DataFrame) -> np.ndarray:
         """Get (n, 3) probabilities ordered [A=0, D=1, H=2] from any model type."""
         from src.evaluation.baselines import MLPModel

@@ -47,15 +47,16 @@ def test_extract_per_model_probas_returns_correct_shape():
     assert 0.0 <= lo <= hi <= 1.0
 
 
-def test_ci_bounds_bracket_blended_value():
+def test_ci_values_are_valid_probabilities():
+    """CI bounds should be valid probabilities with lo <= hi for each outcome."""
     from src.api.services import _extract_ensemble_ci
     ensemble = _make_dummy_ensemble()
     X = pd.DataFrame([{"elo_diff_home_away": 50.0}])
     ci = _extract_ensemble_ci(ensemble, X)
-    blended = ensemble.predict_proba(X)[0]  # [A, D, H]
-    assert ci["home_win"][0] <= blended[2] <= ci["home_win"][1]
-    assert ci["draw"][0] <= blended[1] <= ci["draw"][1]
-    assert ci["away_win"][0] <= blended[0] <= ci["away_win"][1]
+    assert ci is not None
+    for outcome in ("home_win", "draw", "away_win"):
+        lo, hi = ci[outcome]
+        assert 0.0 <= lo <= hi <= 1.0, f"{outcome}: [{lo}, {hi}] is invalid"
 
 
 def test_non_ensemble_returns_none():

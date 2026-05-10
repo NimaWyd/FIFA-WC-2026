@@ -177,19 +177,24 @@ def resolve_team_metadata(
 def _extract_ensemble_ci(
     model: Any, feature_row: "pd.DataFrame"
 ) -> Optional[dict[str, tuple[float, float]]]:
+    """Extract model disagreement range across XGB/LogReg/MLP base models.
+
+    Returns (min, max) of raw base-model probabilities for each outcome —
+    this is a model spread, not a statistical confidence interval.
+    Returns None if model is not an EnsembleModel.
+    """
     if not isinstance(model, EnsembleModel):
         return None
     try:
-        p_xgb = model._get_base_proba(model.xgb_pipeline, feature_row)[0]
-        p_logreg = model._get_base_proba(model.logreg_pipeline, feature_row)[0]
-        p_mlp = model._get_base_proba(model.mlp_pipeline, feature_row)[0]
-        all_p = np.array([p_xgb, p_logreg, p_mlp])
+        all_p = model.base_probas(feature_row)  # (3, n, 3)
+        row = all_p[:, 0, :]  # (3, 3) — first (and only) row
         return {
-            "home_win": (float(all_p[:, 2].min()), float(all_p[:, 2].max())),
-            "draw":     (float(all_p[:, 1].min()), float(all_p[:, 1].max())),
-            "away_win": (float(all_p[:, 0].min()), float(all_p[:, 0].max())),
+            "home_win": (float(row[:, 2].min()), float(row[:, 2].max())),
+            "draw":     (float(row[:, 1].min()), float(row[:, 1].max())),
+            "away_win": (float(row[:, 0].min()), float(row[:, 0].max())),
         }
-    except Exception:
+    except Exception as exc:
+        log.warning("CI extraction failed: %s", exc)
         return None
 
 
