@@ -349,6 +349,7 @@ export default function Home() {
                     probabilities={result.probabilities}
                     homeTeam={result.home_team}
                     awayTeam={result.away_team}
+                    confidence={result.confidence}
                   />
                 </div>
 

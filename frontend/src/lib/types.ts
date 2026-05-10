@@ -35,6 +35,12 @@ export interface Explanation {
   data_note: string;
 }
 
+export interface ConfidenceInterval {
+  home_win: [number, number];
+  draw: [number, number];
+  away_win: [number, number];
+}
+
 export interface PredictResponse {
   home_team: string;
   away_team: string;
@@ -44,6 +50,7 @@ export interface PredictResponse {
   expected_goals: { home: number; away: number };
   explanation: Explanation;
   metadata: Record<string, unknown>;
+  confidence?: ConfidenceInterval;
 }
 
 export interface PredictRequest {

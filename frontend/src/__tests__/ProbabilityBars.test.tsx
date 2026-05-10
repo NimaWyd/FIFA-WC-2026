@@ -5,7 +5,7 @@ import ProbabilityBars from '@/components/ProbabilityBars'
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, initial, animate, transition, ...rest }: any) =>
+    div: ({ children, ...rest }: { children?: React.ReactNode; [key: string]: unknown }) =>
       React.createElement('div', rest, children),
   },
 }))
