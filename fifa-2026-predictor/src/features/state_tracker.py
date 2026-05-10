@@ -211,6 +211,13 @@ class TeamStateTracker:
             return sum(w * h["ga"] for w, h in zip(weights, hist)) / total_w
         return sum(h["ga"] for h in hist) / len(hist)
 
+    def clean_sheet_rate(self, team: str, window: int = 5) -> float:
+        """Fraction of last *window* matches in which the team conceded 0 goals."""
+        hist = self._history_slice(team, window)
+        if not hist:
+            return 0.0
+        return sum(1 for h in hist if h["ga"] == 0) / len(hist)
+
     def opp_adjusted_form(self, team: str, window: int = 5) -> float:
         """Form adjusted proportionally by opponent Elo strength.
 

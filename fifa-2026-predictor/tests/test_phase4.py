@@ -680,6 +680,81 @@ class TestSchemaStability(unittest.TestCase):
             self.assertIn(k, row, f"Legacy key removed: {k}")
 
 
+# ---------------------------------------------------------------------------
+# Issue #88: clean sheet rate
+# ---------------------------------------------------------------------------
+
+class TestCleanSheetRate(unittest.TestCase):
+
+    def _tracker_with_results(self, goals_against: list[int]) -> TeamStateTracker:
+        tracker = TeamStateTracker(_cfg())
+        base = pd.Timestamp("2025-01-01")
+        for i, ga in enumerate(goals_against):
+            tracker.update(
+                "Team", "Opp",
+                home_goals=1, away_goals=ga,
+                neutral=True,
+                date=base + pd.Timedelta(days=30 * i),
+                competition="International Friendly",
+            )
+        return tracker
+
+    def test_all_clean_sheets_returns_one(self):
+        tracker = self._tracker_with_results([0, 0, 0, 0, 0])
+        self.assertAlmostEqual(tracker.clean_sheet_rate("Team", 5), 1.0)
+
+    def test_no_clean_sheets_returns_zero(self):
+        tracker = self._tracker_with_results([1, 2, 1, 3, 1])
+        self.assertAlmostEqual(tracker.clean_sheet_rate("Team", 5), 0.0)
+
+    def test_mixed_returns_correct_fraction(self):
+        tracker = self._tracker_with_results([0, 1, 0, 1, 0])
+        self.assertAlmostEqual(tracker.clean_sheet_rate("Team", 5), 0.6)
+
+    def test_no_history_returns_zero(self):
+        tracker = TeamStateTracker(_cfg())
+        self.assertAlmostEqual(tracker.clean_sheet_rate("NewTeam", 5), 0.0)
+
+    def test_window_respected(self):
+        # 3 old goals-conceded, then 2 clean sheets — window=2 should return 1.0
+        tracker = self._tracker_with_results([2, 2, 2, 0, 0])
+        self.assertAlmostEqual(tracker.clean_sheet_rate("Team", 2), 1.0)
+
+    def test_rate_bounded_between_zero_and_one(self):
+        tracker = self._tracker_with_results([0, 1, 2, 0, 1])
+        rate = tracker.clean_sheet_rate("Team", 5)
+        self.assertGreaterEqual(rate, 0.0)
+        self.assertLessEqual(rate, 1.0)
+
+    def test_match_row_has_clean_sheet_keys(self):
+        tracker = self._tracker_with_results([0, 1, 0])
+        row = build_match_row(
+            tracker=tracker,
+            home_team="Team", away_team="Opp",
+            match_date=pd.Timestamp("2026-06-01"),
+            competition="Friendly", neutral=True,
+            home_confederation="UEFA", away_confederation="UEFA",
+            home_fifa_rank=10, away_fifa_rank=20,
+            tournament_stage="Unknown",
+        )
+        self.assertIn("home_clean_sheet_rate_w5", row)
+        self.assertIn("away_clean_sheet_rate_w5", row)
+
+    def test_match_row_clean_sheet_values_are_floats(self):
+        tracker = self._tracker_with_results([0, 0, 1])
+        row = build_match_row(
+            tracker=tracker,
+            home_team="Team", away_team="Opp",
+            match_date=pd.Timestamp("2026-06-01"),
+            competition="Friendly", neutral=True,
+            home_confederation="UEFA", away_confederation="UEFA",
+            home_fifa_rank=10, away_fifa_rank=20,
+            tournament_stage="Unknown",
+        )
+        self.assertIsInstance(row["home_clean_sheet_rate_w5"], float)
+        self.assertIsInstance(row["away_clean_sheet_rate_w5"], float)
+
+
 class TestLambdaBounds(unittest.TestCase):
     """λ values must stay within realistic football bounds."""
 

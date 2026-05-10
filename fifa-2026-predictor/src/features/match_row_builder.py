@@ -99,6 +99,11 @@ def build_match_row(
     home_form_rw5 = tracker.form_recency_weighted(home_team, 5)
     away_form_rw5 = tracker.form_recency_weighted(away_team, 5)
 
+    # --- Issue #88: clean sheet rate ---
+
+    home_clean_sheet_rate_w5 = tracker.clean_sheet_rate(home_team, 5)
+    away_clean_sheet_rate_w5 = tracker.clean_sheet_rate(away_team, 5)
+
     # --- Phase 4: attack / defense decomposition ---
 
     home_attack_w5 = tracker.attack_rating(home_team, 5, recency=False)
@@ -223,6 +228,9 @@ def build_match_row(
         # Recency-weighted form
         "home_form_rw5": home_form_rw5,
         "away_form_rw5": away_form_rw5,
+        # Issue #88: clean sheet rate
+        "home_clean_sheet_rate_w5": float(home_clean_sheet_rate_w5),
+        "away_clean_sheet_rate_w5": float(away_clean_sheet_rate_w5),
         # Attack / defense decomposition
         "home_attack_w5": home_attack_w5,
         "away_attack_w5": away_attack_w5,
