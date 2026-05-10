@@ -1,0 +1,180 @@
+"use client";
+import TrophyEmbed from "./TrophyEmbed";
+
+const OPENING_MATCHES = [
+  { home: "MEX", away: "RSA", date: "JUN 11", venue: "Mexico City", group: "GROUP A" },
+  { home: "CAN", away: "BIH", date: "JUN 12", venue: "Toronto", group: "GROUP B" },
+  { home: "QAT", away: "SUI", date: "JUN 13", venue: "San Francisco", group: "GROUP B" },
+] as const;
+
+const STATS = [
+  ["48", "Nations"],
+  ["104", "Matches"],
+  ["16", "Cities"],
+  ["39", "Days"],
+] as const;
+
+interface LandingHeroProps {
+  onFillBracket: () => void;
+  onViewMatches: () => void;
+  onViewStandings: () => void;
+}
+
+export default function LandingHero({ onFillBracket, onViewMatches, onViewStandings }: LandingHeroProps) {
+  return (
+    <section className="relative min-h-screen bg-navy-900 overflow-hidden text-[#f0ece2]">
+      {/* Radial gradients */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse at 30% 60%, rgba(34,160,82,0.28) 0%, transparent 52%), radial-gradient(ellipse at 82% 18%, rgba(245,200,66,0.12) 0%, transparent 58%)",
+        }}
+      />
+      {/* Pitch stripes */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-[0.05]"
+        style={{ background: "repeating-linear-gradient(90deg, transparent 0 80px, #fff 80px 81px)" }}
+      />
+
+      {/* ── Header ── */}
+      <header className="relative flex items-center justify-between px-8 md:px-14 py-6 border-b border-white/[0.06]">
+        <div className="flex items-center gap-8 md:gap-10">
+          <div className="flex items-center gap-2.5 flex-shrink-0">
+            <div className="w-[28px] h-[28px] bg-pitch-400 rounded-[3px] rotate-45" />
+            <span className="font-anton text-[22px] tracking-[0.06em]">FORTUNA 26</span>
+          </div>
+          <nav className="hidden md:flex items-center gap-7">
+            {(
+              [
+                { label: "Bracket", onClick: onFillBracket },
+                { label: "Matches", onClick: onViewMatches },
+                { label: "Standings", onClick: onViewStandings },
+                { label: "Leaderboard", onClick: () => {} },
+              ] as const
+            ).map(({ label, onClick }) => (
+              <button
+                key={label}
+                onClick={onClick}
+                className="text-[13px] font-semibold tracking-[0.03em] uppercase text-[rgba(240,236,226,0.6)] hover:text-[#f0ece2] transition-colors"
+              >
+                {label}
+              </button>
+            ))}
+          </nav>
+        </div>
+        <div className="flex items-center gap-4">
+          <span className="font-jb text-[11px] tracking-[0.1em] text-[rgba(240,236,226,0.45)] hidden sm:block">
+            SCORE · — PTS
+          </span>
+          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#c97a4a] to-[#6e3a1e] flex-shrink-0" />
+        </div>
+      </header>
+
+      {/* ── Hero grid ── */}
+      <div className="relative grid grid-cols-1 md:grid-cols-[1.1fr_1fr] px-8 md:px-14 pt-8 md:pt-10 pb-52 md:pb-60 animate-fade-in">
+        {/* Left: text + CTAs + stats */}
+        <div className="pt-4 md:pt-9">
+          <p className="font-jb text-[12px] tracking-[0.16em] uppercase text-pitch-400">
+            ◆ Knockout predictor · USA · MEX · CAN
+          </p>
+
+          <h1 className="font-anton uppercase leading-[0.86] tracking-[-0.01em] mt-3 text-[72px] sm:text-[96px] md:text-[120px] lg:text-[148px] xl:text-[168px]">
+            <span className="block">Call</span>
+            <span className="block text-pitch-400">every</span>
+            <span className="block">match.</span>
+          </h1>
+
+          <p className="max-w-[480px] text-[16px] leading-[1.55] text-[rgba(240,236,226,0.68)] mt-6 md:mt-7">
+            Build your bracket. Track 104 matches across 16 host cities. Climb the leaderboard
+            with predictions that the world will be talking about.
+          </p>
+
+          <div className="flex flex-wrap gap-3 mt-7 md:mt-8">
+            <button
+              onClick={onFillBracket}
+              className="font-anton text-[15px] tracking-[0.09em] px-7 py-4 bg-pitch-400 text-navy-900 rounded-[2px] hover:bg-pitch-300 transition-colors"
+            >
+              FILL MY BRACKET →
+            </button>
+            <button
+              onClick={onViewMatches}
+              className="font-anton text-[15px] tracking-[0.09em] px-7 py-4 bg-transparent text-[#f0ece2] border border-white/[0.18] rounded-[2px] hover:border-white/40 transition-colors"
+            >
+              VIEW STANDINGS
+            </button>
+          </div>
+
+          {/* Stats row */}
+          <div className="grid grid-cols-4 mt-12 md:mt-14 pt-[22px] border-t border-white/[0.08]">
+            {STATS.map(([n, l]) => (
+              <div key={l}>
+                <div className="font-anton text-[36px] md:text-[44px] leading-none">{n}</div>
+                <div className="text-[11px] uppercase tracking-[0.08em] text-[rgba(240,236,226,0.5)] mt-1.5">
+                  {l}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Right: 3D trophy */}
+        <div className="hidden md:block relative h-[580px] lg:h-[640px] -mt-5">
+          <div className="animate-float w-full h-full">
+            <TrophyEmbed className="w-full h-full" />
+          </div>
+          <span className="absolute top-0 right-0 font-jb text-[11px] tracking-[0.14em] text-[rgba(240,236,226,0.35)]">
+            EDITION · XXIII
+          </span>
+          <span className="absolute bottom-2 right-0 font-jb text-[11px] tracking-[0.14em] text-[rgba(240,236,226,0.35)]">
+            JUN 11 → JUL 19, 2026
+          </span>
+        </div>
+      </div>
+
+      {/* ── Fixture strip ── */}
+      <div className="absolute bottom-6 left-8 right-8 md:left-14 md:right-14 grid grid-cols-[auto_1fr] gap-6 md:gap-8 items-start">
+        <div className="pt-1 flex-shrink-0">
+          <div className="font-jb text-[11px] tracking-[0.14em] text-[rgba(240,236,226,0.4)] uppercase mb-2.5">
+            Upcoming
+          </div>
+          <div className="font-anton text-[30px] md:text-[38px] leading-[1.05]">
+            GROUP
+            <br />
+            STAGE
+          </div>
+        </div>
+        <div className="flex gap-3 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none]">
+          {OPENING_MATCHES.map((m) => (
+            <div
+              key={m.home}
+              className="flex-shrink-0 bg-white/[0.04] border border-white/[0.08] rounded-[4px] px-[18px] py-4 min-w-[200px] flex flex-col gap-3.5"
+            >
+              <div className="flex justify-between items-center">
+                <span className="font-jb text-[10px] tracking-[0.12em] text-[rgba(240,236,226,0.5)]">
+                  {m.group}
+                </span>
+                <span className="font-jb text-[10px] tracking-[0.12em] text-[rgba(240,236,226,0.5)]">
+                  {m.date}
+                </span>
+              </div>
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex flex-col gap-1.5">
+                  <span className="font-anton text-[26px] leading-none">{m.home}</span>
+                  <span className="font-anton text-[26px] leading-none text-[rgba(240,236,226,0.65)]">
+                    {m.away}
+                  </span>
+                </div>
+                <span className="font-jb text-[11px] text-[rgba(240,236,226,0.4)] text-right leading-snug">
+                  {m.venue}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
