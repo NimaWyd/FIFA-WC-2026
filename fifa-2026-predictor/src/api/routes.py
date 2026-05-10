@@ -109,3 +109,29 @@ def predict(request: schemas.PredictRequest) -> schemas.PredictResponse:
         metadata=result["metadata"],
         confidence=schemas.ConfidenceInterval(**result["confidence"]) if result.get("confidence") else None,
     )
+
+
+# ---------------------------------------------------------------------------
+# /simulate
+# ---------------------------------------------------------------------------
+
+@router.get("/simulate", response_model=schemas.SimulationResponse, tags=["simulation"])
+def simulate_tournament() -> schemas.SimulationResponse:
+    """Run 1000 Monte Carlo WC2026 simulations (cached after first call).
+
+    Returns per-team probabilities for each stage: group exit, R32, QF, SF,
+    Final, and Champion.
+    """
+    try:
+        result = services.simulate(n=1000)
+    except RuntimeError as exc:
+        raise HTTPException(status_code=503, detail=str(exc))
+    except Exception as exc:
+        log.error("Simulation failed: %s", exc)
+        raise HTTPException(status_code=500, detail=f"Simulation failed: {exc}")
+
+    return schemas.SimulationResponse(
+        n_simulations=result["n_simulations"],
+        teams=[schemas.TeamSimResult(**t) for t in result["teams"]],
+        generated_at=result["generated_at"],
+    )

@@ -44,6 +44,7 @@ _history_df: Optional[pd.DataFrame] = None
 _cfg: Optional[dict] = None
 _tournament_model: Any = None
 _tournament_model_loaded: bool = False
+_simulation_cache: Optional[dict] = None
 
 
 def _get_cfg() -> dict:
@@ -86,6 +87,26 @@ def _get_tournament_model() -> Any:
     else:
         log.warning("xgb_tournament.joblib not found — all requests use ensemble model")
     return _tournament_model
+
+
+def simulate(n: int = 1000) -> dict:
+    """Run tournament simulation (cached for server lifetime)."""
+    global _simulation_cache
+    if _simulation_cache is not None:
+        return _simulation_cache
+
+    model = _get_model()
+    if model is None:
+        raise RuntimeError("No trained model artifact found.")
+    history_df = _get_history()
+    if history_df is None:
+        raise RuntimeError("No match history file found.")
+    cfg = _get_cfg()
+
+    from src.simulation.tournament import build_tournament_states, run_simulation
+    tracker = build_tournament_states(history_df, cfg)
+    _simulation_cache = run_simulation(tracker, model, cfg, n=n)
+    return _simulation_cache
 
 
 def _select_model(base_model: Any, tournament_model: Any, competition_weight: float, min_weight: int) -> Any:

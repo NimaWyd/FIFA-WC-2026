@@ -111,3 +111,24 @@ class HealthResponse(BaseModel):
     data_available: bool
     version: str
     timestamp: str
+
+
+# ---------------------------------------------------------------------------
+# /simulate
+# ---------------------------------------------------------------------------
+
+class TeamSimResult(BaseModel):
+    team: str
+    group: str
+    group_exit: float
+    round_of_32: float
+    quarter_final: float
+    semi_final: float
+    final: float
+    champion: float
+
+
+class SimulationResponse(BaseModel):
+    n_simulations: int
+    teams: list[TeamSimResult]
+    generated_at: str
