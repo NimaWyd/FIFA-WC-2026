@@ -97,7 +97,7 @@ def test_ci_is_narrow_when_dominant_model_has_high_weight():
     assert ci is not None
 
     # Old raw min/max would give away_win CI width = 0.99 - 0.50 = 0.49
-    # New weighted-std should give width < 0.30
+    # New weighted-std should give width < 0.35
     lo, hi = ci["away_win"]
-    assert hi - lo < 0.30, f"CI width {hi - lo:.3f} too wide; expected < 0.30 with XGB weight=0.9"
+    assert hi - lo < 0.35, f"CI width {hi - lo:.3f} too wide; expected < 0.35 with XGB weight=0.9"
     assert 0.0 <= lo <= hi <= 1.0

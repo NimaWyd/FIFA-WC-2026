@@ -213,9 +213,10 @@ def _extract_ensemble_ci(
         all_p = model.base_probas(feature_row)  # (3, n, 3): [model, row, class]
         row = all_p[:, 0, :]                    # (3, 3): [model, class] — A=0, D=1, H=2
         w = model.per_class_weights             # (3, 3): [model, class]
+        w = w / w.sum(axis=0, keepdims=True)  # normalize each class column to sum=1
 
-        # Weighted mean per class (= ensemble blend output, pre-draw-submodel)
-        mean = (w * row).sum(axis=0)            # (3,)
+        # weighted mean per class
+        mean = (w * row).sum(axis=0)            # (3,): weighted blend per class
 
         # Weighted std: sqrt(sum_m(w[m,c] * (p[m,c] - mean[c])^2))
         std = np.sqrt((w * (row - mean) ** 2).sum(axis=0))  # (3,)
