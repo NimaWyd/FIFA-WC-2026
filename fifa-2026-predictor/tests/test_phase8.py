@@ -50,6 +50,12 @@ class TestApplyStageLookup:
         result = _apply_stage_lookup(df)
         assert result.loc[0, "tournament_stage"] == "Group Stage"
 
+    def test_lookup_works_with_noncontiguous_index(self):
+        df = self._base_df()
+        df = df.iloc[1:].copy()  # index starts at 1, not 0
+        result = _apply_stage_lookup(df)
+        assert result.loc[result["home_team"] == "Argentina", "tournament_stage"].iloc[0] == "Final"
+
     def test_save_processed_matches_writes_tournament_stage_column(self, tmp_path):
         from src.data.load_matches import save_processed_matches
         df = pd.DataFrame({

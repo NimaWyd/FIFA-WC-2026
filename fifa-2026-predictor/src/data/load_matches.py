@@ -32,9 +32,10 @@ def _apply_stage_lookup(df: pd.DataFrame) -> pd.DataFrame:
 
     merged = df.merge(lookup, on=["date", "home_team", "away_team"], how="left")
 
+    df = df.reset_index(drop=True)
     needs_fill = df["tournament_stage"].isin(["Unknown", "unknown", ""]) | df["tournament_stage"].isna()
     df["tournament_stage"] = df["tournament_stage"].where(
-        ~needs_fill, merged["_stage_lookup"].fillna(df["tournament_stage"])
+        ~needs_fill, merged["_stage_lookup"].fillna(df["tournament_stage"]).values
     )
     return df
 
