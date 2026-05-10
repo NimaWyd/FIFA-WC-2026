@@ -229,7 +229,10 @@ def simulate_once(
         current = [(survivors[i], survivors[i + 1]) for i in range(0, len(survivors), 2)]
 
     # Final
-    assert len(current) == 1
+    if len(current) != 1:
+        raise RuntimeError(
+            f"Bracket reduction failed: expected 1 finalist pair, got {len(current)}"
+        )
     (finalist1, finalist2) = current[0]
     probs = predict_match_proba(finalist1, finalist2, tracker, model, cfg, stage="Final")
     p_h = probs["home_win"] + probs["draw"] / 2
