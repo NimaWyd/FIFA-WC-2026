@@ -15,6 +15,29 @@ from src.utils import PROJECT_ROOT, ensure_parent_dir, load_config
 # Composite key used to detect duplicate matches across sources.
 _DEDUP_KEY = ["date", "home_team", "away_team"]
 
+_STAGE_LOOKUP_PATH = "data/raw/wc_stage_lookup.csv"
+
+
+def _apply_stage_lookup(df: pd.DataFrame) -> pd.DataFrame:
+    """Backfill tournament_stage from the WC stage lookup CSV where value is absent or 'Unknown'."""
+    lookup_path = PROJECT_ROOT / _STAGE_LOOKUP_PATH
+    if not lookup_path.exists():
+        return df
+
+    lookup = pd.read_csv(lookup_path, parse_dates=["date"])
+    lookup = lookup.rename(columns={"tournament_stage": "_stage_lookup"})
+
+    df = df.copy()
+    df["date"] = pd.to_datetime(df["date"], errors="coerce")
+
+    merged = df.merge(lookup, on=["date", "home_team", "away_team"], how="left")
+
+    needs_fill = df["tournament_stage"].isin(["Unknown", "unknown", ""]) | df["tournament_stage"].isna()
+    df["tournament_stage"] = df["tournament_stage"].where(
+        ~needs_fill, merged["_stage_lookup"].fillna(df["tournament_stage"])
+    )
+    return df
+
 
 def load_local_matches(input_csv: str) -> pd.DataFrame:
     """Load local CSV into dataframe."""
@@ -36,6 +59,9 @@ def save_processed_matches(df: pd.DataFrame, output_csv: str) -> None:
     # Normalize team name aliases so CSVs persist canonical names.
     cleaned["home_team"] = cleaned["home_team"].map(normalize_team_name)
     cleaned["away_team"] = cleaned["away_team"].map(normalize_team_name)
+    if "tournament_stage" not in cleaned.columns:
+        cleaned["tournament_stage"] = "Unknown"
+    cleaned = _apply_stage_lookup(cleaned)
     cleaned = cleaned.sort_values("date").reset_index(drop=True)
 
     # Dedup by canonical key after normalization so overlapping sources don't

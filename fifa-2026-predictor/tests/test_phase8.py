@@ -18,3 +18,51 @@ class TestStageNormalization:
 
     def test_quarterfinals_plural_has_nonzero_importance(self):
         assert get_stage_importance("Quarterfinals") == 5
+
+
+import pandas as pd
+from src.data.load_matches import _apply_stage_lookup
+
+
+class TestApplyStageLookup:
+    def _base_df(self) -> pd.DataFrame:
+        return pd.DataFrame({
+            "date": pd.to_datetime(["2018-07-15", "2022-12-18", "2024-03-01"]),
+            "home_team": ["France", "Argentina", "Germany"],
+            "away_team": ["Croatia", "France", "Brazil"],
+            "tournament_stage": ["Unknown", "Unknown", "Unknown"],
+        })
+
+    def test_lookup_fills_unknown_wc_stages(self):
+        df = self._base_df()
+        result = _apply_stage_lookup(df)
+        assert result.loc[result["home_team"] == "France", "tournament_stage"].iloc[0] == "Final"
+        assert result.loc[result["home_team"] == "Argentina", "tournament_stage"].iloc[0] == "Final"
+
+    def test_lookup_leaves_non_wc_rows_unchanged(self):
+        df = self._base_df()
+        result = _apply_stage_lookup(df)
+        assert result.loc[result["home_team"] == "Germany", "tournament_stage"].iloc[0] == "Unknown"
+
+    def test_lookup_does_not_overwrite_known_stage(self):
+        df = self._base_df()
+        df.loc[0, "tournament_stage"] = "Group Stage"
+        result = _apply_stage_lookup(df)
+        assert result.loc[0, "tournament_stage"] == "Group Stage"
+
+    def test_save_processed_matches_writes_tournament_stage_column(self, tmp_path):
+        from src.data.load_matches import save_processed_matches
+        df = pd.DataFrame({
+            "date": ["2018-07-15"],
+            "home_team": ["France"],
+            "away_team": ["Croatia"],
+            "home_score": [4],
+            "away_score": [2],
+            "neutral": [True],
+            "tournament_stage": ["Unknown"],
+        })
+        out = str(tmp_path / "matches.csv")
+        save_processed_matches(df, out)
+        result = pd.read_csv(out)
+        assert "tournament_stage" in result.columns
+        assert result["tournament_stage"].iloc[0] == "Final"
