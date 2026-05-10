@@ -30,7 +30,7 @@ export default function WinnerCallout({ probabilities, homeTeam, awayTeam }: Pro
   }
 
   return (
-    <div className="flex flex-col gap-1 pb-4 mb-2 border-b border-slate-700/50">
+    <div className="flex flex-col gap-1 pb-4 mb-2 border-b border-navy-600">
       <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
         Predicted Winner
       </span>
@@ -39,7 +39,7 @@ export default function WinnerCallout({ probabilities, homeTeam, awayTeam }: Pro
           <FlagIcon team={winnerLabel} className="w-10 h-7 rounded flex-shrink-0" />
         )}
         <span className="text-lg font-bold text-white">{winnerLabel}</span>
-        <span className="text-lg font-bold text-[#d4af37]">
+        <span className="ml-auto text-lg font-bold px-3 py-0.5 rounded-lg bg-fifa-blue/10 border border-fifa-blue/40 text-fifa-blue-light">
           {(winnerPct * 100).toFixed(1)}%
         </span>
       </div>

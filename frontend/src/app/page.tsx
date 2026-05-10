@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { TrophyIcon, ArrowsRightLeftIcon } from "@heroicons/react/24/solid";
+import Image from "next/image";
+import { ArrowsRightLeftIcon } from "@heroicons/react/24/solid";
 import { useTeams } from "@/hooks/useTeams";
 import { usePredict } from "@/hooks/usePredict";
 import TeamCombobox from "@/components/TeamCombobox";
@@ -43,7 +44,6 @@ export default function Home() {
 
   const resultsRef = useRef<HTMLDivElement>(null);
 
-  // Scroll to results when a new prediction arrives
   useEffect(() => {
     if (result) {
       resultsRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -100,35 +100,70 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-[#0a0e1a]">
-      {/* Header */}
-      <div className="border-b border-slate-800 bg-[#0d1428]">
-        <div className="max-w-4xl mx-auto px-4 py-4 flex items-center gap-3">
-          <TrophyIcon className="h-7 w-7 text-[#d4af37] flex-shrink-0" />
-          <div>
-            <h1 className="text-lg font-bold text-white leading-tight">FIFA WC 2026 Predictor</h1>
-            <p className="text-xs text-slate-400">AI-powered match outcome predictions</p>
-          </div>
+    <main className="min-h-screen bg-navy-900">
+      {/* ── Sticky top bar ── */}
+      <div className="sticky top-0 z-50 bg-navy-900/95 backdrop-blur border-b border-navy-600">
+        <div className="max-w-4xl mx-auto px-4 h-11 flex items-center gap-3">
+          <span className="text-fifa-blue font-black text-sm tracking-[3px] uppercase">FIFA</span>
+          <span className="text-[10px] font-bold text-gold-500 bg-gold-500/10 border border-gold-500/25 rounded px-2 py-0.5 tracking-wider">
+            WC 2026™
+          </span>
+          <span className="flex-1" />
+          <span className="text-[11px] text-slate-500 hidden sm:block">Predictor · Powered by AI</span>
         </div>
+      </div>
 
-        {/* Tab bar */}
-        <div className="max-w-4xl mx-auto px-4 flex items-center gap-0 border-t border-slate-800/50">
+      {/* ── Hero ── */}
+      <div className="hero-texture relative overflow-hidden bg-gradient-to-b from-fifa-blue-dark via-navy-900 to-navy-900">
+        {/* corner glows */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute bottom-0 left-1/4 w-64 h-40 bg-green-500/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 right-1/4 w-64 h-40 bg-fifa-blue/10 rounded-full blur-3xl" />
+        </div>
+        <div className="relative z-10 max-w-4xl mx-auto px-4 py-10 flex flex-col items-center gap-4 text-center animate-fade-in">
+          <p className="text-fifa-blue text-[11px] font-bold tracking-[3px] uppercase">FIFA World Cup 2026™</p>
+          <Image
+            src="/trophy_nobg.png"
+            alt="FIFA World Cup Trophy"
+            width={90}
+            height={220}
+            priority
+            className="animate-float drop-shadow-[0_0_40px_rgba(245,200,66,0.8)]"
+          />
+          <h1 className="text-3xl font-black leading-tight bg-gradient-to-br from-white via-white to-gold-500 bg-clip-text text-transparent">
+            FIFA WC 2026 Predictor
+          </h1>
+          <p className="text-sm text-slate-500 max-w-sm">
+            AI-powered match outcome predictions for the biggest tournament on Earth
+          </p>
+          <button
+            onClick={() => setTab("predictor")}
+            className="mt-1 px-7 py-3 bg-fifa-blue text-white text-sm font-bold rounded-lg shadow-[0_4px_24px_rgba(26,63,255,0.5)] hover:bg-fifa-blue/90 transition-colors"
+          >
+            Predict a Match
+          </button>
+        </div>
+      </div>
+
+      {/* ── Tab bar ── */}
+      <div className="bg-navy-800 border-b border-navy-600">
+        <div className="max-w-4xl mx-auto px-4 flex items-center gap-0">
           <button
             onClick={() => setTab("bracket")}
-            className={`px-5 py-3 text-sm font-semibold border-b-2 transition-colors ${
+            className={`px-5 py-3.5 text-sm font-semibold border-b-[3px] transition-colors ${
               tab === "bracket"
-                ? "border-[#d4af37] text-[#d4af37]"
-                : "border-transparent text-slate-400 hover:text-slate-200"
+                ? "border-fifa-blue text-white"
+                : "border-transparent text-slate-500 hover:text-slate-300"
             }`}
           >
             Group Stage
           </button>
           <button
             onClick={() => setTab("predictor")}
-            className={`px-5 py-3 text-sm font-semibold border-b-2 transition-colors ${
+            className={`px-5 py-3.5 text-sm font-semibold border-b-[3px] transition-colors ${
               tab === "predictor"
-                ? "border-[#d4af37] text-[#d4af37]"
-                : "border-transparent text-slate-400 hover:text-slate-200"
+                ? "border-fifa-blue text-white"
+                : "border-transparent text-slate-500 hover:text-slate-300"
             }`}
           >
             Predict Match
@@ -145,7 +180,7 @@ export default function Home() {
                   setAwayTeam(null);
                   reset();
                 }}
-                className="text-xs px-2 py-1 rounded border border-slate-700 text-slate-400 hover:text-white hover:border-slate-500 transition-colors"
+                className="text-xs px-2 py-1 rounded border border-navy-600 text-slate-500 hover:text-white hover:border-slate-500 transition-colors"
               >
                 {showAllTeams ? "Filter WC26" : "Show all"}
               </button>
@@ -171,13 +206,12 @@ export default function Home() {
         {/* ── Predict Match tab ── */}
         {tab === "predictor" && (
           <>
-            <div className="bg-[#0d1428] rounded-2xl border border-slate-800 p-6 flex flex-col gap-5">
+            <div className="bg-navy-800 rounded-2xl border border-navy-600 p-6 flex flex-col gap-5">
               <div className="flex items-center justify-between">
                 <h2 className="font-bold text-slate-200 text-lg">Select Match</h2>
                 <span className="text-xs text-slate-500">{teams.length} teams available</span>
               </div>
 
-              {/* Teams API error */}
               {teamsError && (
                 <div className="bg-red-950 border border-red-800 rounded-xl px-4 py-3 text-red-300 text-sm">
                   Failed to load teams: {teamsError}
@@ -200,7 +234,7 @@ export default function Home() {
                     <button
                       onClick={swap}
                       disabled={!homeTeam && !awayTeam}
-                      className="mb-0.5 p-2.5 rounded-lg bg-[#111d3c] border border-slate-700 text-slate-400 hover:text-white hover:border-slate-500 transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:text-slate-400 disabled:hover:border-slate-700"
+                      className="mb-0.5 p-2.5 rounded-lg bg-navy-700 border border-navy-600 text-slate-400 hover:text-white hover:border-fifa-blue transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:text-slate-400 disabled:hover:border-navy-600"
                       title="Swap teams"
                       aria-label="Swap home and away teams"
                     >
@@ -232,7 +266,7 @@ export default function Home() {
                           setDateError(null);
                           reset();
                         }}
-                        className="rounded-lg bg-[#111d3c] border border-slate-600 text-white px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#d4af37] [color-scheme:dark]"
+                        className="rounded-lg bg-navy-700 border border-navy-600 text-white px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-fifa-blue [color-scheme:dark]"
                       />
                       {dateError && (
                         <p className="text-red-400 text-xs mt-1">{dateError}</p>
@@ -250,7 +284,6 @@ export default function Home() {
               )}
             </div>
 
-            {/* Prediction error */}
             {error && (
               <div className="bg-red-950 border border-red-800 rounded-xl px-4 py-3 text-red-300 text-sm">
                 {error === "Failed to fetch"
@@ -259,13 +292,12 @@ export default function Home() {
               </div>
             )}
 
-            {/* Results */}
             {result && (
               <div ref={resultsRef} className="flex flex-col gap-4">
-                <div className="bg-[#0d1428] rounded-2xl border border-slate-800 p-6">
+                <div className="bg-navy-800 rounded-2xl border border-navy-600 p-6">
                   <div className="flex items-center justify-between text-slate-400 text-sm mb-4">
                     <span>{result.match_date}</span>
-                    <span className="bg-[#111d3c] border border-slate-700 px-2 py-0.5 rounded-full text-xs">
+                    <span className="bg-navy-700 border border-navy-600 px-2 py-0.5 rounded-full text-xs">
                       {stage} · FIFA World Cup 2026
                     </span>
                   </div>
@@ -296,7 +328,7 @@ export default function Home() {
                     result.expected_goals?.away ?? 1,
                   );
                   return (
-                    <div className="bg-[#0d1428] rounded-2xl border border-slate-800 p-6">
+                    <div className="bg-navy-800 rounded-2xl border border-navy-600 p-6">
                       <MatchScoreboard
                         homeTeam={result.home_team}
                         awayTeam={result.away_team}
@@ -307,7 +339,7 @@ export default function Home() {
                   );
                 })()}
 
-                <div className="bg-[#0d1428] rounded-2xl border border-slate-800 p-6">
+                <div className="bg-navy-800 rounded-2xl border border-navy-600 p-6">
                   <WinnerCallout
                     probabilities={result.probabilities}
                     homeTeam={result.home_team}
@@ -321,14 +353,14 @@ export default function Home() {
                 </div>
 
                 {result.top_scorelines.length > 0 && (
-                  <div className="bg-[#0d1428] rounded-2xl border border-slate-800 p-6">
+                  <div className="bg-navy-800 rounded-2xl border border-navy-600 p-6">
                     <ScorelineGrid scorelines={result.top_scorelines} />
                   </div>
                 )}
 
                 {result.expected_goals &&
                   (result.expected_goals.home > 0 || result.expected_goals.away > 0) && (
-                    <div className="bg-[#0d1428] rounded-2xl border border-slate-800 p-6">
+                    <div className="bg-navy-800 rounded-2xl border border-navy-600 p-6">
                       <ExpectedGoals
                         xg={result.expected_goals}
                         homeTeam={result.home_team}
@@ -337,7 +369,7 @@ export default function Home() {
                     </div>
                   )}
 
-                <div className="bg-[#0d1428] rounded-2xl border border-slate-800 p-6">
+                <div className="bg-navy-800 rounded-2xl border border-navy-600 p-6">
                   <ExplanationPanel
                     explanation={result.explanation}
                     homeTeam={result.home_team}

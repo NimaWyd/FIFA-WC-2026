@@ -140,7 +140,7 @@ export default function GroupView({ group, onBack, onPredict }: Props) {
       <div className="flex items-center gap-3">
         <button
           onClick={onBack}
-          className="p-1.5 rounded-lg bg-[#0d1428] border border-slate-800 text-slate-400 hover:text-white hover:border-slate-600 transition-colors"
+          className="p-1.5 rounded-lg bg-navy-800 border border-navy-600 text-slate-400 hover:text-white hover:border-fifa-blue transition-colors"
         >
           <ArrowLeftIcon className="h-4 w-4" />
         </button>
@@ -151,7 +151,7 @@ export default function GroupView({ group, onBack, onPredict }: Props) {
         <button
           onClick={handlePredictAll}
           disabled={predicting}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#d4af37] text-[#0a0e1a] text-sm font-bold hover:bg-[#e8c84a] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-fifa-blue text-white text-sm font-bold hover:bg-fifa-blue/90 shadow-[0_2px_12px_rgba(26,63,255,0.4)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {predicting ? (
             <>
@@ -175,7 +175,7 @@ export default function GroupView({ group, onBack, onPredict }: Props) {
       {standings && <GroupStandings standings={standings} groupId={group.id} />}
 
       {/* Teams strip */}
-      <div className="bg-[#0d1428] border border-slate-800 rounded-xl p-4">
+      <div className="bg-navy-800 border border-navy-600 rounded-xl p-4">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {group.teams.map((team) => (
             <div key={team} className="flex flex-col items-center gap-1.5">
@@ -184,7 +184,7 @@ export default function GroupView({ group, onBack, onPredict }: Props) {
                 {team === "United States" ? "USA" : team}
               </span>
               {["Mexico", "United States", "Canada"].includes(team) && (
-                <span className="text-[10px] text-[#d4af37]">Host</span>
+                <span className="text-[10px] text-gold-500">Host</span>
               )}
             </div>
           ))}
@@ -197,7 +197,7 @@ export default function GroupView({ group, onBack, onPredict }: Props) {
         {group.matches.map((match, idx) => (
           <div
             key={idx}
-            className="bg-[#0d1428] border border-slate-800 rounded-xl p-4 flex items-center gap-3"
+            className="bg-navy-800 border border-navy-600 rounded-xl p-4 flex items-center gap-3 hover:border-fifa-blue transition-colors"
           >
             <div className="hidden sm:block w-16 flex-shrink-0">
               <span className="text-[10px] text-slate-500 uppercase tracking-wider">
@@ -246,7 +246,7 @@ export default function GroupView({ group, onBack, onPredict }: Props) {
 
             <button
               onClick={() => onPredict(match)}
-              className="flex-shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#d4af37]/10 border border-[#d4af37]/30 text-[#d4af37] text-xs font-semibold hover:bg-[#d4af37]/20 hover:border-[#d4af37]/60 transition-all"
+              className="flex-shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-lg bg-fifa-blue/10 border border-fifa-blue/30 text-fifa-blue-light text-xs font-semibold hover:bg-fifa-blue/20 hover:border-fifa-blue/60 transition-all"
             >
               Predict
               <ChevronRightIcon className="h-3 w-3" />
