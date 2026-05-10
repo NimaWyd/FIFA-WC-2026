@@ -26,7 +26,9 @@ features:
   # Issue #50: Elo inactivity decay — Elo regresses toward base rating (1500)
   # the longer a team has been inactive.  Half-life in days: after this many
   # days of rest the gap from 1500 is halved.  Set to 0 to disable.
-  elo_inactivity_halflife: 180
+  # Disabled (issue #106): collapses all ELOs to ~1500 when predicting future
+  # WC matches (both teams show ~700 days rest), eliminating the primary signal.
+  elo_inactivity_halflife: 0
 
 model:
   # Only use matches from this year onward for XGB training/val/test splits.
@@ -40,7 +42,10 @@ model:
   logreg_C: 1.0
   mlp_hidden_layers: [64, 32]
   min_model_weight: 0.05
-  tournament_model_min_weight: 3
+  # Issue #104: tournament model trained on only 100 WC matches — too small to
+  # generalize. Disabled until retrained on sufficient data. Set to 99 so no
+  # competition weight ever reaches this threshold.
+  tournament_model_min_weight: 99
   xgb:
     n_estimators: 300
     learning_rate: 0.05

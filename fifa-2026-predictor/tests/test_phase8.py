@@ -96,7 +96,8 @@ class TestConfigKeys:
     def test_tournament_model_min_weight_present_in_config(self):
         cfg = load_config()
         assert "tournament_model_min_weight" in cfg["model"]
-        assert cfg["model"]["tournament_model_min_weight"] == 3
+        # Value set to 99 (issue #104) to disable the under-trained tournament model
+        assert cfg["model"]["tournament_model_min_weight"] >= 3
 
 
 import numpy as np

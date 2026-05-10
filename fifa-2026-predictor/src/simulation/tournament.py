@@ -276,6 +276,8 @@ def simulate_once(
     third_assignments = _assign_third_place_teams(best_third)
 
     # -- Build R32 matchups ---------------------------------------------------
+    # Randomly assign home/away per run to cancel the model's learned home-
+    # advantage artifact on neutral-ground matches (issue #110).
     r32_matchups: list[tuple[str, str]] = []
     for slot in WC2026_R32:
         team1 = winners[slot["slot1_group"]] if slot["slot1_type"] == "W" else runners_up[slot["slot1_group"]]
@@ -283,17 +285,21 @@ def simulate_once(
             team2 = runners_up[slot["slot2_group"]]
         else:
             team2 = third_assignments.get(slot["match"], best_third[0][0])
+        if rng.random() < 0.5:
+            team1, team2 = team2, team1
         r32_matchups.append((team1, team2))
 
     # -- Knockout rounds ------------------------------------------------------
     # WC2026 48-team bracket: R32 (16 matches) -> R16 (8) -> QF (4) -> SF (2) -> Final (1)
     # R32 and R16 losers are both labeled "round_of_32"
+    # Home/away is randomised each round to cancel neutral-ground bias (issue #110).
     round_names = ["round_of_32", "round_of_32", "quarter_final", "semi_final"]
     current = r32_matchups
     for round_name in round_names:
         survivors, elim = _simulate_knockout_round(current, prob_cache, round_name, rng)
         results.update(elim)
-        current = [(survivors[i], survivors[i + 1]) for i in range(0, len(survivors), 2)]
+        pairs = [(survivors[i], survivors[i + 1]) for i in range(0, len(survivors), 2)]
+        current = [(a, b) if rng.random() < 0.5 else (b, a) for a, b in pairs]
 
     # Final
     if len(current) != 1:
