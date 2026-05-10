@@ -198,21 +198,35 @@ def resolve_team_metadata(
 def _extract_ensemble_ci(
     model: Any, feature_row: "pd.DataFrame"
 ) -> Optional[dict[str, tuple[float, float]]]:
-    """Extract model disagreement range across XGB/LogReg/MLP base models.
+    """Weighted-std confidence interval across XGB/LogReg/MLP base models.
 
-    Returns (min, max) of raw base-model probabilities for each outcome —
-    this is a model spread, not a statistical confidence interval.
-    Returns None if model is not an EnsembleModel.
+    Uses each model's blend weight (model.per_class_weights) to compute a
+    weighted standard deviation around the blended mean. Produces much
+    narrower, more meaningful intervals than raw min/max when one model
+    dominates (e.g., XGB weight=0.9).
+
+    Returns {outcome: (lo, hi)} clamped to [0, 1], or None for non-ensemble.
     """
     if not isinstance(model, EnsembleModel):
         return None
     try:
-        all_p = model.base_probas(feature_row)  # (3, n, 3)
-        row = all_p[:, 0, :]  # (3, 3) — first (and only) row
+        all_p = model.base_probas(feature_row)  # (3, n, 3): [model, row, class]
+        row = all_p[:, 0, :]                    # (3, 3): [model, class] — A=0, D=1, H=2
+        w = model.per_class_weights             # (3, 3): [model, class]
+
+        # Weighted mean per class (= ensemble blend output, pre-draw-submodel)
+        mean = (w * row).sum(axis=0)            # (3,)
+
+        # Weighted std: sqrt(sum_m(w[m,c] * (p[m,c] - mean[c])^2))
+        std = np.sqrt((w * (row - mean) ** 2).sum(axis=0))  # (3,)
+
+        lo = np.clip(mean - std, 0.0, 1.0)
+        hi = np.clip(mean + std, 0.0, 1.0)
+
         return {
-            "home_win": (float(row[:, 2].min()), float(row[:, 2].max())),
-            "draw":     (float(row[:, 1].min()), float(row[:, 1].max())),
-            "away_win": (float(row[:, 0].min()), float(row[:, 0].max())),
+            "home_win": (float(lo[2]), float(hi[2])),
+            "draw":     (float(lo[1]), float(hi[1])),
+            "away_win": (float(lo[0]), float(hi[0])),
         }
     except Exception as exc:
         log.warning("CI extraction failed: %s", exc)
