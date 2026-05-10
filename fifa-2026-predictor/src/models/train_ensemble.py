@@ -32,11 +32,26 @@ def _pipeline_proba_ordered(pipeline, df: pd.DataFrame, feature_cols: list[str])
     return raw[:, order]
 
 
+def _diagnose_base_models(
+    p_xgb: np.ndarray,
+    p_logreg: np.ndarray,
+    p_mlp: np.ndarray,
+    y_val: np.ndarray,
+) -> None:
+    """Print individual val-set log-loss for each base model before blending."""
+    from sklearn.metrics import log_loss
+
+    for name, p in [("xgb", p_xgb), ("logreg", p_logreg), ("mlp", p_mlp)]:
+        loss = log_loss(y_val, p, labels=[0, 1, 2])
+        print(f"  [{name}] val log-loss: {loss:.4f}")
+
+
 def _optimize_per_class_weights(
     p_xgb: np.ndarray,
     p_logreg: np.ndarray,
     p_mlp: np.ndarray,
     y_val: np.ndarray,
+    min_weight: float = 0.0,
 ) -> np.ndarray:
     """Return per_class_weights (3, 3) minimizing val log-loss via SLSQP.
 
@@ -61,7 +76,7 @@ def _optimize_per_class_weights(
         {"type": "eq", "fun": lambda w, c=c: w.reshape(n_models, n_classes)[:, c].sum() - 1.0}
         for c in range(n_classes)
     ]
-    bounds = [(0.0, 1.0)] * (n_models * n_classes)
+    bounds = [(min_weight, 1.0)] * (n_models * n_classes)
     result = minimize(objective, x0, method="SLSQP", bounds=bounds, constraints=constraints)
     return result.x.reshape(n_models, n_classes)
 
@@ -125,8 +140,13 @@ def main() -> None:
 
     y_val = val_df["target"].map(TARGET_MAP).astype(int).values
 
-    print("Optimizing per-class blend weights...")
-    per_class_weights = _optimize_per_class_weights(p_xgb_val, p_logreg_val, p_mlp_val, y_val)
+    min_model_weight = float(cfg["model"].get("min_model_weight", 0.0))
+    print("Base model diagnostics:")
+    _diagnose_base_models(p_xgb_val, p_logreg_val, p_mlp_val, y_val)
+    print(f"Optimizing per-class blend weights (floor={min_model_weight})...")
+    per_class_weights = _optimize_per_class_weights(
+        p_xgb_val, p_logreg_val, p_mlp_val, y_val, min_weight=min_model_weight
+    )
     print(f"Per-class weights (rows=XGB/LogReg/MLP, cols=A/D/H):\n{np.round(per_class_weights, 3)}")
 
     # Blended draw probability on val set (D = class index 1)

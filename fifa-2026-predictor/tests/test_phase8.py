@@ -97,3 +97,29 @@ class TestConfigKeys:
         cfg = load_config()
         assert "tournament_model_min_weight" in cfg["model"]
         assert cfg["model"]["tournament_model_min_weight"] == 3
+
+
+import numpy as np
+from src.models.train_ensemble import _diagnose_base_models, _optimize_per_class_weights
+
+
+class TestEnsembleWeights:
+    def _fake_probs(self, n: int = 50, seed: int = 0) -> np.ndarray:
+        rng = np.random.default_rng(seed)
+        raw = rng.dirichlet([1, 1, 1], size=n)
+        return raw
+
+    def test_diagnose_does_not_raise(self, capsys):
+        p = self._fake_probs()
+        y = np.random.default_rng(0).integers(0, 3, size=50)
+        _diagnose_base_models(p, p, p, y)
+        captured = capsys.readouterr()
+        assert "xgb" in captured.out.lower()
+        assert "logreg" in captured.out.lower()
+        assert "mlp" in captured.out.lower()
+
+    def test_min_weight_floor_respected(self):
+        p = self._fake_probs()
+        y = np.random.default_rng(0).integers(0, 3, size=50)
+        weights = _optimize_per_class_weights(p, p, p, y, min_weight=0.05)
+        assert weights.min() >= 0.05 - 1e-6, f"weight below floor: {weights.min()}"
