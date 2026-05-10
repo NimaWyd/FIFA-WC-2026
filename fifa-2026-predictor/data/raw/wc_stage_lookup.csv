@@ -1,0 +1,129 @@
+date,home_team,away_team,tournament_stage
+2018-06-14,Russia,Saudi Arabia,Group Stage
+2018-06-15,Egypt,Uruguay,Group Stage
+2018-06-15,Morocco,Iran,Group Stage
+2018-06-15,Portugal,Spain,Group Stage
+2018-06-16,France,Australia,Group Stage
+2018-06-16,Argentina,Iceland,Group Stage
+2018-06-16,Peru,Denmark,Group Stage
+2018-06-16,Croatia,Nigeria,Group Stage
+2018-06-17,Costa Rica,Serbia,Group Stage
+2018-06-17,Germany,Mexico,Group Stage
+2018-06-17,Brazil,Switzerland,Group Stage
+2018-06-18,Sweden,South Korea,Group Stage
+2018-06-18,Belgium,Panama,Group Stage
+2018-06-18,Tunisia,England,Group Stage
+2018-06-19,Colombia,Japan,Group Stage
+2018-06-19,Poland,Senegal,Group Stage
+2018-06-19,Russia,Egypt,Group Stage
+2018-06-20,Portugal,Morocco,Group Stage
+2018-06-20,Uruguay,Saudi Arabia,Group Stage
+2018-06-20,Iran,Spain,Group Stage
+2018-06-21,France,Peru,Group Stage
+2018-06-21,Denmark,Australia,Group Stage
+2018-06-21,Argentina,Croatia,Group Stage
+2018-06-22,Brazil,Costa Rica,Group Stage
+2018-06-22,Nigeria,Iceland,Group Stage
+2018-06-23,Serbia,Switzerland,Group Stage
+2018-06-23,Belgium,Tunisia,Group Stage
+2018-06-23,South Korea,Mexico,Group Stage
+2018-06-23,Germany,Sweden,Group Stage
+2018-06-24,England,Panama,Group Stage
+2018-06-24,Japan,Senegal,Group Stage
+2018-06-24,Poland,Colombia,Group Stage
+2018-06-25,Uruguay,Russia,Group Stage
+2018-06-25,Saudi Arabia,Egypt,Group Stage
+2018-06-25,Spain,Morocco,Group Stage
+2018-06-25,Iran,Portugal,Group Stage
+2018-06-26,Denmark,France,Group Stage
+2018-06-26,Australia,Peru,Group Stage
+2018-06-26,Nigeria,Argentina,Group Stage
+2018-06-26,Iceland,Croatia,Group Stage
+2018-06-27,Mexico,Sweden,Group Stage
+2018-06-27,South Korea,Germany,Group Stage
+2018-06-27,Serbia,Brazil,Group Stage
+2018-06-27,Switzerland,Costa Rica,Group Stage
+2018-06-28,Japan,Poland,Group Stage
+2018-06-28,Senegal,Colombia,Group Stage
+2018-06-28,Panama,Tunisia,Group Stage
+2018-06-28,England,Belgium,Group Stage
+2018-06-30,France,Argentina,Round of 16
+2018-06-30,Uruguay,Portugal,Round of 16
+2018-07-01,Spain,Russia,Round of 16
+2018-07-01,Croatia,Denmark,Round of 16
+2018-07-02,Brazil,Mexico,Round of 16
+2018-07-02,Belgium,Japan,Round of 16
+2018-07-03,Sweden,Switzerland,Round of 16
+2018-07-03,Colombia,England,Round of 16
+2018-07-06,Uruguay,France,Quarter-final
+2018-07-06,Brazil,Belgium,Quarter-final
+2018-07-07,Sweden,England,Quarter-final
+2018-07-07,Russia,Croatia,Quarter-final
+2018-07-10,France,Belgium,Semi-final
+2018-07-11,Croatia,England,Semi-final
+2018-07-14,Belgium,England,Third Place
+2018-07-15,France,Croatia,Final
+2022-11-20,Ecuador,Qatar,Group Stage
+2022-11-21,England,Iran,Group Stage
+2022-11-21,Senegal,Netherlands,Group Stage
+2022-11-21,United States,Wales,Group Stage
+2022-11-22,Argentina,Saudi Arabia,Group Stage
+2022-11-22,Denmark,Tunisia,Group Stage
+2022-11-22,Mexico,Poland,Group Stage
+2022-11-22,France,Australia,Group Stage
+2022-11-23,Morocco,Croatia,Group Stage
+2022-11-23,Germany,Japan,Group Stage
+2022-11-23,Spain,Costa Rica,Group Stage
+2022-11-23,Belgium,Canada,Group Stage
+2022-11-24,Switzerland,Cameroon,Group Stage
+2022-11-24,Uruguay,South Korea,Group Stage
+2022-11-24,Portugal,Ghana,Group Stage
+2022-11-24,Brazil,Serbia,Group Stage
+2022-11-25,Wales,Iran,Group Stage
+2022-11-25,Qatar,Senegal,Group Stage
+2022-11-25,Netherlands,Ecuador,Group Stage
+2022-11-25,England,United States,Group Stage
+2022-11-26,Tunisia,Australia,Group Stage
+2022-11-26,Poland,Saudi Arabia,Group Stage
+2022-11-26,France,Denmark,Group Stage
+2022-11-26,Argentina,Mexico,Group Stage
+2022-11-27,Japan,Costa Rica,Group Stage
+2022-11-27,Belgium,Morocco,Group Stage
+2022-11-27,Croatia,Canada,Group Stage
+2022-11-27,Spain,Germany,Group Stage
+2022-11-28,Cameroon,Serbia,Group Stage
+2022-11-28,South Korea,Ghana,Group Stage
+2022-11-28,Brazil,Switzerland,Group Stage
+2022-11-28,Portugal,Uruguay,Group Stage
+2022-11-29,Netherlands,Qatar,Group Stage
+2022-11-29,Ecuador,Senegal,Group Stage
+2022-11-29,Wales,England,Group Stage
+2022-11-29,Iran,United States,Group Stage
+2022-11-30,Australia,Denmark,Group Stage
+2022-11-30,Tunisia,France,Group Stage
+2022-11-30,Poland,Argentina,Group Stage
+2022-11-30,Saudi Arabia,Mexico,Group Stage
+2022-12-01,Croatia,Belgium,Group Stage
+2022-12-01,Canada,Morocco,Group Stage
+2022-12-01,Japan,Spain,Group Stage
+2022-12-01,Costa Rica,Germany,Group Stage
+2022-12-02,South Korea,Portugal,Group Stage
+2022-12-02,Ghana,Uruguay,Group Stage
+2022-12-02,Cameroon,Brazil,Group Stage
+2022-12-02,Serbia,Switzerland,Group Stage
+2022-12-03,Netherlands,United States,Round of 16
+2022-12-03,Argentina,Australia,Round of 16
+2022-12-04,France,Poland,Round of 16
+2022-12-04,England,Senegal,Round of 16
+2022-12-05,Japan,Croatia,Round of 16
+2022-12-05,Brazil,South Korea,Round of 16
+2022-12-06,Morocco,Spain,Round of 16
+2022-12-06,Portugal,Switzerland,Round of 16
+2022-12-09,Croatia,Brazil,Quarter-final
+2022-12-09,Netherlands,Argentina,Quarter-final
+2022-12-10,Morocco,Portugal,Quarter-final
+2022-12-10,England,France,Quarter-final
+2022-12-13,Argentina,Croatia,Semi-final
+2022-12-14,France,Morocco,Semi-final
+2022-12-17,Croatia,Morocco,Third Place
+2022-12-18,Argentina,France,Final
