@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
-import Image from "next/image";
 import { ArrowsRightLeftIcon } from "@heroicons/react/24/solid";
+import LandingHero from "@/components/LandingHero";
 import { useTeams } from "@/hooks/useTeams";
 import { usePredict } from "@/hooks/usePredict";
 import TeamCombobox from "@/components/TeamCombobox";
@@ -44,6 +44,11 @@ export default function Home() {
   const [dateError, setDateError] = useState<string | null>(null);
 
   const resultsRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  function scrollToContent() {
+    contentRef.current?.scrollIntoView({ behavior: "smooth" });
+  }
 
   useEffect(() => {
     if (result) {
@@ -102,52 +107,14 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-navy-900">
-      {/* ── Sticky top bar ── */}
-      <div className="sticky top-0 z-50 bg-navy-900/95 backdrop-blur border-b border-navy-600">
-        <div className="max-w-4xl mx-auto px-4 h-11 flex items-center gap-3">
-          <span className="text-fifa-blue font-black text-sm tracking-[3px] uppercase">FIFA</span>
-          <span className="text-[10px] font-bold text-gold-500 bg-gold-500/10 border border-gold-500/25 rounded px-2 py-0.5 tracking-wider">
-            WC 2026™
-          </span>
-          <span className="flex-1" />
-          <span className="text-[11px] text-slate-500 hidden sm:block">Predictor · Powered by AI</span>
-        </div>
-      </div>
-
-      {/* ── Hero ── */}
-      <div className="hero-texture relative overflow-hidden bg-gradient-to-b from-fifa-blue-dark via-navy-900 to-navy-900">
-        {/* corner glows */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute bottom-0 left-1/4 w-64 h-40 bg-green-500/5 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 right-1/4 w-64 h-40 bg-fifa-blue/10 rounded-full blur-3xl" />
-        </div>
-        <div className="relative z-10 max-w-4xl mx-auto px-4 py-10 flex flex-col items-center gap-4 text-center animate-fade-in">
-          <p className="text-fifa-blue text-[11px] font-bold tracking-[3px] uppercase">FIFA World Cup 2026™</p>
-          <Image
-            src="/trophy_nobg.png"
-            alt="FIFA World Cup Trophy"
-            width={90}
-            height={220}
-            priority
-            className="animate-float drop-shadow-[0_0_40px_rgba(245,200,66,0.8)]"
-          />
-          <h1 className="text-3xl font-black leading-tight bg-gradient-to-br from-white via-white to-gold-500 bg-clip-text text-transparent">
-            FIFA WC 2026 Predictor
-          </h1>
-          <p className="text-sm text-slate-500 max-w-sm">
-            AI-powered match outcome predictions for the biggest tournament on Earth
-          </p>
-          <button
-            onClick={() => setTab("predictor")}
-            className="mt-1 px-7 py-3 bg-fifa-blue text-white text-sm font-bold rounded-lg shadow-[0_4px_24px_rgba(26,63,255,0.5)] hover:bg-fifa-blue/90 transition-colors"
-          >
-            Predict a Match
-          </button>
-        </div>
-      </div>
+      <LandingHero
+        onFillBracket={() => { setTab("bracket"); scrollToContent(); }}
+        onViewMatches={() => { setTab("predictor"); scrollToContent(); }}
+        onViewStandings={() => { setTab("simulate"); scrollToContent(); }}
+      />
 
       {/* ── Tab bar ── */}
-      <div className="bg-navy-800 border-b border-navy-600">
+      <div ref={contentRef} className="bg-navy-800 border-b border-navy-600">
         <div className="max-w-4xl mx-auto px-4 flex items-center gap-0">
           <button
             onClick={() => setTab("bracket")}

@@ -9,6 +9,10 @@ const config: Config = {
   darkMode: "class",
   theme: {
     extend: {
+      fontFamily: {
+        anton: ["var(--font-anton)", "Impact", "sans-serif"],
+        jb: ["var(--font-jb)", "JetBrains Mono", "monospace"],
+      },
       colors: {
         navy: {
           900: "#090b14",
