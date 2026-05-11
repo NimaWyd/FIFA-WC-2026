@@ -116,3 +116,16 @@ The frontend calls the backend at `http://localhost:8000/api/v1` (configured via
 ### Stack
 
 Next.js 14 (App Router), TypeScript, Tailwind CSS, Framer Motion, Headless UI, flag-icons.
+
+---
+
+## Simulation (`fifa-2026-predictor/src/simulation/`)
+
+**`tournament.py`** — Monte Carlo WC2026 simulation (`run_simulation`, `simulate_once`).
+
+- `precompute_all_probabilities` batches all 48×47 ordered team-pair feature rows into a single `model.predict_proba` call, caching `{(home, away): {home_win, draw, away_win}}` for O(1) lookups during simulation.
+- **Group stage and knockout rounds both randomize home/away per simulation run** (coin-flip on `h, a = a, h`) to cancel the model's learned home-advantage artifact on neutral-ground matches (issues #109, #117). Do not remove this randomization.
+- Knockout tiebreaking: draws split 50/50 between the two teams (no penalty shootout modelled yet — issue #87).
+- Run via `GET /api/v1/simulate?n=1000` or directly: `python -m src.simulation.tournament`
+
+**`wc2026_bracket.py`** — Static group definitions and R32 bracket slots. Group home/away labels are only used as starting identifiers; the simulation randomizes them each run.

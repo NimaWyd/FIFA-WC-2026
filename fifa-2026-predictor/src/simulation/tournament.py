@@ -230,6 +230,9 @@ def simulate_once(
             records[team] = {"pts": 0, "gd": 0, "gf": 0}
         for match in group["matches"]:
             h, a = match["home"], match["away"]
+            # Randomise home/away per run to cancel neutral-ground bias (issue #117).
+            if rng.random() < 0.5:
+                h, a = a, h
             probs = prob_cache[(h, a)]
             outcome = rng.choice(
                 ["H", "D", "A"],
