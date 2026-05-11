@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { motion } from "framer-motion";
 import { ArrowsRightLeftIcon, SparklesIcon } from "@heroicons/react/24/solid";
 import { useTeams } from "@/hooks/useTeams";
 import { usePredict } from "@/hooks/usePredict";
@@ -23,6 +24,15 @@ import { selectScoreline } from "@/lib/scoreline";
 
 const TOURNAMENT_START = "2026-06-11";
 const TOURNAMENT_END = "2026-07-19";
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 16 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.4, delay: i * 0.08, ease: "easeOut" as const },
+  }),
+};
 const MIN_WC_FILTER_TEAMS = 10;
 
 const ALL_GROUP_MATCHES = WC2026_GROUPS.flatMap((g) => g.matches);
@@ -252,8 +262,14 @@ export default function PredictPage() {
         )}
 
         {result && (
-          <div ref={resultsRef} className="flex flex-col gap-4">
-            <div className="bg-navy-800 rounded-2xl border border-navy-600 p-6">
+          <motion.div
+            key={`${result.home_team}-${result.away_team}-${result.match_date}`}
+            ref={resultsRef}
+            className="flex flex-col gap-4"
+          >
+            <motion.div custom={0} initial="hidden" animate="visible" variants={cardVariants}
+              className="bg-navy-800 rounded-2xl border border-navy-600 p-6"
+            >
               <div className="flex items-center justify-between text-slate-400 text-sm mb-4">
                 <span>{result.match_date}</span>
                 <span className="bg-navy-700 border border-navy-600 px-2 py-0.5 rounded-full text-xs">
@@ -273,7 +289,7 @@ export default function PredictPage() {
                   <div className="text-sm text-slate-400 mt-1">Away</div>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
             {result.top_scorelines.length > 0 &&
               (() => {
@@ -291,18 +307,22 @@ export default function PredictPage() {
                   result.expected_goals?.away ?? 1,
                 );
                 return (
-                  <div className="bg-navy-800 rounded-2xl border border-navy-600 p-6">
+                  <motion.div custom={1} initial="hidden" animate="visible" variants={cardVariants}
+                    className="bg-navy-800 rounded-2xl border border-navy-600 p-6"
+                  >
                     <MatchScoreboard
                       homeTeam={result.home_team}
                       awayTeam={result.away_team}
                       homeGoals={hg}
                       awayGoals={ag}
                     />
-                  </div>
+                  </motion.div>
                 );
               })()}
 
-            <div className="bg-navy-800 rounded-2xl border border-navy-600 p-6">
+            <motion.div custom={2} initial="hidden" animate="visible" variants={cardVariants}
+              className="bg-navy-800 rounded-2xl border border-navy-600 p-6"
+            >
               <WinnerCallout
                 probabilities={result.probabilities}
                 homeTeam={result.home_team}
@@ -314,35 +334,43 @@ export default function PredictPage() {
                 awayTeam={result.away_team}
                 confidence={result.confidence}
               />
-            </div>
+            </motion.div>
 
             {result.top_scorelines.length > 0 && (
-              <div className="bg-navy-800 rounded-2xl border border-navy-600 p-6">
+              <motion.div custom={3} initial="hidden" animate="visible" variants={cardVariants}
+                className="bg-navy-800 rounded-2xl border border-navy-600 p-6"
+              >
                 <ScorelineGrid scorelines={result.top_scorelines} />
-              </div>
+              </motion.div>
             )}
 
             {result.expected_goals &&
               (result.expected_goals.home > 0 || result.expected_goals.away > 0) && (
-                <div className="bg-navy-800 rounded-2xl border border-navy-600 p-6">
+                <motion.div custom={4} initial="hidden" animate="visible" variants={cardVariants}
+                  className="bg-navy-800 rounded-2xl border border-navy-600 p-6"
+                >
                   <ExpectedGoals
                     xg={result.expected_goals}
                     homeTeam={result.home_team}
                     awayTeam={result.away_team}
                   />
-                </div>
+                </motion.div>
               )}
 
-            <div className="bg-navy-800 rounded-2xl border border-navy-600 p-6">
+            <motion.div custom={5} initial="hidden" animate="visible" variants={cardVariants}
+              className="bg-navy-800 rounded-2xl border border-navy-600 p-6"
+            >
               <ExplanationPanel
                 explanation={result.explanation}
                 homeTeam={result.home_team}
                 awayTeam={result.away_team}
               />
-            </div>
+            </motion.div>
 
-            <MetadataBadge result={result} />
-          </div>
+            <motion.div custom={6} initial="hidden" animate="visible" variants={cardVariants}>
+              <MetadataBadge result={result} />
+            </motion.div>
+          </motion.div>
         )}
       </div>
     </main>
