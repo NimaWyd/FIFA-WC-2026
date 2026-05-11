@@ -1,5 +1,6 @@
 "use client";
 import clsx from "clsx";
+import { BoltIcon } from "@heroicons/react/24/solid";
 
 interface Props {
   loading: boolean;
@@ -14,10 +15,10 @@ export default function PredictButton({ loading, disabled, onClick }: Props) {
       disabled={disabled || loading}
       aria-busy={loading}
       className={clsx(
-        "w-full py-4 rounded-xl font-bold text-base tracking-wide transition-all duration-200",
+        "relative w-full py-4 rounded-xl font-bold text-sm tracking-[0.25em] uppercase transition-all duration-200 overflow-hidden",
         disabled || loading
           ? "bg-navy-700 text-slate-600 cursor-not-allowed"
-          : "bg-fifa-blue text-white hover:bg-fifa-blue/90 shadow-[0_4px_20px_rgba(26,63,255,0.4)] hover:shadow-[0_4px_28px_rgba(26,63,255,0.6)]"
+          : "bg-fifa-blue text-white hover:bg-fifa-blue/90 shadow-[0_4px_20px_rgba(26,63,255,0.4)] hover:shadow-[0_4px_32px_rgba(26,63,255,0.65)]"
       )}
     >
       {loading ? (
@@ -29,7 +30,10 @@ export default function PredictButton({ loading, disabled, onClick }: Props) {
           Predicting…
         </span>
       ) : (
-        "Predict Outcome"
+        <span className="flex items-center justify-center gap-2">
+          {!disabled && <BoltIcon className="h-4 w-4" />}
+          Predict Match
+        </span>
       )}
     </button>
   );

@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
-import { ArrowLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowLeftIcon, ChevronRightIcon, BoltIcon } from "@heroicons/react/24/solid";
 import { WCGroup, WCMatch } from "@/lib/wc2026Groups";
 import FlagIcon from "@/components/FlagIcon";
 import GroupStandings, { Standing } from "@/components/GroupStandings";
@@ -17,8 +18,6 @@ function formatDate(iso: string) {
   const d = new Date(iso + "T12:00:00");
   return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
-
-const MATCHDAY_LABELS = ["MD 1", "MD 1", "MD 2", "MD 2", "MD 3", "MD 3"];
 
 function parseScoreline(s: string): [number, number] {
   const [h, a] = s.split("-").map(Number);
@@ -56,6 +55,11 @@ function buildStandings(
   return Object.values(map);
 }
 
+const HOSTS = new Set(["Mexico", "United States", "Canada"]);
+
+// Matches are stored MD1/MD1/MD2/MD2/MD3/MD3
+const MATCHDAY_SLICES: [number, number][] = [[0, 2], [2, 4], [4, 6]];
+
 export default function GroupView({ group, onBack, onPredict }: Props) {
   const [standings, setStandings] = useState<Standing[] | null>(null);
   const [predicting, setPredicting] = useState(false);
@@ -84,7 +88,6 @@ export default function GroupView({ group, onBack, onPredict }: Props) {
         });
 
         const p = res.probabilities;
-
         let homeGoals: number;
         let awayGoals: number;
 
@@ -120,8 +123,10 @@ export default function GroupView({ group, onBack, onPredict }: Props) {
         }
 
         results.push({ match, homeGoals, awayGoals });
-        const matchKey = `${match.home}|${match.away}`;
-        setMatchResults((prev) => ({ ...prev, [matchKey]: { homeGoals, awayGoals } }));
+        setMatchResults((prev) => ({
+          ...prev,
+          [`${match.home}|${match.away}`]: { homeGoals, awayGoals },
+        }));
         setProgress((prev) => prev + 1);
       } catch {
         setPredError("Prediction failed — is the backend running?");
@@ -135,124 +140,235 @@ export default function GroupView({ group, onBack, onPredict }: Props) {
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      {/* Header */}
-      <div className="flex items-center gap-3">
-        <button
-          onClick={onBack}
-          className="p-1.5 rounded-lg bg-navy-800 border border-navy-600 text-slate-400 hover:text-white hover:border-fifa-blue transition-colors"
-        >
-          <ArrowLeftIcon className="h-4 w-4" />
-        </button>
-        <div className="flex-1">
-          <h2 className="text-lg font-bold text-white">Group {group.id}</h2>
-          <p className="text-xs text-slate-500">{group.teams.join(" · ")}</p>
+    <div className="flex flex-col gap-6">
+      {/* ── Group hero banner ───────────────────────────────────── */}
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-navy-700/80 to-navy-900 border border-navy-600 p-6">
+        {/* Top shimmer line */}
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-fifa-blue/50 to-transparent" />
+
+        {/* Backdrop group letter */}
+        <span className="pointer-events-none select-none absolute right-6 top-1/2 -translate-y-1/2 font-anton text-[180px] leading-none text-white/[0.04]">
+          {group.id}
+        </span>
+
+        <div className="relative z-10 flex items-start gap-4">
+          {/* Back button */}
+          <button
+            onClick={onBack}
+            className="mt-1 p-2.5 rounded-xl bg-navy-900/70 border border-navy-600 text-slate-400 hover:text-white hover:border-fifa-blue/50 transition-all flex-shrink-0"
+          >
+            <ArrowLeftIcon className="h-4 w-4" />
+          </button>
+
+          <div className="flex-1 min-w-0">
+            <p className="text-[11px] font-bold tracking-[0.3em] text-fifa-blue uppercase mb-1">
+              FIFA World Cup 2026
+            </p>
+            <h2 className="font-anton text-5xl sm:text-6xl text-white uppercase tracking-wide leading-none">
+              Group {group.id}
+            </h2>
+            <div className="flex flex-wrap gap-x-2 gap-y-1 mt-3">
+              {group.teams.map((t, i) => (
+                <span key={t} className="flex items-center gap-2 text-sm text-slate-400">
+                  {i > 0 && <span className="w-0.5 h-0.5 rounded-full bg-navy-500" />}
+                  {t === "United States" ? "USA" : t}
+                  {HOSTS.has(t) && (
+                    <span className="text-[9px] font-bold text-gold-500">★ HOST</span>
+                  )}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Predict All button */}
+          <button
+            onClick={handlePredictAll}
+            disabled={predicting}
+            className="flex-shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-xl bg-fifa-blue text-white text-sm font-bold hover:bg-fifa-blue/90 shadow-[0_4px_20px_rgba(26,63,255,0.4)] hover:shadow-[0_4px_28px_rgba(26,63,255,0.65)] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {predicting ? (
+              <>
+                <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                {progress}/6
+              </>
+            ) : (
+              <>
+                <BoltIcon className="h-4 w-4" />
+                Predict All
+              </>
+            )}
+          </button>
         </div>
-        <button
-          onClick={handlePredictAll}
-          disabled={predicting}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-fifa-blue text-white text-sm font-bold hover:bg-fifa-blue/90 shadow-[0_2px_12px_rgba(26,63,255,0.4)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {predicting ? (
-            <>
-              <span className="inline-block w-3 h-3 border-2 border-[#0a0e1a]/40 border-t-[#0a0e1a] rounded-full animate-spin" />
-              {progress}/6
-            </>
-          ) : (
-            "Predict All"
-          )}
-        </button>
+
+        {/* Progress bar */}
+        {predicting && (
+          <div className="relative z-10 mt-4 ml-14">
+            <div className="flex items-center gap-3">
+              <div className="flex-1 h-1 bg-navy-900 rounded-full overflow-hidden">
+                <motion.div
+                  className="h-full bg-gradient-to-r from-fifa-blue to-fifa-blue-light rounded-full"
+                  initial={{ width: "0%" }}
+                  animate={{ width: `${(progress / 6) * 100}%` }}
+                  transition={{ duration: 0.35, ease: "easeOut" }}
+                />
+              </div>
+              <span className="text-[11px] text-slate-500 tabular-nums w-16 text-right">
+                {progress} of 6
+              </span>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Error */}
+      {/* ── Error ───────────────────────────────────────────────── */}
       {predError && (
-        <div className="bg-red-950 border border-red-800 rounded-xl px-4 py-3 text-red-300 text-sm">
+        <div className="bg-red-950/60 border border-red-800/60 rounded-xl px-4 py-3 text-red-300 text-sm">
           {predError}
         </div>
       )}
 
-      {/* Standings */}
-      {standings && <GroupStandings standings={standings} groupId={group.id} />}
-
-      {/* Teams strip */}
-      <div className="bg-navy-800 border border-navy-600 rounded-xl p-4">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {group.teams.map((team) => (
-            <div key={team} className="flex flex-col items-center gap-1.5">
-              <FlagIcon team={team} className="w-10 h-7 rounded" />
-              <span className="text-xs font-medium text-slate-300 text-center leading-tight">
-                {team === "United States" ? "USA" : team}
-              </span>
-              {["Mexico", "United States", "Canada"].includes(team) && (
-                <span className="text-[10px] text-gold-500">Host</span>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Match cards */}
-      <div className="flex flex-col gap-2">
-        <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider">Fixtures</h3>
-        {group.matches.map((match, idx) => (
-          <div
-            key={idx}
-            className="bg-navy-800 border border-navy-600 rounded-xl p-4 flex items-center gap-3 hover:border-fifa-blue transition-colors"
+      {/* ── Standings ───────────────────────────────────────────── */}
+      <AnimatePresence>
+        {standings && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
           >
-            <div className="hidden sm:block w-16 flex-shrink-0">
-              <span className="text-[10px] text-slate-500 uppercase tracking-wider">
-                {MATCHDAY_LABELS[idx]}
+            <GroupStandings standings={standings} groupId={group.id} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── Teams strip ─────────────────────────────────────────── */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {group.teams.map((team) => (
+          <div
+            key={team}
+            className={`flex flex-col items-center gap-2.5 p-4 rounded-xl border transition-colors ${
+              HOSTS.has(team)
+                ? "bg-gold-500/5 border-gold-500/20"
+                : "bg-navy-800 border-navy-600"
+            }`}
+          >
+            <FlagIcon team={team} className="w-14 h-9 rounded shadow-md" />
+            <span className="text-xs font-semibold text-slate-200 text-center leading-tight">
+              {team === "United States" ? "USA" : team}
+            </span>
+            {HOSTS.has(team) && (
+              <span className="text-[9px] font-bold tracking-widest text-gold-500 uppercase">
+                Host Nation
               </span>
-              <div className="text-xs text-slate-400 mt-0.5">{formatDate(match.date)}</div>
-              <div className="text-[10px] text-slate-600 mt-0.5 truncate">{match.venue}</div>
-            </div>
-
-            <div className="flex-1 flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2 flex-1">
-                <FlagIcon team={match.home} className="w-7 h-5 rounded-sm flex-shrink-0" />
-                <span className="text-sm font-semibold text-white truncate">
-                  {match.home === "United States" ? "USA" : match.home}
-                </span>
-              </div>
-
-              {(() => {
-                const matchKey = `${match.home}|${match.away}`;
-                const mr = matchResults[matchKey];
-                return mr ? (
-                  <div className="flex flex-col items-center gap-0.5 flex-shrink-0 px-2">
-                    <MatchScoreboard
-                      homeTeam={match.home}
-                      awayTeam={match.away}
-                      homeGoals={mr.homeGoals}
-                      awayGoals={mr.awayGoals}
-                      compact
-                    />
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center gap-0.5 flex-shrink-0 px-2">
-                    <span className="text-xs font-bold text-slate-500">VS</span>
-                    <span className="sm:hidden text-[10px] text-slate-600">{formatDate(match.date)}</span>
-                  </div>
-                );
-              })()}
-
-              <div className="flex items-center gap-2 flex-1 justify-end">
-                <span className="text-sm font-semibold text-white truncate text-right">
-                  {match.away === "United States" ? "USA" : match.away}
-                </span>
-                <FlagIcon team={match.away} className="w-7 h-5 rounded-sm flex-shrink-0" />
-              </div>
-            </div>
-
-            <button
-              onClick={() => onPredict(match)}
-              className="flex-shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-lg bg-fifa-blue/10 border border-fifa-blue/30 text-fifa-blue-light text-xs font-semibold hover:bg-fifa-blue/20 hover:border-fifa-blue/60 transition-all"
-            >
-              Predict
-              <ChevronRightIcon className="h-3 w-3" />
-            </button>
+            )}
           </div>
         ))}
+      </div>
+
+      {/* ── Fixtures ────────────────────────────────────────────── */}
+      <div>
+        <h3 className="text-[11px] font-bold tracking-[0.22em] text-slate-500 uppercase mb-4">
+          Fixtures
+        </h3>
+
+        <div className="flex flex-col gap-5">
+          {MATCHDAY_SLICES.map(([start, end], mdIdx) => {
+            const mdMatches = group.matches.slice(start, end);
+            return (
+              <div key={mdIdx}>
+                {/* Matchday divider */}
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="text-[10px] font-bold tracking-[0.25em] text-fifa-blue uppercase flex-shrink-0">
+                    Matchday {mdIdx + 1}
+                  </span>
+                  <div className="flex-1 h-px bg-navy-600" />
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  {mdMatches.map((match) => {
+                    const matchKey = `${match.home}|${match.away}`;
+                    const mr = matchResults[matchKey];
+
+                    return (
+                      <div
+                        key={matchKey}
+                        className="group relative bg-navy-800 border border-navy-600 rounded-xl overflow-hidden hover:border-navy-500 transition-colors"
+                      >
+                        {/* Hover shimmer on top edge */}
+                        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-fifa-blue/0 to-transparent group-hover:via-fifa-blue/40 transition-all duration-500" />
+
+                        <div className="flex items-center px-4 py-3 gap-3">
+                          {/* Date / venue */}
+                          <div className="hidden sm:block w-16 flex-shrink-0 text-center">
+                            <div className="text-xs font-semibold text-slate-300">
+                              {formatDate(match.date)}
+                            </div>
+                            <div className="text-[10px] text-slate-600 mt-0.5 truncate">
+                              {match.venue}
+                            </div>
+                          </div>
+
+                          {/* Home team */}
+                          <div className="flex items-center gap-2 flex-1 min-w-0">
+                            <FlagIcon
+                              team={match.home}
+                              className="w-7 h-5 rounded-sm shadow-sm flex-shrink-0"
+                            />
+                            <span className="text-sm font-semibold text-white truncate">
+                              {match.home === "United States" ? "USA" : match.home}
+                            </span>
+                          </div>
+
+                          {/* Score / VS */}
+                          {mr ? (
+                            <div className="flex-shrink-0 px-1">
+                              <MatchScoreboard
+                                homeTeam={match.home}
+                                awayTeam={match.away}
+                                homeGoals={mr.homeGoals}
+                                awayGoals={mr.awayGoals}
+                                compact
+                              />
+                            </div>
+                          ) : (
+                            <div className="flex-shrink-0 flex flex-col items-center gap-0.5 w-14">
+                              <span className="text-[11px] font-bold text-navy-500 bg-navy-900 px-2.5 py-1 rounded-lg border border-navy-600">
+                                VS
+                              </span>
+                              <span className="sm:hidden text-[10px] text-slate-600">
+                                {formatDate(match.date)}
+                              </span>
+                            </div>
+                          )}
+
+                          {/* Away team */}
+                          <div className="flex items-center gap-2 flex-1 justify-end min-w-0">
+                            <span className="text-sm font-semibold text-white truncate text-right">
+                              {match.away === "United States" ? "USA" : match.away}
+                            </span>
+                            <FlagIcon
+                              team={match.away}
+                              className="w-7 h-5 rounded-sm shadow-sm flex-shrink-0"
+                            />
+                          </div>
+
+                          {/* Predict button */}
+                          <button
+                            onClick={() => onPredict(match)}
+                            className="flex-shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-lg bg-fifa-blue/10 border border-fifa-blue/20 text-fifa-blue-light text-xs font-semibold hover:bg-fifa-blue/20 hover:border-fifa-blue/50 transition-all"
+                          >
+                            Predict
+                            <ChevronRightIcon className="h-3 w-3" />
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

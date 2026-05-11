@@ -1,4 +1,5 @@
 "use client";
+import FlagIcon from "@/components/FlagIcon";
 
 interface Props {
   xg: { home: number; away: number };
@@ -11,20 +12,32 @@ export default function ExpectedGoals({ xg, homeTeam, awayTeam }: Props) {
   const homePct = total === 0 ? 50 : (xg.home / total) * 100;
 
   return (
-    <div className="flex flex-col gap-3">
-      <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider">Expected Goals (xG)</h3>
-      <div className="flex items-center justify-between gap-6">
-        <div className="flex-1 text-center">
-          <div className="text-4xl font-bold text-fifa-blue-light">{xg.home.toFixed(2)}</div>
-          <div className="text-sm text-slate-400 mt-1 truncate">{homeTeam}</div>
+    <div className="flex flex-col gap-4">
+      <h3 className="text-[11px] font-bold tracking-[0.22em] text-slate-500 uppercase">
+        Expected Goals (xG)
+      </h3>
+      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4">
+        <div className="flex flex-col items-center gap-2">
+          <FlagIcon team={homeTeam} className="w-10 h-7 rounded-sm shadow" />
+          <div className="font-anton text-5xl text-fifa-blue-light tabular-nums leading-none">
+            {xg.home.toFixed(2)}
+          </div>
+          <div className="text-[11px] text-slate-500 truncate max-w-[110px] text-center">
+            {homeTeam === "United States" ? "USA" : homeTeam}
+          </div>
         </div>
-        <div className="text-slate-500 font-bold text-xl">vs</div>
-        <div className="flex-1 text-center">
-          <div className="text-4xl font-bold text-gold-500">{xg.away.toFixed(2)}</div>
-          <div className="text-sm text-slate-400 mt-1 truncate">{awayTeam}</div>
+        <div className="font-anton text-xl text-navy-600 tracking-widest">xG</div>
+        <div className="flex flex-col items-center gap-2">
+          <FlagIcon team={awayTeam} className="w-10 h-7 rounded-sm shadow" />
+          <div className="font-anton text-5xl text-gold-500 tabular-nums leading-none">
+            {xg.away.toFixed(2)}
+          </div>
+          <div className="text-[11px] text-slate-500 truncate max-w-[110px] text-center">
+            {awayTeam === "United States" ? "USA" : awayTeam}
+          </div>
         </div>
       </div>
-      <div className="flex h-2 rounded-full overflow-hidden">
+      <div className="flex h-1.5 rounded-full overflow-hidden">
         <div className="bg-fifa-blue transition-all duration-500" style={{ width: `${homePct}%` }} />
         <div className="bg-gold-500 flex-1" />
       </div>
