@@ -1,5 +1,6 @@
 {
   "model_type": "logistic_regression",
+  "calibration": "isotonic",
   "features_csv": "data/processed/features.csv",
   "split_sizes": {
     "train": 19832,

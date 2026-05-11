@@ -53,6 +53,7 @@ def _optimize_per_class_weights(
     p_mlp: np.ndarray,
     y_val: np.ndarray,
     min_weight: float = 0.0,
+    max_weight: float = 1.0,
 ) -> np.ndarray:
     """Return per_class_weights (3, 3) minimizing val log-loss via SLSQP.
 
@@ -77,7 +78,7 @@ def _optimize_per_class_weights(
         {"type": "eq", "fun": lambda w, c=c: w.reshape(n_models, n_classes)[:, c].sum() - 1.0}
         for c in range(n_classes)
     ]
-    bounds = [(min_weight, 1.0)] * (n_models * n_classes)
+    bounds = [(min_weight, max_weight)] * (n_models * n_classes)
     result = minimize(objective, x0, method="SLSQP", bounds=bounds, constraints=constraints)
     return result.x.reshape(n_models, n_classes)
 
@@ -151,11 +152,13 @@ def main() -> None:
     p_mlp_val = mlp.predict_proba(val_df)
 
     min_model_weight = float(cfg["model"].get("min_model_weight", 0.0))
+    max_model_weight = float(cfg["model"].get("max_model_weight", 1.0))
     print("Base model diagnostics (post-calibration):")
     _diagnose_base_models(p_xgb_val, p_logreg_val, p_mlp_val, y_val)
-    print(f"Optimizing per-class blend weights (floor={min_model_weight})...")
+    print(f"Optimizing per-class blend weights (floor={min_model_weight}, cap={max_model_weight})...")
     per_class_weights = _optimize_per_class_weights(
-        p_xgb_val, p_logreg_val, p_mlp_val, y_val, min_weight=min_model_weight
+        p_xgb_val, p_logreg_val, p_mlp_val, y_val,
+        min_weight=min_model_weight, max_weight=max_model_weight,
     )
     print(f"Per-class weights (rows=XGB/LogReg/MLP, cols=A/D/H):\n{np.round(per_class_weights, 3)}")
 
