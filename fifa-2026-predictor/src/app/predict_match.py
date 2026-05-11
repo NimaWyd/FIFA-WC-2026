@@ -11,6 +11,8 @@ import joblib
 import pandas as pd
 
 from src.data.schema import ensure_match_schema, normalize_team_name
+from src.data.team_identity import CANONICAL_TEAMS
+from src.features.elo import rank_to_starting_elo
 from src.features.match_row_builder import build_match_row
 from src.features.registry import get_registry
 from src.features.state_tracker import TeamStateTracker
@@ -52,7 +54,11 @@ def build_pre_match_row(
     history = ensure_match_schema(history_df)
     history = history[history["date"] < pd.to_datetime(match_date)].sort_values("date")
 
-    tracker = TeamStateTracker(cfg)
+    team_elo_init = {
+        name: rank_to_starting_elo(meta.get("fifa_rank_2025"))
+        for name, meta in CANONICAL_TEAMS.items()
+    }
+    tracker = TeamStateTracker(cfg, team_elo_init=team_elo_init)
     tracker.replay_history(history)
 
     record = build_match_row(

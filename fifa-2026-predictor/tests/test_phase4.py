@@ -573,11 +573,13 @@ class TestNoLeakage(unittest.TestCase):
             "neutral": [False, False, True],
         })
         features = build_feature_table(df, _cfg())
-        # First match must have base Elo for both teams
-        self.assertAlmostEqual(features.iloc[0]["home_elo_pre"], 1500.0, places=6)
-        self.assertAlmostEqual(features.iloc[0]["away_elo_pre"], 1500.0, places=6)
-        # Third match must have non-base Elo (teams appeared in matches 1 & 2)
-        self.assertNotAlmostEqual(features.iloc[2]["home_elo_pre"], 1500.0, places=2)
+        # First match must have rank-based initial Elo (not updated by any prior match)
+        from src.features.elo import rank_to_starting_elo
+        from src.data.team_identity import get_fifa_rank
+        self.assertAlmostEqual(features.iloc[0]["home_elo_pre"], rank_to_starting_elo(get_fifa_rank("Brazil")), places=4)
+        self.assertAlmostEqual(features.iloc[0]["away_elo_pre"], rank_to_starting_elo(get_fifa_rank("France")), places=4)
+        # Third match must have a different Elo (updated after matches 1 & 2)
+        self.assertNotAlmostEqual(features.iloc[2]["home_elo_pre"], rank_to_starting_elo(get_fifa_rank("Brazil")), places=2)
 
     def test_training_inference_consistent_with_new_features(self):
         """New Phase 4 features must be identical in training and inference paths."""

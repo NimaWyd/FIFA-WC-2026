@@ -2,8 +2,12 @@
 
 from __future__ import annotations
 
-import math
 from dataclasses import dataclass
+
+# Elo range assigned to FIFA-ranked teams (rank 1 → MAX, rank ~210 → MIN).
+_ELO_RANK_MAX = 1900.0
+_ELO_RANK_MIN = 1500.0
+_ELO_RANK_SPAN = 210  # approximate total number of FIFA-ranked nations
 
 
 @dataclass
@@ -11,6 +15,19 @@ class EloConfig:
     k_factor: float = 40.0
     home_advantage: float = 100.0
     base_rating: float = 1500.0
+
+
+def rank_to_starting_elo(rank: int | None) -> float:
+    """Convert a FIFA rank to an initial Elo rating.
+
+    Linear mapping: rank 1 → 1900, rank 210 → 1500.
+    Unranked teams (rank=None) get 1450 (below the minimum for ranked nations).
+    """
+    if rank is None:
+        return 1450.0
+    rank = max(1, rank)
+    elo = _ELO_RANK_MAX - (rank - 1) * (_ELO_RANK_MAX - _ELO_RANK_MIN) / _ELO_RANK_SPAN
+    return max(_ELO_RANK_MIN, elo)
 
 
 def expected_score(rating_a: float, rating_b: float) -> float:

@@ -448,12 +448,19 @@ class TestFeatureGenerationExpandedData(unittest.TestCase):
 
     def test_first_match_base_elo(self):
         from src.features.build_features import build_feature_table
+        from src.features.elo import rank_to_starting_elo
+        from src.data.team_identity import CANONICAL_TEAMS
 
         df = self._make_multi_era_df()
         features = build_feature_table(df, _cfg())
         first = features.iloc[0]
-        self.assertEqual(first["home_elo_pre"], 1500.0)
-        self.assertEqual(first["away_elo_pre"], 1500.0)
+        home_team = df.iloc[0]["home_team"]
+        away_team = df.iloc[0]["away_team"]
+        # Use raw rank (may be None) so unranked teams map to 1450, matching tracker init
+        home_rank = CANONICAL_TEAMS.get(home_team, {}).get("fifa_rank_2025")
+        away_rank = CANONICAL_TEAMS.get(away_team, {}).get("fifa_rank_2025")
+        self.assertAlmostEqual(first["home_elo_pre"], rank_to_starting_elo(home_rank), places=4)
+        self.assertAlmostEqual(first["away_elo_pre"], rank_to_starting_elo(away_rank), places=4)
 
     def test_elo_evolves_across_eras(self):
         from src.features.build_features import build_feature_table

@@ -9,6 +9,8 @@ import numpy as np
 import pandas as pd
 
 from src.data.schema import ensure_match_schema
+from src.data.team_identity import CANONICAL_TEAMS
+from src.features.elo import rank_to_starting_elo
 from src.features.match_row_builder import build_match_row
 from src.features.registry import get_registry
 from src.features.state_tracker import TeamStateTracker
@@ -57,7 +59,11 @@ def build_feature_table(
     matches = matches.dropna(subset=["date", "home_score", "away_score"])
     matches = matches.sort_values("date").reset_index(drop=True)
 
-    tracker = TeamStateTracker(cfg)
+    team_elo_init = {
+        name: rank_to_starting_elo(meta.get("fifa_rank_2025"))
+        for name, meta in CANONICAL_TEAMS.items()
+    }
+    tracker = TeamStateTracker(cfg, team_elo_init=team_elo_init)
     rows: list[dict[str, Any]] = []
 
     for row in matches.itertuples(index=False):

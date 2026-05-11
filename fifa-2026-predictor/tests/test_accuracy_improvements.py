@@ -546,8 +546,11 @@ class TestTrainingInferenceConsistency:
 
         # Last row: Brazil vs France on 2021-01-01
         # Build via inference path
+        from src.data.team_identity import CANONICAL_TEAMS
+        from src.features.elo import rank_to_starting_elo
+        team_elo_init = {n: rank_to_starting_elo(m.get("fifa_rank_2025")) for n, m in CANONICAL_TEAMS.items()}
         history = matches.iloc[:2]  # only first two matches
-        tracker = TeamStateTracker(cfg)
+        tracker = TeamStateTracker(cfg, team_elo_init=team_elo_init)
         # Rename tournament→competition if needed (already 'competition' here)
         for row in history.itertuples(index=False):
             tracker.update(

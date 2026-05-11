@@ -18,7 +18,7 @@ from src.features.competition_weights import (
     DEFAULT_COMPETITION_K_MULTIPLIER,
     get_competition_k_multiplier,
 )
-from src.features.elo import EloConfig, expected_score, update_ratings
+from src.features.elo import EloConfig, expected_score, rank_to_starting_elo, update_ratings
 
 
 class TeamStateTracker:
@@ -55,7 +55,11 @@ class TeamStateTracker:
     # Separate H2H deque per canonical pair (sorted tuple of names).
     _MAX_H2H: int = 15
 
-    def __init__(self, cfg: dict[str, Any]) -> None:
+    def __init__(
+        self,
+        cfg: dict[str, Any],
+        team_elo_init: dict[str, float] | None = None,
+    ) -> None:
         form_window = int(cfg["features"]["form_window"])
         self.elo_cfg = EloConfig(
             k_factor=float(cfg["features"]["elo_k_factor"]),
@@ -65,8 +69,10 @@ class TeamStateTracker:
         self._recency_halflife = float(
             cfg["features"].get("recency_halflife_days", 180.0)
         )
-
-        self._ratings: dict[str, float] = defaultdict(lambda: self.elo_cfg.base_rating)
+        base = self.elo_cfg.base_rating
+        self._ratings: dict[str, float] = defaultdict(lambda: base)
+        if team_elo_init:
+            self._ratings.update(team_elo_init)
 
         # Legacy deques (backward compat — drive form(), goals_for(), goals_against())
         self._form: dict[str, deque] = defaultdict(

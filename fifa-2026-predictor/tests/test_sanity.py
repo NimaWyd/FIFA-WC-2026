@@ -321,10 +321,13 @@ class TestTrainingInferenceConsistency(unittest.TestCase):
 
     def test_first_match_uses_base_elo(self):
         from src.features.build_features import build_feature_table
+        from src.features.elo import rank_to_starting_elo
+        from src.data.team_identity import get_fifa_rank
         features = build_feature_table(_minimal_matches(), _cfg())
         first = features.iloc[0]
-        self.assertEqual(first["home_elo_pre"], 1500.0)
-        self.assertEqual(first["away_elo_pre"], 1500.0)
+        # Brazil (rank 2) and Argentina (rank 1) start at rank-based Elo, not flat 1500
+        self.assertAlmostEqual(first["home_elo_pre"], rank_to_starting_elo(get_fifa_rank("Brazil")), places=4)
+        self.assertAlmostEqual(first["away_elo_pre"], rank_to_starting_elo(get_fifa_rank("Argentina")), places=4)
 
     def test_third_match_elo_is_updated(self):
         from src.features.build_features import build_feature_table
@@ -344,9 +347,12 @@ class TestTrainingInferenceConsistency(unittest.TestCase):
         train_row = features.iloc[2]
 
         # Inference path: replay first two matches, then snapshot state
+        from src.data.team_identity import CANONICAL_TEAMS
+        from src.features.elo import rank_to_starting_elo
+        team_elo_init = {n: rank_to_starting_elo(m.get("fifa_rank_2025")) for n, m in CANONICAL_TEAMS.items()}
         history = matches.iloc[:2].copy()
         history["date"] = pd.to_datetime(history["date"])
-        tracker = TeamStateTracker(cfg)
+        tracker = TeamStateTracker(cfg, team_elo_init=team_elo_init)
         tracker.replay_history(history)
         infer_row = build_match_row(
             tracker=tracker,
