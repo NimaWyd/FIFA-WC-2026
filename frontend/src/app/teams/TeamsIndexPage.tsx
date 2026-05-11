@@ -7,19 +7,6 @@ import { WC2026_TEAMS } from "@/lib/wc2026Teams";
 import { WC2026_GROUPS } from "@/lib/wc2026Groups";
 import FlagIcon from "@/components/FlagIcon";
 
-const CONF_ORDER: Record<string, number> = {
-  CONCACAF: 0, UEFA: 1, CONMEBOL: 2, CAF: 3, AFC: 4, OFC: 5,
-};
-
-const CONF_COLORS: Record<string, string> = {
-  UEFA: "text-sky-400 bg-sky-400/10 border-sky-400/30",
-  CONMEBOL: "text-gold-500 bg-gold-500/10 border-gold-500/30",
-  CONCACAF: "text-pitch-400 bg-pitch-400/10 border-pitch-400/30",
-  CAF: "text-orange-400 bg-orange-400/10 border-orange-400/30",
-  AFC: "text-red-400 bg-red-400/10 border-red-400/30",
-  OFC: "text-purple-400 bg-purple-400/10 border-purple-400/30",
-};
-
 const HOST_TEAMS = new Set(["United States", "Canada", "Mexico"]);
 
 function getGroup(team: string): string | null {
