@@ -15,27 +15,44 @@ function teamLabel(name: string) {
   return name === "United States" ? "USA" : name;
 }
 
+const STEP_MS = 350;
+const START_DELAY_MS = 400;
+
 function AnimatedGoals({ target }: { target: number }) {
-  const [display, setDisplay] = useState(0);
+  const [display, setDisplay] = useState<number | null>(null);
 
   useEffect(() => {
-    setDisplay(0);
-    if (target === 0) return;
+    setDisplay(null);
     let current = 0;
-    const id = setInterval(() => {
-      current += 1;
-      setDisplay(current);
-      if (current >= target) clearInterval(id);
-    }, 80);
-    return () => clearInterval(id);
+    // Brief pause before counting so the card appears first
+    const startId = setTimeout(() => {
+      setDisplay(0);
+      if (target === 0) return;
+      const id = setInterval(() => {
+        current += 1;
+        setDisplay(current);
+        if (current >= target) clearInterval(id);
+      }, STEP_MS);
+      return () => clearInterval(id);
+    }, START_DELAY_MS);
+    return () => clearTimeout(startId);
   }, [target]);
+
+  // Blank while the delay plays out
+  if (display === null) {
+    return (
+      <span className="text-5xl font-black tabular-nums text-transparent select-none">
+        {target}
+      </span>
+    );
+  }
 
   return (
     <motion.span
       key={display}
-      initial={{ scale: 1.4, opacity: 0.4 }}
-      animate={{ scale: 1, opacity: 1 }}
-      transition={{ duration: 0.12 }}
+      initial={{ scale: 2, opacity: 0, y: -16 }}
+      animate={{ scale: 1, opacity: 1, y: 0 }}
+      transition={{ type: "spring", stiffness: 300, damping: 18 }}
       className="text-5xl font-black tabular-nums bg-gradient-to-br from-white to-gold-500 bg-clip-text text-transparent"
     >
       {display}
