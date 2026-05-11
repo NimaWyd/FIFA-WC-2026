@@ -54,11 +54,6 @@ export default function Home() {
   const [dateError, setDateError] = useState<string | null>(null);
 
   const resultsRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-
-  function scrollToContent() {
-    contentRef.current?.scrollIntoView({ behavior: "smooth" });
-  }
 
   useEffect(() => {
     if (result) {
@@ -117,14 +112,10 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-navy-900">
-      <LandingHero
-        onFillBracket={() => { setTab("bracket"); scrollToContent(); }}
-        onViewMatches={() => { setTab("predictor"); scrollToContent(); }}
-        onViewStandings={() => { setTab("simulate"); scrollToContent(); }}
-      />
+      <LandingHero />
 
       {/* ── Tab bar ── */}
-      <div ref={contentRef} className="bg-navy-800 border-b border-navy-600">
+      <div className="bg-navy-800 border-b border-navy-600">
         <div className="max-w-4xl mx-auto px-4 flex items-center gap-0">
           <button
             onClick={() => setTab("bracket")}

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Anton, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import "flag-icons/css/flag-icons.min.css";
+import Navbar from "@/components/Navbar";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const anton = Anton({ weight: "400", subsets: ["latin"], variable: "--font-anton" });
@@ -26,6 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body
         className={`${inter.className} ${anton.variable} ${jetbrainsMono.variable} antialiased min-h-screen bg-navy-900`}
       >
+        <Navbar />
         {children}
       </body>
     </html>

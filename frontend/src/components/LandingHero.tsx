@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import TrophyEmbed from "./TrophyEmbed";
 import TournamentCountdown from "./TournamentCountdown";
 
@@ -15,13 +16,7 @@ const STATS = [
   ["39", "Days"],
 ] as const;
 
-interface LandingHeroProps {
-  onFillBracket: () => void;
-  onViewMatches: () => void;
-  onViewStandings: () => void;
-}
-
-export default function LandingHero({ onFillBracket, onViewMatches, onViewStandings }: LandingHeroProps) {
+export default function LandingHero() {
   return (
     <section className="relative min-h-screen bg-navy-900 overflow-hidden text-[#f0ece2]">
       {/* Radial gradients */}
@@ -39,40 +34,6 @@ export default function LandingHero({ onFillBracket, onViewMatches, onViewStandi
         className="pointer-events-none absolute inset-0 opacity-[0.05]"
         style={{ background: "repeating-linear-gradient(90deg, transparent 0 80px, #fff 80px 81px)" }}
       />
-
-      {/* ── Header ── */}
-      <header className="relative flex items-center justify-between px-8 md:px-14 py-6 border-b border-white/[0.06]">
-        <div className="flex items-center gap-8 md:gap-10">
-          <div className="flex items-center gap-2.5 flex-shrink-0">
-            <div className="w-[28px] h-[28px] bg-pitch-400 rounded-[3px] rotate-45" />
-            <span className="font-anton text-[22px] tracking-[0.06em]">FORTUNA 26</span>
-          </div>
-          <nav className="hidden md:flex items-center gap-7">
-            {(
-              [
-                { label: "Bracket", onClick: onFillBracket },
-                { label: "Matches", onClick: onViewMatches },
-                { label: "Standings", onClick: onViewStandings },
-                { label: "Leaderboard", onClick: () => {} },
-              ] as const
-            ).map(({ label, onClick }) => (
-              <button
-                key={label}
-                onClick={onClick}
-                className="text-[13px] font-semibold tracking-[0.03em] uppercase text-[rgba(240,236,226,0.6)] hover:text-[#f0ece2] transition-colors"
-              >
-                {label}
-              </button>
-            ))}
-          </nav>
-        </div>
-        <div className="flex items-center gap-4">
-          <span className="font-jb text-[11px] tracking-[0.1em] text-[rgba(240,236,226,0.45)] hidden sm:block">
-            SCORE · — PTS
-          </span>
-          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#c97a4a] to-[#6e3a1e] flex-shrink-0" />
-        </div>
-      </header>
 
       {/* ── Hero grid ── */}
       <div className="relative grid grid-cols-1 md:grid-cols-[1.1fr_1fr] px-8 md:px-14 pt-8 md:pt-10 pb-52 md:pb-60 animate-fade-in">
@@ -96,18 +57,18 @@ export default function LandingHero({ onFillBracket, onViewMatches, onViewStandi
           <TournamentCountdown />
 
           <div className="flex flex-wrap gap-3 mt-7 md:mt-8">
-            <button
-              onClick={onFillBracket}
+            <Link
+              href="/predict"
               className="font-anton text-[15px] tracking-[0.09em] px-7 py-4 bg-pitch-400 text-navy-900 rounded-[2px] hover:bg-pitch-300 transition-colors"
             >
-              FILL MY BRACKET →
-            </button>
-            <button
-              onClick={onViewMatches}
+              PREDICT A MATCH →
+            </Link>
+            <Link
+              href="/groups"
               className="font-anton text-[15px] tracking-[0.09em] px-7 py-4 bg-transparent text-[#f0ece2] border border-white/[0.18] rounded-[2px] hover:border-white/40 transition-colors"
             >
-              VIEW STANDINGS
-            </button>
+              VIEW GROUPS
+            </Link>
           </div>
 
           {/* Stats row */}
