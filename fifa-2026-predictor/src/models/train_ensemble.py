@@ -11,6 +11,7 @@ from scipy.optimize import minimize
 from src.evaluation.baselines import MLPModel
 from src.models.common import (
     TARGET_MAP,
+    IsotonicCalibrationWrapper,
     build_preprocessor,
     ensure_artifact_dir,
     load_feature_data,
@@ -85,6 +86,7 @@ def _optimize_draw_blend_weight(
     p_draw_sub: np.ndarray,
     p_draw_ensemble: np.ndarray,
     y_val: np.ndarray,
+    min_weight: float = 0.0,
 ) -> float:
     """Return scalar w minimizing binary cross-entropy on draw labels."""
     y_draw = (y_val == TARGET_MAP["D"]).astype(int)
@@ -93,7 +95,7 @@ def _optimize_draw_blend_weight(
         p = np.clip(w[0] * p_draw_sub + (1.0 - w[0]) * p_draw_ensemble, 1e-9, 1.0 - 1e-9)
         return float(-np.mean(y_draw * np.log(p) + (1 - y_draw) * np.log(1 - p)))
 
-    result = minimize(objective, [0.5], method="SLSQP", bounds=[(0.0, 1.0)])
+    result = minimize(objective, [0.5], method="SLSQP", bounds=[(min_weight, 1.0)])
     return float(result.x[0])
 
 
@@ -133,15 +135,23 @@ def main() -> None:
     print("Loading draw submodel...")
     draw_submodel = joblib.load(artifact_dir / "draw_submodel.joblib")
 
+    y_val = val_df["target"].map(TARGET_MAP).astype(int).values
+    X_val_raw, _ = to_xy(val_df, feature_cols)
+
     print("Getting val-set predictions...")
     p_xgb_val = _pipeline_proba_ordered(xgb_pipeline, val_df, feature_cols)
     p_logreg_val = _pipeline_proba_ordered(logreg_pipeline, val_df, feature_cols)
+
+    # Calibrate MLP on val set before using its predictions in the blend optimizer.
+    X_val_t = mlp._pipeline.named_steps["preprocessor"].transform(X_val_raw)
+    mlp_clf_cal = IsotonicCalibrationWrapper(mlp._pipeline.named_steps["classifier"])
+    mlp_clf_cal.fit(X_val_t, y_val)
+    mlp._pipeline.steps[1] = ("classifier", mlp_clf_cal)
+    print("Fitted isotonic calibration on MLP validation set.")
     p_mlp_val = mlp.predict_proba(val_df)
 
-    y_val = val_df["target"].map(TARGET_MAP).astype(int).values
-
     min_model_weight = float(cfg["model"].get("min_model_weight", 0.0))
-    print("Base model diagnostics:")
+    print("Base model diagnostics (post-calibration):")
     _diagnose_base_models(p_xgb_val, p_logreg_val, p_mlp_val, y_val)
     print(f"Optimizing per-class blend weights (floor={min_model_weight})...")
     per_class_weights = _optimize_per_class_weights(
@@ -154,11 +164,13 @@ def main() -> None:
     for m_idx, p in enumerate([p_xgb_val, p_logreg_val, p_mlp_val]):
         blended_draw_val += per_class_weights[m_idx, 1] * p[:, 1]
 
-    X_val_raw, _ = to_xy(val_df, feature_cols)
     p_draw_sub_val = draw_submodel.predict_proba(X_val_raw)[:, 1]
 
-    print("Optimizing draw blend weight...")
-    draw_blend_weight = _optimize_draw_blend_weight(p_draw_sub_val, blended_draw_val, y_val)
+    min_draw_blend = float(cfg["model"].get("min_draw_blend_weight", 0.0))
+    print(f"Optimizing draw blend weight (floor={min_draw_blend})...")
+    draw_blend_weight = _optimize_draw_blend_weight(
+        p_draw_sub_val, blended_draw_val, y_val, min_weight=min_draw_blend
+    )
     print(f"Draw blend weight: {draw_blend_weight:.4f}")
 
     ensemble = EnsembleModel(

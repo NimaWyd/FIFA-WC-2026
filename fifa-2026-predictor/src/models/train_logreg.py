@@ -11,6 +11,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 
 from src.models.common import (
+    IsotonicCalibrationWrapper,
     build_preprocessor,
     ensure_artifact_dir,
     load_feature_data,
@@ -46,6 +47,7 @@ def main() -> None:
 
     preprocessor, feature_cols = build_preprocessor(df)
     x_train, y_train = to_xy(train_df, feature_cols)
+    x_val, y_val = to_xy(val_df, feature_cols)
 
     weights_train = (
         train_df["match_weight"].values if "match_weight" in train_df.columns else None
@@ -54,23 +56,30 @@ def main() -> None:
         print(f"Using time-decay sample weights "
               f"(min={weights_train.min():.3f}, max={weights_train.max():.3f})")
 
-    model = Pipeline(
-        steps=[
-            ("preprocessor", preprocessor),
-            (
-                "classifier",
-                LogisticRegression(
-                    max_iter=int(cfg["model"]["logistic_max_iter"]),
-                    C=float(cfg["model"].get("logreg_C", 1.0)),
-                    class_weight="balanced",
-                ),
-            ),
-        ]
+    preprocessor.fit(x_train, y_train)
+    x_train_t = preprocessor.transform(x_train)
+    x_val_t = preprocessor.transform(x_val)
+
+    classifier = LogisticRegression(
+        max_iter=int(cfg["model"]["logistic_max_iter"]),
+        C=float(cfg["model"].get("logreg_C", 1.0)),
+        class_weight="balanced",
     )
     fit_kwargs: dict = {}
     if weights_train is not None:
-        fit_kwargs["classifier__sample_weight"] = weights_train
-    model.fit(x_train, y_train, **fit_kwargs)
+        fit_kwargs["sample_weight"] = weights_train
+    classifier.fit(x_train_t, y_train, **fit_kwargs)
+
+    calibrated_classifier = IsotonicCalibrationWrapper(classifier)
+    calibrated_classifier.fit(x_val_t, y_val)
+    print("Fitted isotonic calibration on validation set.")
+
+    model = Pipeline(
+        steps=[
+            ("preprocessor", preprocessor),
+            ("classifier", calibrated_classifier),
+        ]
+    )
 
     artifact_dir = ensure_artifact_dir(cfg["paths"]["trained_model_dir"])
     model_path = artifact_dir / f"{args.model_name}.joblib"
@@ -79,6 +88,7 @@ def main() -> None:
 
     metadata = {
         "model_type": "logistic_regression",
+        "calibration": "isotonic",
         "features_csv": args.features_csv,
         "split_sizes": {
             "train": len(train_df),
@@ -89,8 +99,8 @@ def main() -> None:
     }
     meta_path.write_text(json.dumps(metadata, indent=2), encoding="utf-8")
     print(f"Saved model to {model_path}")
+    print(f"Train: {len(train_df)} | Val: {len(val_df)} | Test: {len(test_df)}")
 
 
 if __name__ == "__main__":
     main()
-
