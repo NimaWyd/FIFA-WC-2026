@@ -7,9 +7,9 @@ import joblib
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
-from sklearn.utils.class_weight import compute_sample_weight
 
 from src.models.common import (
+    IsotonicCalibrationWrapper,
     build_preprocessor,
     ensure_artifact_dir,
     load_feature_data,
@@ -28,16 +28,21 @@ def train_draw_submodel(df: pd.DataFrame, cfg: dict) -> Pipeline:
     )
     preprocessor, feature_cols = build_preprocessor(df)
     X_train, _ = to_xy(train_df, feature_cols)
+    X_val, _ = to_xy(val_df, feature_cols)
     y_train = (train_df["target"] == "D").astype(int).values
+    y_val = (val_df["target"] == "D").astype(int).values
 
-    weights = compute_sample_weight("balanced", y_train)
     preprocessor.fit(X_train)
     X_train_t = preprocessor.transform(X_train)
+    X_val_t = preprocessor.transform(X_val)
 
-    clf = LogisticRegression(max_iter=1000, random_state=42)
-    clf.fit(X_train_t, y_train, sample_weight=weights)
+    clf = LogisticRegression(max_iter=1000, C=1.0, random_state=42)
+    clf.fit(X_train_t, y_train)
 
-    model = Pipeline([("preprocessor", preprocessor), ("classifier", clf)])
+    calibrated = IsotonicCalibrationWrapper(clf)
+    calibrated.fit(X_val_t, y_val)
+
+    model = Pipeline([("preprocessor", preprocessor), ("classifier", calibrated)])
     print(f"Draw submodel — train: {len(train_df)} | val: {len(val_df)} | test: {len(test_df)}")
     return model
 
