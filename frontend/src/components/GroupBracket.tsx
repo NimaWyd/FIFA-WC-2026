@@ -4,6 +4,7 @@ import FlagIcon from "@/components/FlagIcon";
 
 interface Props {
   onSelectGroup: (group: WCGroup) => void;
+  showHeader?: boolean;
 }
 
 const HOST_COLORS: Record<string, string> = {
@@ -12,13 +13,15 @@ const HOST_COLORS: Record<string, string> = {
   Canada: "text-red-400",
 };
 
-export default function GroupBracket({ onSelectGroup }: Props) {
+export default function GroupBracket({ onSelectGroup, showHeader = true }: Props) {
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-bold text-white">Group Stage</h2>
-        <span className="text-xs text-slate-500">12 groups · 48 teams</span>
-      </div>
+      {showHeader && (
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-bold text-white">Group Stage</h2>
+          <span className="text-xs text-slate-500">12 groups · 48 teams</span>
+        </div>
+      )}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {WC2026_GROUPS.map((group) => (
           <button
