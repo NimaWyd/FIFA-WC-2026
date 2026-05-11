@@ -49,6 +49,19 @@ from src.features.state_tracker import TeamStateTracker
 
 _ELO_BASE = 1500.0  # matches EloConfig.base_rating
 
+# Confederation strength tiers (issue #119).
+# UEFA and CONMEBOL are historically the strongest; OFC the weakest.
+# Used to compute confederation_strength_diff = home_tier - away_tier,
+# giving the model a signal for cross-confederation matches.
+CONFEDERATION_TIER: dict[str, int] = {
+    "UEFA": 6,
+    "CONMEBOL": 5,
+    "CONCACAF": 4,
+    "AFC": 3,
+    "CAF": 3,
+    "OFC": 1,
+}
+
 
 def build_match_row(
     tracker: TeamStateTracker,
@@ -190,6 +203,11 @@ def build_match_row(
     neutral_x_elo_diff = neutral_flag * elo_diff
     neutral_x_rank_diff = neutral_flag * rank_diff
 
+    # --- Issue #119: confederation strength difference ---
+    home_conf_tier = CONFEDERATION_TIER.get(home_confederation, 2)
+    away_conf_tier = CONFEDERATION_TIER.get(away_confederation, 2)
+    confederation_strength_diff = home_conf_tier - away_conf_tier
+
     return {
         # Match metadata
         "date": match_date,
@@ -288,6 +306,8 @@ def build_match_row(
         # --- Issue #57: neutral-venue interaction features ---
         "neutral_x_elo_diff": float(neutral_x_elo_diff),
         "neutral_x_rank_diff": float(neutral_x_rank_diff),
+        # --- Issue #119: confederation strength difference ---
+        "confederation_strength_diff": float(confederation_strength_diff),
         # --- Issue #58: consecutive-result streak features ---
         "home_win_streak": float(home_win_streak),
         "away_win_streak": float(away_win_streak),

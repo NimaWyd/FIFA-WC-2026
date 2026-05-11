@@ -120,6 +120,33 @@ def build_feature_table(
         record["target"] = _result_label(record["home_score"], record["away_score"])
         rows.append(record)
 
+        # Issue #109/#111: augment neutral matches with home/away swapped so the
+        # model learns that neutral ground is symmetric.  Half weight prevents
+        # double-counting the same result.
+        if neutral:
+            aug = build_match_row(
+                tracker=tracker,
+                home_team=away_team,
+                away_team=home_team,
+                match_date=date,
+                competition=competition,
+                neutral=True,
+                home_confederation=away_conf,
+                away_confederation=home_conf,
+                home_fifa_rank=away_rank,
+                away_fifa_rank=home_rank,
+                tournament_stage=tournament_stage,
+                h2h_window=h2h_window,
+                elo_inactivity_halflife=elo_inactivity_halflife,
+            )
+            aug["home_score"] = int(row.away_score)
+            aug["away_score"] = int(row.home_score)
+            aug_label = _result_label(int(row.away_score), int(row.home_score))
+            aug["target"] = aug_label
+            aug["match_weight"] = aug.get("match_weight", 1.0) * 0.5
+            aug["stage_weight"] = aug.get("stage_weight", 1.0) * 0.5
+            rows.append(aug)
+
         tracker.update(
             home_team=home_team,
             away_team=away_team,

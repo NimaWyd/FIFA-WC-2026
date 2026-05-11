@@ -571,7 +571,10 @@ class TestTrainingInferenceConsistency:
             tournament_stage="Unknown",
         )
 
-        train_row = features_df.iloc[-1].to_dict()
+        # Neutral augmentation adds a swapped copy — filter for the original row
+        train_row = features_df[
+            (features_df["home_team"] == "Brazil") & (features_df["away_team"] == "France")
+        ].iloc[-1].to_dict()
 
         for key in ("home_elo_pre", "away_elo_pre", "home_form_last5",
                     "home_draw_rate_w5", "away_draw_rate_w5", "h2h_n_matches"):
