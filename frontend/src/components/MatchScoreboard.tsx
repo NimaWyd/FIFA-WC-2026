@@ -1,4 +1,6 @@
 "use client";
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import FlagIcon from "@/components/FlagIcon";
 
 interface Props {
@@ -11,6 +13,34 @@ interface Props {
 
 function teamLabel(name: string) {
   return name === "United States" ? "USA" : name;
+}
+
+function AnimatedGoals({ target }: { target: number }) {
+  const [display, setDisplay] = useState(0);
+
+  useEffect(() => {
+    setDisplay(0);
+    if (target === 0) return;
+    let current = 0;
+    const id = setInterval(() => {
+      current += 1;
+      setDisplay(current);
+      if (current >= target) clearInterval(id);
+    }, 80);
+    return () => clearInterval(id);
+  }, [target]);
+
+  return (
+    <motion.span
+      key={display}
+      initial={{ scale: 1.4, opacity: 0.4 }}
+      animate={{ scale: 1, opacity: 1 }}
+      transition={{ duration: 0.12 }}
+      className="text-5xl font-black tabular-nums bg-gradient-to-br from-white to-gold-500 bg-clip-text text-transparent"
+    >
+      {display}
+    </motion.span>
+  );
 }
 
 export default function MatchScoreboard({ homeTeam, awayTeam, homeGoals, awayGoals, compact = false }: Props) {
@@ -33,13 +63,9 @@ export default function MatchScoreboard({ homeTeam, awayTeam, homeGoals, awayGoa
           <span className="text-sm font-semibold text-white text-center">{teamLabel(homeTeam)}</span>
         </div>
         <div className="flex items-center gap-3 px-8 py-4 bg-navy-700 rounded-2xl border border-gold-500/40">
-          <span className="text-5xl font-black tabular-nums bg-gradient-to-br from-white to-gold-500 bg-clip-text text-transparent">
-            {homeGoals}
-          </span>
+          <AnimatedGoals target={homeGoals} />
           <span className="text-3xl text-slate-500 font-light">–</span>
-          <span className="text-5xl font-black tabular-nums bg-gradient-to-br from-white to-gold-500 bg-clip-text text-transparent">
-            {awayGoals}
-          </span>
+          <AnimatedGoals target={awayGoals} />
         </div>
         <div className="flex-1 flex flex-col items-center gap-2">
           <FlagIcon team={awayTeam} className="w-16 h-12 rounded" />
