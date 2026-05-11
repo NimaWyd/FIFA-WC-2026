@@ -92,6 +92,11 @@ export async function fetchModelInfo(): Promise<ModelInfo> {
   return handleResponse<ModelInfo>(res);
 }
 
+export async function fetchTeam(name: string): Promise<TeamInfo> {
+  const res = await fetchWithTimeout(`${BASE}/teams/${encodeURIComponent(name)}`);
+  return handleResponse<TeamInfo>(res);
+}
+
 export async function fetchSimulation(): Promise<SimulationResponse> {
   const res = await fetchWithTimeout(`${BASE}/simulate`, {}, 90_000);
   return handleResponse<SimulationResponse>(res);
