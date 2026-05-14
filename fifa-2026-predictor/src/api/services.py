@@ -407,6 +407,7 @@ def predict(
             "scoreline_model_status": scoreline_status,
             "competition_used": comp,
             "neutral": is_neutral,
+            "neutral_symmetry_applied": is_neutral,
             "home_confederation": home_conf,
             "away_confederation": away_conf,
             "home_fifa_rank": home_rank,

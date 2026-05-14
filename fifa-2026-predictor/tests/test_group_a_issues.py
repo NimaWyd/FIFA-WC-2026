@@ -182,3 +182,38 @@ class TestNeutralSymmetry:
         assert abs(p_bra_home - p_bra_away) > 0.02, (
             "Non-neutral predictions should differ when team order swapped"
         )
+
+
+# ---------------------------------------------------------------------------
+# Issue #111 — Neutral flag: metadata flag for symmetry
+# ---------------------------------------------------------------------------
+
+@_integration_skip
+class TestNeutralFlag:
+    """Neutral symmetry flag appears in metadata."""
+
+    def test_neutral_prediction_has_symmetry_flag(self):
+        """Metadata should carry neutral_symmetry_applied=True for neutral matches."""
+        from src.api.services import predict
+        result = predict(
+            home_team="England", away_team="Germany",
+            match_date="2026-06-20",
+            competition="FIFA World Cup", neutral=True,
+            home_confederation=None, away_confederation=None,
+            home_fifa_rank=None, away_fifa_rank=None,
+            tournament_stage="Group Stage",
+        )
+        assert result["metadata"].get("neutral_symmetry_applied") is True
+
+    def test_non_neutral_prediction_flag_is_false(self):
+        """Non-neutral matches should have neutral_symmetry_applied=False."""
+        from src.api.services import predict
+        result = predict(
+            home_team="Brazil", away_team="Argentina",
+            match_date="2026-06-20",
+            competition="FIFA World Cup Qualification", neutral=False,
+            home_confederation=None, away_confederation=None,
+            home_fifa_rank=None, away_fifa_rank=None,
+            tournament_stage="Unknown",
+        )
+        assert result["metadata"].get("neutral_symmetry_applied") is False
