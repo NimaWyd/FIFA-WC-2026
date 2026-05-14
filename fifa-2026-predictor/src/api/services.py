@@ -321,6 +321,36 @@ def predict(
         "away_win": prob_by_class.get(TARGET_MAP["A"], 0.0),
     }
 
+    # Issue #109: on neutral ground, average P(home,away) and P(away,home) to
+    # cancel the model's learned home-advantage artifact. Both orderings are
+    # equally valid on a neutral pitch, so their mean is the unbiased estimate.
+    if is_neutral:
+        swapped_row = build_pre_match_row(
+            history_df=history_df,
+            home_team=away_canonical,
+            away_team=home_canonical,
+            match_date=match_date,
+            competition=comp,
+            neutral=True,
+            home_confederation=away_conf,
+            away_confederation=home_conf,
+            home_fifa_rank=away_rank,
+            away_fifa_rank=home_rank,
+            tournament_stage=stage,
+            cfg=cfg,
+        )
+        probs_swapped_raw = model.predict_proba(swapped_row)[0]
+        prob_swapped = {int(c): float(p) for c, p in zip(clf.classes_, probs_swapped_raw)}
+        # In the swapped row "home" = original away team, so:
+        #   prob_swapped[TARGET_MAP["H"]] = P(original away wins)
+        #   prob_swapped[TARGET_MAP["A"]] = P(original home wins)
+        # Symmetrize from original home team's perspective:
+        probabilities = {
+            "home_win": 0.5 * (probabilities["home_win"] + prob_swapped.get(TARGET_MAP["A"], 0.0)),
+            "draw":     0.5 * (probabilities["draw"]     + prob_swapped.get(TARGET_MAP["D"], 0.0)),
+            "away_win": 0.5 * (probabilities["away_win"] + prob_swapped.get(TARGET_MAP["H"], 0.0)),
+        }
+
     # Scoreline distribution (optional — no error if params file absent)
     top_scorelines: list[dict] = []
     expected_goals: dict[str, float] = {}

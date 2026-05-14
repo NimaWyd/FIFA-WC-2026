@@ -120,3 +120,65 @@ class TestScorelineIntegration:
         scorelines = [s["scoreline"] for s in result["top_scorelines"]]
         assert "2-1" not in scorelines[:1], \
             f"2-1 should not be top scoreline for dominant mismatch, got: {scorelines}"
+
+
+# ---------------------------------------------------------------------------
+# Issue #109 — Neutral-ground symmetry
+# ---------------------------------------------------------------------------
+
+@_integration_skip
+class TestNeutralSymmetry:
+    """Swapping home/away on neutral ground should give near-identical predictions."""
+
+    def _pred(self, home: str, away: str) -> dict:
+        from src.api.services import predict
+        return predict(
+            home_team=home, away_team=away,
+            match_date="2026-06-20",
+            competition="FIFA World Cup", neutral=True,
+            home_confederation=None, away_confederation=None,
+            home_fifa_rank=None, away_fifa_rank=None,
+            tournament_stage="Group Stage",
+        )
+
+    def test_symmetric_home_win_prob(self):
+        """P(Argentina wins) should be same whether listed as home or away."""
+        fwd = self._pred("Argentina", "Portugal")
+        rev = self._pred("Portugal", "Argentina")
+        p_arg_fwd = fwd["probabilities"]["home_win"]
+        p_arg_rev = rev["probabilities"]["away_win"]
+        assert abs(p_arg_fwd - p_arg_rev) < 0.02, (
+            f"Neutral asymmetry: Argentina wins {p_arg_fwd:.3f} (home) "
+            f"vs {p_arg_rev:.3f} (away) — delta {abs(p_arg_fwd - p_arg_rev):.3f}"
+        )
+
+    def test_probabilities_sum_to_one_after_averaging(self):
+        """Averaged probabilities must still sum to 1.0."""
+        result = self._pred("Brazil", "France")
+        total = sum(result["probabilities"].values())
+        assert abs(total - 1.0) < 1e-4, f"Probabilities sum to {total}"
+
+    def test_non_neutral_is_not_symmetrized(self):
+        """Non-neutral predictions should NOT be averaged (home team keeps advantage)."""
+        from src.api.services import predict
+        home_pred = predict(
+            home_team="Brazil", away_team="Argentina",
+            match_date="2026-06-20",
+            competition="FIFA World Cup Qualification", neutral=False,
+            home_confederation=None, away_confederation=None,
+            home_fifa_rank=None, away_fifa_rank=None,
+            tournament_stage="Unknown",
+        )
+        away_pred = predict(
+            home_team="Argentina", away_team="Brazil",
+            match_date="2026-06-20",
+            competition="FIFA World Cup Qualification", neutral=False,
+            home_confederation=None, away_confederation=None,
+            home_fifa_rank=None, away_fifa_rank=None,
+            tournament_stage="Unknown",
+        )
+        p_bra_home = home_pred["probabilities"]["home_win"]
+        p_bra_away = away_pred["probabilities"]["away_win"]
+        assert abs(p_bra_home - p_bra_away) > 0.02, (
+            "Non-neutral predictions should differ when team order swapped"
+        )
