@@ -16,7 +16,37 @@ Usage:
 
 from __future__ import annotations
 
+import csv
+from pathlib import Path
 from typing import Optional
+
+# ---------------------------------------------------------------------------
+# Live rankings cache — loaded once from fifa_rankings.csv when it exists.
+# get_fifa_rank() checks this first so rankings can be updated without code
+# changes (issue #74). Falls back to hardcoded fifa_rank_2025 values.
+# ---------------------------------------------------------------------------
+
+_RANKINGS_CSV = Path(__file__).resolve().parents[2] / "data/processed/fifa_rankings.csv"
+_rankings_cache: dict[str, int] | None = None
+
+
+def _load_rankings_cache() -> dict[str, int]:
+    global _rankings_cache
+    if _rankings_cache is not None:
+        return _rankings_cache
+    if _RANKINGS_CSV.exists():
+        try:
+            with _RANKINGS_CSV.open(newline="", encoding="utf-8") as f:
+                _rankings_cache = {
+                    row["team"]: int(row["fifa_rank"])
+                    for row in csv.DictReader(f)
+                    if row.get("team") and row.get("fifa_rank")
+                }
+            return _rankings_cache
+        except Exception:
+            pass
+    _rankings_cache = {}
+    return _rankings_cache
 
 # ---------------------------------------------------------------------------
 # Master team registry
@@ -391,12 +421,16 @@ def get_confederation(name: str, default: str = "UNKNOWN") -> str:
 
 
 def get_fifa_rank(name: str, default: int = 75) -> int:
-    """Return the 2025 FIFA rank for *name* (any alias), or *default*.
+    """Return the current FIFA rank for *name* (any alias), or *default*.
 
-    The rank is a static mid-2025 snapshot.  For historical feature rows the
-    same snapshot is used as a proxy — this is a documented limitation.
+    Prefers data/processed/fifa_rankings.csv when present (issue #74) so
+    rankings can be updated by editing the CSV without touching code.
+    Falls back to the hardcoded fifa_rank_2025 snapshot in CANONICAL_TEAMS.
     """
     canonical = resolve_team(name)
+    cache = _load_rankings_cache()
+    if canonical in cache:
+        return cache[canonical]
     meta = CANONICAL_TEAMS.get(canonical)
     if meta is None:
         return default
