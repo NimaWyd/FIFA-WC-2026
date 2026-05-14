@@ -251,22 +251,22 @@ def get_stage_importance(stage: str) -> int:
 
 
 # ---------------------------------------------------------------------------
-# Issue #59: per-tier H/D/A base rates
-# Rates are empirically derived from international match data and represent
-# the structural outcome distribution for each competition importance tier.
-# Tier 5 (World Cup) has more decisive results due to knockout format bias.
-# Tier 1 (Friendlies) has fewer home wins due to experimental lineup effects.
+# Issue #59/#75: per-tier H/D/A base rates
+# Computed from 39,123 post-1993 matches in features.csv (issue #75).
+# Tier 5 (World Cup) has the highest away win rate (0.377) due to neutral-venue
+# dominance in knockout rounds. Tier 2 (Qualifiers) has low draw rate (0.208)
+# reflecting the decisive home-field advantage in two-legged ties.
 # ---------------------------------------------------------------------------
 
 _TIER_BASE_RATES: dict[int, dict[str, float]] = {
-    5: {"home_rate": 0.44, "draw_rate": 0.23, "away_rate": 0.33},  # World Cup
-    4: {"home_rate": 0.46, "draw_rate": 0.24, "away_rate": 0.30},  # Major continental
-    3: {"home_rate": 0.48, "draw_rate": 0.25, "away_rate": 0.27},  # Secondary continental
-    2: {"home_rate": 0.50, "draw_rate": 0.25, "away_rate": 0.25},  # Qualifiers
-    1: {"home_rate": 0.44, "draw_rate": 0.27, "away_rate": 0.29},  # Friendlies
+    5: {"home_rate": 0.387, "draw_rate": 0.236, "away_rate": 0.377},  # World Cup
+    4: {"home_rate": 0.382, "draw_rate": 0.269, "away_rate": 0.349},  # Major continental
+    3: {"home_rate": 0.432, "draw_rate": 0.233, "away_rate": 0.335},  # Secondary continental
+    2: {"home_rate": 0.469, "draw_rate": 0.208, "away_rate": 0.323},  # Qualifiers
+    1: {"home_rate": 0.450, "draw_rate": 0.271, "away_rate": 0.279},  # Friendlies
 }
 
-_DEFAULT_TIER_BASE_RATES = {"home_rate": 0.47, "draw_rate": 0.25, "away_rate": 0.28}
+_DEFAULT_TIER_BASE_RATES = {"home_rate": 0.453, "draw_rate": 0.234, "away_rate": 0.313}
 
 
 def get_tier_base_rates(competition_weight: int) -> dict[str, float]:
