@@ -25,6 +25,8 @@ Thumbs.db
 
 # Generated data files — reproducible from code, not committed
 fifa-2026-predictor/data/processed/*.csv
+# Exception: squad_ratings.csv is derived from static CANONICAL_TEAMS data
+!fifa-2026-predictor/data/processed/squad_ratings.csv
 fifa-2026-predictor/data/processed/*.png
 fifa-2026-predictor/data/processed/*.json
 fifa-2026-predictor/data/raw/open_data_prepared.csv
