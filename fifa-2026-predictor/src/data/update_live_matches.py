@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import logging
+import os
 import tempfile
 from datetime import date
 from pathlib import Path
@@ -32,7 +33,8 @@ def get_last_update_date(matches_csv: Path) -> str:
         return FALLBACK_DATE
     try:
         df = pd.read_csv(matches_csv, usecols=["date"])
-    except (ValueError, KeyError):
+    except (ValueError, KeyError) as exc:
+        log.warning("Could not read date column from %s: %s — using fallback.", matches_csv, exc)
         return FALLBACK_DATE
     if df.empty:
         return FALLBACK_DATE
@@ -51,6 +53,7 @@ def fetch_and_append_new_results(
 
     Returns the count of new rows added.
     """
+    auto_detected = date_from is None
     if date_from is None:
         date_from = get_last_update_date(output_csv)
     if date_to is None:
@@ -60,18 +63,29 @@ def fetch_and_append_new_results(
         temp_path = f.name
 
     log.info("Fetching results from %s to %s", date_from, date_to)
-    new_df = fetch_international_matches_from_api(date_from, date_to, temp_path)
+    try:
+        new_df = fetch_international_matches_from_api(date_from, date_to, temp_path)
+    finally:
+        try:
+            os.unlink(temp_path)
+        except OSError:
+            pass
 
     # Only keep completed matches (both scores present)
     new_df = new_df.dropna(subset=["home_score", "away_score"])
-    # Strictly after last known date to avoid re-inserting boundary match
-    new_df = new_df[new_df["date"] > date_from].copy()
+    # Strict > only when auto-detected (to skip the boundary match already in CSV).
+    # When caller passes date_from explicitly, include the boundary (>=).
+    if auto_detected:
+        new_df = new_df[new_df["date"] > date_from].copy()
+    else:
+        new_df = new_df[new_df["date"] >= date_from].copy()
 
     if new_df.empty:
         log.info("No new completed matches found.")
         return 0
 
-    # Resolve team names to canonical
+    # Resolve team names to canonical (must happen BEFORE dedup so canonical
+    # names in new_df match the canonical names stored in the existing CSV)
     for col in ("home_team", "away_team"):
         new_df[col] = new_df[col].apply(
             lambda x: resolve_team(str(x)) if pd.notna(x) else x
