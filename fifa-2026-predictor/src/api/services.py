@@ -46,6 +46,7 @@ _cfg: Optional[dict] = None
 _tournament_model: Any = None
 _tournament_model_loaded: bool = False
 _simulation_cache: Optional[dict] = None
+_bracket_cache: Optional[dict] = None
 _squad_ratings: dict = {}
 _squad_ratings_loaded: bool = False
 
@@ -60,9 +61,10 @@ def _get_squad_ratings() -> dict:
 
 def invalidate_data_caches() -> None:
     """Reset history and simulation caches so the next request reloads fresh data."""
-    global _history_df, _simulation_cache, _squad_ratings, _squad_ratings_loaded
+    global _history_df, _simulation_cache, _bracket_cache, _squad_ratings, _squad_ratings_loaded
     _history_df = None
     _simulation_cache = None
+    _bracket_cache = None
     _squad_ratings = {}
     _squad_ratings_loaded = False
 
@@ -127,6 +129,31 @@ def simulate(n: int = 1000) -> dict:
     tracker = build_tournament_states(history_df, cfg)
     _simulation_cache = run_simulation(tracker, model, cfg, n=n)
     return _simulation_cache
+
+
+def predict_bracket() -> dict:
+    """Deterministically predict the full WC2026 bracket (cached for server lifetime)."""
+    global _bracket_cache
+    if _bracket_cache is not None:
+        return _bracket_cache
+
+    model = _get_model()
+    if model is None:
+        raise RuntimeError("No trained model artifact found.")
+    history_df = _get_history()
+    if history_df is None:
+        raise RuntimeError("No match history file found.")
+    cfg = _get_cfg()
+
+    from src.simulation.tournament import (
+        build_tournament_states,
+        precompute_all_probabilities,
+        predict_bracket as _predict_bracket,
+    )
+    tracker = build_tournament_states(history_df, cfg)
+    prob_cache = precompute_all_probabilities(tracker, model, cfg)
+    _bracket_cache = _predict_bracket(prob_cache)
+    return _bracket_cache
 
 
 def _select_model(base_model: Any, tournament_model: Any, competition_weight: float, min_weight: int) -> Any:

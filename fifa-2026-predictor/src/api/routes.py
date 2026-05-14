@@ -138,6 +138,39 @@ def simulate_tournament() -> schemas.SimulationResponse:
 
 
 # ---------------------------------------------------------------------------
+# /bracket
+# ---------------------------------------------------------------------------
+
+@router.get("/bracket", response_model=schemas.BracketResponse, tags=["simulation"])
+def predict_bracket() -> schemas.BracketResponse:
+    """Deterministically predict the full WC2026 knockout bracket (cached after first call).
+
+    Returns per-match win probabilities for every round from R32 to Final,
+    plus expected group standings used to seed the bracket.
+    """
+    try:
+        result = services.predict_bracket()
+    except RuntimeError as exc:
+        raise HTTPException(status_code=503, detail=str(exc))
+    except Exception as exc:
+        log.error("Bracket prediction failed: %s", exc)
+        raise HTTPException(status_code=500, detail=f"Bracket prediction failed: {exc}")
+
+    return schemas.BracketResponse(
+        rounds=[
+            schemas.BracketRound(
+                round=r["round"],
+                matches=[schemas.BracketMatch(**m) for m in r["matches"]],
+            )
+            for r in result["rounds"]
+        ],
+        group_standings=result["group_standings"],
+        champion=result["champion"],
+        generated_at=result["generated_at"],
+    )
+
+
+# ---------------------------------------------------------------------------
 # /refresh
 # ---------------------------------------------------------------------------
 

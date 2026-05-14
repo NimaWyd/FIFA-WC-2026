@@ -132,3 +132,29 @@ class SimulationResponse(BaseModel):
     n_simulations: int
     teams: list[TeamSimResult]
     generated_at: str
+
+
+# ---------------------------------------------------------------------------
+# /bracket
+# ---------------------------------------------------------------------------
+
+class BracketMatch(BaseModel):
+    match_id: str
+    round: str
+    team1: str
+    team2: str
+    team1_win_prob: float
+    team2_win_prob: float
+    predicted_winner: str
+
+
+class BracketRound(BaseModel):
+    round: str
+    matches: list[BracketMatch]
+
+
+class BracketResponse(BaseModel):
+    rounds: list[BracketRound]
+    group_standings: dict[str, list[str]]
+    champion: str
+    generated_at: str

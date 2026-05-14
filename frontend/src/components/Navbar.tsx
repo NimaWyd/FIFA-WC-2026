@@ -6,10 +6,11 @@ import { usePathname } from "next/navigation";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
 
 const NAV_LINKS = [
-  { label: "Groups",  href: "/groups" },
-  { label: "Predict", href: "/predict" },
-  { label: "Teams",   href: "/teams" },
-  { label: "About",   href: "/about" },
+  { label: "Groups",   href: "/groups" },
+  { label: "Predict",  href: "/predict" },
+  { label: "Simulate", href: "/simulate" },
+  { label: "Teams",    href: "/teams" },
+  { label: "About",    href: "/about" },
 ] as const;
 
 export default function Navbar() {

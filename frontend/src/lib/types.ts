@@ -88,3 +88,25 @@ export interface SimulationResponse {
   teams: TeamSimResult[];
   generated_at: string;
 }
+
+export interface BracketMatch {
+  match_id: string;
+  round: string;
+  team1: string;
+  team2: string;
+  team1_win_prob: number;
+  team2_win_prob: number;
+  predicted_winner: string;
+}
+
+export interface BracketRound {
+  round: string;
+  matches: BracketMatch[];
+}
+
+export interface BracketResponse {
+  rounds: BracketRound[];
+  group_standings: Record<string, string[]>;
+  champion: string;
+  generated_at: string;
+}

@@ -317,6 +317,137 @@ def simulate_once(
     return results
 
 
+def _neutral_probs(
+    team1: str, team2: str, prob_cache: ProbCache,
+) -> tuple[float, float, float]:
+    """Return (p_team1_wins, p_draw, p_team2_wins) for a neutral-ground match.
+
+    Averages both home/away orderings to cancel the model's learned home-advantage
+    artifact — the same symmetry applied in services.predict() and simulate_once().
+    """
+    p1 = 0.5 * (prob_cache[(team1, team2)]["home_win"] + prob_cache[(team2, team1)]["away_win"])
+    pd = 0.5 * (prob_cache[(team1, team2)]["draw"]     + prob_cache[(team2, team1)]["draw"])
+    p2 = 0.5 * (prob_cache[(team1, team2)]["away_win"] + prob_cache[(team2, team1)]["home_win"])
+    return p1, pd, p2
+
+
+def _knockout_neutral_probs(
+    team1: str, team2: str, prob_cache: ProbCache,
+) -> tuple[float, float]:
+    """Return (p_team1_wins, p_team2_wins) for a neutral knockout match (draws → 50/50)."""
+    p1, pd, p2 = _neutral_probs(team1, team2, prob_cache)
+    return p1 + pd / 2, p2 + pd / 2
+
+
+def predict_bracket(prob_cache: ProbCache) -> dict:
+    """Deterministically predict the full WC2026 knockout bracket.
+
+    Uses expected points from neutral match probabilities to rank group standings,
+    assigns 3rd-place teams to R32 slots, then propagates winners round by round.
+    Returns per-match win probabilities for every round from R32 to Final.
+    """
+    # --- Group stage expected standings ---
+    all_expected_pts: dict[str, float] = {}
+    group_standings: dict[str, list[str]] = {}
+
+    for group in WC2026_GROUPS:
+        exp_pts = {t: 0.0 for t in group["teams"]}
+        for match in group["matches"]:
+            h, a = match["home"], match["away"]
+            p_h, p_d, p_a = _neutral_probs(h, a, prob_cache)
+            exp_pts[h] += p_h * 3 + p_d
+            exp_pts[a] += p_a * 3 + p_d
+        all_expected_pts.update(exp_pts)
+        standings = sorted(
+            group["teams"],
+            key=lambda t: (exp_pts[t], -(get_fifa_rank(t) or 999)),
+            reverse=True,
+        )
+        group_standings[group["id"]] = standings
+
+    winners   = {gid: teams[0] for gid, teams in group_standings.items()}
+    runners_up = {gid: teams[1] for gid, teams in group_standings.items()}
+
+    # --- Best 8 third-place teams ---
+    all_thirds = [(teams[2], gid) for gid, teams in group_standings.items()]
+    all_thirds_sorted = sorted(
+        all_thirds,
+        key=lambda x: (all_expected_pts[x[0]], -(get_fifa_rank(x[0]) or 999)),
+        reverse=True,
+    )
+    best_thirds = all_thirds_sorted[:8]
+    third_assignments = _assign_third_place_teams(best_thirds)
+
+    # --- Round of 32 ---
+    r32_matches = []
+    for slot in WC2026_R32:
+        team1 = winners[slot["slot1_group"]] if slot["slot1_type"] == "W" else runners_up[slot["slot1_group"]]
+        if slot["slot2_type"] == "RU":
+            team2 = runners_up[slot["slot2_group"]]
+        else:
+            team2 = third_assignments.get(slot["match"], best_thirds[0][0])
+        p1, p2 = _knockout_neutral_probs(team1, team2, prob_cache)
+        r32_matches.append({
+            "match_id": f"r32_{slot['match']}",
+            "round": "Round of 32",
+            "team1": team1, "team2": team2,
+            "team1_win_prob": round(p1, 4),
+            "team2_win_prob": round(p2, 4),
+            "predicted_winner": team1 if p1 >= p2 else team2,
+        })
+
+    rounds_out: list[dict] = [{"round": "Round of 32", "matches": r32_matches}]
+    current_winners = [m["predicted_winner"] for m in r32_matches]
+
+    # --- Subsequent knockout rounds ---
+    round_configs = [
+        ("Round of 16", "r16"),
+        ("Quarter-Final", "qf"),
+        ("Semi-Final", "sf"),
+    ]
+    for round_name, round_prefix in round_configs:
+        round_matches = []
+        next_winners = []
+        for i in range(0, len(current_winners), 2):
+            team1, team2 = current_winners[i], current_winners[i + 1]
+            p1, p2 = _knockout_neutral_probs(team1, team2, prob_cache)
+            winner = team1 if p1 >= p2 else team2
+            round_matches.append({
+                "match_id": f"{round_prefix}_{i // 2 + 1}",
+                "round": round_name,
+                "team1": team1, "team2": team2,
+                "team1_win_prob": round(p1, 4),
+                "team2_win_prob": round(p2, 4),
+                "predicted_winner": winner,
+            })
+            next_winners.append(winner)
+        rounds_out.append({"round": round_name, "matches": round_matches})
+        current_winners = next_winners
+
+    # --- Final ---
+    finalist1, finalist2 = current_winners[0], current_winners[1]
+    p1, p2 = _knockout_neutral_probs(finalist1, finalist2, prob_cache)
+    champion = finalist1 if p1 >= p2 else finalist2
+    rounds_out.append({
+        "round": "Final",
+        "matches": [{
+            "match_id": "final",
+            "round": "Final",
+            "team1": finalist1, "team2": finalist2,
+            "team1_win_prob": round(p1, 4),
+            "team2_win_prob": round(p2, 4),
+            "predicted_winner": champion,
+        }],
+    })
+
+    return {
+        "rounds": rounds_out,
+        "group_standings": group_standings,
+        "champion": champion,
+        "generated_at": datetime.now(tz=timezone.utc).isoformat().replace("+00:00", "Z"),
+    }
+
+
 def run_simulation(
     tracker: TeamStateTracker,
     model: Any,
