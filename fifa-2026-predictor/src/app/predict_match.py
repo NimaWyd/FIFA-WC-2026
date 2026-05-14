@@ -111,17 +111,9 @@ def predict_scorelines(
         return []
     model = TeamDependentScoreModel.load(scoreline_params_path)
     row = feature_row.iloc[0].to_dict()
-    lh_raw, la_raw = model.predict_lambdas_from_row(row)
-    if outcome_probs is not None:
-        lh, la = TeamDependentScoreModel.calibrate_lambdas_to_outcomes(
-            outcome_probs["home_win"],
-            outcome_probs["draw"],
-            outcome_probs["away_win"],
-            lambda_home_init=lh_raw,
-            lambda_away_init=la_raw,
-        )
-    else:
-        lh, la = lh_raw, la_raw
+    # Natural lambdas from team attack/defense ratings. The calibration to
+    # outcome probs forced unrealistic high xG — see issue #118.
+    lh, la = model.predict_lambdas_from_row(row)
     return TeamDependentScoreModel.top_scorelines(lh, la, top_n=top_n)
 
 
