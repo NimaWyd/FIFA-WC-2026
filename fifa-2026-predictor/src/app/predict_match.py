@@ -103,9 +103,8 @@ def predict_scorelines(
 ) -> list[tuple[str, float]]:
     """Return top scoreline probabilities using the team-dependent model.
 
-    When *outcome_probs* (home_win, draw, away_win) are supplied the Poisson
-    lambdas are calibrated so that integrating over the distribution reproduces
-    those probabilities — keeping scorelines and win-probability consistent.
+    Uses natural lambdas from team attack/defense ratings. The *outcome_probs*
+    parameter is accepted but ignored (kept for backward compatibility).
     """
     if not scoreline_params_path.exists():
         return []
