@@ -102,3 +102,41 @@ class TestFetchAndAppendNewResults:
         with patch("src.data.update_live_matches.fetch_international_matches_from_api", return_value=api_df):
             n = fetch_and_append_new_results(existing, date_from="2020-01-01")
         assert n == 1
+
+
+# ---------------------------------------------------------------------------
+# Issue #79 — Cache invalidation + /refresh endpoint
+# ---------------------------------------------------------------------------
+
+class TestInvalidateDataCaches:
+    def test_clears_history_and_simulation_cache(self):
+        """invalidate_data_caches resets both module-level singletons."""
+        import src.api.services as svc
+        svc._history_df = "not_none"
+        svc._simulation_cache = {"some": "data"}
+
+        from src.api.services import invalidate_data_caches
+        invalidate_data_caches()
+
+        assert svc._history_df is None
+        assert svc._simulation_cache is None
+
+
+class TestRefreshEndpoint:
+    def test_refresh_returns_ok_status(self):
+        """POST /api/v1/refresh returns {status: ok, new_matches_added: N}."""
+        try:
+            from fastapi.testclient import TestClient
+            from src.api.main import app
+        except ImportError:
+            import pytest
+            pytest.skip("FastAPI or httpx not installed")
+
+        from unittest.mock import patch
+        client = TestClient(app)
+        with patch("src.data.update_live_matches.fetch_and_append_new_results", return_value=3):
+            resp = client.post("/api/v1/refresh")
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["status"] == "ok"
+        assert data["new_matches_added"] == 3

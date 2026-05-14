@@ -47,6 +47,13 @@ _tournament_model_loaded: bool = False
 _simulation_cache: Optional[dict] = None
 
 
+def invalidate_data_caches() -> None:
+    """Reset history and simulation caches so the next request reloads fresh data."""
+    global _history_df, _simulation_cache
+    _history_df = None
+    _simulation_cache = None
+
+
 def _get_cfg() -> dict:
     global _cfg
     if _cfg is None:

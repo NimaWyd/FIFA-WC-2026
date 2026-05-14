@@ -135,3 +135,23 @@ def simulate_tournament() -> schemas.SimulationResponse:
         teams=[schemas.TeamSimResult(**t) for t in result["teams"]],
         generated_at=result["generated_at"],
     )
+
+
+# ---------------------------------------------------------------------------
+# /refresh
+# ---------------------------------------------------------------------------
+
+@router.post("/refresh", tags=["meta"])
+def refresh_live_data() -> dict:
+    """Fetch the latest match results from football-data.org and clear caches.
+
+    Requires FOOTBALL_DATA_API_KEY in the server environment.
+    The next prediction after this call replays updated Elo/form history.
+    """
+    from src.data.update_live_matches import fetch_and_append_new_results, DEFAULT_OUTPUT
+    try:
+        n = fetch_and_append_new_results(DEFAULT_OUTPUT)
+        services.invalidate_data_caches()
+        return {"status": "ok", "new_matches_added": n}
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc))
