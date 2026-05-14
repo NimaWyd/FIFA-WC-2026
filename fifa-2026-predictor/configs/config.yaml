@@ -40,10 +40,10 @@ model:
   val_size: 0.20
   logistic_max_iter: 1500
   logreg_C: 1.0
-  mlp_hidden_layers: [128, 64]
-  min_model_weight: 0.05
+  mlp_hidden_layers: [256, 128, 64]
+  min_model_weight: 0.02
   max_model_weight: 0.80
-  min_draw_blend_weight: 0.10
+  min_draw_blend_weight: 0.05
   # Issue #104: tournament model trained on only 100 WC matches — too small to
   # generalize. Disabled until retrained on sufficient data. Set to 99 so no
   # competition weight ever reaches this threshold.

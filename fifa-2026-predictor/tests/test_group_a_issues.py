@@ -217,3 +217,66 @@ class TestNeutralFlag:
             tournament_stage="Unknown",
         )
         assert result["metadata"].get("neutral_symmetry_applied") is False
+
+
+# ---------------------------------------------------------------------------
+# Issue #116 — Ensemble diversity: no model universally floored
+# ---------------------------------------------------------------------------
+
+class TestEnsembleDiversity:
+    """After retraining, all per-class weights should be above the new 0.02 floor
+    for at least one class, and no model should be universally floored."""
+
+    def _load_ensemble(self):
+        import joblib
+        from pathlib import Path
+        path = Path(__file__).parents[1] / "src/models/artifacts/ensemble.joblib"
+        if not path.exists():
+            pytest.skip("ensemble.joblib not found")
+        return joblib.load(path)
+
+    def test_no_model_universally_floored(self):
+        """Each base model should have at least one class weight above 0.05."""
+        ens = self._load_ensemble()
+        w = ens.per_class_weights  # shape (3, 3): [model, class]
+        for m_idx, name in enumerate(["xgb", "logreg", "mlp"]):
+            max_weight = w[m_idx, :].max()
+            assert max_weight > 0.05, (
+                f"{name} has all per-class weights <= 0.05: {w[m_idx, :]}"
+            )
+
+    def test_draw_blend_weight_above_zero(self):
+        """Draw blend weight should be > 0 (optimizer found genuine contribution)."""
+        ens = self._load_ensemble()
+        assert ens.draw_blend_weight > 0.0, \
+            f"draw_blend_weight is {ens.draw_blend_weight} — optimizer collapsed it"
+
+    def test_probabilities_sum_to_one(self):
+        """Ensemble predict_proba must still sum to 1.0 after retraining."""
+        import numpy as np
+        ens = self._load_ensemble()
+        rng = np.random.default_rng(0)
+        n = 10
+        df = pd.DataFrame({
+            "home_elo_pre": rng.normal(1500, 100, n),
+            "away_elo_pre": rng.normal(1500, 100, n),
+            "elo_diff_home_away": rng.normal(0, 50, n),
+            "elo_win_prob": rng.uniform(0.3, 0.7, n),
+            "home_form_last5": rng.uniform(0, 3, n),
+            "away_form_last5": rng.uniform(0, 3, n),
+            "neutral": rng.choice([True, False], n),
+            "competition": ["FIFA World Cup"] * n,
+            "home_confederation": ["UEFA"] * n,
+            "away_confederation": ["CONMEBOL"] * n,
+            "tournament_stage": ["Group Stage"] * n,
+            "home_fifa_rank": rng.integers(1, 50, n),
+            "away_fifa_rank": rng.integers(1, 50, n),
+        })
+        feature_cols = ens.feature_cols
+        for col in feature_cols:
+            if col not in df.columns:
+                df[col] = 0.0
+        proba = ens.predict_proba(df)
+        row_sums = proba.sum(axis=1)
+        assert np.allclose(row_sums, 1.0, atol=1e-4), \
+            f"Row sums not 1.0: {row_sums}"

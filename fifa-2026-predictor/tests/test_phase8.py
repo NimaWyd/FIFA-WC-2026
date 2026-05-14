@@ -86,7 +86,7 @@ class TestConfigKeys:
     def test_min_model_weight_present_in_config(self):
         cfg = load_config()
         assert "min_model_weight" in cfg["model"]
-        assert cfg["model"]["min_model_weight"] >= 0.05
+        assert cfg["model"]["min_model_weight"] >= 0.01  # lowered to 0.02 (#116)
 
     def test_mlp_hidden_layers_present_in_config(self):
         cfg = load_config()
