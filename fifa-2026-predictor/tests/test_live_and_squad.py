@@ -140,3 +140,41 @@ class TestRefreshEndpoint:
         data = resp.json()
         assert data["status"] == "ok"
         assert data["new_matches_added"] == 3
+
+
+# ---------------------------------------------------------------------------
+# Issue #78 — Squad ratings seed script
+# ---------------------------------------------------------------------------
+
+class TestSeedSquadRatings:
+    def test_generates_csv_with_required_columns(self):
+        from src.data.seed_squad_ratings import generate_squad_ratings, SQUAD_RATING_COLUMNS
+        df = generate_squad_ratings()
+        for col in SQUAD_RATING_COLUMNS:
+            assert col in df.columns, f"Missing column: {col}"
+
+    def test_all_teams_have_ratings(self):
+        from src.data.seed_squad_ratings import generate_squad_ratings
+        df = generate_squad_ratings()
+        assert len(df) > 0
+        assert df["squad_avg_rating"].between(50.0, 90.0).all(), \
+            "Ratings should be in realistic range"
+
+    def test_higher_rank_means_lower_rating(self):
+        from src.data.seed_squad_ratings import generate_squad_ratings
+        df = generate_squad_ratings().set_index("team")
+        from src.data.team_identity import CANONICAL_TEAMS
+        ranked = [(t, m.get("fifa_rank_2025", 999)) for t, m in CANONICAL_TEAMS.items()
+                  if m.get("fifa_rank_2025") is not None]
+        ranked.sort(key=lambda x: x[1])
+        top_team, top_rank = ranked[0]
+        bottom_team, bottom_rank = ranked[-1]
+        if top_team in df.index and bottom_team in df.index:
+            assert df.loc[top_team, "squad_avg_rating"] > df.loc[bottom_team, "squad_avg_rating"], \
+                f"{top_team}(rank {top_rank}) should have higher rating than {bottom_team}(rank {bottom_rank})"
+
+    def test_top_player_rating_above_squad_avg(self):
+        from src.data.seed_squad_ratings import generate_squad_ratings
+        df = generate_squad_ratings()
+        assert (df["top_player_rating"] >= df["squad_avg_rating"]).all(), \
+            "Top player rating should be >= squad average"
