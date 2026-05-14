@@ -77,6 +77,7 @@ def build_match_row(
     tournament_stage: str,
     h2h_window: int = 10,
     elo_inactivity_halflife: float = 0.0,
+    squad_ratings: "dict[str, dict[str, float]] | None" = None,
 ) -> dict[str, Any]:
     """Return a pre-match feature dict from the current tracker state.
 
@@ -208,7 +209,7 @@ def build_match_row(
     away_conf_tier = CONFEDERATION_TIER.get(away_confederation, 2)
     confederation_strength_diff = home_conf_tier - away_conf_tier
 
-    return {
+    record: dict[str, Any] = {
         # Match metadata
         "date": match_date,
         "home_team": home_team,
@@ -324,3 +325,17 @@ def build_match_row(
         # --- Issue #47: tournament-stage sample weight multiplier ---
         "stage_weight": get_stage_sample_weight(tournament_stage),
     }
+
+    if squad_ratings:
+        _DEFAULT_SQ = 70.0
+        h_sq = squad_ratings.get(home_team, {})
+        a_sq = squad_ratings.get(away_team, {})
+        h_avg = h_sq.get("squad_avg_rating", _DEFAULT_SQ)
+        a_avg = a_sq.get("squad_avg_rating", _DEFAULT_SQ)
+        record["home_squad_avg_rating"] = h_avg
+        record["away_squad_avg_rating"] = a_avg
+        record["squad_rating_diff"] = h_avg - a_avg
+        record["home_top_player_rating"] = h_sq.get("top_player_rating", _DEFAULT_SQ + 5.0)
+        record["away_top_player_rating"] = a_sq.get("top_player_rating", _DEFAULT_SQ + 5.0)
+
+    return record

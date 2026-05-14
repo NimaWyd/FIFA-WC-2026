@@ -59,6 +59,11 @@ def build_feature_table(
     matches = matches.dropna(subset=["date", "home_score", "away_score"])
     matches = matches.sort_values("date").reset_index(drop=True)
 
+    from src.data.load_squad_ratings import load_squad_ratings, DEFAULT_PATH as SQUAD_PATH
+    squad_ratings = load_squad_ratings(SQUAD_PATH)
+    if squad_ratings:
+        print(f"Loaded squad ratings for {len(squad_ratings)} teams")
+
     team_elo_init = {
         name: rank_to_starting_elo(meta.get("fifa_rank_2025"))
         for name, meta in CANONICAL_TEAMS.items()
@@ -96,6 +101,7 @@ def build_feature_table(
             tournament_stage=tournament_stage,
             h2h_window=h2h_window,
             elo_inactivity_halflife=elo_inactivity_halflife,
+            squad_ratings=squad_ratings,
         )
         # Registry: merge any extra features from enabled blocks.
         # The player_aggregate block is disabled by default; enabling it
@@ -138,6 +144,7 @@ def build_feature_table(
                 tournament_stage=tournament_stage,
                 h2h_window=h2h_window,
                 elo_inactivity_halflife=elo_inactivity_halflife,
+                squad_ratings=squad_ratings,
             )
             aug["home_score"] = int(row.away_score)
             aug["away_score"] = int(row.home_score)

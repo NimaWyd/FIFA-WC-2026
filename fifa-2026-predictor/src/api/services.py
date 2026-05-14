@@ -33,6 +33,7 @@ from src.models.common import TARGET_MAP
 from src.models.ensemble_model import EnsembleModel
 from src.models.scoreline_model import TeamDependentScoreModel
 from src.utils import PROJECT_ROOT, load_config
+from src.data.load_squad_ratings import load_squad_ratings as _load_squad_ratings, DEFAULT_PATH as _SQUAD_RATINGS_PATH
 
 # ---------------------------------------------------------------------------
 # Module-level singletons — loaded once on first use
@@ -45,13 +46,25 @@ _cfg: Optional[dict] = None
 _tournament_model: Any = None
 _tournament_model_loaded: bool = False
 _simulation_cache: Optional[dict] = None
+_squad_ratings: dict = {}
+_squad_ratings_loaded: bool = False
+
+
+def _get_squad_ratings() -> dict:
+    global _squad_ratings, _squad_ratings_loaded
+    if not _squad_ratings_loaded:
+        _squad_ratings = _load_squad_ratings(_SQUAD_RATINGS_PATH)
+        _squad_ratings_loaded = True
+    return _squad_ratings
 
 
 def invalidate_data_caches() -> None:
     """Reset history and simulation caches so the next request reloads fresh data."""
-    global _history_df, _simulation_cache
+    global _history_df, _simulation_cache, _squad_ratings, _squad_ratings_loaded
     _history_df = None
     _simulation_cache = None
+    _squad_ratings = {}
+    _squad_ratings_loaded = False
 
 
 def _get_cfg() -> dict:
@@ -311,6 +324,7 @@ def predict(
         away_fifa_rank=away_rank,
         tournament_stage=stage,
         cfg=cfg,
+        squad_ratings=_get_squad_ratings(),
     )
 
     cfg_min = int(cfg["model"].get("tournament_model_min_weight", 3))

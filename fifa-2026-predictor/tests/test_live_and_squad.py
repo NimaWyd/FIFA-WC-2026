@@ -178,3 +178,81 @@ class TestSeedSquadRatings:
         df = generate_squad_ratings()
         assert (df["top_player_rating"] >= df["squad_avg_rating"]).all(), \
             "Top player rating should be >= squad average"
+
+
+# ---------------------------------------------------------------------------
+# Issue #78 — Squad features in pipeline
+# ---------------------------------------------------------------------------
+
+class TestLoadSquadRatings:
+    def test_loads_ratings_as_dict(self, tmp_path):
+        from src.data.load_squad_ratings import load_squad_ratings
+        csv = tmp_path / "squad_ratings.csv"
+        csv.write_text(
+            "team,squad_avg_rating,top_player_rating,attack_rating,defense_rating,gk_rating\n"
+            "Brazil,84.5,92.5,85.5,83.5,84.5\n"
+            "Germany,80.0,88.0,81.0,79.0,80.0\n"
+        )
+        ratings = load_squad_ratings(csv)
+        assert "Brazil" in ratings
+        assert ratings["Brazil"]["squad_avg_rating"] == 84.5
+        assert ratings["Brazil"]["top_player_rating"] == 92.5
+
+    def test_returns_empty_dict_when_file_missing(self, tmp_path):
+        from src.data.load_squad_ratings import load_squad_ratings
+        ratings = load_squad_ratings(tmp_path / "nonexistent.csv")
+        assert ratings == {}
+
+
+class TestSquadFeaturesInMatchRow:
+    def _make_tracker_and_row(self, squad_ratings=None):
+        import pandas as pd
+        from src.features.state_tracker import TeamStateTracker
+        from src.features.match_row_builder import build_match_row
+        from src.utils import load_config
+
+        cfg = load_config()
+        tracker = TeamStateTracker(cfg)
+        row = build_match_row(
+            tracker=tracker,
+            home_team="Brazil",
+            away_team="Germany",
+            match_date=pd.Timestamp("2026-06-01"),
+            competition="FIFA World Cup",
+            neutral=True,
+            home_confederation="CONMEBOL",
+            away_confederation="UEFA",
+            home_fifa_rank=5,
+            away_fifa_rank=15,
+            tournament_stage="Group Stage",
+            squad_ratings=squad_ratings,
+        )
+        return row
+
+    def test_squad_features_absent_when_no_ratings(self):
+        row = self._make_tracker_and_row(squad_ratings=None)
+        assert "home_squad_avg_rating" not in row
+
+    def test_squad_features_present_when_ratings_provided(self):
+        ratings = {
+            "Brazil": {"squad_avg_rating": 84.5, "top_player_rating": 92.5,
+                       "attack_rating": 85.5, "defense_rating": 83.5, "gk_rating": 84.5},
+            "Germany": {"squad_avg_rating": 80.0, "top_player_rating": 88.0,
+                        "attack_rating": 81.0, "defense_rating": 79.0, "gk_rating": 80.0},
+        }
+        row = self._make_tracker_and_row(squad_ratings=ratings)
+        assert row["home_squad_avg_rating"] == 84.5
+        assert row["away_squad_avg_rating"] == 80.0
+        assert abs(row["squad_rating_diff"] - 4.5) < 0.01
+        assert row["home_top_player_rating"] == 92.5
+        assert row["away_top_player_rating"] == 88.0
+
+    def test_squad_rating_diff_correct_sign(self):
+        ratings = {
+            "Brazil": {"squad_avg_rating": 84.0, "top_player_rating": 92.0,
+                       "attack_rating": 85.0, "defense_rating": 83.0, "gk_rating": 84.0},
+            "Germany": {"squad_avg_rating": 78.0, "top_player_rating": 86.0,
+                        "attack_rating": 79.0, "defense_rating": 77.0, "gk_rating": 78.0},
+        }
+        row = self._make_tracker_and_row(squad_ratings=ratings)
+        assert row["squad_rating_diff"] > 0
