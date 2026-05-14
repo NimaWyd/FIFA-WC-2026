@@ -359,6 +359,7 @@ def predict(
             away_fifa_rank=home_rank,
             tournament_stage=stage,
             cfg=cfg,
+            squad_ratings=_get_squad_ratings(),
         )
         probs_swapped_raw = model.predict_proba(swapped_row)[0]
         prob_swapped = {int(c): float(p) for c, p in zip(clf.classes_, probs_swapped_raw)}
