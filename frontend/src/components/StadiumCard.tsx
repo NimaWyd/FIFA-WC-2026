@@ -112,18 +112,20 @@ export default function StadiumCard({ venueCity }: Props) {
 
         {/* ── "MATCH VENUE" live badge ── */}
         <motion.div
-          className="absolute top-4 left-5 z-10 flex items-center gap-2"
+          className="absolute top-4 left-5 z-10"
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.15 }}
         >
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-fifa-blue opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-fifa-blue" />
-          </span>
-          <span className="text-[10px] font-bold tracking-[0.32em] text-fifa-blue uppercase">
-            Match Venue
-          </span>
+          <div className="flex items-center gap-2 bg-navy-900/80 backdrop-blur-sm border border-fifa-blue/50 px-3 py-1.5 rounded-full shadow-lg shadow-black/40">
+            <span className="relative flex h-2 w-2 flex-shrink-0">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-fifa-blue opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-fifa-blue" />
+            </span>
+            <span className="text-[10px] font-bold tracking-[0.28em] text-white uppercase">
+              Match Venue
+            </span>
+          </div>
         </motion.div>
 
         {/* ── FIFA WC 2026 watermark top-right ── */}
