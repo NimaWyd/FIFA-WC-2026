@@ -16,6 +16,7 @@ import ExpectedGoals from "@/components/ExpectedGoals";
 import ExplanationPanel from "@/components/ExplanationPanel";
 import MetadataBadge from "@/components/MetadataBadge";
 import FlagIcon from "@/components/FlagIcon";
+import StadiumCard from "@/components/StadiumCard";
 import { WC2026_TEAMS } from "@/lib/wc2026Teams";
 import { WC2026_GROUPS } from "@/lib/wc2026Groups";
 import type { TeamInfo } from "@/lib/types";
@@ -98,6 +99,7 @@ export default function PredictPage() {
   const [showAllTeams, setShowAllTeams] = useState(false);
   const [dateError, setDateError] = useState<string | null>(null);
   const [paramsApplied, setParamsApplied] = useState(false);
+  const [venueCity, setVenueCity] = useState<string | null>(null);
 
   const resultsRef = useRef<HTMLDivElement>(null);
 
@@ -137,6 +139,16 @@ export default function PredictPage() {
       resultsRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   }, [result]);
+
+  useEffect(() => {
+    const match = ALL_GROUP_MATCHES.find(
+      (m) =>
+        m.home === homeTeam?.canonical_name &&
+        m.away === awayTeam?.canonical_name &&
+        m.date === matchDate,
+    );
+    setVenueCity(match?.venue ?? null);
+  }, [homeTeam, awayTeam, matchDate]);
 
   const teams = useMemo(() => {
     if (showAllTeams) return allTeams;
@@ -378,6 +390,7 @@ export default function PredictPage() {
           }
 
           const homeDisplay = result.home_team === "United States" ? "USA" : result.home_team;
+          const c = venueCity ? 1 : 0; // card delay offset when stadium card is shown
           const awayDisplay = result.away_team === "United States" ? "USA" : result.away_team;
 
           return (
@@ -386,9 +399,16 @@ export default function PredictPage() {
               ref={resultsRef}
               className="flex flex-col gap-4"
             >
+              {/* Stadium card: shown when venue is known from the schedule */}
+              {venueCity && (
+                <motion.div custom={0} initial="hidden" animate="visible" variants={cardVariants}>
+                  <StadiumCard venueCity={venueCity} />
+                </motion.div>
+              )}
+
               {/* Card 1: Stadium scoreboard */}
               <motion.div
-                custom={0}
+                custom={venueCity ? 1 : 0}
                 initial="hidden"
                 animate="visible"
                 variants={cardVariants}
@@ -463,7 +483,7 @@ export default function PredictPage() {
 
               {/* Card 2: Analytics (WinnerCallout + ProbabilityBars + ExpectedGoals) */}
               <motion.div
-                custom={1}
+                custom={c + 1}
                 initial="hidden"
                 animate="visible"
                 variants={cardVariants}
@@ -499,7 +519,7 @@ export default function PredictPage() {
               {/* Card 3: Scorelines */}
               {result.top_scorelines.length > 0 && (
                 <motion.div
-                  custom={2}
+                  custom={c + 2}
                   initial="hidden"
                   animate="visible"
                   variants={cardVariants}
@@ -511,7 +531,7 @@ export default function PredictPage() {
 
               {/* Card 4: Explanation */}
               <motion.div
-                custom={3}
+                custom={c + 3}
                 initial="hidden"
                 animate="visible"
                 variants={cardVariants}
@@ -525,7 +545,7 @@ export default function PredictPage() {
               </motion.div>
 
               {/* Metadata */}
-              <motion.div custom={4} initial="hidden" animate="visible" variants={cardVariants}>
+              <motion.div custom={c + 4} initial="hidden" animate="visible" variants={cardVariants}>
                 <MetadataBadge result={result} />
               </motion.div>
             </motion.div>
