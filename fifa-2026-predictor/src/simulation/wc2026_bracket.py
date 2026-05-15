@@ -149,6 +149,37 @@ WC2026_GROUPS: list[dict] = [
     },
 ]
 
+# ---------------------------------------------------------------------------
+# Knockout bracket advancement — source: Wikipedia "2026 FIFA World Cup knockout stage"
+# Each tuple = (match_number_A, match_number_B) whose winners meet in the next round.
+# ---------------------------------------------------------------------------
+
+# R16: which two R32 match winners play each other
+WC2026_R16_PAIRS: list[tuple[int, int]] = [
+    (74, 77),  # Match 89
+    (73, 75),  # Match 90
+    (76, 78),  # Match 91
+    (79, 80),  # Match 92
+    (83, 84),  # Match 93
+    (81, 82),  # Match 94
+    (86, 88),  # Match 95
+    (85, 87),  # Match 96
+]
+
+# QF: which two R16 match winners play each other
+WC2026_QF_PAIRS: list[tuple[int, int]] = [
+    (89, 90),   # Match 97
+    (93, 96),   # Match 98
+    (91, 92),   # Match 99
+    (94, 95),   # Match 100
+]
+
+# SF: which two QF match winners play each other
+WC2026_SF_PAIRS: list[tuple[int, int]] = [
+    (97, 98),   # Match 101
+    (99, 100),  # Match 102
+]
+
 # R32 bracket — source: Wikipedia "2026 FIFA World Cup knockout stage"
 # slot_type: "W" = group winner, "RU" = runner-up, "3rd" = best 3rd-place
 # eligible_groups: for "3rd" slots, the set of groups whose 3rd-place team can fill this slot

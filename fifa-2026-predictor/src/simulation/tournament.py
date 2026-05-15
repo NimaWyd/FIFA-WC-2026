@@ -11,7 +11,10 @@ import pandas as pd
 from src.data.team_identity import get_confederation, get_fifa_rank
 from src.features.match_row_builder import build_match_row
 from src.features.state_tracker import TeamStateTracker
-from src.simulation.wc2026_bracket import WC2026_GROUPS, WC2026_R32
+from src.simulation.wc2026_bracket import (
+    WC2026_GROUPS, WC2026_R32,
+    WC2026_R16_PAIRS, WC2026_QF_PAIRS, WC2026_SF_PAIRS,
+)
 
 _TOURNAMENT_DATE = pd.Timestamp("2026-06-11")
 _COMPETITION = "FIFA World Cup"
@@ -280,38 +283,50 @@ def simulate_once(
     # -- Assign 3rd-place teams to R32 slots ----------------------------------
     third_assignments = _assign_third_place_teams(best_third)
 
-    # -- Build R32 matchups ---------------------------------------------------
-    # Randomly assign home/away per run to cancel the model's learned home-
-    # advantage artifact on neutral-ground matches (issue #110).
-    r32_matchups: list[tuple[str, str]] = []
+    # -- Build R32 matchups keyed by match number -----------------------------
+    match_winners: dict[int, str] = {}
     for slot in WC2026_R32:
         team1 = winners[slot["slot1_group"]] if slot["slot1_type"] == "W" else runners_up[slot["slot1_group"]]
-        if slot["slot2_type"] == "RU":
-            team2 = runners_up[slot["slot2_group"]]
-        else:
-            team2 = third_assignments.get(slot["match"], best_third[0][0])
+        team2 = (
+            runners_up[slot["slot2_group"]]
+            if slot["slot2_type"] == "RU"
+            else third_assignments.get(slot["match"], best_third[0][0])
+        )
         if rng.random() < 0.5:
             team1, team2 = team2, team1
-        r32_matchups.append((team1, team2))
+        winner_r32, loser_r32 = _knockout_winner(team1, team2, prob_cache, rng)
+        match_winners[slot["match"]] = winner_r32
+        results[loser_r32] = "round_of_32"
 
-    # -- Knockout rounds ------------------------------------------------------
-    # WC2026 48-team bracket: R32 (16 matches) -> R16 (8) -> QF (4) -> SF (2) -> Final (1)
-    # R32 and R16 losers are both labeled "round_of_32"
-    # Home/away is randomised each round to cancel neutral-ground bias (issue #110).
-    round_names = ["round_of_32", "round_of_32", "quarter_final", "semi_final"]
-    current = r32_matchups
-    for round_name in round_names:
-        survivors, elim = _simulate_knockout_round(current, prob_cache, round_name, rng)
-        results.update(elim)
-        pairs = [(survivors[i], survivors[i + 1]) for i in range(0, len(survivors), 2)]
-        current = [(a, b) if rng.random() < 0.5 else (b, a) for a, b in pairs]
+    # -- R16: official cross-pairings (not simple adjacency) ------------------
+    for i, (ma, mb) in enumerate(WC2026_R16_PAIRS):
+        t1, t2 = match_winners[ma], match_winners[mb]
+        if rng.random() < 0.5:
+            t1, t2 = t2, t1
+        winner_r16, loser_r16 = _knockout_winner(t1, t2, prob_cache, rng)
+        match_winners[89 + i] = winner_r16
+        results[loser_r16] = "round_of_32"
 
-    # Final
-    if len(current) != 1:
-        raise RuntimeError(
-            f"Bracket reduction failed: expected 1 finalist pair, got {len(current)}"
-        )
-    (finalist1, finalist2) = current[0]
+    # -- QF -------------------------------------------------------------------
+    for i, (ma, mb) in enumerate(WC2026_QF_PAIRS):
+        t1, t2 = match_winners[ma], match_winners[mb]
+        if rng.random() < 0.5:
+            t1, t2 = t2, t1
+        winner_qf, loser_qf = _knockout_winner(t1, t2, prob_cache, rng)
+        match_winners[97 + i] = winner_qf
+        results[loser_qf] = "quarter_final"
+
+    # -- SF -------------------------------------------------------------------
+    for i, (ma, mb) in enumerate(WC2026_SF_PAIRS):
+        t1, t2 = match_winners[ma], match_winners[mb]
+        if rng.random() < 0.5:
+            t1, t2 = t2, t1
+        winner_sf, loser_sf = _knockout_winner(t1, t2, prob_cache, rng)
+        match_winners[101 + i] = winner_sf
+        results[loser_sf] = "semi_final"
+
+    # -- Final ----------------------------------------------------------------
+    finalist1, finalist2 = match_winners[101], match_winners[102]
     winner, runner_up = _knockout_winner(finalist1, finalist2, prob_cache, rng)
     results[winner] = "champion"
     results[runner_up] = "final"
@@ -381,53 +396,81 @@ def predict_bracket(prob_cache: ProbCache) -> dict:
     third_assignments = _assign_third_place_teams(best_thirds)
 
     # --- Round of 32 ---
+    match_winners: dict[int, str] = {}
     r32_matches = []
     for slot in WC2026_R32:
         team1 = winners[slot["slot1_group"]] if slot["slot1_type"] == "W" else runners_up[slot["slot1_group"]]
-        if slot["slot2_type"] == "RU":
-            team2 = runners_up[slot["slot2_group"]]
-        else:
-            team2 = third_assignments.get(slot["match"], best_thirds[0][0])
+        team2 = (
+            runners_up[slot["slot2_group"]]
+            if slot["slot2_type"] == "RU"
+            else third_assignments.get(slot["match"], best_thirds[0][0])
+        )
         p1, p2 = _knockout_neutral_probs(team1, team2, prob_cache)
+        predicted_winner = team1 if p1 >= p2 else team2
+        match_winners[slot["match"]] = predicted_winner
         r32_matches.append({
             "match_id": f"r32_{slot['match']}",
             "round": "Round of 32",
             "team1": team1, "team2": team2,
             "team1_win_prob": round(p1, 4),
             "team2_win_prob": round(p2, 4),
-            "predicted_winner": team1 if p1 >= p2 else team2,
+            "predicted_winner": predicted_winner,
         })
-
     rounds_out: list[dict] = [{"round": "Round of 32", "matches": r32_matches}]
-    current_winners = [m["predicted_winner"] for m in r32_matches]
 
-    # --- Subsequent knockout rounds ---
-    round_configs = [
-        ("Round of 16", "r16"),
-        ("Quarter-Final", "qf"),
-        ("Semi-Final", "sf"),
-    ]
-    for round_name, round_prefix in round_configs:
-        round_matches = []
-        next_winners = []
-        for i in range(0, len(current_winners), 2):
-            team1, team2 = current_winners[i], current_winners[i + 1]
-            p1, p2 = _knockout_neutral_probs(team1, team2, prob_cache)
-            winner = team1 if p1 >= p2 else team2
-            round_matches.append({
-                "match_id": f"{round_prefix}_{i // 2 + 1}",
-                "round": round_name,
-                "team1": team1, "team2": team2,
-                "team1_win_prob": round(p1, 4),
-                "team2_win_prob": round(p2, 4),
-                "predicted_winner": winner,
-            })
-            next_winners.append(winner)
-        rounds_out.append({"round": round_name, "matches": round_matches})
-        current_winners = next_winners
+    # --- Round of 16: official cross-pairings ---
+    r16_matches = []
+    for i, (ma, mb) in enumerate(WC2026_R16_PAIRS):
+        team1, team2 = match_winners[ma], match_winners[mb]
+        p1, p2 = _knockout_neutral_probs(team1, team2, prob_cache)
+        predicted_winner = team1 if p1 >= p2 else team2
+        match_winners[89 + i] = predicted_winner
+        r16_matches.append({
+            "match_id": f"r16_{i + 1}",
+            "round": "Round of 16",
+            "team1": team1, "team2": team2,
+            "team1_win_prob": round(p1, 4),
+            "team2_win_prob": round(p2, 4),
+            "predicted_winner": predicted_winner,
+        })
+    rounds_out.append({"round": "Round of 16", "matches": r16_matches})
+
+    # --- Quarter-Finals ---
+    qf_matches = []
+    for i, (ma, mb) in enumerate(WC2026_QF_PAIRS):
+        team1, team2 = match_winners[ma], match_winners[mb]
+        p1, p2 = _knockout_neutral_probs(team1, team2, prob_cache)
+        predicted_winner = team1 if p1 >= p2 else team2
+        match_winners[97 + i] = predicted_winner
+        qf_matches.append({
+            "match_id": f"qf_{i + 1}",
+            "round": "Quarter-Final",
+            "team1": team1, "team2": team2,
+            "team1_win_prob": round(p1, 4),
+            "team2_win_prob": round(p2, 4),
+            "predicted_winner": predicted_winner,
+        })
+    rounds_out.append({"round": "Quarter-Final", "matches": qf_matches})
+
+    # --- Semi-Finals ---
+    sf_matches = []
+    for i, (ma, mb) in enumerate(WC2026_SF_PAIRS):
+        team1, team2 = match_winners[ma], match_winners[mb]
+        p1, p2 = _knockout_neutral_probs(team1, team2, prob_cache)
+        predicted_winner = team1 if p1 >= p2 else team2
+        match_winners[101 + i] = predicted_winner
+        sf_matches.append({
+            "match_id": f"sf_{i + 1}",
+            "round": "Semi-Final",
+            "team1": team1, "team2": team2,
+            "team1_win_prob": round(p1, 4),
+            "team2_win_prob": round(p2, 4),
+            "predicted_winner": predicted_winner,
+        })
+    rounds_out.append({"round": "Semi-Final", "matches": sf_matches})
 
     # --- Final ---
-    finalist1, finalist2 = current_winners[0], current_winners[1]
+    finalist1, finalist2 = match_winners[101], match_winners[102]
     p1, p2 = _knockout_neutral_probs(finalist1, finalist2, prob_cache)
     champion = finalist1 if p1 >= p2 else finalist2
     rounds_out.append({
