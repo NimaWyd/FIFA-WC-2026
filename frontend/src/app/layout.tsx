@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Anton, JetBrains_Mono } from "next/font/google";
-import "./globals.css";
 import "flag-icons/css/flag-icons.min.css";
+import "./globals.css";
 import Navbar from "@/components/Navbar";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
