@@ -18,6 +18,7 @@ from src.features.competition_weights import (
     DEFAULT_COMPETITION_K_MULTIPLIER,
     get_competition_k_multiplier,
 )
+from src.data.team_identity import get_confederation
 from src.features.elo import EloConfig, expected_score, rank_to_starting_elo, update_ratings
 
 
@@ -64,6 +65,7 @@ class TeamStateTracker:
         self.elo_cfg = EloConfig(
             k_factor=float(cfg["features"]["elo_k_factor"]),
             home_advantage=float(cfg["features"]["elo_home_advantage"]),
+            home_advantage_by_confederation=cfg["features"].get("elo_home_advantage_by_confederation"),
         )
         self._form_window = form_window
         self._recency_halflife = float(
@@ -410,6 +412,7 @@ class TeamStateTracker:
             neutral=neutral,
             cfg=self.elo_cfg,
             competition_k_multiplier=comp_k,
+            home_confederation=get_confederation(home_team),
         )
         self._ratings[home_team] = home_new
         self._ratings[away_team] = away_new

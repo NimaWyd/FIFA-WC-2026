@@ -44,6 +44,7 @@ from src.features.competition_weights import (
     get_tier_base_rates,
     normalize_tournament_stage,
 )
+from src.data.team_identity import get_penalty_win_rate
 from src.features.state_tracker import TeamStateTracker
 
 
@@ -324,6 +325,10 @@ def build_match_row(
         "match_weight": 1.0,
         # --- Issue #47: tournament-stage sample weight multiplier ---
         "stage_weight": get_stage_sample_weight(tournament_stage),
+        # --- Issue #87: WC penalty shootout win rate ---
+        "home_penalty_win_rate": get_penalty_win_rate(home_team),
+        "away_penalty_win_rate": get_penalty_win_rate(away_team),
+        "penalty_win_rate_diff": get_penalty_win_rate(home_team) - get_penalty_win_rate(away_team),
     }
 
     if squad_ratings:

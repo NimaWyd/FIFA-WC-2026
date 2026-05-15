@@ -168,6 +168,24 @@ def build_preprocessor(df: pd.DataFrame) -> tuple[ColumnTransformer, list[str]]:
         "tier_draw_rate",
         "tier_away_rate",
     ]
+    # Issue #78: squad strength features (included when present)
+    _issue78_numeric = [
+        "home_squad_avg_rating",
+        "away_squad_avg_rating",
+        "squad_rating_diff",
+        "home_top_player_rating",
+        "away_top_player_rating",
+    ]
+    # Issue #87: WC penalty shootout win rate (included when present)
+    _issue87_numeric = [
+        "home_penalty_win_rate",
+        "away_penalty_win_rate",
+        "penalty_win_rate_diff",
+    ]
+    # Issue #119: confederation strength difference (included when present)
+    _issue119_numeric = [
+        "confederation_strength_diff",
+    ]
     # Only include Phase 4 / Phase 7 / Phase 8 columns that actually exist in this DataFrame
     present_phase4 = [c for c in _phase4_numeric if c in df.columns]
     present_phase7 = [c for c in _phase7_numeric if c in df.columns]
@@ -175,10 +193,17 @@ def build_preprocessor(df: pd.DataFrame) -> tuple[ColumnTransformer, list[str]]:
     present_issue57 = [c for c in _issue57_numeric if c in df.columns]
     present_issue58 = [c for c in _issue58_numeric if c in df.columns]
     present_issue59 = [c for c in _issue59_numeric if c in df.columns]
+    present_issue78 = [c for c in _issue78_numeric if c in df.columns]
+    present_issue87 = [c for c in _issue87_numeric if c in df.columns]
     present_issue88 = [c for c in _issue88_numeric if c in df.columns]
     present_issue84 = [c for c in _issue84_numeric if c in df.columns]
     present_issue85 = [c for c in _issue85_numeric if c in df.columns]
-    numeric_features = _base_numeric + present_phase4 + present_phase7 + present_phase8 + present_issue57 + present_issue58 + present_issue59 + present_issue88 + present_issue84 + present_issue85
+    present_issue119 = [c for c in _issue119_numeric if c in df.columns]
+    numeric_features = (_base_numeric + present_phase4 + present_phase7 + present_phase8
+                        + present_issue57 + present_issue58 + present_issue59
+                        + present_issue78 + present_issue87
+                        + present_issue88 + present_issue84 + present_issue85
+                        + present_issue119)
     used_features = categorical_features + numeric_features
 
     missing = sorted(set(used_features) - set(df.columns))

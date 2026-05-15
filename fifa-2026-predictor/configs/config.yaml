@@ -11,6 +11,14 @@ features:
   form_window: 5
   elo_k_factor: 40.0
   elo_home_advantage: 100.0
+  elo_home_advantage_by_confederation:
+    UEFA: 80.0
+    CONMEBOL: 110.0
+    CONCACAF: 70.0
+    CAF: 90.0
+    AFC: 80.0
+    OFC: 60.0
+    UNKNOWN: 100.0
   default_fifa_rank: 75
   # Time-decay for sample weights: a match this many days old gets half the weight
   # of a match played today.  730 = 2-year half-life (recent matches weighted 2x

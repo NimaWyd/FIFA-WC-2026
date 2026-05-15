@@ -450,3 +450,63 @@ def list_aliases(name: str) -> list[str]:
 def is_known_team(name: str) -> bool:
     """Return True if *name* (or any alias) is in the canonical registry."""
     return str(name).strip() in ALIAS_TO_CANONICAL
+
+
+# ---------------------------------------------------------------------------
+# World Cup penalty shootout records (wins, total_shootouts, 1982-2022)
+# ---------------------------------------------------------------------------
+WC_PENALTY_RECORDS: dict[str, tuple[int, int]] = {
+    "Germany": (4, 4),
+    "Croatia": (4, 4),
+    "Argentina": (4, 5),
+    "Brazil": (3, 5),
+    "France": (2, 3),
+    "Korea Republic": (1, 1),
+    "Morocco": (1, 1),
+    "Ukraine": (1, 1),
+    "Russia": (1, 1),
+    "Ireland": (1, 1),
+    "Belgium": (1, 1),
+    "Bulgaria": (1, 1),
+    "Portugal": (1, 1),
+    "Uruguay": (1, 2),
+    "Sweden": (1, 2),
+    "Costa Rica": (1, 2),
+    "Italy": (1, 3),
+    "Netherlands": (1, 4),
+    "England": (0, 2),
+    "Spain": (0, 3),
+    "Mexico": (0, 2),
+    "Romania": (0, 2),
+    "Switzerland": (0, 1),
+    "Denmark": (0, 1),
+    "Japan": (0, 1),
+    "Ghana": (0, 1),
+}
+
+
+def get_penalty_win_rate(name: str, default: float = 0.5) -> float:
+    """Return historical WC penalty shootout win rate for *name* (any alias).
+
+    Returns *default* (0.5) for teams with no WC PSO history.
+    """
+    canonical = resolve_team(name)
+    record = WC_PENALTY_RECORDS.get(canonical)
+    if record is None or record[1] == 0:
+        return default
+    return record[0] / record[1]
+
+
+# ---------------------------------------------------------------------------
+# Defunct nation dissolution cutoffs
+# Matches with these raw names before the cutoff are excluded from the
+# training pipeline to prevent Elo bleed into successor states.
+# ---------------------------------------------------------------------------
+DEFUNCT_NATION_CUTOFFS: dict[str, str] = {
+    "Soviet Union": "1992-01-01",
+    "USSR": "1992-01-01",
+    "CIS": "1993-01-01",
+    "Yugoslavia": "1992-01-01",
+    "Czechoslovakia": "1993-01-01",
+    "East Germany": "1990-11-01",
+}

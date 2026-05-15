@@ -82,6 +82,14 @@
     "tier_home_rate",
     "tier_draw_rate",
     "tier_away_rate",
+    "home_squad_avg_rating",
+    "away_squad_avg_rating",
+    "squad_rating_diff",
+    "home_top_player_rating",
+    "away_top_player_rating",
+    "home_penalty_win_rate",
+    "away_penalty_win_rate",
+    "penalty_win_rate_diff",
     "home_clean_sheet_rate_w5",
     "away_clean_sheet_rate_w5",
     "home_gd_form_w5",
@@ -92,6 +100,7 @@
     "away_home_form_w5",
     "away_away_form_w5",
     "home_venue_form_diff",
-    "away_venue_form_diff"
+    "away_venue_form_diff",
+    "confederation_strength_diff"
   ]
 }

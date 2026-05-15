@@ -15,6 +15,7 @@ class EloConfig:
     k_factor: float = 40.0
     home_advantage: float = 100.0
     base_rating: float = 1500.0
+    home_advantage_by_confederation: "dict[str, float] | None" = None
 
 
 def rank_to_starting_elo(rank: int | None) -> float:
@@ -62,13 +63,20 @@ def update_ratings(
     neutral: bool,
     cfg: EloConfig,
     competition_k_multiplier: float = 1.0,
+    home_confederation: str = "UNKNOWN",
 ) -> tuple[float, float]:
     """Update two team ratings after a match.
 
     *competition_k_multiplier* scales the K-factor by competition importance:
     >1 for high-stakes tournaments, <1 for friendlies.
     """
-    adjusted_home = home_rating + (0.0 if neutral else cfg.home_advantage)
+    if neutral:
+        ha = 0.0
+    elif cfg.home_advantage_by_confederation:
+        ha = cfg.home_advantage_by_confederation.get(home_confederation, cfg.home_advantage)
+    else:
+        ha = cfg.home_advantage
+    adjusted_home = home_rating + ha
     exp_home = expected_score(adjusted_home, away_rating)
     exp_away = 1.0 - exp_home
     act_home, act_away = actual_score(home_goals, away_goals)
