@@ -64,6 +64,7 @@ def predict_match_proba(
 
 def precompute_all_probabilities(
     tracker: TeamStateTracker, model: Any, cfg: dict,
+    squad_ratings: "dict | None" = None,
 ) -> ProbCache:
     """Build feature rows for all 48×47 ordered team pairs and run ONE batched predict_proba.
 
@@ -95,6 +96,7 @@ def precompute_all_probabilities(
                 away_fifa_rank=get_fifa_rank(away),
                 tournament_stage="Group Stage",
                 elo_inactivity_halflife=halflife,
+                squad_ratings=squad_ratings,
             ))
 
     feature_df = pd.DataFrame(rows)
@@ -453,6 +455,7 @@ def run_simulation(
     model: Any,
     cfg: dict,
     n: int = 1000,
+    squad_ratings: "dict | None" = None,
 ) -> dict:
     """Run n simulations. Pre-computes all match probabilities once before the loop."""
     all_teams = {t: g["id"] for g in WC2026_GROUPS for t in g["teams"]}
@@ -460,7 +463,7 @@ def run_simulation(
     counts: dict[str, dict[str, int]] = {t: {s: 0 for s in stage_keys} for t in all_teams}
 
     # Single batched model call covering all 48×47 pairs — O(1) lookups during simulation
-    prob_cache = precompute_all_probabilities(tracker, model, cfg)
+    prob_cache = precompute_all_probabilities(tracker, model, cfg, squad_ratings=squad_ratings)
 
     rng = np.random.default_rng()
     for _ in range(n):

@@ -127,7 +127,7 @@ def simulate(n: int = 1000) -> dict:
 
     from src.simulation.tournament import build_tournament_states, run_simulation
     tracker = build_tournament_states(history_df, cfg)
-    _simulation_cache = run_simulation(tracker, model, cfg, n=n)
+    _simulation_cache = run_simulation(tracker, model, cfg, n=n, squad_ratings=_get_squad_ratings())
     return _simulation_cache
 
 
@@ -151,7 +151,7 @@ def predict_bracket() -> dict:
         predict_bracket as _predict_bracket,
     )
     tracker = build_tournament_states(history_df, cfg)
-    prob_cache = precompute_all_probabilities(tracker, model, cfg)
+    prob_cache = precompute_all_probabilities(tracker, model, cfg, squad_ratings=_get_squad_ratings())
     _bracket_cache = _predict_bracket(prob_cache)
     return _bracket_cache
 
