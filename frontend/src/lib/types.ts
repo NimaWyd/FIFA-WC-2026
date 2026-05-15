@@ -41,6 +41,18 @@ export interface ConfidenceInterval {
   away_win: [number, number];
 }
 
+export interface VenueInfo {
+  name: string;
+  city: string;
+  country: string;
+  capacity: number;
+  altitude_m: number;
+  surface: string;
+  is_dome: boolean;
+  image_url?: string | null;
+  wikipedia_url?: string | null;
+}
+
 export interface PredictResponse {
   home_team: string;
   away_team: string;
@@ -51,6 +63,7 @@ export interface PredictResponse {
   explanation: Explanation;
   metadata: Record<string, unknown>;
   confidence?: ConfidenceInterval;
+  venue?: VenueInfo | null;
 }
 
 export interface PredictRequest {

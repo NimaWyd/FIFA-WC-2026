@@ -34,6 +34,7 @@ from src.models.ensemble_model import EnsembleModel
 from src.models.scoreline_model import TeamDependentScoreModel
 from src.utils import PROJECT_ROOT, load_config
 from src.data.load_squad_ratings import load_squad_ratings as _load_squad_ratings, DEFAULT_PATH as _SQUAD_RATINGS_PATH
+from src.data.wc2026_venues import lookup_venue
 
 # ---------------------------------------------------------------------------
 # Module-level singletons — loaded once on first use
@@ -438,6 +439,8 @@ def predict(
 
     model_type = "xgboost" if "xgb" in _model_artifact_name else "logistic_regression"
 
+    venue = lookup_venue(home_canonical, away_canonical, match_date)
+
     return {
         "home_team": home_canonical,
         "away_team": away_canonical,
@@ -447,6 +450,7 @@ def predict(
         "expected_goals": expected_goals,
         "explanation": explanation,
         "confidence": confidence,
+        "venue": venue,
         "metadata": {
             "model_version": "1.0.0",
             "model_type": model_type,

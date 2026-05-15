@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, useMotionValue, useTransform, animate } from "framer-motion";
-import { MapPinIcon, UsersIcon } from "@heroicons/react/24/outline";
+import { MapPinIcon, UsersIcon, ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
 import { WC2026_STADIUMS } from "@/lib/wc2026Stadiums";
 
 /* Counts up from 0 to `target` on mount */
@@ -201,12 +201,37 @@ export default function StadiumCard({ venueCity }: Props) {
         {/* Surface */}
         <SurfaceBadge surface={stadium.surface} />
 
-        {/* Host nation flag-style indicator */}
-        <div className="ml-auto flex items-center gap-2 px-3 py-1.5 rounded-lg bg-navy-900/60 border border-navy-600/60">
-          <span className="text-[11px] font-semibold text-slate-400 tracking-wide">
-            {stadium.country === "USA" ? "🇺🇸" : stadium.country === "Mexico" ? "🇲🇽" : "🇨🇦"}
-          </span>
-          <span className="text-[11px] font-semibold text-slate-300">{stadium.country}</span>
+        {/* Altitude — amber badge when above 1000 m */}
+        {stadium.altitude_m >= 1000 ? (
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border bg-amber-500/15 border-amber-500/40 text-amber-300">
+            <span className="text-[11px]">⛰️</span>
+            <span className="text-[11px] font-semibold tabular-nums">{stadium.altitude_m.toLocaleString()} m</span>
+          </div>
+        ) : (
+          <div className="flex items-center gap-1.5 bg-navy-900/60 border border-navy-600/60 px-3 py-1.5 rounded-lg">
+            <span className="text-[11px] text-slate-500">↑</span>
+            <span className="text-[11px] font-semibold text-slate-300 tabular-nums">{stadium.altitude_m} m</span>
+          </div>
+        )}
+
+        {/* Host nation flag + Wikipedia link */}
+        <div className="ml-auto flex items-center gap-2">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-navy-900/60 border border-navy-600/60">
+            <span className="text-[11px]">
+              {stadium.country === "USA" ? "🇺🇸" : stadium.country === "Mexico" ? "🇲🇽" : "🇨🇦"}
+            </span>
+            <span className="text-[11px] font-semibold text-slate-300">{stadium.country}</span>
+          </div>
+          <a
+            href={stadium.wikipediaUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-navy-900/60 border border-navy-600/60 text-slate-400 hover:text-white hover:border-slate-500 transition-colors"
+            title="View on Wikipedia"
+          >
+            <ArrowTopRightOnSquareIcon className="h-3.5 w-3.5" />
+            <span className="text-[11px] font-semibold">Wiki</span>
+          </a>
         </div>
       </motion.div>
 
