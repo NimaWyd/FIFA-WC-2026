@@ -44,7 +44,7 @@ export default function Navbar() {
               isHome ? "text-[#f0ece2]" : "text-white"
             }`}
           >
-            WC 26
+            WC PREDICTOR 26
           </span>
         </Link>
 
