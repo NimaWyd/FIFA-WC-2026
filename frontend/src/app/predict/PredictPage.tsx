@@ -75,7 +75,7 @@ function TeamPanel({
             />
             <FlagIcon
               team={team.canonical_name}
-              className={`relative w-28 h-20 rounded-xl shadow-2xl ring-2 ${isHome ? "ring-fifa-blue/40" : "ring-gold-500/40"}`}
+              className="relative w-40 h-[107px] rounded-xl shadow-2xl"
             />
           </motion.div>
           <div className="text-center mt-1">
@@ -87,7 +87,7 @@ function TeamPanel({
         </>
       ) : (
         <div className="flex flex-col items-center gap-2">
-          <div className="w-28 h-20 rounded-xl border-2 border-dashed border-navy-600 flex items-center justify-center">
+          <div className="w-40 h-[107px] rounded-xl border-2 border-dashed border-navy-600 flex items-center justify-center">
             <span className="text-navy-600 text-[10px] font-bold tracking-wider">{emptyLabel}</span>
           </div>
           <div className={`text-[10px] font-bold tracking-[0.25em] uppercase ${labelColor} opacity-40`}>
@@ -438,7 +438,7 @@ export default function PredictPage() {
                         <div className="absolute -inset-1 bg-fifa-blue rounded-2xl blur-md opacity-20" />
                         <FlagIcon
                           team={result.home_team}
-                          className="relative w-28 h-20 sm:w-40 sm:h-[110px] rounded-xl shadow-2xl ring-2 ring-fifa-blue/40"
+                          className="relative w-40 h-[107px] sm:w-56 sm:h-[150px] rounded-xl shadow-2xl"
                         />
                       </motion.div>
                       <div className="text-center">
@@ -474,7 +474,7 @@ export default function PredictPage() {
                         <div className="absolute -inset-1 bg-gold-500 rounded-2xl blur-md opacity-20" />
                         <FlagIcon
                           team={result.away_team}
-                          className="relative w-28 h-20 sm:w-40 sm:h-[110px] rounded-xl shadow-2xl ring-2 ring-gold-500/40"
+                          className="relative w-40 h-[107px] sm:w-56 sm:h-[150px] rounded-xl shadow-2xl"
                         />
                       </motion.div>
                       <div className="text-center">
