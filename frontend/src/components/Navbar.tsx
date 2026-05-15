@@ -36,7 +36,7 @@ export default function Navbar() {
         <Link
           href="/"
           className="flex items-center gap-2.5 flex-shrink-0 group"
-          aria-label="Fortuna 26 home"
+          aria-label="World Cup 26 home"
         >
           <div className="w-[22px] h-[22px] bg-pitch-400 rounded-[3px] rotate-45 group-hover:bg-pitch-300 transition-colors" />
           <span
@@ -44,7 +44,7 @@ export default function Navbar() {
               isHome ? "text-[#f0ece2]" : "text-white"
             }`}
           >
-            FORTUNA 26
+            WC 26
           </span>
         </Link>
 
