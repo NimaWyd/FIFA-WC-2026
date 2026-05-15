@@ -54,15 +54,30 @@ function TeamPanel({
   const emptyLabel = isHome ? "HOME" : "AWAY";
 
   return (
-    <div className="flex flex-col items-center gap-2 py-4">
+    <div className="flex flex-col items-center gap-3 py-4">
       {team ? (
         <>
-          <div className="relative">
+          <motion.div
+            key={team.canonical_name}
+            initial={{ scale: 0.82, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            whileHover={{ scale: 1.06 }}
+            transition={{ type: "spring", stiffness: 320, damping: 22 }}
+            className="relative cursor-default"
+          >
+            {/* outer halo */}
             <div
-              className={`absolute inset-0 rounded blur-xl opacity-20 scale-150 ${isHome ? "bg-fifa-blue" : "bg-gold-500"}`}
+              className={`absolute -inset-5 rounded-3xl blur-2xl opacity-50 ${isHome ? "bg-fifa-blue" : "bg-gold-500"}`}
             />
-            <FlagIcon team={team.canonical_name} className="relative w-20 h-14 rounded shadow-lg" />
-          </div>
+            {/* inner edge glow */}
+            <div
+              className={`absolute -inset-1 rounded-2xl blur-md opacity-30 ${isHome ? "bg-fifa-blue" : "bg-gold-500"}`}
+            />
+            <FlagIcon
+              team={team.canonical_name}
+              className={`relative w-28 h-20 rounded-xl shadow-2xl ring-2 ${isHome ? "ring-fifa-blue/40" : "ring-gold-500/40"}`}
+            />
+          </motion.div>
           <div className="text-center mt-1">
             <div className={`text-[10px] font-bold tracking-[0.25em] uppercase ${labelColor}`}>{label}</div>
             <div className="font-anton text-xl text-white mt-0.5 leading-none">
@@ -72,7 +87,7 @@ function TeamPanel({
         </>
       ) : (
         <div className="flex flex-col items-center gap-2">
-          <div className="w-20 h-14 rounded border-2 border-dashed border-navy-600 flex items-center justify-center">
+          <div className="w-28 h-20 rounded-xl border-2 border-dashed border-navy-600 flex items-center justify-center">
             <span className="text-navy-600 text-[10px] font-bold tracking-wider">{emptyLabel}</span>
           </div>
           <div className={`text-[10px] font-bold tracking-[0.25em] uppercase ${labelColor} opacity-40`}>
@@ -414,13 +429,18 @@ export default function PredictPage() {
                   <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4 sm:gap-8">
                     {/* Home */}
                     <div className="flex flex-col items-center gap-3">
-                      <div className="relative">
-                        <div className="absolute inset-0 bg-fifa-blue rounded blur-xl opacity-20 scale-150" />
+                      <motion.div
+                        className="relative cursor-default"
+                        whileHover={{ scale: 1.05 }}
+                        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                      >
+                        <div className="absolute -inset-6 bg-fifa-blue rounded-3xl blur-2xl opacity-40" />
+                        <div className="absolute -inset-1 bg-fifa-blue rounded-2xl blur-md opacity-20" />
                         <FlagIcon
                           team={result.home_team}
-                          className="relative w-20 h-14 sm:w-28 sm:h-20 rounded shadow-lg"
+                          className="relative w-28 h-20 sm:w-40 sm:h-[110px] rounded-xl shadow-2xl ring-2 ring-fifa-blue/40"
                         />
-                      </div>
+                      </motion.div>
                       <div className="text-center">
                         <div className="font-anton text-xl sm:text-2xl text-white leading-none">{homeDisplay}</div>
                         <div className="text-[10px] font-bold tracking-[0.2em] text-fifa-blue uppercase mt-1">Home</div>
@@ -445,13 +465,18 @@ export default function PredictPage() {
 
                     {/* Away */}
                     <div className="flex flex-col items-center gap-3">
-                      <div className="relative">
-                        <div className="absolute inset-0 bg-gold-500 rounded blur-xl opacity-20 scale-150" />
+                      <motion.div
+                        className="relative cursor-default"
+                        whileHover={{ scale: 1.05 }}
+                        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                      >
+                        <div className="absolute -inset-6 bg-gold-500 rounded-3xl blur-2xl opacity-40" />
+                        <div className="absolute -inset-1 bg-gold-500 rounded-2xl blur-md opacity-20" />
                         <FlagIcon
                           team={result.away_team}
-                          className="relative w-20 h-14 sm:w-28 sm:h-20 rounded shadow-lg"
+                          className="relative w-28 h-20 sm:w-40 sm:h-[110px] rounded-xl shadow-2xl ring-2 ring-gold-500/40"
                         />
-                      </div>
+                      </motion.div>
                       <div className="text-center">
                         <div className="font-anton text-xl sm:text-2xl text-white leading-none">{awayDisplay}</div>
                         <div className="text-[10px] font-bold tracking-[0.2em] text-gold-500 uppercase mt-1">Away</div>
