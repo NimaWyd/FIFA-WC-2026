@@ -6,7 +6,6 @@ import { WCGroup, WCMatch } from "@/lib/wc2026Groups";
 import FlagIcon from "@/components/FlagIcon";
 import GroupStandings, { Standing } from "@/components/GroupStandings";
 import { predict } from "@/lib/api";
-import MatchScoreboard from "@/components/MatchScoreboard";
 
 interface Props {
   group: WCGroup;
@@ -65,7 +64,10 @@ export default function GroupView({ group, onBack, onPredict }: Props) {
   const [predicting, setPredicting] = useState(false);
   const [progress, setProgress] = useState(0);
   const [predError, setPredError] = useState<string | null>(null);
-  const [matchResults, setMatchResults] = useState<Record<string, { homeGoals: number; awayGoals: number }>>({});
+  const [matchResults, setMatchResults] = useState<Record<string, {
+    homeGoals: number; awayGoals: number;
+    homeWinProb: number; drawProb: number; awayWinProb: number;
+  }>>({});
 
   async function handlePredictAll() {
     setPredicting(true);
@@ -125,7 +127,12 @@ export default function GroupView({ group, onBack, onPredict }: Props) {
         results.push({ match, homeGoals, awayGoals });
         setMatchResults((prev) => ({
           ...prev,
-          [`${match.home}|${match.away}`]: { homeGoals, awayGoals },
+          [`${match.home}|${match.away}`]: {
+            homeGoals, awayGoals,
+            homeWinProb: p.home_win,
+            drawProb: p.draw,
+            awayWinProb: p.away_win,
+          },
         }));
         setProgress((prev) => prev + 1);
       } catch {
@@ -319,16 +326,36 @@ export default function GroupView({ group, onBack, onPredict }: Props) {
                             </span>
                           </div>
 
-                          {/* Score / VS */}
+                          {/* Winner / VS */}
                           {mr ? (
-                            <div className="flex-shrink-0 px-1">
-                              <MatchScoreboard
-                                homeTeam={match.home}
-                                awayTeam={match.away}
-                                homeGoals={mr.homeGoals}
-                                awayGoals={mr.awayGoals}
-                                compact
-                              />
+                            <div className="flex-shrink-0 flex flex-col items-center gap-1.5 w-28">
+                              {(() => {
+                                const hw = mr.homeWinProb;
+                                const dw = mr.drawProb;
+                                const aw = mr.awayWinProb;
+                                const isDraw = dw >= hw && dw >= aw;
+                                const winner = hw >= aw ? match.home : match.away;
+                                const winProb = Math.round((isDraw ? dw : Math.max(hw, aw)) * 100);
+                                return (
+                                  <>
+                                    {isDraw ? (
+                                      <span className="text-[11px] font-bold text-slate-300 bg-navy-900/80 px-2.5 py-1 rounded-lg border border-navy-500 whitespace-nowrap">
+                                        Draw · {winProb}%
+                                      </span>
+                                    ) : (
+                                      <div className="flex items-center gap-1.5 bg-navy-900/80 px-2 py-1 rounded-lg border border-fifa-blue/40 shadow-[0_0_10px_rgba(26,63,255,0.15)]">
+                                        <FlagIcon team={winner} className="w-5 h-3.5 rounded-sm shadow-sm flex-shrink-0" />
+                                        <span className="text-[12px] font-bold text-white tabular-nums">{winProb}%</span>
+                                      </div>
+                                    )}
+                                    <div className="flex w-full h-1 rounded-full overflow-hidden">
+                                      <div className="bg-blue-400/80 transition-all" style={{ width: `${Math.round(hw * 100)}%` }} />
+                                      <div className="bg-slate-500/50 transition-all" style={{ width: `${Math.round(dw * 100)}%` }} />
+                                      <div className="bg-red-400/70 transition-all" style={{ width: `${Math.round(aw * 100)}%` }} />
+                                    </div>
+                                  </>
+                                );
+                              })()}
                             </div>
                           ) : (
                             <div className="flex-shrink-0 flex flex-col items-center gap-0.5 w-14">
