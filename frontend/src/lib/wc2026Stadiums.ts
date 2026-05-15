@@ -7,9 +7,7 @@ export interface StadiumInfo {
   imageUrl: string;
 }
 
-function wikiImg(filename: string): string {
-  return `https://commons.wikimedia.org/w/index.php?title=Special:Redirect/file/${encodeURIComponent(filename)}&width=1280`;
-}
+const W = "https://upload.wikimedia.org/wikipedia/commons/thumb";
 
 export const WC2026_STADIUMS: Record<string, StadiumInfo> = {
   Atlanta: {
@@ -18,7 +16,7 @@ export const WC2026_STADIUMS: Record<string, StadiumInfo> = {
     country: "USA",
     capacity: 71000,
     surface: "FieldTurf",
-    imageUrl: wikiImg("Mercedes-Benz_Stadium.jpg"),
+    imageUrl: `${W}/1/10/Mercedes_Benz_Stadium_time_lapse_capture_2017-08-13.jpg/1280px-Mercedes_Benz_Stadium_time_lapse_capture_2017-08-13.jpg`,
   },
   Boston: {
     name: "Gillette Stadium",
@@ -26,7 +24,7 @@ export const WC2026_STADIUMS: Record<string, StadiumInfo> = {
     country: "USA",
     capacity: 65878,
     surface: "Grass",
-    imageUrl: wikiImg("Gillette_Stadium.jpg"),
+    imageUrl: `${W}/d/db/Gillette_Stadium_%28Top_View%29.jpg/1280px-Gillette_Stadium_%28Top_View%29.jpg`,
   },
   Dallas: {
     name: "AT&T Stadium",
@@ -34,7 +32,7 @@ export const WC2026_STADIUMS: Record<string, StadiumInfo> = {
     country: "USA",
     capacity: 80000,
     surface: "AstroTurf",
-    imageUrl: wikiImg("AT&T_Stadium_by_D_Ramey_Logan.jpg"),
+    imageUrl: `${W}/1/11/Arlington_June_2020_4_%28AT%26T_Stadium%29.jpg/1280px-Arlington_June_2020_4_%28AT%26T_Stadium%29.jpg`,
   },
   Houston: {
     name: "NRG Stadium",
@@ -42,7 +40,7 @@ export const WC2026_STADIUMS: Record<string, StadiumInfo> = {
     country: "USA",
     capacity: 72220,
     surface: "FieldTurf",
-    imageUrl: wikiImg("NRG_Stadium.jpg"),
+    imageUrl: `${W}/3/3e/Nrg_stadium.jpg/1280px-Nrg_stadium.jpg`,
   },
   "Kansas City": {
     name: "GEHA Field at Arrowhead Stadium",
@@ -50,7 +48,7 @@ export const WC2026_STADIUMS: Record<string, StadiumInfo> = {
     country: "USA",
     capacity: 76416,
     surface: "Grass",
-    imageUrl: wikiImg("Arrowhead_Stadium.jpg"),
+    imageUrl: `${W}/a/ac/Aerial_view_of_Arrowhead_Stadium_08-31-2013.jpg/1280px-Aerial_view_of_Arrowhead_Stadium_08-31-2013.jpg`,
   },
   "Los Angeles": {
     name: "SoFi Stadium",
@@ -58,7 +56,7 @@ export const WC2026_STADIUMS: Record<string, StadiumInfo> = {
     country: "USA",
     capacity: 70240,
     surface: "Bermuda grass",
-    imageUrl: wikiImg("SoFi_Stadium.jpg"),
+    imageUrl: `${W}/b/b3/SoFi_Stadium_2023.jpg/1280px-SoFi_Stadium_2023.jpg`,
   },
   Miami: {
     name: "Hard Rock Stadium",
@@ -66,7 +64,7 @@ export const WC2026_STADIUMS: Record<string, StadiumInfo> = {
     country: "USA",
     capacity: 65326,
     surface: "Grass",
-    imageUrl: wikiImg("Hard_Rock_Stadium.jpg"),
+    imageUrl: `${W}/c/ce/Hard_Rock_Stadium_for_Super_Bowl_LIV_%2849606710103%29.jpg/1280px-Hard_Rock_Stadium_for_Super_Bowl_LIV_%2849606710103%29.jpg`,
   },
   "Mexico City": {
     name: "Estadio Azteca",
@@ -74,7 +72,7 @@ export const WC2026_STADIUMS: Record<string, StadiumInfo> = {
     country: "Mexico",
     capacity: 87523,
     surface: "Grass",
-    imageUrl: wikiImg("Azteca_Stadium.jpg"),
+    imageUrl: `${W}/0/07/Vista_a%C3%A9rea_del_Estadio_Azteca_-_2026_-_02.jpg/1280px-Vista_a%C3%A9rea_del_Estadio_Azteca_-_2026_-_02.jpg`,
   },
   Guadalajara: {
     name: "Estadio Akron",
@@ -82,7 +80,7 @@ export const WC2026_STADIUMS: Record<string, StadiumInfo> = {
     country: "Mexico",
     capacity: 49850,
     surface: "Grass",
-    imageUrl: wikiImg("Estadio_Akron.jpg"),
+    imageUrl: `${W}/1/10/Estadio_Akron_02-07-2022_cabecera_sur_lado_derecho_%283%29.jpg/1280px-Estadio_Akron_02-07-2022_cabecera_sur_lado_derecho_%283%29.jpg`,
   },
   Monterrey: {
     name: "Estadio BBVA",
@@ -90,7 +88,7 @@ export const WC2026_STADIUMS: Record<string, StadiumInfo> = {
     country: "Mexico",
     capacity: 53500,
     surface: "Grass",
-    imageUrl: wikiImg("Estadio_BBVA.jpg"),
+    imageUrl: `${W}/5/57/Mexico_Guadalupe_Monterrey_Estadio_BBVA_Bancomer_fifa_world_cup_2026_6.JPG/1280px-Mexico_Guadalupe_Monterrey_Estadio_BBVA_Bancomer_fifa_world_cup_2026_6.JPG`,
   },
   "New York/New Jersey": {
     name: "MetLife Stadium",
@@ -98,7 +96,7 @@ export const WC2026_STADIUMS: Record<string, StadiumInfo> = {
     country: "USA",
     capacity: 82500,
     surface: "FieldTurf",
-    imageUrl: wikiImg("MetLife_Stadium.jpg"),
+    imageUrl: `${W}/0/04/Metlife_stadium_%28Aerial_view%29.jpg/1280px-Metlife_stadium_%28Aerial_view%29.jpg`,
   },
   Philadelphia: {
     name: "Lincoln Financial Field",
@@ -106,7 +104,7 @@ export const WC2026_STADIUMS: Record<string, StadiumInfo> = {
     country: "USA",
     capacity: 69796,
     surface: "Grass",
-    imageUrl: wikiImg("Lincoln_Financial_Field.jpg"),
+    imageUrl: `${W}/a/a1/Lincoln_Financial_Field_%28Aerial_view%29.jpg/1280px-Lincoln_Financial_Field_%28Aerial_view%29.jpg`,
   },
   "San Francisco": {
     name: "Levi's Stadium",
@@ -114,7 +112,7 @@ export const WC2026_STADIUMS: Record<string, StadiumInfo> = {
     country: "USA",
     capacity: 68500,
     surface: "Grass",
-    imageUrl: wikiImg("Levi's_Stadium.jpg"),
+    imageUrl: `${W}/a/a6/Levi%27s_Stadium_in_February_2016_prior_to_Super_Bowl_50_%2824398261729%29.jpg/1280px-Levi%27s_Stadium_in_February_2016_prior_to_Super_Bowl_50_%2824398261729%29.jpg`,
   },
   Seattle: {
     name: "Lumen Field",
@@ -122,7 +120,7 @@ export const WC2026_STADIUMS: Record<string, StadiumInfo> = {
     country: "USA",
     capacity: 72000,
     surface: "FieldTurf",
-    imageUrl: wikiImg("Lumen_Field.jpg"),
+    imageUrl: `${W}/5/53/Qwest_Field_North.jpg/1280px-Qwest_Field_North.jpg`,
   },
   Toronto: {
     name: "BMO Field",
@@ -130,7 +128,7 @@ export const WC2026_STADIUMS: Record<string, StadiumInfo> = {
     country: "Canada",
     capacity: 30000,
     surface: "Grass",
-    imageUrl: wikiImg("BMO_Field.jpg"),
+    imageUrl: `${W}/9/91/Toronto_BMO_Field_in_2024.jpg/1280px-Toronto_BMO_Field_in_2024.jpg`,
   },
   Vancouver: {
     name: "BC Place",
@@ -138,6 +136,6 @@ export const WC2026_STADIUMS: Record<string, StadiumInfo> = {
     country: "Canada",
     capacity: 54500,
     surface: "FieldTurf",
-    imageUrl: wikiImg("BC_Place.jpg"),
+    imageUrl: `${W}/f/ff/BC_Place_2015_Women%27s_FIFA_World_Cup.jpg/1280px-BC_Place_2015_Women%27s_FIFA_World_Cup.jpg`,
   },
 };
