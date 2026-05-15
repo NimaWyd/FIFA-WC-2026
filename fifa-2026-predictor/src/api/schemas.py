@@ -58,6 +58,18 @@ class Explanation(BaseModel):
     data_note: str
 
 
+class VenueInfo(BaseModel):
+    name: str
+    city: str
+    country: str
+    capacity: int
+    altitude_m: int
+    surface: str
+    is_dome: bool
+    image_url: Optional[str] = None
+    wikipedia_url: Optional[str] = None
+
+
 class PredictResponse(BaseModel):
     home_team: str
     away_team: str
@@ -68,6 +80,7 @@ class PredictResponse(BaseModel):
     explanation: Explanation
     metadata: dict[str, Any]
     confidence: Optional[ConfidenceInterval] = None
+    venue: Optional[VenueInfo] = None
 
 
 # ---------------------------------------------------------------------------
