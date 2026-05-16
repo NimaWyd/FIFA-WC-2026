@@ -40,6 +40,7 @@ def build_pre_match_row(
     injuries_df: Optional[pd.DataFrame] = None,
     lineups_df: Optional[pd.DataFrame] = None,
     squad_ratings: "dict[str, dict[str, float]] | None" = None,
+    venue: "dict | None" = None,
 ) -> pd.DataFrame:
     """Build one leakage-safe feature row for a future fixture.
 
@@ -76,6 +77,7 @@ def build_pre_match_row(
         tournament_stage=tournament_stage,
         elo_inactivity_halflife=float(cfg["features"].get("elo_inactivity_halflife", 0.0)),
         squad_ratings=squad_ratings,
+        venue=venue,
     )
 
     # Registry: merge any extra features from enabled blocks (e.g. player_aggregate).

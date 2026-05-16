@@ -278,6 +278,73 @@ _MATCH_VENUE: dict[tuple[str, str, str], str] = {
 }
 
 
+# City-to-altitude lookup for major international football cities.
+# Covers all high-altitude nations whose matches appear in results.csv.
+# Sea-level / low-altitude cities are intentionally omitted (default = 0).
+CITY_ALTITUDE_M: dict[str, int] = {
+    # Bolivia
+    "El Alto": 4150,
+    "La Paz": 3625,
+    "Sucre": 2750,
+    "Cochabamba": 2570,
+    "Potosí": 3967,
+    # Ecuador
+    "Quito": 2850,
+    "Cuenca": 2560,
+    "Ambato": 2577,
+    "Latacunga": 2785,
+    "Riobamba": 2754,
+    # Colombia
+    "Bogotá": 2640,
+    "Bogota": 2640,
+    "Manizales": 2153,
+    "Armenia": 1540,
+    "Pereira": 1411,
+    "Medellín": 1495,
+    "Medellin": 1495,
+    "Bucaramanga": 959,
+    "Cali": 1000,
+    # Mexico
+    "Mexico City": 2240,
+    "Toluca": 2667,
+    "Puebla": 2135,
+    "Guadalajara": 1566,
+    "Zapopan": 1560,
+    "Querétaro": 1827,
+    "Queretaro": 1827,
+    "León": 1884,
+    "Leon": 1884,
+    "Irapuato": 1724,
+    "Nezahualcóyotl": 2240,
+    "San Luis Potosí": 1877,
+    "Aguascalientes": 1888,
+    "Zacatecas": 2496,
+    "Monterrey": 538,
+    # Peru
+    "Arequipa": 2335,
+    "Cusco": 3399,
+    "Puno": 3827,
+    # Venezuela
+    "Mérida": 1625,
+    "Merida": 1625,
+    # China / Asia (some high-altitude venues)
+    "Kunming": 1895,
+    "Chengdu": 500,
+    # Ethiopia
+    "Addis Ababa": 2355,
+    # Kenya
+    "Nairobi": 1795,
+    # United States
+    "Denver": 1609,
+    # Canada — all near sea-level; intentionally excluded
+}
+
+
+def altitude_from_city(city: str) -> int:
+    """Return altitude in metres for a city name, or 0 if unknown / sea-level."""
+    return CITY_ALTITUDE_M.get(city, 0)
+
+
 def lookup_venue(home: str, away: str, date: str) -> Optional[dict]:
     """Return venue metadata dict for a scheduled WC 2026 group match, or None."""
     city = _MATCH_VENUE.get((home, away, date))
