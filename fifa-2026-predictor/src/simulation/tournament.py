@@ -529,7 +529,7 @@ def run_simulation(
     # Single batched model call covering all 48×47 pairs — O(1) lookups during simulation
     prob_cache = precompute_all_probabilities(tracker, model, cfg, squad_ratings=squad_ratings)
 
-    rng = np.random.default_rng()
+    rng = np.random.default_rng(cfg.get("project", {}).get("random_state", 42))
     for _ in range(n):
         sim_result = simulate_once(tracker, model, cfg, rng, prob_cache=prob_cache)
         for team, stage in sim_result.items():
