@@ -584,15 +584,52 @@ def list_all_teams(confederation_filter: Optional[str] = None) -> list[dict[str,
 # /model-info service
 # ---------------------------------------------------------------------------
 
+def _get_accuracy_metrics() -> dict[str, Any] | None:
+    """Read accuracy metrics from evaluation_summary.json for the served model type."""
+    eval_path = PROJECT_ROOT / "reports" / "evaluation_summary.json"
+    if not eval_path.exists():
+        return None
+    try:
+        with open(eval_path) as f:
+            records = json.load(f)
+        target = "ensemble" if "ensemble" in _model_artifact_name else "xgboost" if "xgb" in _model_artifact_name else "logreg"
+        for rec in records:
+            if rec.get("model") == target:
+                cm = rec.get("confusion_matrix", [])
+                test_rows = sum(sum(row) for row in cm) if cm else 0
+                return {
+                    "accuracy": rec["accuracy"],
+                    "brier_score": rec["brier_score"],
+                    "log_loss": rec["log_loss"],
+                    "test_rows": test_rows,
+                }
+        # fall back to first record if target not found
+        rec = records[0]
+        cm = rec.get("confusion_matrix", [])
+        return {
+            "accuracy": rec["accuracy"],
+            "brier_score": rec["brier_score"],
+            "log_loss": rec["log_loss"],
+            "test_rows": sum(sum(row) for row in cm) if cm else 0,
+        }
+    except Exception:
+        return None
+
+
 def get_model_info() -> dict[str, Any]:
     model = _get_model()
     cfg = _get_cfg()
     registry = get_registry()
     scoreline_path = PROJECT_ROOT / "src/models/artifacts/scoreline_params.json"
 
-    model_type = "none"
-    if model is not None:
-        model_type = "xgboost" if "xgb" in _model_artifact_name else "logistic_regression"
+    if model is None:
+        model_type = "none"
+    elif "ensemble" in _model_artifact_name:
+        model_type = "ensemble"
+    elif "xgb" in _model_artifact_name:
+        model_type = "xgboost"
+    else:
+        model_type = "logistic_regression"
 
     return {
         "model_version": "1.0.0",
@@ -608,6 +645,7 @@ def get_model_info() -> dict[str, Any]:
             "default_competition": cfg["inference"]["default_competition"],
             "default_neutral": cfg["inference"]["default_neutral"],
         },
+        "accuracy_metrics": _get_accuracy_metrics(),
     }
 
 

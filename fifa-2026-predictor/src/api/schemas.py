@@ -104,6 +104,13 @@ class TeamInfo(BaseModel):
 # /model-info
 # ---------------------------------------------------------------------------
 
+class AccuracyMetrics(BaseModel):
+    accuracy: float
+    brier_score: float
+    log_loss: float
+    test_rows: int
+
+
 class ModelInfo(BaseModel):
     model_version: str
     model_type: str
@@ -112,6 +119,7 @@ class ModelInfo(BaseModel):
     enabled_features: list[str]
     scoreline_model_status: str
     config_summary: dict[str, Any]
+    accuracy_metrics: AccuracyMetrics | None = None
 
 
 # ---------------------------------------------------------------------------

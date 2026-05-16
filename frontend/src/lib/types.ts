@@ -75,6 +75,13 @@ export interface PredictRequest {
   tournament_stage?: string;
 }
 
+export interface AccuracyMetrics {
+  accuracy: number;
+  brier_score: number;
+  log_loss: number;
+  test_rows: number;
+}
+
 export interface ModelInfo {
   model_version: string;
   model_type: string;
@@ -83,6 +90,7 @@ export interface ModelInfo {
   enabled_features: string[];
   scoreline_model_status: string;
   config_summary: Record<string, unknown>;
+  accuracy_metrics: AccuracyMetrics | null;
 }
 
 export interface TeamSimResult {

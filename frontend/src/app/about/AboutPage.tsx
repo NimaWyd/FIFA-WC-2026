@@ -33,7 +33,6 @@ const TOP_FEATURES = [
   { feature: "away_elo_pre",        mean_abs_shap: 0.009, label: "Away Elo Rating" },
 ];
 
-const ACCURACY = { accuracy: 0.36, brier_score: 0.766, log_loss: 2.29, test_rows: 25 };
 
 const PIPELINE_STEPS = [
   { num: "01", title: "Data Ingestion",       desc: "49,000+ international fixtures from 1993–2025, spanning WC, qualifiers, continental championships, and friendlies.", accent: "sky" },
@@ -382,8 +381,9 @@ export default function AboutPage() {
             {/* Header bar */}
             <div className="px-6 py-3.5 border-b border-navy-600 bg-navy-700/40">
               <span className="text-[11px] text-slate-500">
-                Chronological backtest · {ACCURACY.test_rows}-match held-out test set ·
-                Isotonic calibration applied · 3-class H / D / A
+                Chronological backtest
+                {modelInfo?.accuracy_metrics ? ` · ${modelInfo.accuracy_metrics.test_rows.toLocaleString()}-match held-out test set` : ""}
+                {" "}· Isotonic calibration applied · 3-class H / D / A
               </span>
             </div>
 
@@ -394,21 +394,27 @@ export default function AboutPage() {
                   className="font-anton text-5xl sm:text-6xl"
                   style={{ color: "rgba(245,200,66,1)", textShadow: "0 0 30px rgba(245,200,66,0.4)" }}
                 >
-                  {(ACCURACY.accuracy * 100).toFixed(0)}%
+                  {modelInfo?.accuracy_metrics
+                    ? `${(modelInfo.accuracy_metrics.accuracy * 100).toFixed(0)}%`
+                    : "—"}
                 </span>
                 <span className="text-xs font-semibold text-slate-400">Test Accuracy</span>
                 <span className="text-[10px] text-slate-600 text-center">Random baseline ~33%</span>
               </div>
               <div className="p-6 sm:p-8 flex flex-col items-center gap-2">
                 <span className="font-anton text-5xl sm:text-6xl text-sky-400">
-                  {ACCURACY.brier_score.toFixed(3)}
+                  {modelInfo?.accuracy_metrics
+                    ? modelInfo.accuracy_metrics.brier_score.toFixed(3)
+                    : "—"}
                 </span>
                 <span className="text-xs font-semibold text-slate-400">Brier Score</span>
                 <span className="text-[10px] text-slate-600">Lower is better</span>
               </div>
               <div className="p-6 sm:p-8 flex flex-col items-center gap-2">
                 <span className="font-anton text-5xl sm:text-6xl text-purple-400">
-                  {ACCURACY.log_loss.toFixed(2)}
+                  {modelInfo?.accuracy_metrics
+                    ? modelInfo.accuracy_metrics.log_loss.toFixed(2)
+                    : "—"}
                 </span>
                 <span className="text-xs font-semibold text-slate-400">Log Loss</span>
                 <span className="text-[10px] text-slate-600">Lower is better</span>
