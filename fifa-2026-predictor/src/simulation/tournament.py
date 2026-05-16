@@ -153,35 +153,36 @@ def _compute_group_standings(
 def _assign_third_place_teams(
     best_third: list[tuple[str, str]],  # [(team, group_id), ...]
 ) -> dict[int, str]:
-    """Assign 8 best 3rd-place teams to R32 slots using eligibility constraints.
+    """Assign 8 best 3rd-place teams to R32 slots via backtracking CSP.
 
-    Uses a greedy most-constrained-first approach.
+    Slots are ordered most-constrained-first. Backtracks on dead ends.
     Returns {match_number: team}.
     """
-    third_slots = [(m["match"], m["eligible_groups"]) for m in WC2026_R32 if m["slot2_type"] == "3rd"]
+    third_slots = sorted(
+        [(m["match"], m["eligible_groups"]) for m in WC2026_R32 if m["slot2_type"] == "3rd"],
+        key=lambda s: len(s[1]),  # most constrained first
+    )
 
-    scored = []
-    for team, group in best_third:
-        eligible_idxs = [i for i, (_, groups) in enumerate(third_slots) if group in groups]
-        scored.append((len(eligible_idxs), team, group))
-    scored.sort()  # most constrained first
+    group_to_team = {group: team for team, group in best_third}
+    qualifying_groups = {group for _, group in best_third}
+
+    def backtrack(slot_idx: int, assigned: dict[int, str], used_groups: set[str]) -> bool:
+        if slot_idx == len(third_slots):
+            return True
+        match_num, eligible_groups = third_slots[slot_idx]
+        candidates = eligible_groups & qualifying_groups - used_groups
+        for group in candidates:
+            assigned[match_num] = group_to_team[group]
+            used_groups.add(group)
+            if backtrack(slot_idx + 1, assigned, used_groups):
+                return True
+            used_groups.discard(group)
+            del assigned[match_num]
+        return False
 
     assigned: dict[int, str] = {}
-    used_idxs: set[int] = set()
-
-    for _, team, group in scored:
-        for i, (match_num, eligible_groups) in enumerate(third_slots):
-            if i not in used_idxs and group in eligible_groups:
-                assigned[match_num] = team
-                used_idxs.add(i)
-                break
-        else:
-            for i, (match_num, _) in enumerate(third_slots):
-                if i not in used_idxs:
-                    assigned[match_num] = team
-                    used_idxs.add(i)
-                    break
-
+    if not backtrack(0, assigned, set()):
+        raise RuntimeError("No valid 3rd-place assignment found — check eligible_groups constraints.")
     return assigned
 
 
@@ -273,7 +274,12 @@ def simulate_once(
     ]
     third_sorted = sorted(
         third_place,
-        key=lambda x: (records[x[0]]["pts"], records[x[0]]["gd"], records[x[0]]["gf"]),
+        key=lambda x: (
+            records[x[0]]["pts"],
+            records[x[0]]["gd"],
+            records[x[0]]["gf"],
+            -(get_fifa_rank(x[0]) or 999),
+        ),
         reverse=True,
     )
     best_third = third_sorted[:8]
@@ -305,7 +311,7 @@ def simulate_once(
             t1, t2 = t2, t1
         winner_r16, loser_r16 = _knockout_winner(t1, t2, prob_cache, rng)
         match_winners[89 + i] = winner_r16
-        results[loser_r16] = "round_of_32"
+        results[loser_r16] = "round_of_16"
 
     # -- QF -------------------------------------------------------------------
     for i, (ma, mb) in enumerate(WC2026_QF_PAIRS):
@@ -324,6 +330,16 @@ def simulate_once(
         winner_sf, loser_sf = _knockout_winner(t1, t2, prob_cache, rng)
         match_winners[101 + i] = winner_sf
         results[loser_sf] = "semi_final"
+
+    # -- 3rd place playoff ----------------------------------------------------
+    sf_losers = [t for t, s in results.items() if s == "semi_final"]
+    if len(sf_losers) == 2:
+        t1, t2 = sf_losers
+        if rng.random() < 0.5:
+            t1, t2 = t2, t1
+        third, fourth = _knockout_winner(t1, t2, prob_cache, rng)
+        results[third] = "third_place"
+        # loser stays "semi_final"
 
     # -- Final ----------------------------------------------------------------
     finalist1, finalist2 = match_winners[101], match_winners[102]
@@ -389,7 +405,10 @@ def predict_bracket(prob_cache: ProbCache) -> dict:
     all_thirds = [(teams[2], gid) for gid, teams in group_standings.items()]
     all_thirds_sorted = sorted(
         all_thirds,
-        key=lambda x: (all_expected_pts[x[0]], -(get_fifa_rank(x[0]) or 999)),
+        key=lambda x: (
+            all_expected_pts[x[0]],
+            -(get_fifa_rank(x[0]) or 999),
+        ),
         reverse=True,
     )
     best_thirds = all_thirds_sorted[:8]
@@ -469,6 +488,28 @@ def predict_bracket(prob_cache: ProbCache) -> dict:
         })
     rounds_out.append({"round": "Semi-Final", "matches": sf_matches})
 
+    # --- 3rd Place Playoff ---
+    sf_losers = []
+    for i in range(len(WC2026_SF_PAIRS)):
+        t1 = sf_matches[i]["team1"]
+        t2 = sf_matches[i]["team2"]
+        sf_losers.append(t2 if match_winners[101 + i] == t1 else t1)
+
+    tp1, tp2 = sf_losers[0], sf_losers[1]
+    p1_tp, p2_tp = _knockout_neutral_probs(tp1, tp2, prob_cache)
+    third_place_winner = tp1 if p1_tp >= p2_tp else tp2
+    rounds_out.append({
+        "round": "3rd Place Playoff",
+        "matches": [{
+            "match_id": "third_place",
+            "round": "3rd Place Playoff",
+            "team1": tp1, "team2": tp2,
+            "team1_win_prob": round(p1_tp, 4),
+            "team2_win_prob": round(p2_tp, 4),
+            "predicted_winner": third_place_winner,
+        }],
+    })
+
     # --- Final ---
     finalist1, finalist2 = match_winners[101], match_winners[102]
     p1, p2 = _knockout_neutral_probs(finalist1, finalist2, prob_cache)
@@ -502,7 +543,7 @@ def run_simulation(
 ) -> dict:
     """Run n simulations. Pre-computes all match probabilities once before the loop."""
     all_teams = {t: g["id"] for g in WC2026_GROUPS for t in g["teams"]}
-    stage_keys = ["group_exit", "round_of_32", "quarter_final", "semi_final", "final", "champion"]
+    stage_keys = ["group_exit", "round_of_32", "round_of_16", "quarter_final", "semi_final", "third_place", "final", "champion"]
     counts: dict[str, dict[str, int]] = {t: {s: 0 for s in stage_keys} for t in all_teams}
 
     # Single batched model call covering all 48×47 pairs — O(1) lookups during simulation

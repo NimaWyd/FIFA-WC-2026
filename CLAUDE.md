@@ -126,6 +126,12 @@ Next.js 14 (App Router), TypeScript, Tailwind CSS, Framer Motion, Headless UI, f
 - `precompute_all_probabilities` batches all 48×47 ordered team-pair feature rows into a single `model.predict_proba` call, caching `{(home, away): {home_win, draw, away_win}}` for O(1) lookups during simulation.
 - **Group stage and knockout rounds both randomize home/away per simulation run** (coin-flip on `h, a = a, h`) to cancel the model's learned home-advantage artifact on neutral-ground matches (issues #109, #117). Do not remove this randomization.
 - Knockout tiebreaking: draws split 50/50 between the two teams (no penalty shootout modelled yet — issue #87).
+- **3rd-place team assignment** uses a backtracking CSP (`_assign_third_place_teams`) ordered most-constrained-first against `eligible_groups` from `wc2026_bracket.py`. Raises `RuntimeError` if no valid assignment exists (indicates broken constraints).
+- **3rd-place tiebreaker** order: pts → gd → gf → FIFA rank (lower rank = better). Applied in both `simulate_once()` and `predict_bracket()`.
+- **Stage keys** (issues #131, #132): `["group_exit", "round_of_32", "round_of_16", "quarter_final", "semi_final", "third_place", "final", "champion"]`. R16 losers are labeled `"round_of_16"` (not `"round_of_32"`). SF losers play a 3rd place playoff; the playoff winner gets `"third_place"`.
+- `predict_bracket()` outputs a `"3rd Place Playoff"` round between the two predicted SF losers, inserted between `"Semi-Final"` and `"Final"`.
 - Run via `GET /api/v1/simulate?n=1000` or directly: `python -m src.simulation.tournament`
 
 **`wc2026_bracket.py`** — Static group definitions and R32 bracket slots. Group home/away labels are only used as starting identifiers; the simulation randomizes them each run.
+
+**Simulation cache TTL (issue #130):** `_simulation_cache` and `_bracket_cache` in `services.py` expire after **3600 seconds (1 hour)**. `invalidate_data_caches()` resets both immediately. Do not remove the TTL check — without it, stale odds from an early cold-start get frozen indefinitely.

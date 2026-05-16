@@ -67,7 +67,7 @@ def test_simulate_once_returns_all_48_teams():
 
 def test_simulate_once_returns_valid_stages():
     from src.simulation.tournament import simulate_once
-    valid_stages = {"group_exit", "round_of_32", "quarter_final", "semi_final", "final", "champion"}
+    valid_stages = {"group_exit", "round_of_32", "round_of_16", "quarter_final", "semi_final", "third_place", "final", "champion"}
     rng = np.random.default_rng(42)
     result = simulate_once(_make_stub_tracker(), None, {}, rng, prob_cache=_make_stub_prob_cache())
     for team, stage in result.items():
@@ -89,7 +89,8 @@ def test_run_simulation_probabilities_sum_to_one_per_team():
     for team_result in results["teams"]:
         total = (
             team_result["group_exit"] + team_result["round_of_32"] +
-            team_result["quarter_final"] + team_result["semi_final"] +
+            team_result["round_of_16"] + team_result["quarter_final"] +
+            team_result["semi_final"] + team_result["third_place"] +
             team_result["final"] + team_result["champion"]
         )
         assert abs(total - 1.0) < 0.01, f"{team_result['team']} probs sum to {total}"

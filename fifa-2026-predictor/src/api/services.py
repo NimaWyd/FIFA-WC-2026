@@ -47,9 +47,13 @@ _cfg: Optional[dict] = None
 _tournament_model: Any = None
 _tournament_model_loaded: bool = False
 _simulation_cache: Optional[dict] = None
+_simulation_cache_ts: float = 0.0
 _bracket_cache: Optional[dict] = None
+_bracket_cache_ts: float = 0.0
 _squad_ratings: dict = {}
 _squad_ratings_loaded: bool = False
+
+_CACHE_TTL_SECONDS: float = 3600.0
 
 
 def _get_squad_ratings() -> dict:
@@ -62,10 +66,12 @@ def _get_squad_ratings() -> dict:
 
 def invalidate_data_caches() -> None:
     """Reset history and simulation caches so the next request reloads fresh data."""
-    global _history_df, _simulation_cache, _bracket_cache, _squad_ratings, _squad_ratings_loaded
+    global _history_df, _simulation_cache, _simulation_cache_ts, _bracket_cache, _bracket_cache_ts, _squad_ratings, _squad_ratings_loaded
     _history_df = None
     _simulation_cache = None
+    _simulation_cache_ts = 0.0
     _bracket_cache = None
+    _bracket_cache_ts = 0.0
     _squad_ratings = {}
     _squad_ratings_loaded = False
 
@@ -113,9 +119,10 @@ def _get_tournament_model() -> Any:
 
 
 def simulate(n: int = 1000) -> dict:
-    """Run tournament simulation (cached for server lifetime)."""
-    global _simulation_cache
-    if _simulation_cache is not None:
+    """Run tournament simulation (cached with 1-hour TTL)."""
+    import time
+    global _simulation_cache, _simulation_cache_ts
+    if _simulation_cache is not None and (time.time() - _simulation_cache_ts) < _CACHE_TTL_SECONDS:
         return _simulation_cache
 
     model = _get_model()
@@ -129,13 +136,15 @@ def simulate(n: int = 1000) -> dict:
     from src.simulation.tournament import build_tournament_states, run_simulation
     tracker = build_tournament_states(history_df, cfg)
     _simulation_cache = run_simulation(tracker, model, cfg, n=n, squad_ratings=_get_squad_ratings())
+    _simulation_cache_ts = time.time()
     return _simulation_cache
 
 
 def predict_bracket() -> dict:
-    """Deterministically predict the full WC2026 bracket (cached for server lifetime)."""
-    global _bracket_cache
-    if _bracket_cache is not None:
+    """Deterministically predict the full WC2026 bracket (cached with 1-hour TTL)."""
+    import time
+    global _bracket_cache, _bracket_cache_ts
+    if _bracket_cache is not None and (time.time() - _bracket_cache_ts) < _CACHE_TTL_SECONDS:
         return _bracket_cache
 
     model = _get_model()
@@ -154,6 +163,7 @@ def predict_bracket() -> dict:
     tracker = build_tournament_states(history_df, cfg)
     prob_cache = precompute_all_probabilities(tracker, model, cfg, squad_ratings=_get_squad_ratings())
     _bracket_cache = _predict_bracket(prob_cache)
+    _bracket_cache_ts = time.time()
     return _bracket_cache
 
 
