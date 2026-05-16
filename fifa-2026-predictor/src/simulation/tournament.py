@@ -14,6 +14,7 @@ from src.features.state_tracker import TeamStateTracker
 from src.simulation.wc2026_bracket import (
     WC2026_GROUPS, WC2026_R32,
     WC2026_R16_PAIRS, WC2026_QF_PAIRS, WC2026_SF_PAIRS,
+    _THIRD_PLACE_LOOKUP,
 )
 
 _TOURNAMENT_DATE = pd.Timestamp("2026-06-11")
@@ -153,37 +154,16 @@ def _compute_group_standings(
 def _assign_third_place_teams(
     best_third: list[tuple[str, str]],  # [(team, group_id), ...]
 ) -> dict[int, str]:
-    """Assign 8 best 3rd-place teams to R32 slots via backtracking CSP.
+    """Assign 8 best 3rd-place teams to R32 slots using the official FIFA Annex C lookup table.
 
-    Slots are ordered most-constrained-first. Backtracks on dead ends.
     Returns {match_number: team}.
     """
-    third_slots = sorted(
-        [(m["match"], m["eligible_groups"]) for m in WC2026_R32 if m["slot2_type"] == "3rd"],
-        key=lambda s: len(s[1]),  # most constrained first
-    )
-
     group_to_team = {group: team for team, group in best_third}
-    qualifying_groups = {group for _, group in best_third}
-
-    def backtrack(slot_idx: int, assigned: dict[int, str], used_groups: set[str]) -> bool:
-        if slot_idx == len(third_slots):
-            return True
-        match_num, eligible_groups = third_slots[slot_idx]
-        candidates = eligible_groups & qualifying_groups - used_groups
-        for group in candidates:
-            assigned[match_num] = group_to_team[group]
-            used_groups.add(group)
-            if backtrack(slot_idx + 1, assigned, used_groups):
-                return True
-            used_groups.discard(group)
-            del assigned[match_num]
-        return False
-
-    assigned: dict[int, str] = {}
-    if not backtrack(0, assigned, set()):
-        raise RuntimeError("No valid 3rd-place assignment found — check eligible_groups constraints.")
-    return assigned
+    qualifying_groups = frozenset(group for _, group in best_third)
+    match_to_group = _THIRD_PLACE_LOOKUP.get(qualifying_groups)
+    if match_to_group is None:
+        raise RuntimeError(f"No FIFA Annex C entry for qualifying groups {sorted(qualifying_groups)}")
+    return {match: group_to_team[group] for match, group in match_to_group.items()}
 
 
 def _knockout_winner(home: str, away: str, prob_cache: ProbCache, rng: np.random.Generator) -> tuple[str, str]:
