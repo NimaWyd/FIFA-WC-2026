@@ -10,6 +10,7 @@ import pandas as pd
 
 from src.data.schema import ensure_match_schema
 from src.data.team_identity import CANONICAL_TEAMS
+from src.data.wc2026_venues import altitude_from_city
 from src.features.elo import rank_to_starting_elo
 from src.features.match_row_builder import build_match_row
 from src.features.registry import get_registry
@@ -87,6 +88,12 @@ def build_feature_table(
         competition = str(row.competition)
         tournament_stage = str(getattr(row, "tournament_stage", "Unknown"))
 
+        # Build a minimal venue dict from city altitude when available.
+        # Historical data doesn't carry dome/capacity, so those default to 0.
+        city = str(getattr(row, "city", "")) if hasattr(row, "city") else ""
+        alt = altitude_from_city(city) if city else 0
+        venue_dict: "dict | None" = {"altitude_m": alt, "is_dome": 0, "capacity": 0} if alt > 0 else None
+
         record = build_match_row(
             tracker=tracker,
             home_team=home_team,
@@ -102,6 +109,7 @@ def build_feature_table(
             h2h_window=h2h_window,
             elo_inactivity_halflife=elo_inactivity_halflife,
             squad_ratings=squad_ratings,
+            venue=venue_dict,
         )
         # Registry: merge any extra features from enabled blocks.
         # The player_aggregate block is disabled by default; enabling it
@@ -145,6 +153,7 @@ def build_feature_table(
                 h2h_window=h2h_window,
                 elo_inactivity_halflife=elo_inactivity_halflife,
                 squad_ratings=squad_ratings,
+                venue=venue_dict,
             )
             aug["home_score"] = int(row.away_score)
             aug["away_score"] = int(row.home_score)

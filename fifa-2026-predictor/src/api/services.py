@@ -348,6 +348,9 @@ def predict(
     is_neutral = neutral if neutral is not None else default_neutral
     stage = tournament_stage or "Unknown"
 
+    # Look up WC2026 venue early so its altitude/dome/capacity become ML features.
+    venue = lookup_venue(home_canonical, away_canonical, match_date)
+
     # Build the feature row using the shared pipeline — no logic duplicated here
     feature_row = build_pre_match_row(
         history_df=history_df,
@@ -363,6 +366,7 @@ def predict(
         tournament_stage=stage,
         cfg=cfg,
         squad_ratings=_get_squad_ratings(),
+        venue=venue,
     )
 
     cfg_min = int(cfg["model"].get("tournament_model_min_weight", 3))
@@ -398,6 +402,7 @@ def predict(
             tournament_stage=stage,
             cfg=cfg,
             squad_ratings=_get_squad_ratings(),
+            venue=venue,
         )
         probs_swapped_raw = model.predict_proba(swapped_row)[0]
         prob_swapped = {int(c): float(p) for c, p in zip(clf.classes_, probs_swapped_raw)}
@@ -448,8 +453,6 @@ def predict(
     explanation = _build_explanation(row, home_rank, away_rank)
 
     model_type = "xgboost" if "xgb" in _model_artifact_name else "logistic_regression"
-
-    venue = lookup_venue(home_canonical, away_canonical, match_date)
 
     return {
         "home_team": home_canonical,

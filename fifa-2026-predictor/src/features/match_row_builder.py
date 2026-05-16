@@ -27,6 +27,12 @@ Issue #50
 - When enabled, home/away_elo_effective regresses toward 1500 as rest_days
   increases: elo_effective = 1500 + (elo - 1500) * exp(-rest_days / halflife).
   Emits home_elo_effective, away_elo_effective, elo_diff_effective.
+
+Issue #125
+----------
+- Added venue parameter (dict | None). When provided, emits venue_altitude_m,
+  venue_is_dome, venue_capacity. Defaults to 0 when venue is None (historical
+  matches without venue info).
 """
 
 from __future__ import annotations
@@ -79,6 +85,7 @@ def build_match_row(
     h2h_window: int = 10,
     elo_inactivity_halflife: float = 0.0,
     squad_ratings: "dict[str, dict[str, float]] | None" = None,
+    venue: "dict | None" = None,
 ) -> dict[str, Any]:
     """Return a pre-match feature dict from the current tracker state.
 
@@ -342,5 +349,10 @@ def build_match_row(
         record["squad_rating_diff"] = h_avg - a_avg
         record["home_top_player_rating"] = h_sq.get("top_player_rating", _DEFAULT_SQ + 5.0)
         record["away_top_player_rating"] = a_sq.get("top_player_rating", _DEFAULT_SQ + 5.0)
+
+    # --- Issue #125: venue features ---
+    record["venue_altitude_m"] = float(venue["altitude_m"]) if venue else 0.0
+    record["venue_is_dome"] = int(venue["is_dome"]) if venue else 0
+    record["venue_capacity"] = float(venue["capacity"]) if venue else 0.0
 
     return record
