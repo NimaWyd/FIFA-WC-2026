@@ -592,19 +592,13 @@ def _get_accuracy_metrics() -> dict[str, Any] | None:
     try:
         with open(eval_path) as f:
             records = json.load(f)
-        target = "ensemble" if "ensemble" in _model_artifact_name else "xgboost" if "xgb" in _model_artifact_name else "logreg"
-        for rec in records:
-            if rec.get("model") == target:
-                cm = rec.get("confusion_matrix", [])
-                test_rows = sum(sum(row) for row in cm) if cm else 0
-                return {
-                    "accuracy": rec["accuracy"],
-                    "brier_score": rec["brier_score"],
-                    "log_loss": rec["log_loss"],
-                    "test_rows": test_rows,
-                }
-        # fall back to first record if target not found
-        rec = records[0]
+        # Ensemble metrics not separately evaluated — fall back to xgboost as the backbone
+        priority = ["ensemble", "xgboost", "logreg"] if "ensemble" in _model_artifact_name else \
+                   ["xgboost", "logreg"] if "xgb" in _model_artifact_name else ["logreg"]
+        by_name = {r["model"]: r for r in records}
+        rec = next((by_name[k] for k in priority if k in by_name), None)
+        if rec is None:
+            return None
         cm = rec.get("confusion_matrix", [])
         return {
             "accuracy": rec["accuracy"],
