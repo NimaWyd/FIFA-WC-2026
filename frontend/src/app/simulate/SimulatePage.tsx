@@ -9,11 +9,12 @@ import type { BracketMatch, BracketRound, TeamSimResult } from "@/lib/types";
 
 // ─── Round tab labels ─────────────────────────────────────────────────────────
 const ROUND_LABELS: Record<string, string> = {
-  "Round of 32":   "R32",
-  "Round of 16":   "R16",
-  "Quarter-Final": "QF",
-  "Semi-Final":    "SF",
-  "Final":         "Final",
+  "Round of 32":      "R32",
+  "Round of 16":      "R16",
+  "Quarter-Final":    "QF",
+  "Semi-Final":       "SF",
+  "3rd Place Playoff":"3rd Place",
+  "Final":            "Final",
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
