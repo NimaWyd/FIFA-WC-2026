@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useRef, useLayoutEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useRef, useLayoutEffect, useEffect } from "react";
+import { motion, AnimatePresence, useMotionValue, useTransform, animate } from "framer-motion";
 import FlagIcon from "@/components/FlagIcon";
 import { useBracket } from "@/hooks/useBracket";
 import { useSimulation } from "@/hooks/useSimulation";
@@ -383,31 +383,192 @@ function FinalCard({ match }: { match: BracketMatch }) {
   );
 }
 
+// ─── Animated number counter for champion odds ───────────────────────────────
+function AnimatedOdds({ value }: { value: number }) {
+  const count = useMotionValue(0);
+  const display = useTransform(count, (v) => (v * 100).toFixed(1) + "%");
+  useEffect(() => {
+    const ctrl = animate(count, value, { duration: 1.4, delay: 0.65, ease: [0.16, 1, 0.3, 1] });
+    return ctrl.stop;
+  }, [count, value]);
+  return <motion.span className="text-base font-black text-gold-400 tabular-nums">{display}</motion.span>;
+}
+
 // ─── Champion banner ──────────────────────────────────────────────────────────
-function ChampionBanner({ champion }: { champion: string }) {
+const CHAMPION_PARTICLES = [
+  { id: 0, x: 6,  y: 70, size: 2.5, delay: 0.0, dur: 3.2 },
+  { id: 1, x: 16, y: 38, size: 2.0, delay: 0.9, dur: 2.8 },
+  { id: 2, x: 78, y: 28, size: 2.5, delay: 1.4, dur: 3.5 },
+  { id: 3, x: 86, y: 65, size: 2.0, delay: 0.5, dur: 2.6 },
+  { id: 4, x: 93, y: 18, size: 3.0, delay: 1.8, dur: 3.0 },
+  { id: 5, x: 72, y: 82, size: 2.0, delay: 0.3, dur: 2.9 },
+  { id: 6, x: 24, y: 88, size: 2.5, delay: 1.2, dur: 3.4 },
+  { id: 7, x: 50, y: 8,  size: 2.0, delay: 2.1, dur: 2.7 },
+];
+
+function ChampionBanner({ champion, championOdds }: { champion: string; championOdds?: number }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-      className="relative flex items-center gap-4 rounded-2xl px-6 py-4 overflow-hidden"
+      initial={{ opacity: 0, y: 16, scale: 0.97 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.5, ease: [0.21, 1.02, 0.73, 1.0] }}
+      className="relative w-full rounded-3xl overflow-hidden"
       style={{
-        background: "linear-gradient(135deg, rgba(197,130,39,0.18) 0%, rgba(14,16,32,1) 60%)",
+        background: "linear-gradient(160deg, rgba(30,22,4,1) 0%, rgba(14,16,32,1) 55%, rgba(10,12,24,1) 100%)",
         border:     "1.5px solid rgba(245,200,66,0.28)",
-        boxShadow:  "0 0 40px rgba(245,200,66,0.05)",
+        boxShadow:  "0 0 80px rgba(245,200,66,0.07), 0 0 160px rgba(245,200,66,0.03), inset 0 1px 0 rgba(245,200,66,0.10)",
       }}
     >
-      <div className="pointer-events-none absolute left-0 top-0 w-40 h-full">
-        <div className="absolute inset-0 bg-gold-500/[0.07] blur-2xl rounded-2xl" />
-      </div>
-      <span className="text-3xl shrink-0 relative">🏆</span>
-      <div className="relative">
-        <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-gold-500/60 mb-0.5">Predicted Champion</div>
-        <div className="flex items-center gap-2.5">
-          <FlagIcon team={champion} className="w-8 h-[21px] rounded-sm shadow" />
-          <span className="text-xl font-bold text-white">{champion}</span>
+      {/* Ambient radial glow */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{ background: "radial-gradient(ellipse 70% 60% at 50% 0%, rgba(245,200,66,0.09) 0%, transparent 70%)" }}
+      />
+
+      {/* Pulsing border glow */}
+      <motion.div
+        className="pointer-events-none absolute inset-0 rounded-3xl"
+        animate={{ opacity: [0.4, 1, 0.4] }}
+        transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+        style={{ boxShadow: "0 0 60px rgba(245,200,66,0.1), inset 0 0 0 1.5px rgba(245,200,66,0.18)" }}
+      />
+
+      {/* One-shot shimmer sweep on mount */}
+      <motion.div
+        initial={{ x: "-140%" }}
+        animate={{ x: "240%" }}
+        transition={{ delay: 0.7, duration: 1.1, ease: "easeInOut" }}
+        className="pointer-events-none absolute inset-y-0 w-1/2"
+        style={{
+          background: "linear-gradient(90deg, transparent 0%, rgba(245,200,66,0.06) 40%, rgba(255,255,255,0.05) 50%, rgba(245,200,66,0.06) 60%, transparent 100%)",
+        }}
+      />
+
+      {/* Floating gold particles */}
+      {CHAMPION_PARTICLES.map(p => (
+        <motion.div
+          key={p.id}
+          className="pointer-events-none absolute rounded-full bg-gold-400"
+          style={{ left: `${p.x}%`, top: `${p.y}%`, width: p.size, height: p.size }}
+          animate={{ y: [0, -18, 0], opacity: [0, 0.55, 0] }}
+          transition={{ duration: p.dur, delay: p.delay, repeat: Infinity, ease: "easeInOut" }}
+        />
+      ))}
+
+      {/* Content */}
+      <div className="relative z-10 flex flex-col items-center py-10 px-6 text-center gap-5">
+        {/* Eyebrow */}
+        <div className="flex items-center gap-3">
+          <motion.div
+            initial={{ scaleX: 0, opacity: 0 }}
+            animate={{ scaleX: 1, opacity: 1 }}
+            transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
+            className="h-px w-10 bg-gradient-to-r from-transparent to-gold-500/40"
+            style={{ transformOrigin: "right center" }}
+          />
+          <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-gold-500/60">
+            FIFA World Cup 2026 · Predicted Champion
+          </span>
+          <motion.div
+            initial={{ scaleX: 0, opacity: 0 }}
+            animate={{ scaleX: 1, opacity: 1 }}
+            transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
+            className="h-px w-10 bg-gradient-to-l from-transparent to-gold-500/40"
+            style={{ transformOrigin: "left center" }}
+          />
         </div>
+
+        {/* Trophy — spring entrance, then continuous float */}
+        <div className="relative">
+          <div
+            className="pointer-events-none absolute inset-0 blur-2xl"
+            style={{ background: "radial-gradient(circle, rgba(245,200,66,0.3) 0%, transparent 65%)", transform: "scale(2.2)" }}
+          />
+          <motion.div
+            initial={{ scale: 0, rotate: -20, opacity: 0 }}
+            animate={{ scale: 1, rotate: 0, opacity: 1, y: [0, -6, 0] }}
+            transition={{
+              scale:   { delay: 0.1, duration: 0.55, type: "spring", stiffness: 240, damping: 16 },
+              rotate:  { delay: 0.1, duration: 0.55, type: "spring", stiffness: 240, damping: 16 },
+              opacity: { delay: 0.1, duration: 0.2 },
+              y:       { delay: 0.8, duration: 3.5, repeat: Infinity, ease: "easeInOut" },
+            }}
+          >
+            <span className="text-5xl" style={{ filter: "drop-shadow(0 0 16px rgba(245,200,66,0.55))" }}>🏆</span>
+          </motion.div>
+        </div>
+
+        {/* Flag with expanding pulse rings */}
+        <motion.div
+          initial={{ scale: 0.75, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 0.3, duration: 0.45, type: "spring", stiffness: 180, damping: 16 }}
+          className="relative"
+        >
+          {[0, 1].map(i => (
+            <motion.div
+              key={i}
+              className="absolute inset-0 rounded-lg border border-gold-500/25"
+              animate={{ scale: [1, 1.5 + i * 0.25], opacity: [0.45, 0] }}
+              transition={{ duration: 2.0, delay: 0.5 + i * 1.0, repeat: Infinity, ease: "easeOut" }}
+            />
+          ))}
+          <div style={{ filter: "drop-shadow(0 6px 18px rgba(0,0,0,0.55)) drop-shadow(0 0 22px rgba(245,200,66,0.2))" }}>
+            <FlagIcon team={champion} className="w-24 h-16 rounded-lg" />
+          </div>
+          <div className="absolute inset-0 rounded-lg pointer-events-none" style={{ boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.13)" }} />
+        </motion.div>
+
+        {/* Team name with star accents */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.4 }}
+          className="flex items-center gap-3"
+        >
+          <motion.span
+            className="text-gold-500/35 text-sm select-none"
+            animate={{ opacity: [0.35, 0.75, 0.35], scale: [1, 1.35, 1] }}
+            transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+          >★</motion.span>
+          <h2
+            className="font-anton text-4xl md:text-5xl text-white tracking-wide leading-none"
+            style={{ textShadow: "0 0 48px rgba(245,200,66,0.22), 0 2px 8px rgba(0,0,0,0.4)" }}
+          >
+            {champion}
+          </h2>
+          <motion.span
+            className="text-gold-500/35 text-sm select-none"
+            animate={{ opacity: [0.35, 0.75, 0.35], scale: [1, 1.35, 1] }}
+            transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut", delay: 1.2 }}
+          >★</motion.span>
+        </motion.div>
+
+        {/* Champion probability badge */}
+        {championOdds !== undefined && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.5, duration: 0.3 }}
+            className="flex items-center gap-2.5 px-4 py-1.5 rounded-full"
+            style={{
+              background: "rgba(245,200,66,0.08)",
+              border:     "1px solid rgba(245,200,66,0.22)",
+            }}
+          >
+            <span className="text-[11px] font-semibold uppercase tracking-widest text-gold-500/60">
+              Champion Probability
+            </span>
+            <AnimatedOdds value={championOdds} />
+          </motion.div>
+        )}
       </div>
+
+      {/* Bottom shimmer line */}
+      <div
+        className="absolute bottom-0 left-0 right-0 h-px"
+        style={{ background: "linear-gradient(90deg, transparent 0%, rgba(245,200,66,0.25) 30%, rgba(245,200,66,0.45) 50%, rgba(245,200,66,0.25) 70%, transparent 100%)" }}
+      />
     </motion.div>
   );
 }
@@ -600,7 +761,10 @@ export default function SimulatePage() {
         {bracket.data && (
           <>
             {/* ── Champion banner ── */}
-            <ChampionBanner champion={bracket.data.champion} />
+            <ChampionBanner
+              champion={bracket.data.champion}
+              championOdds={simulation.data?.teams.find(t => t.team === bracket.data!.champion)?.champion}
+            />
 
             {/* ── Visual bracket diagram (desktop only) ── */}
             <section className="hidden md:block">
