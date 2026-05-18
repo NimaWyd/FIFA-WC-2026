@@ -142,6 +142,7 @@ def test_predict_bracket_modal_returns_correct_structure():
     assert "Round of 16" in round_names
     assert "Quarter-Final" in round_names
     assert "Semi-Final" in round_names
+    assert "3rd Place Playoff" in round_names
     assert "Final" in round_names
 
 

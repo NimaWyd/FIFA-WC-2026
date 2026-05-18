@@ -23,6 +23,11 @@ _COMPETITION = "FIFA World Cup"
 # Type alias for the pre-computed probability cache
 ProbCache = dict[tuple[str, str], dict[str, float]]
 
+# Visual reorder for R16: groups by which SF half they feed.
+# Left half (→ QF97+QF98 → SF101): R16-89,90,93,96 (indices 0,1,4,7)
+# Right half (→ QF99+QF100 → SF102): R16-91,92,94,95 (indices 2,3,5,6)
+_R16_VIS = [0, 1, 4, 7, 2, 3, 5, 6]
+
 
 def build_tournament_states(history_df: pd.DataFrame, cfg: dict) -> TeamStateTracker:
     """Replay all match history before the tournament start; return the tracker snapshot."""
@@ -438,10 +443,7 @@ def predict_bracket(prob_cache: ProbCache) -> dict:
             "team2_win_prob": round(p2, 4),
             "predicted_winner": predicted_winner,
         })
-    # Reorder for visual bracket alignment: group by which SF half they feed.
-    # Left half (→ QF97+QF98 → SF101): R16-89,90,93,96 (indices 0,1,4,7)
-    # Right half (→ QF99+QF100 → SF102): R16-91,92,94,95 (indices 2,3,5,6)
-    _R16_VIS = [0, 1, 4, 7, 2, 3, 5, 6]
+    # Reorder for visual bracket alignment (see module-level _R16_VIS).
     rounds_out.append({"round": "Round of 16", "matches": [r16_matches[i] for i in _R16_VIS]})
 
     # --- Quarter-Finals ---
@@ -561,14 +563,6 @@ def predict_bracket_modal(modal_match_winners: dict[int, str], prob_cache: ProbC
     best_thirds = all_thirds_sorted[:8]
     third_assignments = _assign_third_place_teams(best_thirds)
 
-    def _modal_winner(slot: int, team1: str, team2: str) -> str:
-        """Return modal simulation winner for this slot; fall back to higher-prob if absent."""
-        modal = modal_match_winners.get(slot)
-        if modal in (team1, team2):
-            return modal
-        p1, p2 = _knockout_neutral_probs(team1, team2, prob_cache)
-        return team1 if p1 >= p2 else team2
-
     # --- Round of 32 ---
     match_predicted: dict[int, str] = {}
     r32_matches = []
@@ -580,7 +574,9 @@ def predict_bracket_modal(modal_match_winners: dict[int, str], prob_cache: ProbC
             else third_assignments.get(slot["match"], best_thirds[0][0])
         )
         p1, p2 = _knockout_neutral_probs(team1, team2, prob_cache)
-        predicted_winner = _modal_winner(slot["match"], team1, team2)
+        predicted_winner = modal_match_winners.get(slot["match"])
+        if predicted_winner not in (team1, team2):
+            predicted_winner = team1 if p1 >= p2 else team2
         match_predicted[slot["match"]] = predicted_winner
         r32_matches.append({
             "match_id": f"r32_{slot['match']}",
@@ -597,7 +593,9 @@ def predict_bracket_modal(modal_match_winners: dict[int, str], prob_cache: ProbC
     for i, (ma, mb) in enumerate(WC2026_R16_PAIRS):
         team1, team2 = match_predicted[ma], match_predicted[mb]
         p1, p2 = _knockout_neutral_probs(team1, team2, prob_cache)
-        predicted_winner = _modal_winner(89 + i, team1, team2)
+        predicted_winner = modal_match_winners.get(89 + i)
+        if predicted_winner not in (team1, team2):
+            predicted_winner = team1 if p1 >= p2 else team2
         match_predicted[89 + i] = predicted_winner
         r16_matches.append({
             "match_id": f"r16_{i + 1}",
@@ -607,8 +605,7 @@ def predict_bracket_modal(modal_match_winners: dict[int, str], prob_cache: ProbC
             "team2_win_prob": round(p2, 4),
             "predicted_winner": predicted_winner,
         })
-    # Reorder for visual bracket alignment (same as predict_bracket)
-    _R16_VIS = [0, 1, 4, 7, 2, 3, 5, 6]
+    # Reorder for visual bracket alignment (see module-level _R16_VIS).
     rounds_out.append({"round": "Round of 16", "matches": [r16_matches[i] for i in _R16_VIS]})
 
     # --- Quarter-Finals ---
@@ -616,7 +613,9 @@ def predict_bracket_modal(modal_match_winners: dict[int, str], prob_cache: ProbC
     for i, (ma, mb) in enumerate(WC2026_QF_PAIRS):
         team1, team2 = match_predicted[ma], match_predicted[mb]
         p1, p2 = _knockout_neutral_probs(team1, team2, prob_cache)
-        predicted_winner = _modal_winner(97 + i, team1, team2)
+        predicted_winner = modal_match_winners.get(97 + i)
+        if predicted_winner not in (team1, team2):
+            predicted_winner = team1 if p1 >= p2 else team2
         match_predicted[97 + i] = predicted_winner
         qf_matches.append({
             "match_id": f"qf_{i + 1}",
@@ -633,7 +632,9 @@ def predict_bracket_modal(modal_match_winners: dict[int, str], prob_cache: ProbC
     for i, (ma, mb) in enumerate(WC2026_SF_PAIRS):
         team1, team2 = match_predicted[ma], match_predicted[mb]
         p1, p2 = _knockout_neutral_probs(team1, team2, prob_cache)
-        predicted_winner = _modal_winner(101 + i, team1, team2)
+        predicted_winner = modal_match_winners.get(101 + i)
+        if predicted_winner not in (team1, team2):
+            predicted_winner = team1 if p1 >= p2 else team2
         match_predicted[101 + i] = predicted_winner
         sf_matches.append({
             "match_id": f"sf_{i + 1}",
@@ -653,7 +654,9 @@ def predict_bracket_modal(modal_match_winners: dict[int, str], prob_cache: ProbC
         sf_losers.append(t2 if match_predicted[101 + i] == t1 else t1)
     tp1, tp2 = sf_losers[0], sf_losers[1]
     p1_tp, p2_tp = _knockout_neutral_probs(tp1, tp2, prob_cache)
-    third_place_winner = _modal_winner(104, tp1, tp2)
+    third_place_winner = modal_match_winners.get(104)
+    if third_place_winner not in (tp1, tp2):
+        third_place_winner = tp1 if p1_tp >= p2_tp else tp2
     rounds_out.append({
         "round": "3rd Place Playoff",
         "matches": [{
@@ -669,7 +672,9 @@ def predict_bracket_modal(modal_match_winners: dict[int, str], prob_cache: ProbC
     # --- Final ---
     finalist1, finalist2 = match_predicted[101], match_predicted[102]
     p1, p2 = _knockout_neutral_probs(finalist1, finalist2, prob_cache)
-    champion = _modal_winner(103, finalist1, finalist2)
+    champion = modal_match_winners.get(103)
+    if champion not in (finalist1, finalist2):
+        champion = finalist1 if p1 >= p2 else finalist2
     rounds_out.append({
         "round": "Final",
         "matches": [{
