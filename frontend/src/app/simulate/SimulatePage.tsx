@@ -761,10 +761,19 @@ export default function SimulatePage() {
         {bracket.data && (
           <>
             {/* ── Champion banner ── */}
-            <ChampionBanner
-              champion={bracket.data.champion}
-              championOdds={simulation.data?.teams.find(t => t.team === bracket.data!.champion)?.champion}
-            />
+            {(() => {
+              const simChampion = simulation.data
+                ? [...simulation.data.teams].sort((a, b) => b.champion - a.champion)[0]
+                : null;
+              const bannerTeam = simChampion?.team ?? bracket.data.champion;
+              const bannerOdds = simChampion?.champion;
+              return (
+                <ChampionBanner
+                  champion={bannerTeam}
+                  championOdds={bannerOdds}
+                />
+              );
+            })()}
 
             {/* ── Visual bracket diagram (desktop only) ── */}
             <section className="hidden md:block">
