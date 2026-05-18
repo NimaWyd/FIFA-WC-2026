@@ -24,9 +24,9 @@ _COMPETITION = "FIFA World Cup"
 ProbCache = dict[tuple[str, str], dict[str, float]]
 
 # Visual reorder for R16: groups by which SF half they feed.
-# Left half (→ QF97+QF98 → SF101): R16-89,90,93,96 (indices 0,1,4,7)
-# Right half (→ QF99+QF100 → SF102): R16-91,92,94,95 (indices 2,3,5,6)
-_R16_VIS = [0, 1, 4, 7, 2, 3, 5, 6]
+# Left half (→ QF97+QF98 → SF101): R16-89,90,93,94 (indices 0,1,4,5)
+# Right half (→ QF99+QF100 → SF102): R16-91,92,95,96 (indices 2,3,6,7)
+_R16_VIS = [0, 1, 4, 5, 2, 3, 6, 7]
 
 
 def build_tournament_states(history_df: pd.DataFrame, cfg: dict) -> TeamStateTracker:
