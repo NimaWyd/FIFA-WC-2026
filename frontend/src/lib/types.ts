@@ -98,10 +98,24 @@ export interface TeamSimResult {
   group: string;
   group_exit: number;
   round_of_32: number;
+  round_of_16: number;
   quarter_final: number;
   semi_final: number;
+  third_place: number;
   final: number;
   champion: number;
+}
+
+/** P(team reaches at least this stage) — use these for all display purposes */
+export function reachProb(t: TeamSimResult, stage: "r32" | "r16" | "qf" | "sf" | "final" | "champion"): number {
+  switch (stage) {
+    case "r32":     return 1 - t.group_exit;
+    case "r16":     return 1 - t.group_exit - t.round_of_32;
+    case "qf":      return 1 - t.group_exit - t.round_of_32 - t.round_of_16;
+    case "sf":      return t.semi_final + t.third_place + t.final + t.champion;
+    case "final":   return t.final + t.champion;
+    case "champion":return t.champion;
+  }
 }
 
 export interface SimulationResponse {
