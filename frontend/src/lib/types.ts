@@ -110,9 +110,9 @@ export interface TeamSimResult {
 export function reachProb(t: TeamSimResult, stage: "r32" | "r16" | "qf" | "sf" | "final" | "champion"): number {
   switch (stage) {
     case "r32":     return 1 - t.group_exit;
-    case "r16":     return 1 - t.group_exit - t.round_of_32;
-    case "qf":      return 1 - t.group_exit - t.round_of_32 - t.round_of_16;
-    case "sf":      return t.semi_final + t.third_place + t.final + t.champion;
+    case "r16":     return 1 - t.group_exit - (t.round_of_32 ?? 0);
+    case "qf":      return 1 - t.group_exit - (t.round_of_32 ?? 0) - (t.round_of_16 ?? 0);
+    case "sf":      return (t.semi_final ?? 0) + (t.third_place ?? 0) + t.final + t.champion;
     case "final":   return t.final + t.champion;
     case "champion":return t.champion;
   }

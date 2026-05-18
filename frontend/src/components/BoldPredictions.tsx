@@ -92,7 +92,7 @@ function buildCards(teams: TeamSimResult[]): PredCard[] {
 
   /* 4 — Shock exit (top-12 team with highest group_exit%) */
   const shockTeam = [...sorted.slice(0, 12)].sort((a, b) => b.group_exit - a.group_exit)[0];
-  if (shockTeam && shockTeam.group_exit > 0.12) {
+  if (shockTeam && shockTeam.group_exit > 0.20) {
     cards.push({
       id: "shock_exit",
       tag: "Shock Alert",
@@ -103,7 +103,7 @@ function buildCards(teams: TeamSimResult[]): PredCard[] {
       headline: `${display(shockTeam.team)} could crash out early`,
       bigStat: `${(shockTeam.group_exit * 100).toFixed(0)}%`,
       statLabel: "chance of a group-stage exit",
-      sub: `Group ${shockTeam.group}  ·  ${(reachProb(shockTeam, "r32") * 100).toFixed(0)}% to advance`,
+      sub: `Group ${shockTeam.group}  ·  only ${(reachProb(shockTeam, "qf") * 100).toFixed(0)}% to reach QF`,
     });
   }
 
@@ -119,9 +119,9 @@ function buildCards(teams: TeamSimResult[]): PredCard[] {
       glowColor: "rgba(255,255,255,0.025)",
       teams: [f1.team, f2.team],
       headline: `${display(f1.team)} vs ${display(f2.team)}`,
-      bigStat: `${(reachProb(f1, "final") * 100).toFixed(0)} — ${(reachProb(f2, "final") * 100).toFixed(0)}%`,
-      statLabel: "most likely to reach the Final",
-      sub: `${display(f1.team)} ${(f1.champion * 100).toFixed(1)}% to win  ·  ${display(f2.team)} ${(f2.champion * 100).toFixed(1)}% to win`,
+      bigStat: `${(f1.champion * 100).toFixed(1)}% — ${(f2.champion * 100).toFixed(1)}%`,
+      statLabel: "to win the World Cup",
+      sub: `${display(f1.team)} ${(reachProb(f1, "final") * 100).toFixed(0)}% reach Final  ·  ${display(f2.team)} ${(reachProb(f2, "final") * 100).toFixed(0)}% reach Final`,
     });
   }
 
