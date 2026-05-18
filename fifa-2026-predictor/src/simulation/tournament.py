@@ -526,12 +526,19 @@ def predict_bracket(prob_cache: ProbCache) -> dict:
     }
 
 
-def predict_bracket_modal(modal_match_winners: dict[int, str], prob_cache: ProbCache) -> dict:
+def predict_bracket_modal(
+    modal_match_winners: dict[int, str],
+    prob_cache: ProbCache,
+    match_winner_counts: "dict[int, dict[str, int]] | None" = None,
+) -> dict:
     """Build the WC2026 bracket using modal (most-likely) winners from Monte Carlo simulation.
 
     Uses the same group-stage and 3rd-place logic as predict_bracket(), but determines
     the winner of each knockout slot from simulation modal counts rather than raw probabilities.
     Falls back to higher-probability team when modal winner is neither slot team (rare upset paths).
+
+    When match_winner_counts is provided, the Final (slot 103) and 3rd Place (slot 104) match
+    cards display MC-frequency-based probabilities so the champion always appears as the favorite.
     """
     # --- Group stage expected standings (same as predict_bracket) ---
     all_expected_pts: dict[str, float] = {}
@@ -657,6 +664,13 @@ def predict_bracket_modal(modal_match_winners: dict[int, str], prob_cache: ProbC
     third_place_winner = modal_match_winners.get(104)
     if third_place_winner not in (tp1, tp2):
         third_place_winner = tp1 if p1_tp >= p2_tp else tp2
+    # Use MC frequencies for 3rd place display probabilities when available
+    if match_winner_counts and 104 in match_winner_counts:
+        c1 = match_winner_counts[104].get(tp1, 0)
+        c2 = match_winner_counts[104].get(tp2, 0)
+        total = c1 + c2
+        if total > 0:
+            p1_tp, p2_tp = c1 / total, c2 / total
     rounds_out.append({
         "round": "3rd Place Playoff",
         "matches": [{
@@ -675,6 +689,13 @@ def predict_bracket_modal(modal_match_winners: dict[int, str], prob_cache: ProbC
     champion = modal_match_winners.get(103)
     if champion not in (finalist1, finalist2):
         champion = finalist1 if p1 >= p2 else finalist2
+    # Use MC frequencies for Final display probabilities so champion always shows as favorite
+    if match_winner_counts and 103 in match_winner_counts:
+        c1 = match_winner_counts[103].get(finalist1, 0)
+        c2 = match_winner_counts[103].get(finalist2, 0)
+        total = c1 + c2
+        if total > 0:
+            p1, p2 = c1 / total, c2 / total
     rounds_out.append({
         "round": "Final",
         "matches": [{
@@ -746,5 +767,7 @@ def run_simulation(
         "n_simulations": n,
         "teams": teams_out,
         "modal_match_winners": modal_match_winners,
+        # Raw per-slot win counts (popped by services.py before API response)
+        "match_winner_counts": {slot: dict(counter) for slot, counter in match_winner_counts.items()},
         "generated_at": datetime.now(tz=timezone.utc).isoformat().replace("+00:00", "Z"),
     }
