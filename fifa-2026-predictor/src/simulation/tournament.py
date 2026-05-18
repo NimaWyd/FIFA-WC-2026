@@ -524,6 +524,172 @@ def predict_bracket(prob_cache: ProbCache) -> dict:
     }
 
 
+def predict_bracket_modal(modal_match_winners: dict[int, str], prob_cache: ProbCache) -> dict:
+    """Build the WC2026 bracket using modal (most-likely) winners from Monte Carlo simulation.
+
+    Uses the same group-stage and 3rd-place logic as predict_bracket(), but determines
+    the winner of each knockout slot from simulation modal counts rather than raw probabilities.
+    Falls back to higher-probability team when modal winner is neither slot team (rare upset paths).
+    """
+    # --- Group stage expected standings (same as predict_bracket) ---
+    all_expected_pts: dict[str, float] = {}
+    group_standings: dict[str, list[str]] = {}
+    for group in WC2026_GROUPS:
+        exp_pts = {t: 0.0 for t in group["teams"]}
+        for match in group["matches"]:
+            h, a = match["home"], match["away"]
+            p_h, p_d, p_a = _neutral_probs(h, a, prob_cache)
+            exp_pts[h] += p_h * 3 + p_d
+            exp_pts[a] += p_a * 3 + p_d
+        all_expected_pts.update(exp_pts)
+        standings = sorted(
+            group["teams"],
+            key=lambda t: (exp_pts[t], -(get_fifa_rank(t) or 999)),
+            reverse=True,
+        )
+        group_standings[group["id"]] = standings
+
+    winners    = {gid: teams[0] for gid, teams in group_standings.items()}
+    runners_up = {gid: teams[1] for gid, teams in group_standings.items()}
+
+    all_thirds = [(teams[2], gid) for gid, teams in group_standings.items()]
+    all_thirds_sorted = sorted(
+        all_thirds,
+        key=lambda x: (all_expected_pts[x[0]], -(get_fifa_rank(x[0]) or 999)),
+        reverse=True,
+    )
+    best_thirds = all_thirds_sorted[:8]
+    third_assignments = _assign_third_place_teams(best_thirds)
+
+    def _modal_winner(slot: int, team1: str, team2: str) -> str:
+        """Return modal simulation winner for this slot; fall back to higher-prob if absent."""
+        modal = modal_match_winners.get(slot)
+        if modal in (team1, team2):
+            return modal
+        p1, p2 = _knockout_neutral_probs(team1, team2, prob_cache)
+        return team1 if p1 >= p2 else team2
+
+    # --- Round of 32 ---
+    match_predicted: dict[int, str] = {}
+    r32_matches = []
+    for slot in WC2026_R32:
+        team1 = winners[slot["slot1_group"]] if slot["slot1_type"] == "W" else runners_up[slot["slot1_group"]]
+        team2 = (
+            runners_up[slot["slot2_group"]]
+            if slot["slot2_type"] == "RU"
+            else third_assignments.get(slot["match"], best_thirds[0][0])
+        )
+        p1, p2 = _knockout_neutral_probs(team1, team2, prob_cache)
+        predicted_winner = _modal_winner(slot["match"], team1, team2)
+        match_predicted[slot["match"]] = predicted_winner
+        r32_matches.append({
+            "match_id": f"r32_{slot['match']}",
+            "round": "Round of 32",
+            "team1": team1, "team2": team2,
+            "team1_win_prob": round(p1, 4),
+            "team2_win_prob": round(p2, 4),
+            "predicted_winner": predicted_winner,
+        })
+    rounds_out: list[dict] = [{"round": "Round of 32", "matches": r32_matches}]
+
+    # --- Round of 16 ---
+    r16_matches = []
+    for i, (ma, mb) in enumerate(WC2026_R16_PAIRS):
+        team1, team2 = match_predicted[ma], match_predicted[mb]
+        p1, p2 = _knockout_neutral_probs(team1, team2, prob_cache)
+        predicted_winner = _modal_winner(89 + i, team1, team2)
+        match_predicted[89 + i] = predicted_winner
+        r16_matches.append({
+            "match_id": f"r16_{i + 1}",
+            "round": "Round of 16",
+            "team1": team1, "team2": team2,
+            "team1_win_prob": round(p1, 4),
+            "team2_win_prob": round(p2, 4),
+            "predicted_winner": predicted_winner,
+        })
+    # Reorder for visual bracket alignment (same as predict_bracket)
+    _R16_VIS = [0, 1, 4, 7, 2, 3, 5, 6]
+    rounds_out.append({"round": "Round of 16", "matches": [r16_matches[i] for i in _R16_VIS]})
+
+    # --- Quarter-Finals ---
+    qf_matches = []
+    for i, (ma, mb) in enumerate(WC2026_QF_PAIRS):
+        team1, team2 = match_predicted[ma], match_predicted[mb]
+        p1, p2 = _knockout_neutral_probs(team1, team2, prob_cache)
+        predicted_winner = _modal_winner(97 + i, team1, team2)
+        match_predicted[97 + i] = predicted_winner
+        qf_matches.append({
+            "match_id": f"qf_{i + 1}",
+            "round": "Quarter-Final",
+            "team1": team1, "team2": team2,
+            "team1_win_prob": round(p1, 4),
+            "team2_win_prob": round(p2, 4),
+            "predicted_winner": predicted_winner,
+        })
+    rounds_out.append({"round": "Quarter-Final", "matches": qf_matches})
+
+    # --- Semi-Finals ---
+    sf_matches = []
+    for i, (ma, mb) in enumerate(WC2026_SF_PAIRS):
+        team1, team2 = match_predicted[ma], match_predicted[mb]
+        p1, p2 = _knockout_neutral_probs(team1, team2, prob_cache)
+        predicted_winner = _modal_winner(101 + i, team1, team2)
+        match_predicted[101 + i] = predicted_winner
+        sf_matches.append({
+            "match_id": f"sf_{i + 1}",
+            "round": "Semi-Final",
+            "team1": team1, "team2": team2,
+            "team1_win_prob": round(p1, 4),
+            "team2_win_prob": round(p2, 4),
+            "predicted_winner": predicted_winner,
+        })
+    rounds_out.append({"round": "Semi-Final", "matches": sf_matches})
+
+    # --- 3rd Place Playoff ---
+    sf_losers = []
+    for i in range(len(WC2026_SF_PAIRS)):
+        t1 = sf_matches[i]["team1"]
+        t2 = sf_matches[i]["team2"]
+        sf_losers.append(t2 if match_predicted[101 + i] == t1 else t1)
+    tp1, tp2 = sf_losers[0], sf_losers[1]
+    p1_tp, p2_tp = _knockout_neutral_probs(tp1, tp2, prob_cache)
+    third_place_winner = _modal_winner(104, tp1, tp2)
+    rounds_out.append({
+        "round": "3rd Place Playoff",
+        "matches": [{
+            "match_id": "third_place",
+            "round": "3rd Place Playoff",
+            "team1": tp1, "team2": tp2,
+            "team1_win_prob": round(p1_tp, 4),
+            "team2_win_prob": round(p2_tp, 4),
+            "predicted_winner": third_place_winner,
+        }],
+    })
+
+    # --- Final ---
+    finalist1, finalist2 = match_predicted[101], match_predicted[102]
+    p1, p2 = _knockout_neutral_probs(finalist1, finalist2, prob_cache)
+    champion = _modal_winner(103, finalist1, finalist2)
+    rounds_out.append({
+        "round": "Final",
+        "matches": [{
+            "match_id": "final",
+            "round": "Final",
+            "team1": finalist1, "team2": finalist2,
+            "team1_win_prob": round(p1, 4),
+            "team2_win_prob": round(p2, 4),
+            "predicted_winner": champion,
+        }],
+    })
+
+    return {
+        "rounds": rounds_out,
+        "group_standings": group_standings,
+        "champion": champion,
+        "generated_at": datetime.now(tz=timezone.utc).isoformat().replace("+00:00", "Z"),
+    }
+
+
 def run_simulation(
     tracker: TeamStateTracker,
     model: Any,

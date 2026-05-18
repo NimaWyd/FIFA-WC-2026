@@ -125,3 +125,43 @@ def test_run_simulation_includes_modal_match_winners():
     assert 103 in modal, "Final winner slot (103) must be in modal_match_winners"
     for slot, winner in modal.items():
         assert isinstance(winner, str), f"Slot {slot} winner must be a string"
+
+
+def test_predict_bracket_modal_returns_correct_structure():
+    from src.simulation.tournament import predict_bracket_modal
+    from src.simulation.wc2026_bracket import WC2026_GROUPS
+    all_teams = {t for g in WC2026_GROUPS for t in g["teams"]}
+    prob_cache = _make_stub_prob_cache()
+    result = predict_bracket_modal({}, prob_cache)
+    assert "rounds" in result
+    assert "champion" in result
+    assert "group_standings" in result
+    assert result["champion"] in all_teams
+    round_names = [r["round"] for r in result["rounds"]]
+    assert "Round of 32" in round_names
+    assert "Round of 16" in round_names
+    assert "Quarter-Final" in round_names
+    assert "Semi-Final" in round_names
+    assert "Final" in round_names
+
+
+def test_predict_bracket_modal_uses_modal_champion():
+    from src.simulation.tournament import predict_bracket_modal, run_simulation
+    prob_cache = _make_stub_prob_cache()
+    with patch("src.simulation.tournament.precompute_all_probabilities",
+               return_value=prob_cache):
+        sim = run_simulation(_make_stub_tracker(), None, {}, n=200)
+    modal = sim["modal_match_winners"]
+    result = predict_bracket_modal(modal, prob_cache)
+    # When modal slot 103 is provided AND that team is one of the two finalists
+    # produced by the modal bracket path, the bracket champion must match it.
+    if 103 in modal:
+        final_match = result["rounds"][-1]["matches"][0]
+        finalist1, finalist2 = final_match["team1"], final_match["team2"]
+        if modal[103] in (finalist1, finalist2):
+            assert result["champion"] == modal[103], (
+                f"Bracket champion {result['champion']!r} != modal final winner {modal[103]!r}"
+            )
+        else:
+            # modal[103] is an impossible finalist given earlier modal picks — fallback used
+            assert result["champion"] in (finalist1, finalist2)
