@@ -113,3 +113,15 @@ def test_run_simulation_probabilities_sum_to_one_per_team():
             team_result["final"] + team_result["champion"]
         )
         assert abs(total - 1.0) < 0.01, f"{team_result['team']} probs sum to {total}"
+
+
+def test_run_simulation_includes_modal_match_winners():
+    from src.simulation.tournament import run_simulation
+    with patch("src.simulation.tournament.precompute_all_probabilities",
+               return_value=_make_stub_prob_cache()):
+        result = run_simulation(_make_stub_tracker(), None, {}, n=50)
+    assert "modal_match_winners" in result, "modal_match_winners key missing from simulation output"
+    modal = result["modal_match_winners"]
+    assert 103 in modal, "Final winner slot (103) must be in modal_match_winners"
+    for slot, winner in modal.items():
+        assert isinstance(winner, str), f"Slot {slot} winner must be a string"

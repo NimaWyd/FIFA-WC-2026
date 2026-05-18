@@ -532,18 +532,36 @@ def run_simulation(
     squad_ratings: "dict | None" = None,
 ) -> dict:
     """Run n simulations. Pre-computes all match probabilities once before the loop."""
+    from collections import Counter
+
     all_teams = {t: g["id"] for g in WC2026_GROUPS for t in g["teams"]}
-    stage_keys = ["group_exit", "round_of_32", "round_of_16", "quarter_final", "semi_final", "third_place", "final", "champion"]
+    stage_keys = ["group_exit", "round_of_32", "round_of_16", "quarter_final",
+                  "semi_final", "third_place", "final", "champion"]
     counts: dict[str, dict[str, int]] = {t: {s: 0 for s in stage_keys} for t in all_teams}
+
+    # Slots: R32 73-88, R16 89-96, QF 97-100, SF 101-102, Final 103, 3rd-place 104
+    match_winner_counts: dict[int, Counter] = {
+        m: Counter() for m in list(range(73, 103)) + [103, 104]
+    }
 
     # Single batched model call covering all 48×47 pairs — O(1) lookups during simulation
     prob_cache = precompute_all_probabilities(tracker, model, cfg, squad_ratings=squad_ratings)
 
     rng = np.random.default_rng(cfg.get("project", {}).get("random_state", 42))
     for _ in range(n):
-        sim_result, _ = simulate_once(tracker, model, cfg, rng, prob_cache=prob_cache)
-        for team, stage in sim_result.items():
+        stage_results, match_winners = simulate_once(
+            tracker, model, cfg, rng, prob_cache=prob_cache
+        )
+        for team, stage in stage_results.items():
             counts[team][stage] += 1
+        for slot, winner in match_winners.items():
+            match_winner_counts[slot][winner] += 1
+
+    modal_match_winners: dict[int, str] = {
+        slot: counter.most_common(1)[0][0]
+        for slot, counter in match_winner_counts.items()
+        if counter
+    }
 
     teams_out = []
     for team, group_id in all_teams.items():
@@ -556,5 +574,6 @@ def run_simulation(
     return {
         "n_simulations": n,
         "teams": teams_out,
+        "modal_match_winners": modal_match_winners,
         "generated_at": datetime.now(tz=timezone.utc).isoformat().replace("+00:00", "Z"),
     }
