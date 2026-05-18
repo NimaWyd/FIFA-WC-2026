@@ -198,7 +198,7 @@ def simulate_once(
     cfg: dict,
     rng: np.random.Generator,
     prob_cache: ProbCache | None = None,
-) -> dict[str, str]:
+) -> tuple[dict[str, str], dict[int, str]]:
     """Run one full WC2026 simulation. Returns {team: stage_reached} for all 48 teams.
 
     If prob_cache is provided (pre-computed via precompute_all_probabilities), no model
@@ -327,7 +327,13 @@ def simulate_once(
     results[winner] = "champion"
     results[runner_up] = "final"
 
-    return results
+    # Track final winner (slot 103) and 3rd-place winner (slot 104)
+    match_winners[103] = winner
+    third_place_team = next((t for t, s in results.items() if s == "third_place"), None)
+    if third_place_team is not None:
+        match_winners[104] = third_place_team
+
+    return results, match_winners
 
 
 def _neutral_probs(
@@ -535,7 +541,7 @@ def run_simulation(
 
     rng = np.random.default_rng(cfg.get("project", {}).get("random_state", 42))
     for _ in range(n):
-        sim_result = simulate_once(tracker, model, cfg, rng, prob_cache=prob_cache)
+        sim_result, _ = simulate_once(tracker, model, cfg, rng, prob_cache=prob_cache)
         for team, stage in sim_result.items():
             counts[team][stage] += 1
 
