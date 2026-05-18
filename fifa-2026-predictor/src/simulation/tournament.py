@@ -432,7 +432,11 @@ def predict_bracket(prob_cache: ProbCache) -> dict:
             "team2_win_prob": round(p2, 4),
             "predicted_winner": predicted_winner,
         })
-    rounds_out.append({"round": "Round of 16", "matches": r16_matches})
+    # Reorder for visual bracket alignment: group by which SF half they feed.
+    # Left half (→ QF97+QF98 → SF101): R16-89,90,93,96 (indices 0,1,4,7)
+    # Right half (→ QF99+QF100 → SF102): R16-91,92,94,95 (indices 2,3,5,6)
+    _R16_VIS = [0, 1, 4, 7, 2, 3, 5, 6]
+    rounds_out.append({"round": "Round of 16", "matches": [r16_matches[i] for i in _R16_VIS]})
 
     # --- Quarter-Finals ---
     qf_matches = []

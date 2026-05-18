@@ -130,6 +130,7 @@ Next.js 14 (App Router), TypeScript, Tailwind CSS, Framer Motion, Headless UI, f
 - **3rd-place tiebreaker** order: pts → gd → gf → FIFA rank (lower rank = better). Applied in both `simulate_once()` and `predict_bracket()`.
 - **Stage keys** (issues #131, #132): `["group_exit", "round_of_32", "round_of_16", "quarter_final", "semi_final", "third_place", "final", "champion"]`. R16 losers are labeled `"round_of_16"` (not `"round_of_32"`). SF losers play a 3rd place playoff; the playoff winner gets `"third_place"`.
 - `predict_bracket()` outputs a `"3rd Place Playoff"` round between the two predicted SF losers, inserted between `"Semi-Final"` and `"Final"`.
+- **R16 visual ordering:** `predict_bracket()` reorders the R16 matches before output using `_R16_VIS = [0,1,4,7,2,3,5,6]` so the array groups correctly for the frontend bracket diagram: left 4 entries feed QF97+QF98→SF101; right 4 feed QF99+QF100→SF102. Do not remove this reordering — without it the QF connectors point to the wrong R16 cards.
 - Run via `GET /api/v1/simulate?n=1000` or directly: `python -m src.simulation.tournament`
 
 **`wc2026_bracket.py`** — Static group definitions and R32 bracket slots. Group home/away labels are only used as starting identifiers; the simulation randomizes them each run.
