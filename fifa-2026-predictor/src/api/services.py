@@ -754,8 +754,8 @@ def _fetch_wc_matches() -> dict[str, Any]:
             group_raw = str(m.get("group") or "")
             group = group_raw.replace("GROUP_", "").replace("GROUP ", "") or None
 
-            home_name = (m.get("homeTeam") or {}).get("name", "TBD")
-            away_name = (m.get("awayTeam") or {}).get("name", "TBD")
+            home_name = (m.get("homeTeam") or {}).get("name") or "TBD"
+            away_name = (m.get("awayTeam") or {}).get("name") or "TBD"
 
             try:
                 home_name = resolve_team(home_name)

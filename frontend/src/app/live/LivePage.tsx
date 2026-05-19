@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 import FlagIcon from "@/components/FlagIcon";
 import StadiumCard from "@/components/StadiumCard";
 import { WC2026_GROUPS } from "@/lib/wc2026Groups";
@@ -203,7 +204,9 @@ function TodayStrip({ liveByKey }: { liveByKey: Map<string, LiveMatch> }) {
 
   return (
     <div className="border-b border-navy-700 bg-navy-900/90 backdrop-blur-md">
-      <div className="max-w-screen-xl mx-auto px-4 md:px-6">
+      <div className="max-w-screen-xl mx-auto px-4 md:px-6 relative">
+        {/* Right-edge fade — signals horizontal scroll on mobile */}
+        <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-navy-900/90 to-transparent z-10" />
         <div
           className="flex items-center gap-3 py-2.5 overflow-x-auto scrollbar-none"
           style={{ scrollbarWidth: "none" }}
@@ -249,9 +252,13 @@ function TodayStrip({ liveByKey }: { liveByKey: Map<string, LiveMatch> }) {
                   }`}
                 >
                   <FlagIcon team={m.home} className="w-[18px] h-[11px] rounded-[2px] shrink-0" />
-                  <span className="font-bold text-slate-200 uppercase tracking-[0.05em]">
+                  <Link
+                    href={`/teams/${encodeURIComponent(m.home)}`}
+                    className="font-bold text-slate-200 uppercase tracking-[0.05em] hover:text-white transition-colors"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     {m.home}
-                  </span>
+                  </Link>
 
                   {showScore ? (
                     <>
@@ -273,9 +280,13 @@ function TodayStrip({ liveByKey }: { liveByKey: Map<string, LiveMatch> }) {
                     </span>
                   )}
 
-                  <span className="font-bold text-slate-200 uppercase tracking-[0.05em]">
+                  <Link
+                    href={`/teams/${encodeURIComponent(m.away)}`}
+                    className="font-bold text-slate-200 uppercase tracking-[0.05em] hover:text-white transition-colors"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     {m.away}
-                  </span>
+                  </Link>
                   <FlagIcon team={m.away} className="w-[18px] h-[11px] rounded-[2px] shrink-0" />
 
                   {status === "ht" && (
@@ -449,8 +460,10 @@ function MatchCard({
                   team={s.home}
                   className="w-8 h-5 rounded-[3px] shrink-0 shadow-sm"
                 />
-                <span
-                  className={`font-bold text-[12px] uppercase tracking-[0.07em] truncate leading-tight ${
+                <Link
+                  href={`/teams/${encodeURIComponent(s.home)}`}
+                  onClick={(e) => e.stopPropagation()}
+                  className={`font-bold text-[12px] uppercase tracking-[0.07em] truncate leading-tight hover:underline underline-offset-2 ${
                     homeWins
                       ? "text-white"
                       : isDraw
@@ -459,7 +472,7 @@ function MatchCard({
                   }`}
                 >
                   {s.home}
-                </span>
+                </Link>
               </div>
 
               {/* Score chips */}
@@ -491,8 +504,10 @@ function MatchCard({
                   homeWins ? "opacity-45" : ""
                 }`}
               >
-                <span
-                  className={`font-bold text-[12px] uppercase tracking-[0.07em] truncate leading-tight text-right ${
+                <Link
+                  href={`/teams/${encodeURIComponent(s.away)}`}
+                  onClick={(e) => e.stopPropagation()}
+                  className={`font-bold text-[12px] uppercase tracking-[0.07em] truncate leading-tight text-right hover:underline underline-offset-2 ${
                     awayWins
                       ? "text-white"
                       : isDraw
@@ -501,7 +516,7 @@ function MatchCard({
                   }`}
                 >
                   {s.away}
-                </span>
+                </Link>
                 <FlagIcon
                   team={s.away}
                   className="w-8 h-5 rounded-[3px] shrink-0 shadow-sm"
@@ -513,9 +528,13 @@ function MatchCard({
             <div className="space-y-1.5">
               <div className="flex items-center gap-2.5">
                 <FlagIcon team={s.home} className="w-7 h-[18px] rounded-[3px] shrink-0" />
-                <span className="font-bold text-[13px] uppercase tracking-[0.07em] text-slate-200 truncate">
+                <Link
+                  href={`/teams/${encodeURIComponent(s.home)}`}
+                  onClick={(e) => e.stopPropagation()}
+                  className="font-bold text-[13px] uppercase tracking-[0.07em] text-slate-200 truncate hover:text-white hover:underline underline-offset-2 transition-colors"
+                >
                   {s.home}
-                </span>
+                </Link>
               </div>
               <div className="flex items-center gap-2 py-0.5">
                 <div className="flex-1 h-px bg-navy-700/50" />
@@ -526,9 +545,13 @@ function MatchCard({
               </div>
               <div className="flex items-center gap-2.5">
                 <FlagIcon team={s.away} className="w-7 h-[18px] rounded-[3px] shrink-0" />
-                <span className="font-bold text-[13px] uppercase tracking-[0.07em] text-slate-200 truncate">
+                <Link
+                  href={`/teams/${encodeURIComponent(s.away)}`}
+                  onClick={(e) => e.stopPropagation()}
+                  className="font-bold text-[13px] uppercase tracking-[0.07em] text-slate-200 truncate hover:text-white hover:underline underline-offset-2 transition-colors"
+                >
                   {s.away}
-                </span>
+                </Link>
               </div>
             </div>
           )}
@@ -671,6 +694,11 @@ function GroupStandingsTable({
         </div>
       </div>
 
+      {rows.every((r) => r.p === 0) && (
+        <div className="px-4 py-2.5 text-[11px] text-slate-600 italic border-b border-navy-700/25">
+          No results yet
+        </div>
+      )}
       {rows.map((row, i) => (
         <div
           key={row.team}
@@ -693,13 +721,14 @@ function GroupStandingsTable({
               <div className="w-[3px] h-4 rounded-full bg-pitch-400 shrink-0 -ml-1" />
             )}
             <FlagIcon team={row.team} className="w-[18px] h-[11px] rounded-[2px] shrink-0" />
-            <span
-              className={`text-[12px] font-semibold truncate ${
-                i < 2 ? "text-white" : "text-slate-400"
+            <Link
+              href={`/teams/${encodeURIComponent(row.team)}`}
+              className={`text-[12px] font-semibold truncate hover:underline underline-offset-2 ${
+                i < 2 ? "text-white" : "text-slate-400 hover:text-slate-200"
               }`}
             >
               {row.team}
-            </span>
+            </Link>
           </div>
 
           {/* Stats */}
@@ -722,6 +751,205 @@ function GroupStandingsTable({
             >
               {row.pts}
             </span>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ─── Knockout stage ───────────────────────────────────────────────────────────
+
+const KNOCKOUT_STAGE_ORDER = [
+  "LAST_16",
+  "QUARTER_FINALS",
+  "SEMI_FINALS",
+  "THIRD_PLACE",
+  "FINAL",
+];
+
+const KNOCKOUT_LABEL: Record<string, string> = {
+  LAST_16: "Round of 16",
+  QUARTER_FINALS: "Quarter-finals",
+  SEMI_FINALS: "Semi-finals",
+  THIRD_PLACE: "3rd Place Playoff",
+  FINAL: "Final",
+};
+
+function KnockoutMatchCard({ match, expanded, onToggle }: {
+  match: LiveMatch;
+  expanded: boolean;
+  onToggle: () => void;
+}) {
+  const hasScore = match.home_score != null || match.away_score != null;
+  const isLive = match.status === "IN_PLAY";
+  const isHt = match.status === "PAUSED";
+  const isFt = match.status === "FINISHED";
+  const showScore = (isLive || isHt || isFt) && hasScore;
+
+  const homeScore = match.home_score ?? 0;
+  const awayScore = match.away_score ?? 0;
+  const homeWins = isFt && homeScore > awayScore;
+  const awayWins = isFt && awayScore > homeScore;
+  const isDraw = isFt && homeScore === awayScore;
+
+  const accentClass = isLive ? "bg-emerald-400" : isHt ? "bg-amber-400" : isFt ? "bg-gold-500" : "bg-navy-700";
+  const borderClass = isLive ? "border-emerald-500/25" : isFt ? "border-gold-500/20" : "border-navy-700/50";
+  const venueCity = match.venue ?? "";
+
+  let statusEl = null;
+  if (isLive) statusEl = (
+    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-[0.18em] bg-emerald-500/12 text-emerald-400 border border-emerald-500/25">
+      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+      {match.minute != null ? `${match.minute}'` : "LIVE"}
+    </span>
+  );
+  else if (isHt) statusEl = (
+    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-[0.18em] bg-amber-500/12 text-amber-400 border border-amber-500/25">HALF TIME</span>
+  );
+  else if (isFt) statusEl = (
+    <span className="px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-[0.18em] text-slate-500 bg-navy-700/80 border border-navy-600/60">FULL TIME</span>
+  );
+  else if (match.utc_date) statusEl = (
+    <span className="text-[11px] text-slate-500 tabular-nums font-mono">{fmtTime(match.utc_date)}</span>
+  );
+
+  return (
+    <div className={`rounded-xl border overflow-hidden ${borderClass} ${isLive ? "shadow-[0_0_24px_rgba(52,211,153,0.06)]" : ""}`}>
+      <div className={`h-[3px] ${accentClass}`} />
+      <button onClick={onToggle} className="w-full text-left bg-navy-800 hover:bg-white/[0.015] transition-colors focus-visible:outline-none">
+        <div className="flex items-center justify-between px-4 py-2.5 border-b border-navy-700/40">
+          <span className="text-[9px] font-bold uppercase tracking-[0.22em] text-slate-500">
+            {KNOCKOUT_LABEL[match.stage] ?? match.stage}
+          </span>
+          <div className="flex items-center gap-2.5">
+            {statusEl}
+            <svg className={`w-3 h-3 text-slate-600 transition-transform duration-200 ${expanded ? "rotate-180" : ""}`} viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M2 4l4 4 4-4" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
+        </div>
+
+        <div className="px-4 py-4">
+          {showScore ? (
+            <div className="flex items-center gap-2">
+              <div className={`flex-1 flex items-center gap-2 min-w-0 ${awayWins ? "opacity-45" : ""}`}>
+                <FlagIcon team={match.home_team} className="w-8 h-5 rounded-[3px] shrink-0 shadow-sm" />
+                <Link href={`/teams/${encodeURIComponent(match.home_team)}`} onClick={(e) => e.stopPropagation()}
+                  className={`font-bold text-[12px] uppercase tracking-[0.07em] truncate leading-tight hover:underline underline-offset-2 ${homeWins ? "text-white" : isDraw ? "text-slate-200" : "text-slate-400"}`}>
+                  {match.home_team}
+                </Link>
+              </div>
+              <div className="flex items-center gap-1.5 shrink-0">
+                <div className={`w-10 h-10 flex items-center justify-center rounded-lg font-anton text-[22px] tabular-nums border ${homeWins ? "bg-pitch-400/12 text-pitch-300 border-pitch-400/25" : "bg-navy-700/70 text-slate-200 border-navy-600/60"}`}>{homeScore}</div>
+                <span className="text-slate-600 font-bold text-sm select-none">–</span>
+                <div className={`w-10 h-10 flex items-center justify-center rounded-lg font-anton text-[22px] tabular-nums border ${awayWins ? "bg-pitch-400/12 text-pitch-300 border-pitch-400/25" : "bg-navy-700/70 text-slate-200 border-navy-600/60"}`}>{awayScore}</div>
+              </div>
+              <div className={`flex-1 flex items-center gap-2 min-w-0 justify-end ${homeWins ? "opacity-45" : ""}`}>
+                <Link href={`/teams/${encodeURIComponent(match.away_team)}`} onClick={(e) => e.stopPropagation()}
+                  className={`font-bold text-[12px] uppercase tracking-[0.07em] truncate leading-tight text-right hover:underline underline-offset-2 ${awayWins ? "text-white" : isDraw ? "text-slate-200" : "text-slate-400"}`}>
+                  {match.away_team}
+                </Link>
+                <FlagIcon team={match.away_team} className="w-8 h-5 rounded-[3px] shrink-0 shadow-sm" />
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-1.5">
+              <div className="flex items-center gap-2.5">
+                <FlagIcon team={match.home_team} className="w-7 h-[18px] rounded-[3px] shrink-0" />
+                <Link href={`/teams/${encodeURIComponent(match.home_team)}`} onClick={(e) => e.stopPropagation()}
+                  className="font-bold text-[13px] uppercase tracking-[0.07em] text-slate-200 truncate hover:text-white hover:underline underline-offset-2 transition-colors">
+                  {match.home_team}
+                </Link>
+              </div>
+              <div className="flex items-center gap-2 py-0.5">
+                <div className="flex-1 h-px bg-navy-700/50" />
+                <span className="text-[11px] text-slate-600 tabular-nums font-mono">{match.utc_date ? fmtTime(match.utc_date) : "TBD"}</span>
+                <div className="flex-1 h-px bg-navy-700/50" />
+              </div>
+              <div className="flex items-center gap-2.5">
+                <FlagIcon team={match.away_team} className="w-7 h-[18px] rounded-[3px] shrink-0" />
+                <Link href={`/teams/${encodeURIComponent(match.away_team)}`} onClick={(e) => e.stopPropagation()}
+                  className="font-bold text-[13px] uppercase tracking-[0.07em] text-slate-200 truncate hover:text-white hover:underline underline-offset-2 transition-colors">
+                  {match.away_team}
+                </Link>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {venueCity && (
+          <div className="px-4 pb-3">
+            <span className="text-[10px] text-slate-600 flex items-center gap-1.5">
+              <svg className="w-2.5 h-2.5 shrink-0" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <circle cx="6" cy="4.5" r="1.75" /><path d="M6 1C3.79 1 2 2.8 2 5c0 3 4 7 4 7s4-4 4-7c0-2.2-1.79-4-4-4z" strokeLinejoin="round" />
+              </svg>
+              {venueCity}
+            </span>
+          </div>
+        )}
+      </button>
+
+      <AnimatePresence>
+        {expanded && venueCity && (
+          <motion.div key="ko-expanded" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.28, ease: "easeInOut" }} className="overflow-hidden">
+            <div className="border-t border-navy-700/40 p-4">
+              <VenueDetail city={venueCity} />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+function KnockoutSection({ matches, expandedKey, onToggle }: {
+  matches: LiveMatch[];
+  expandedKey: string | null;
+  onToggle: (key: string) => void;
+}) {
+  // Only show matches where both teams have been determined
+  const realMatches = matches.filter(
+    (m) => m.home_team && m.away_team && m.home_team !== "TBD" && m.away_team !== "TBD"
+  );
+  if (realMatches.length === 0) return null;
+
+  // Group by stage in display order
+  const byStage = new Map<string, LiveMatch[]>();
+  for (const m of realMatches) {
+    if (!byStage.has(m.stage)) byStage.set(m.stage, []);
+    byStage.get(m.stage)!.push(m);
+  }
+
+  const stages = KNOCKOUT_STAGE_ORDER.filter((s) => byStage.has(s));
+
+  return (
+    <div className="space-y-8 pt-4">
+      <div className="flex items-center gap-3">
+        <div className="h-px flex-1 bg-navy-700/40" />
+        <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 whitespace-nowrap">
+          Knockout Stage
+        </span>
+        <div className="h-px flex-1 bg-navy-700/40" />
+      </div>
+
+      {stages.map((stage) => (
+        <div key={stage} className="space-y-3">
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-600">
+            {KNOCKOUT_LABEL[stage] ?? stage}
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-4">
+            {byStage.get(stage)!.map((m) => {
+              const key = `ko|${m.id}`;
+              return (
+                <KnockoutMatchCard
+                  key={key}
+                  match={m}
+                  expanded={expandedKey === key}
+                  onToggle={() => onToggle(key)}
+                />
+              );
+            })}
           </div>
         </div>
       ))}
@@ -863,6 +1091,18 @@ export default function LivePage() {
       Array.from(new Set(ALL_STATIC.filter((m) => m.date === selectedDate).map((m) => m.group))).sort(),
     [selectedDate]
   );
+
+  const knockoutMatches = useMemo<LiveMatch[]>(() => {
+    if (!data?.matches) return [];
+    const UNKNOWN = ["TBD", "None", "none", ""];
+    return data.matches.filter(
+      (m) =>
+        m.stage !== "GROUP_STAGE" &&
+        m.home_team && m.away_team &&
+        !UNKNOWN.includes(m.home_team) &&
+        !UNKNOWN.includes(m.away_team)
+    );
+  }, [data]);
 
   const toggleExpand = useCallback((key: string) => {
     setExpandedKey((prev) => (prev === key ? null : key));
@@ -1029,6 +1269,15 @@ export default function LivePage() {
               )}
             </motion.div>
           </AnimatePresence>
+        )}
+
+        {/* Knockout stage — only shown when teams are determined */}
+        {!loading && knockoutMatches.length > 0 && (
+          <KnockoutSection
+            matches={knockoutMatches}
+            expandedKey={expandedKey}
+            onToggle={toggleExpand}
+          />
         )}
       </div>
     </main>
