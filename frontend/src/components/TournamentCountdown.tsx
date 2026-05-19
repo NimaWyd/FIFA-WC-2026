@@ -21,24 +21,34 @@ function pad(n: number) {
   return String(n).padStart(2, "0");
 }
 
-function DigitBlock({ value, label }: { value: string; label: string }) {
+function DigitBlock({
+  value,
+  label,
+  accent = false,
+}: {
+  value: string;
+  label: string;
+  accent?: boolean;
+}) {
   return (
-    <div className="flex flex-col items-center gap-1.5">
-      <div className="bg-white/[0.06] border border-white/[0.10] rounded-[4px] px-3 py-2 min-w-[52px] flex items-center justify-center overflow-hidden">
+    <div className="flex flex-col items-center gap-3">
+      <div className="relative overflow-hidden">
         <AnimatePresence mode="popLayout" initial={false}>
           <motion.span
             key={value}
-            initial={{ y: -10, opacity: 0 }}
+            initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 10, opacity: 0 }}
-            transition={{ duration: 0.18, ease: "easeOut" }}
-            className="font-anton text-[28px] leading-none text-[#f0ece2] tabular-nums"
+            exit={{ y: 20, opacity: 0 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className={`block font-anton tabular-nums leading-none text-[72px] sm:text-[96px] md:text-[112px] lg:text-[128px] ${
+              accent ? "text-pitch-400" : "text-[#f0ece2]"
+            }`}
           >
             {value}
           </motion.span>
         </AnimatePresence>
       </div>
-      <span className="font-jb text-[10px] tracking-[0.12em] uppercase text-[rgba(240,236,226,0.4)]">
+      <span className="font-jb text-[10px] sm:text-[11px] tracking-[0.22em] uppercase text-[rgba(240,236,226,0.4)]">
         {label}
       </span>
     </div>
@@ -58,41 +68,75 @@ export default function TournamentCountdown() {
     return () => clearInterval(id);
   }, []);
 
-  // SSR + initial client render — hold space to avoid layout shift
-  if (!mounted) {
-    return <div className="h-[72px] mt-6 md:mt-7" aria-hidden />;
-  }
-
-  if (timeLeft === null) {
+  if (timeLeft === null && mounted) {
     return (
-      <div className="inline-flex items-center gap-2 bg-pitch-400/10 border border-pitch-400/30 rounded-full px-4 py-2 mt-6 md:mt-7">
-        <span className="w-1.5 h-1.5 rounded-full bg-pitch-400 animate-pulse" />
-        <span className="font-jb text-[12px] tracking-[0.08em] text-pitch-400 uppercase">
-          Tournament underway
-        </span>
-      </div>
+      <section className="relative w-full bg-navy-900 border-t border-white/[0.06] py-14 text-center overflow-hidden">
+        <div className="inline-flex items-center gap-2 bg-pitch-400/10 border border-pitch-400/30 rounded-full px-5 py-2.5">
+          <span className="w-1.5 h-1.5 rounded-full bg-pitch-400 animate-pulse" />
+          <span className="font-jb text-[13px] tracking-[0.08em] text-pitch-400 uppercase">
+            Tournament underway
+          </span>
+        </div>
+      </section>
     );
   }
 
   const units = [
-    { value: pad(timeLeft.days), label: "Days" },
-    { value: pad(timeLeft.hours), label: "Hours" },
-    { value: pad(timeLeft.minutes), label: "Mins" },
-    { value: pad(timeLeft.seconds), label: "Secs" },
+    { value: mounted ? pad(timeLeft!.days) : "00", label: "Days", accent: true },
+    { value: mounted ? pad(timeLeft!.hours) : "00", label: "Hours", accent: false },
+    { value: mounted ? pad(timeLeft!.minutes) : "00", label: "Mins", accent: false },
+    { value: mounted ? pad(timeLeft!.seconds) : "00", label: "Secs", accent: false },
   ];
 
   return (
-    <div className="flex items-end gap-2.5 mt-6 md:mt-7">
-      {units.map(({ value, label }, i) => (
-        <div key={label} className="flex items-center gap-2.5">
-          <DigitBlock value={value} label={label} />
-          {i < units.length - 1 && (
-            <span className="font-anton text-[20px] text-[rgba(240,236,226,0.25)] mb-5 select-none">
-              :
-            </span>
-          )}
+    <section className="relative w-full bg-navy-900 border-t border-white/[0.06] overflow-hidden">
+      {/* Green radial glow from below */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse at 50% 140%, rgba(34,160,82,0.22) 0%, transparent 60%)",
+        }}
+      />
+      {/* Pitch stripes */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-[0.03]"
+        style={{
+          background:
+            "repeating-linear-gradient(90deg, transparent 0 80px, #fff 80px 81px)",
+        }}
+      />
+
+      <div className="relative flex flex-col items-center py-14 md:py-18 px-6">
+        {/* Heading */}
+        <p className="font-jb text-[10px] sm:text-[11px] tracking-[0.26em] uppercase text-[rgba(240,236,226,0.38)] mb-10">
+          ◆&nbsp;&nbsp;World Cup Kicks Off In
+        </p>
+
+        {/* Digits row */}
+        <div className="flex items-start justify-center gap-2 sm:gap-4 md:gap-6">
+          {units.map(({ value, label, accent }, i) => (
+            <div key={label} className="flex items-start gap-2 sm:gap-4 md:gap-6">
+              <DigitBlock value={value} label={label} accent={accent} />
+              {i < units.length - 1 && (
+                <span className="font-anton text-[48px] sm:text-[64px] md:text-[80px] text-[rgba(240,236,226,0.18)] leading-none mt-2 select-none">
+                  :
+                </span>
+              )}
+            </div>
+          ))}
         </div>
-      ))}
-    </div>
+
+        {/* Subtitle */}
+        <p className="font-jb text-[11px] tracking-[0.18em] uppercase text-[rgba(240,236,226,0.30)] mt-10">
+          Jun 11&nbsp;&nbsp;·&nbsp;&nbsp;Mexico City&nbsp;&nbsp;·&nbsp;&nbsp;Opening Match
+        </p>
+      </div>
+
+      {/* Bottom border accent */}
+      <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-pitch-400/30 to-transparent" />
+    </section>
   );
 }

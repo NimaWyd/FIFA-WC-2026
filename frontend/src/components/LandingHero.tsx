@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
 import TrophyEmbed from "./TrophyEmbed";
-import TournamentCountdown from "./TournamentCountdown";
 
 const OPENING_MATCHES = [
   { home: "MEX", away: "RSA", date: "JUN 11", venue: "Mexico City", group: "GROUP A" },
@@ -53,8 +52,6 @@ export default function LandingHero() {
             Build your bracket. Track 104 matches across 16 host cities. Climb the leaderboard
             with predictions that the world will be talking about.
           </p>
-
-          <TournamentCountdown />
 
           <div className="flex flex-wrap gap-3 mt-7 md:mt-8">
             <Link
