@@ -44,3 +44,4 @@ fifa-2026-predictor/data/raw/open_data_prepared.csv
 # Environment files with secrets
 .env
 fifa-2026-predictor/.env
+fifa-2026-predictor/env
