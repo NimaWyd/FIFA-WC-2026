@@ -169,9 +169,9 @@ WC2026_R16_PAIRS: list[tuple[int, int]] = [
 # QF: which two R16 match winners play each other
 WC2026_QF_PAIRS: list[tuple[int, int]] = [
     (89, 90),   # Match 97
-    (93, 96),   # Match 98
+    (93, 94),   # Match 98
     (91, 92),   # Match 99
-    (94, 95),   # Match 100
+    (95, 96),   # Match 100
 ]
 
 # SF: which two QF match winners play each other

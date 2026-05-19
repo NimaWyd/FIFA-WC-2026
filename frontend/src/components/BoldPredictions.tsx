@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import FlagIcon from "@/components/FlagIcon";
 import { useSimulation } from "@/hooks/useSimulation";
 import { WC2026_GROUPS } from "@/lib/wc2026Groups";
+import { reachProb } from "@/lib/types";
 import type { TeamSimResult } from "@/lib/types";
 
 const display = (name: string) => (name === "United States" ? "USA" : name);
@@ -40,7 +41,7 @@ function buildCards(teams: TeamSimResult[]): PredCard[] {
       headline: `${display(fav.team)} lead the field`,
       bigStat: `${(fav.champion * 100).toFixed(1)}%`,
       statLabel: "to lift the trophy",
-      sub: `${(fav.final * 100).toFixed(0)}% Final · ${(fav.semi_final * 100).toFixed(0)}% Semi`,
+      sub: `${(reachProb(fav, "final") * 100).toFixed(0)}% reach Final · ${(reachProb(fav, "sf") * 100).toFixed(0)}% reach SF`,
     });
   }
 
@@ -72,8 +73,8 @@ function buildCards(teams: TeamSimResult[]): PredCard[] {
     });
   }
 
-  /* 3 — Dark horse (outside top 4, highest SF odds) */
-  const darkHorse = [...sorted.slice(4)].sort((a, b) => b.semi_final - a.semi_final)[0];
+  /* 3 — Dark horse (outside top 8, highest SF reach odds) */
+  const darkHorse = [...sorted.slice(8)].sort((a, b) => reachProb(b, "sf") - reachProb(a, "sf"))[0];
   if (darkHorse) {
     cards.push({
       id: "dark_horse",
@@ -83,15 +84,15 @@ function buildCards(teams: TeamSimResult[]): PredCard[] {
       glowColor: "rgba(34,160,82,0.08)",
       teams: [darkHorse.team],
       headline: `Don't sleep on ${display(darkHorse.team)}`,
-      bigStat: `${(darkHorse.semi_final * 100).toFixed(0)}%`,
+      bigStat: `${(reachProb(darkHorse, "sf") * 100).toFixed(0)}%`,
       statLabel: "chance to reach the semis",
-      sub: `${(darkHorse.quarter_final * 100).toFixed(0)}% QF · ${(darkHorse.champion * 100).toFixed(1)}% to win it all`,
+      sub: `${(reachProb(darkHorse, "qf") * 100).toFixed(0)}% reach QF · ${(darkHorse.champion * 100).toFixed(1)}% to win it all`,
     });
   }
 
   /* 4 — Shock exit (top-12 team with highest group_exit%) */
   const shockTeam = [...sorted.slice(0, 12)].sort((a, b) => b.group_exit - a.group_exit)[0];
-  if (shockTeam && shockTeam.group_exit > 0.12) {
+  if (shockTeam && shockTeam.group_exit > 0.20) {
     cards.push({
       id: "shock_exit",
       tag: "Shock Alert",
@@ -102,24 +103,25 @@ function buildCards(teams: TeamSimResult[]): PredCard[] {
       headline: `${display(shockTeam.team)} could crash out early`,
       bigStat: `${(shockTeam.group_exit * 100).toFixed(0)}%`,
       statLabel: "chance of a group-stage exit",
-      sub: `Group ${shockTeam.group}  ·  ${(shockTeam.round_of_32 * 100).toFixed(0)}% to advance`,
+      sub: `Group ${shockTeam.group}  ·  only ${(reachProb(shockTeam, "qf") * 100).toFixed(0)}% to reach QF`,
     });
   }
 
-  /* 5 — Title race: top 2 head-to-head */
-  const [t1, t2] = sorted;
-  if (t1 && t2) {
+  /* 5 — Title race: the two teams most likely to reach the final */
+  const byFinal = [...teams].sort((a, b) => reachProb(b, "final") - reachProb(a, "final"));
+  const [f1, f2] = byFinal;
+  if (f1 && f2) {
     cards.push({
       id: "title_race",
       tag: "Title Race",
       tagColor: "text-[rgba(240,236,226,0.65)]",
       borderColor: "rgba(255,255,255,0.10)",
       glowColor: "rgba(255,255,255,0.025)",
-      teams: [t1.team, t2.team],
-      headline: `${display(t1.team)} vs ${display(t2.team)}`,
-      bigStat: `${(t1.champion * 100).toFixed(1)} — ${(t2.champion * 100).toFixed(1)}%`,
-      statLabel: "the two most likely finalists",
-      sub: `${display(t1.team)} ${(t1.final * 100).toFixed(0)}% Final  ·  ${display(t2.team)} ${(t2.final * 100).toFixed(0)}% Final`,
+      teams: [f1.team, f2.team],
+      headline: `${display(f1.team)} vs ${display(f2.team)}`,
+      bigStat: `${(f1.champion * 100).toFixed(1)}% — ${(f2.champion * 100).toFixed(1)}%`,
+      statLabel: "to win the World Cup",
+      sub: `${display(f1.team)} ${(reachProb(f1, "final") * 100).toFixed(0)}% reach Final  ·  ${display(f2.team)} ${(reachProb(f2, "final") * 100).toFixed(0)}% reach Final`,
     });
   }
 

@@ -4,13 +4,16 @@ import { motion, useInView } from "framer-motion";
 import Link from "next/link";
 import FlagIcon from "@/components/FlagIcon";
 import { useSimulation } from "@/hooks/useSimulation";
-type StageKey = "quarter_final" | "semi_final" | "final" | "champion";
+import { reachProb } from "@/lib/types";
+import type { TeamSimResult } from "@/lib/types";
 
-const STAGES: { key: StageKey; short: string }[] = [
-  { key: "quarter_final", short: "QF" },
-  { key: "semi_final",    short: "SF" },
-  { key: "final",         short: "Final" },
-  { key: "champion",      short: "Win" },
+type StageShorthand = { short: string; reach: (t: TeamSimResult) => number };
+
+const STAGES: StageShorthand[] = [
+  { short: "QF",    reach: (t) => reachProb(t, "qf") },
+  { short: "SF",    reach: (t) => reachProb(t, "sf") },
+  { short: "Final", reach: (t) => reachProb(t, "final") },
+  { short: "Win",   reach: (t) => reachProb(t, "champion") },
 ];
 
 /* ── Animated probability bar ── */
@@ -199,13 +202,13 @@ export default function TitleContenders() {
 
               {/* Stage breakdown */}
               <div className="flex gap-6">
-                {STAGES.map(({ key, short }) => (
-                  <div key={key} className="flex flex-col gap-1">
+                {STAGES.map(({ short, reach }) => (
+                  <div key={short} className="flex flex-col gap-1">
                     <span className="font-jb text-[10px] tracking-[0.1em] uppercase text-[rgba(240,236,226,0.3)]">
                       {short}
                     </span>
                     <span className="font-anton text-[22px] leading-none text-[rgba(240,236,226,0.78)]">
-                      {(champion[key] * 100).toFixed(0)}%
+                      {(reach(champion) * 100).toFixed(0)}%
                     </span>
                   </div>
                 ))}
@@ -259,13 +262,13 @@ export default function TitleContenders() {
 
                 {/* Stage chips — desktop only */}
                 <div className="hidden lg:flex items-center gap-5 flex-shrink-0 pl-2">
-                  {STAGES.slice(0, 3).map(({ key, short }) => (
-                    <div key={key} className="flex flex-col items-center gap-0.5 w-10">
+                  {STAGES.slice(0, 3).map(({ short, reach }) => (
+                    <div key={short} className="flex flex-col items-center gap-0.5 w-10">
                       <span className="font-jb text-[9px] uppercase tracking-[0.08em] text-[rgba(240,236,226,0.28)]">
                         {short}
                       </span>
                       <span className="font-jb text-[12px] tabular-nums text-[rgba(240,236,226,0.52)]">
-                        {(team[key] * 100).toFixed(0)}%
+                        {(reach(team) * 100).toFixed(0)}%
                       </span>
                     </div>
                   ))}

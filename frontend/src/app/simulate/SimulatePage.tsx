@@ -48,7 +48,8 @@ const D_NATURAL_W =
   D_FINAL_W + 48
 // = 597 × 2 + 192 + 48 = 1434
 
-const D_NATURAL_H = D_HDR_H + D_BRACKET_H + 16  // 372
+const D_3P_SECTION_H = 120                        // label + card + padding
+const D_NATURAL_H = D_HDR_H + D_BRACKET_H + 16 + D_3P_SECTION_H  // 492
 
 // ── Label above each column ───────────────────────────────────────────────────
 function DLabel({ text, icon }: { text: string; icon: string }) {
@@ -264,6 +265,7 @@ function BracketDiagram({ rounds }: { rounds: BracketRound[] }) {
   const qf  = rounds.find(r => r.round === "Quarter-Final")?.matches ?? [];
   const sf  = rounds.find(r => r.round === "Semi-Final")?.matches ?? [];
   const fin = rounds.find(r => r.round === "Final")?.matches ?? [];
+  const tp  = rounds.find(r => r.round === "3rd Place Playoff")?.matches?.[0];
 
   if (r16.length < 8 || qf.length < 4 || sf.length < 2 || !fin[0]) return null;
 
@@ -311,6 +313,34 @@ function BracketDiagram({ rounds }: { rounds: BracketRound[] }) {
           <DCol    matches={r16R}  centers={D_R16_Y}      label={r16Label} fromLeft={false} delay={0} />
 
         </div>
+
+        {/* ── 3rd Place Playoff ──────────────────────────────────────── */}
+        {tp && (
+          <div className="flex flex-col items-center gap-2 pt-1 pb-4">
+            <div className="flex items-center gap-2">
+              <div className="h-px w-16 bg-gradient-to-r from-transparent to-amber-700/30" />
+              <DLabel text="3rd Place Playoff" icon="🥉" />
+              <div className="h-px w-16 bg-gradient-to-l from-transparent to-amber-700/30" />
+            </div>
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.32, delay: 0.88, ease: "easeOut" }}
+              className="overflow-hidden rounded-lg border shrink-0 cursor-default"
+              style={{
+                width: D_CARD_W,
+                height: D_CARD_H,
+                background: "linear-gradient(135deg, rgba(120,53,15,0.12) 0%, rgba(21,24,41,1) 70%)",
+                border: "1px solid rgba(180,120,60,0.28)",
+              }}
+            >
+              <DRow team={tp.team1} prob={tp.team1_win_prob} isWinner={tp.predicted_winner === tp.team1} />
+              <div className="h-px bg-navy-600/35 mx-1.5" />
+              <DRow team={tp.team2} prob={tp.team2_win_prob} isWinner={tp.predicted_winner === tp.team2} />
+            </motion.div>
+          </div>
+        )}
+
       </div>
     </div>
   );
@@ -782,7 +812,7 @@ export default function SimulatePage() {
                   Predicted Bracket
                 </h2>
                 <span className="text-xs text-slate-600 hidden lg:block">
-                  R16 → QF → SF → Final
+                  R16 → QF → SF → Final · 3rd Place
                 </span>
               </div>
               <div

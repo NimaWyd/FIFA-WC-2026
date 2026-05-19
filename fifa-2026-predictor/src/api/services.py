@@ -50,6 +50,7 @@ _simulation_cache: Optional[dict] = None
 _simulation_cache_ts: float = 0.0
 _bracket_cache: Optional[dict] = None
 _bracket_cache_ts: float = 0.0
+_match_winner_counts_cache: Optional[dict] = None
 _squad_ratings: dict = {}
 _squad_ratings_loaded: bool = False
 
@@ -66,12 +67,13 @@ def _get_squad_ratings() -> dict:
 
 def invalidate_data_caches() -> None:
     """Reset history and simulation caches so the next request reloads fresh data."""
-    global _history_df, _simulation_cache, _simulation_cache_ts, _bracket_cache, _bracket_cache_ts, _squad_ratings, _squad_ratings_loaded
+    global _history_df, _simulation_cache, _simulation_cache_ts, _bracket_cache, _bracket_cache_ts, _squad_ratings, _squad_ratings_loaded, _match_winner_counts_cache
     _history_df = None
     _simulation_cache = None
     _simulation_cache_ts = 0.0
     _bracket_cache = None
     _bracket_cache_ts = 0.0
+    _match_winner_counts_cache = None
     _squad_ratings = {}
     _squad_ratings_loaded = False
 
@@ -135,17 +137,29 @@ def simulate(n: int = 1000) -> dict:
 
     from src.simulation.tournament import build_tournament_states, run_simulation
     tracker = build_tournament_states(history_df, cfg)
-    _simulation_cache = run_simulation(tracker, model, cfg, n=n, squad_ratings=_get_squad_ratings())
+    global _match_winner_counts_cache
+    raw = run_simulation(tracker, model, cfg, n=n, squad_ratings=_get_squad_ratings())
+    _match_winner_counts_cache = raw.pop("match_winner_counts", None)
+    _simulation_cache = raw
     _simulation_cache_ts = time.time()
     return _simulation_cache
 
 
 def predict_bracket() -> dict:
-    """Deterministically predict the full WC2026 bracket (cached with 1-hour TTL)."""
+    """Predict WC2026 bracket using Monte Carlo modal winners (cached with 1-hour TTL).
+
+    Runs (or reuses) the Monte Carlo simulation to get modal per-slot winners,
+    then builds the bracket display from those — guaranteeing the bracket champion
+    matches the simulation's most-likely champion.
+    """
     import time
     global _bracket_cache, _bracket_cache_ts
     if _bracket_cache is not None and (time.time() - _bracket_cache_ts) < _CACHE_TTL_SECONDS:
         return _bracket_cache
+
+    # Reuse cached simulation if available; run fresh if not
+    sim_result = simulate()
+    modal_match_winners: dict[int, str] = sim_result.get("modal_match_winners", {})
 
     model = _get_model()
     if model is None:
@@ -158,11 +172,11 @@ def predict_bracket() -> dict:
     from src.simulation.tournament import (
         build_tournament_states,
         precompute_all_probabilities,
-        predict_bracket as _predict_bracket,
+        predict_bracket_modal as _predict_bracket_modal,
     )
     tracker = build_tournament_states(history_df, cfg)
     prob_cache = precompute_all_probabilities(tracker, model, cfg, squad_ratings=_get_squad_ratings())
-    _bracket_cache = _predict_bracket(prob_cache)
+    _bracket_cache = _predict_bracket_modal(modal_match_winners, prob_cache, _match_winner_counts_cache)
     _bracket_cache_ts = time.time()
     return _bracket_cache
 
