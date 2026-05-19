@@ -248,14 +248,14 @@ class TeamDependentScoreModel:
             predicted = np.array([probs["home_win"], probs["draw"], probs["away_win"]])
             return float(np.sum((predicted - target) ** 2))
 
-        # Cap at 3.5 goals — above that the Poisson mass spreads so thin that
-        # the optimizer reaches unrealistic scorelines (e.g. 5-4) when trying to
-        # match a very low draw probability. Real football teams average <3 xG/game.
+        # Cap at 2.5 goals — tighter than the old 3.5 cap to prevent unrealistic
+        # scorelines (e.g. 3-0 top result) when optimizing extreme win probabilities.
+        # Floor at 0.5 to keep dominated teams' xG plausible (issue #118).
         result = minimize(
             _loss,
             x0=np.array([lambda_home_init, lambda_away_init]),
             method="L-BFGS-B",
-            bounds=[(0.3, 3.5), (0.3, 3.5)],
+            bounds=[(0.5, 2.5), (0.5, 2.5)],
             options={"ftol": 1e-10, "gtol": 1e-7},
         )
         return float(result.x[0]), float(result.x[1])

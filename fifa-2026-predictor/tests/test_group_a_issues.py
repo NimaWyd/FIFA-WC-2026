@@ -1,4 +1,4 @@
-"""Tests for Group A model-accuracy issues (#109, #111, #116, #118)."""
+"""Tests for Group A model-accuracy issues (#109, #111, #116, #118, #119)."""
 from __future__ import annotations
 import sys
 from pathlib import Path
@@ -9,6 +9,82 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from src.models.scoreline_model import TeamDependentScoreModel, ScoreModelParams
+
+
+# ---------------------------------------------------------------------------
+# Issue #119 — xG/win-probability consistency: calibrated lambdas used for xG
+# ---------------------------------------------------------------------------
+
+class TestCalibratedLambdaBounds:
+    """calibrate_lambdas_to_outcomes must stay within [0.5, 2.5] (tighter than old 0.3–3.5)."""
+
+    def test_calibrated_lambdas_capped_at_2_5_for_dominant_home(self):
+        """Very dominant home team (85% win prob) must not push λ_home above 2.5."""
+        lh, la = TeamDependentScoreModel.calibrate_lambdas_to_outcomes(
+            p_home_win=0.85, p_draw=0.10, p_away_win=0.05,
+            lambda_home_init=1.8, lambda_away_init=0.7,
+        )
+        assert lh <= 2.5, f"Home lambda {lh:.3f} exceeded 2.5 cap — unrealistic xG"
+        assert la >= 0.5, f"Away lambda {la:.3f} below 0.5 floor"
+
+    def test_calibrated_lambdas_floored_at_0_5_for_dominated_team(self):
+        """Very weak away team (5% win prob) must not push λ_away below 0.5."""
+        lh, la = TeamDependentScoreModel.calibrate_lambdas_to_outcomes(
+            p_home_win=0.80, p_draw=0.15, p_away_win=0.05,
+            lambda_home_init=2.0, lambda_away_init=0.6,
+        )
+        assert la >= 0.5, f"Away lambda {la:.3f} below 0.5 floor"
+        assert lh <= 2.5, f"Home lambda {lh:.3f} exceeded 2.5 cap"
+
+    def test_away_dominant_gives_higher_away_lambda(self):
+        """When away team has higher win prob, calibrated λ_away must exceed λ_home."""
+        lh, la = TeamDependentScoreModel.calibrate_lambdas_to_outcomes(
+            p_home_win=0.30, p_draw=0.27, p_away_win=0.43,
+            lambda_home_init=1.4, lambda_away_init=1.1,
+        )
+        assert la > lh, (
+            f"Away team wins more (43% vs 30%) but λ_away={la:.3f} < λ_home={lh:.3f}"
+        )
+
+
+@pytest.mark.skipif(
+    not (lambda: __import__('pathlib').Path(
+        __import__('pathlib').Path(__file__).parents[1]
+        / "src/models/artifacts/scoreline_params.json"
+    ).exists())(),
+    reason="scoreline_params.json not found",
+)
+class TestXGMatchesWinProbDirection:
+    """xG direction must match win-probability direction (services.py must use calibrated lambdas)."""
+
+    def _predict(self, home: str, away: str) -> dict:
+        from src.api.services import predict
+        return predict(
+            home_team=home, away_team=away,
+            match_date="2026-06-20",
+            competition="FIFA World Cup", neutral=True,
+            home_confederation=None, away_confederation=None,
+            home_fifa_rank=None, away_fifa_rank=None,
+            tournament_stage="Group Stage",
+        )
+
+    def test_stronger_team_has_higher_xg(self):
+        """The team with higher win probability should also have higher expected goals."""
+        result = self._predict("Iran", "Turkey")
+        probs = result["probabilities"]
+        eg = result["expected_goals"]
+        if abs(probs["home_win"] - probs["away_win"]) < 0.05:
+            pytest.skip("Teams too evenly matched to test direction")
+        if probs["away_win"] > probs["home_win"]:
+            assert eg["away"] > eg["home"], (
+                f"Away wins more ({probs['away_win']:.2f} vs {probs['home_win']:.2f}) "
+                f"but xG: home={eg['home']:.2f} away={eg['away']:.2f}"
+            )
+        else:
+            assert eg["home"] > eg["away"], (
+                f"Home wins more ({probs['home_win']:.2f} vs {probs['away_win']:.2f}) "
+                f"but xG: home={eg['home']:.2f} away={eg['away']:.2f}"
+            )
 
 
 # ---------------------------------------------------------------------------

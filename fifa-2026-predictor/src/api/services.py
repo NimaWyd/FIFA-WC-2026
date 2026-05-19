@@ -441,11 +441,16 @@ def predict(
         try:
             score_model = TeamDependentScoreModel.load(scoreline_path)
             row_dict = feature_row.iloc[0].to_dict()
-            # Use natural lambdas derived from team attack/defense ratings.
-            # calibrate_lambdas_to_outcomes forced high xG (2.0-2.5) when
-            # draw probability was low, making 2-1 appear too often. Natural
-            # lambdas stay realistic (1.0-2.0 range). See issue #118.
-            lh, la = score_model.predict_lambdas_from_row(row_dict)
+            # Use natural lambdas as starting point, then calibrate to ensemble
+            # win probabilities so xG direction matches the predicted winner.
+            # Bounds (0.5, 2.5) prevent unrealistic values (issue #118).
+            lh_nat, la_nat = score_model.predict_lambdas_from_row(row_dict)
+            lh, la = TeamDependentScoreModel.calibrate_lambdas_to_outcomes(
+                probabilities["home_win"],
+                probabilities["draw"],
+                probabilities["away_win"],
+                lh_nat, la_nat,
+            )
             expected_goals = {"home": round(lh, 3), "away": round(la, 3)}
             raw_scorelines = TeamDependentScoreModel.top_scorelines(lh, la, top_n=5)
             top_scorelines = [
