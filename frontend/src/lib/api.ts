@@ -1,4 +1,4 @@
-import type { TeamInfo, PredictRequest, PredictResponse, ModelInfo, SimulationResponse, BracketResponse } from "./types";
+import type { TeamInfo, PredictRequest, PredictResponse, ModelInfo, SimulationResponse, BracketResponse, LiveMatchesResponse } from "./types";
 
 const BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:8000/api/v1";
 
@@ -105,4 +105,9 @@ export async function fetchSimulation(): Promise<SimulationResponse> {
 export async function fetchBracket(): Promise<BracketResponse> {
   const res = await fetchWithTimeout(`${BASE}/bracket`, {}, 90_000);
   return handleResponse<BracketResponse>(res);
+}
+
+export async function fetchLiveMatches(): Promise<LiveMatchesResponse> {
+  const res = await fetchWithTimeout(`${BASE}/matches`, {}, 20_000);
+  return handleResponse<LiveMatchesResponse>(res);
 }

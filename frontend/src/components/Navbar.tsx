@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
 
 const NAV_LINKS = [
+  { label: "Live",     href: "/live" },
   { label: "Groups",   href: "/groups" },
   { label: "Predict",  href: "/predict" },
   { label: "Simulate", href: "/simulate" },
@@ -52,6 +53,7 @@ export default function Navbar() {
         <nav className="hidden md:flex items-center gap-1" aria-label="Main navigation">
           {NAV_LINKS.map(({ label, href }) => {
             const active = isActive(href);
+            const isLive = label === "Live";
             return (
               <Link
                 key={label}
@@ -66,7 +68,15 @@ export default function Navbar() {
                     : "text-slate-400 hover:text-white hover:bg-navy-800"
                 }`}
               >
-                {label}
+                <span className="flex items-center gap-1.5">
+                  {isLive && (
+                    <span className="relative flex h-2 w-2 shrink-0">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75" />
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
+                    </span>
+                  )}
+                  {label}
+                </span>
                 {active && (
                   <span className="absolute bottom-0.5 left-4 right-4 h-[2px] rounded-full bg-pitch-400" />
                 )}
@@ -102,6 +112,7 @@ export default function Navbar() {
         >
           {NAV_LINKS.map(({ label, href }) => {
             const active = isActive(href);
+            const isLive = label === "Live";
             return (
               <Link
                 key={label}
@@ -115,7 +126,15 @@ export default function Navbar() {
                     : "text-slate-400 hover:text-white"
                 }`}
               >
-                {label}
+                <span className="flex items-center gap-2">
+                  {isLive && (
+                    <span className="relative flex h-2 w-2 shrink-0">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75" />
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
+                    </span>
+                  )}
+                  {label}
+                </span>
                 {active && (
                   <span className="w-1.5 h-1.5 rounded-full bg-pitch-400 flex-shrink-0" />
                 )}

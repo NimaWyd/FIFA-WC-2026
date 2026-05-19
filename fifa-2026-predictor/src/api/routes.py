@@ -171,6 +171,26 @@ def predict_bracket() -> schemas.BracketResponse:
 
 
 # ---------------------------------------------------------------------------
+# /matches
+# ---------------------------------------------------------------------------
+
+@router.get("/matches", response_model=schemas.LiveMatchesResponse, tags=["live"])
+def live_matches() -> schemas.LiveMatchesResponse:
+    """Return WC2026 match schedule with live status and scores from football-data.org.
+
+    Falls back gracefully when FOOTBALL_DATA_API_KEY is not set.
+    Results are cached for 60 s when matches are in play, 5 min otherwise.
+    """
+    result = services.get_live_matches()
+    return schemas.LiveMatchesResponse(
+        matches=[schemas.LiveMatch(**m) for m in result["matches"]],
+        source=result["source"],
+        fetched_at=result["fetched_at"],
+        has_live=result["has_live"],
+    )
+
+
+# ---------------------------------------------------------------------------
 # /refresh
 # ---------------------------------------------------------------------------
 

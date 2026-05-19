@@ -658,6 +658,107 @@ def get_model_info() -> dict[str, Any]:
 
 
 # ---------------------------------------------------------------------------
+# /matches service  (live scores from football-data.org)
+# ---------------------------------------------------------------------------
+
+import time as _time
+
+_matches_cache: dict[str, Any] = {"data": None, "ts": 0.0}
+_MATCHES_TTL_LIVE = 60        # seconds — poll quickly when in-play
+_MATCHES_TTL_IDLE = 300       # seconds — no active matches
+
+
+def get_live_matches() -> dict[str, Any]:
+    now = _time.time()
+    cached = _matches_cache
+    ttl = _MATCHES_TTL_LIVE if (cached["data"] or {}).get("has_live") else _MATCHES_TTL_IDLE
+    if cached["data"] is not None and (now - cached["ts"]) < ttl:
+        return cached["data"]
+    result = _fetch_wc_matches()
+    _matches_cache["data"] = result
+    _matches_cache["ts"] = now
+    return result
+
+
+def _fetch_wc_matches() -> dict[str, Any]:
+    import os
+    import requests as _req
+    from dotenv import load_dotenv
+
+    load_dotenv()
+    api_key = os.getenv("FOOTBALL_DATA_API_KEY")
+    fetched_at = datetime.now(timezone.utc).isoformat()
+
+    if not api_key:
+        return {"matches": [], "source": "no_api_key", "fetched_at": fetched_at, "has_live": False}
+
+    try:
+        resp = _req.get(
+            "https://api.football-data.org/v4/competitions/WC/matches",
+            headers={"X-Auth-Token": api_key},
+            timeout=15,
+        )
+        if resp.status_code in (401, 403):
+            return {"matches": [], "source": "api_forbidden", "fetched_at": fetched_at, "has_live": False}
+        resp.raise_for_status()
+
+        raw = resp.json().get("matches", [])
+        matches: list[dict[str, Any]] = []
+        has_live = False
+
+        for m in raw:
+            status = m.get("status", "SCHEDULED")
+            if status in ("IN_PLAY", "PAUSED"):
+                has_live = True
+
+            score = m.get("score", {})
+            ft = score.get("fullTime", {}) or {}
+            ht = score.get("halfTime", {}) or {}
+
+            utc_date = str(m.get("utcDate", ""))
+            local_date = utc_date[:10] if utc_date else ""
+
+            group_raw = str(m.get("group") or "")
+            group = group_raw.replace("GROUP_", "").replace("GROUP ", "") or None
+
+            home_name = (m.get("homeTeam") or {}).get("name", "TBD")
+            away_name = (m.get("awayTeam") or {}).get("name", "TBD")
+
+            try:
+                home_name = resolve_team(home_name)
+            except Exception:
+                pass
+            try:
+                away_name = resolve_team(away_name)
+            except Exception:
+                pass
+
+            matches.append({
+                "id": f"{local_date}_{home_name}_{away_name}",
+                "utc_date": utc_date,
+                "local_date": local_date,
+                "status": status,
+                "minute": m.get("minute"),
+                "stage": m.get("stage", ""),
+                "group": group,
+                "matchday": m.get("matchday"),
+                "home_team": home_name,
+                "away_team": away_name,
+                "home_score": ft.get("home"),
+                "away_score": ft.get("away"),
+                "halftime_home": ht.get("home"),
+                "halftime_away": ht.get("away"),
+                "venue": m.get("venue"),
+            })
+
+        return {"matches": matches, "source": "api", "fetched_at": fetched_at, "has_live": has_live}
+
+    except Exception as exc:
+        log.warning("Failed to fetch live matches: %s", exc)
+        return {"matches": [], "source": "error", "fetched_at": fetched_at, "has_live": False}
+
+
+# ---------------------------------------------------------------------------
 # /health service
 # ---------------------------------------------------------------------------
 

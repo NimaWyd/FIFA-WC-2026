@@ -145,3 +145,28 @@ export interface BracketResponse {
   champion: string;
   generated_at: string;
 }
+
+export interface LiveMatch {
+  id: string;
+  utc_date: string;
+  local_date: string;
+  status: "SCHEDULED" | "TIMED" | "IN_PLAY" | "PAUSED" | "FINISHED" | "POSTPONED" | "SUSPENDED" | "CANCELLED" | "AWARDED";
+  minute?: number | null;
+  stage: string;
+  group?: string | null;
+  matchday?: number | null;
+  home_team: string;
+  away_team: string;
+  home_score?: number | null;
+  away_score?: number | null;
+  halftime_home?: number | null;
+  halftime_away?: number | null;
+  venue?: string | null;
+}
+
+export interface LiveMatchesResponse {
+  matches: LiveMatch[];
+  source: string;
+  fetched_at: string;
+  has_live: boolean;
+}

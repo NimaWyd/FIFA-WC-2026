@@ -179,3 +179,32 @@ class BracketResponse(BaseModel):
     group_standings: dict[str, list[str]]
     champion: str
     generated_at: str
+
+
+# ---------------------------------------------------------------------------
+# /matches
+# ---------------------------------------------------------------------------
+
+class LiveMatch(BaseModel):
+    id: str
+    utc_date: str
+    local_date: str
+    status: str
+    minute: Optional[int] = None
+    stage: str
+    group: Optional[str] = None
+    matchday: Optional[int] = None
+    home_team: str
+    away_team: str
+    home_score: Optional[int] = None
+    away_score: Optional[int] = None
+    halftime_home: Optional[int] = None
+    halftime_away: Optional[int] = None
+    venue: Optional[str] = None
+
+
+class LiveMatchesResponse(BaseModel):
+    matches: list[LiveMatch]
+    source: str
+    fetched_at: str
+    has_live: bool
