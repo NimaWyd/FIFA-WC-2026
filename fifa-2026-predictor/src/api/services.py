@@ -671,13 +671,18 @@ import time as _time
 _matches_cache: dict[str, Any] = {"data": None, "ts": 0.0}
 _MATCHES_TTL_LIVE = 60        # seconds — poll quickly when in-play
 _MATCHES_TTL_IDLE = 300       # seconds — no active matches
+_matches_throttle_until: float = 0.0  # epoch time; back off until this point
 
 
 def get_live_matches() -> dict[str, Any]:
     now = _time.time()
     cached = _matches_cache
-    ttl = _MATCHES_TTL_LIVE if (cached["data"] or {}).get("has_live") else _MATCHES_TTL_IDLE
-    if cached["data"] is not None and (now - cached["ts"]) < ttl:
+    # Honour rate-limit backoff first
+    effective_ttl = max(
+        _MATCHES_TTL_LIVE if (cached["data"] or {}).get("has_live") else _MATCHES_TTL_IDLE,
+        _matches_throttle_until - now,
+    )
+    if cached["data"] is not None and (now - cached["ts"]) < effective_ttl:
         return cached["data"]
     result = _fetch_wc_matches()
     _matches_cache["data"] = result
@@ -689,6 +694,8 @@ def _fetch_wc_matches() -> dict[str, Any]:
     import os
     import requests as _req
     from dotenv import load_dotenv
+
+    global _matches_throttle_until
 
     load_dotenv()
     api_key = os.getenv("FOOTBALL_DATA_API_KEY")
@@ -703,6 +710,27 @@ def _fetch_wc_matches() -> dict[str, Any]:
             headers={"X-Auth-Token": api_key},
             timeout=15,
         )
+
+        # Respect rate-limit headers so we don't hammer the API
+        try:
+            requests_available = int(resp.headers.get("X-RequestsAvailable", 10))
+            reset_in = int(resp.headers.get("X-RequestCounter-Reset", 60))
+            if requests_available <= 1:
+                _matches_throttle_until = _time.time() + reset_in
+                log.warning(
+                    "football-data.org rate limit nearly exhausted (%d remaining). "
+                    "Backing off for %ds.",
+                    requests_available, reset_in,
+                )
+        except (TypeError, ValueError):
+            pass
+
+        if resp.status_code == 429:
+            reset_in = int(resp.headers.get("X-RequestCounter-Reset", 60))
+            _matches_throttle_until = _time.time() + reset_in
+            log.warning("football-data.org rate limited (429). Backing off for %ds.", reset_in)
+            return {"matches": [], "source": "rate_limited", "fetched_at": fetched_at, "has_live": False}
+
         if resp.status_code in (401, 403):
             return {"matches": [], "source": "api_forbidden", "fetched_at": fetched_at, "has_live": False}
         resp.raise_for_status()
