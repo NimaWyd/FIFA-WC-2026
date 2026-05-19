@@ -66,7 +66,7 @@ CANONICAL_TEAMS: dict[str, dict] = {
     "Austria": {"confederation": "UEFA", "fifa_rank_2025": 22, "aliases": []},
     "Azerbaijan": {"confederation": "UEFA", "fifa_rank_2025": None, "aliases": []},
     "Belarus": {"confederation": "UEFA", "fifa_rank_2025": None, "aliases": []},
-    "Belgium": {"confederation": "UEFA", "fifa_rank_2025": 7, "aliases": []},
+    "Belgium": {"confederation": "UEFA", "fifa_rank_2025": 8, "aliases": []},
     "Bosnia and Herzegovina": {
         "confederation": "UEFA", "fifa_rank_2025": 67,
         "aliases": ["Bosnia", "Bosnia & Herzegovina", "Bosnia-Herzegovina",
@@ -87,7 +87,7 @@ CANONICAL_TEAMS: dict[str, dict] = {
     "France": {"confederation": "UEFA", "fifa_rank_2025": 2, "aliases": []},
     "Georgia": {"confederation": "UEFA", "fifa_rank_2025": 69, "aliases": []},
     "Germany": {
-        "confederation": "UEFA", "fifa_rank_2025": 9,
+        "confederation": "UEFA", "fifa_rank_2025": 10,
         "aliases": ["West Germany", "Deutschland"],
     },
     "Gibraltar": {"confederation": "UEFA", "fifa_rank_2025": None, "aliases": []},
@@ -99,7 +99,7 @@ CANONICAL_TEAMS: dict[str, dict] = {
         "aliases": ["Republic of Ireland"],
     },
     "Israel": {"confederation": "UEFA", "fifa_rank_2025": 64, "aliases": []},
-    "Italy": {"confederation": "UEFA", "fifa_rank_2025": 10, "aliases": []},
+    "Italy": {"confederation": "UEFA", "fifa_rank_2025": 9, "aliases": []},
     "Kazakhstan": {"confederation": "UEFA", "fifa_rank_2025": None, "aliases": []},
     "Kosovo": {"confederation": "UEFA", "fifa_rank_2025": None, "aliases": []},
     "Latvia": {"confederation": "UEFA", "fifa_rank_2025": None, "aliases": []},
@@ -109,7 +109,7 @@ CANONICAL_TEAMS: dict[str, dict] = {
     "Malta": {"confederation": "UEFA", "fifa_rank_2025": None, "aliases": []},
     "Moldova": {"confederation": "UEFA", "fifa_rank_2025": None, "aliases": []},
     "Montenegro": {"confederation": "UEFA", "fifa_rank_2025": 73, "aliases": []},
-    "Netherlands": {"confederation": "UEFA", "fifa_rank_2025": 8, "aliases": ["Holland"]},
+    "Netherlands": {"confederation": "UEFA", "fifa_rank_2025": 7, "aliases": ["Holland"]},
     "North Macedonia": {
         "confederation": "UEFA", "fifa_rank_2025": 74,
         "aliases": ["Macedonia", "FYROM", "FYR Macedonia", "North Macedonia (FYROM)"],
@@ -136,7 +136,7 @@ CANONICAL_TEAMS: dict[str, dict] = {
     "Sweden": {"confederation": "UEFA", "fifa_rank_2025": 53, "aliases": []},
     "Switzerland": {"confederation": "UEFA", "fifa_rank_2025": 17, "aliases": ["Swiss"]},
     "Turkey": {
-        "confederation": "UEFA", "fifa_rank_2025": 25,
+        "confederation": "UEFA", "fifa_rank_2025": 40,
         "aliases": ["Türkiye", "Turkiye"],
     },
     "Ukraine": {"confederation": "UEFA", "fifa_rank_2025": 29, "aliases": []},
@@ -153,7 +153,7 @@ CANONICAL_TEAMS: dict[str, dict] = {
     "Ecuador": {"confederation": "CONMEBOL", "fifa_rank_2025": 21, "aliases": []},
     "Paraguay": {"confederation": "CONMEBOL", "fifa_rank_2025": 45, "aliases": []},
     "Peru": {"confederation": "CONMEBOL", "fifa_rank_2025": 39, "aliases": []},
-    "Uruguay": {"confederation": "CONMEBOL", "fifa_rank_2025": 16, "aliases": []},
+    "Uruguay": {"confederation": "CONMEBOL", "fifa_rank_2025": 12, "aliases": []},
     "Venezuela": {"confederation": "CONMEBOL", "fifa_rank_2025": 36, "aliases": []},
 
     # =========================================================================
@@ -198,7 +198,7 @@ CANONICAL_TEAMS: dict[str, dict] = {
         "aliases": ["Trinidad & Tobago", "T&T"],
     },
     "United States": {
-        "confederation": "CONCACAF", "fifa_rank_2025": 13,
+        "confederation": "CONCACAF", "fifa_rank_2025": 16,
         "aliases": ["USA", "US", "United States of America", "U.S.A.", "U.S.",
                     "United States Men's National Team", "USMNT"],
     },
@@ -258,7 +258,7 @@ CANONICAL_TEAMS: dict[str, dict] = {
     "Mali": {"confederation": "CAF", "fifa_rank_2025": 56, "aliases": []},
     "Mauritania": {"confederation": "CAF", "fifa_rank_2025": None, "aliases": []},
     "Mauritius": {"confederation": "CAF", "fifa_rank_2025": None, "aliases": []},
-    "Morocco": {"confederation": "CAF", "fifa_rank_2025": 12, "aliases": []},
+    "Morocco": {"confederation": "CAF", "fifa_rank_2025": 13, "aliases": []},
     "Mozambique": {"confederation": "CAF", "fifa_rank_2025": 84, "aliases": []},
     "Namibia": {"confederation": "CAF", "fifa_rank_2025": None, "aliases": []},
     "Niger": {"confederation": "CAF", "fifa_rank_2025": None, "aliases": []},
@@ -268,7 +268,7 @@ CANONICAL_TEAMS: dict[str, dict] = {
         "confederation": "CAF", "fifa_rank_2025": None,
         "aliases": ["Sao Tome and Principe", "São Tomé e Príncipe"],
     },
-    "Senegal": {"confederation": "CAF", "fifa_rank_2025": 19, "aliases": []},
+    "Senegal": {"confederation": "CAF", "fifa_rank_2025": 20, "aliases": []},
     "Seychelles": {"confederation": "CAF", "fifa_rank_2025": None, "aliases": []},
     "Sierra Leone": {"confederation": "CAF", "fifa_rank_2025": None, "aliases": []},
     "Somalia": {"confederation": "CAF", "fifa_rank_2025": None, "aliases": []},
@@ -286,7 +286,7 @@ CANONICAL_TEAMS: dict[str, dict] = {
     # AFC (47 members)
     # =========================================================================
     "Afghanistan": {"confederation": "AFC", "fifa_rank_2025": 94, "aliases": []},
-    "Australia": {"confederation": "AFC", "fifa_rank_2025": 27, "aliases": ["Socceroos"]},
+    "Australia": {"confederation": "AFC", "fifa_rank_2025": 24, "aliases": ["Socceroos"]},
     "Bahrain": {"confederation": "AFC", "fifa_rank_2025": None, "aliases": []},
     "Bangladesh": {"confederation": "AFC", "fifa_rank_2025": None, "aliases": []},
     "Bhutan": {"confederation": "AFC", "fifa_rank_2025": None, "aliases": []},
@@ -302,18 +302,18 @@ CANONICAL_TEAMS: dict[str, dict] = {
     "India": {"confederation": "AFC", "fifa_rank_2025": 95, "aliases": []},
     "Indonesia": {"confederation": "AFC", "fifa_rank_2025": 98, "aliases": []},
     "IR Iran": {
-        "confederation": "AFC", "fifa_rank_2025": 31,
+        "confederation": "AFC", "fifa_rank_2025": 22,
         "aliases": ["Iran", "Islamic Republic of Iran", "Iran IR"],
     },
     "Iraq": {"confederation": "AFC", "fifa_rank_2025": 61, "aliases": []},
-    "Japan": {"confederation": "AFC", "fifa_rank_2025": 15, "aliases": []},
+    "Japan": {"confederation": "AFC", "fifa_rank_2025": 24, "aliases": []},
     "Jordan": {"confederation": "AFC", "fifa_rank_2025": 71, "aliases": []},
     "Korea DPR": {
         "confederation": "AFC", "fifa_rank_2025": None,
         "aliases": ["North Korea", "DPR Korea", "Democratic People's Republic of Korea"],
     },
     "Korea Republic": {
-        "confederation": "AFC", "fifa_rank_2025": 26,
+        "confederation": "AFC", "fifa_rank_2025": 23,
         "aliases": ["South Korea", "Korea", "Republic of Korea"],
     },
     "Kuwait": {"confederation": "AFC", "fifa_rank_2025": None, "aliases": []},
@@ -333,8 +333,8 @@ CANONICAL_TEAMS: dict[str, dict] = {
     "Pakistan": {"confederation": "AFC", "fifa_rank_2025": None, "aliases": []},
     "Palestine": {"confederation": "AFC", "fifa_rank_2025": None, "aliases": []},
     "Philippines": {"confederation": "AFC", "fifa_rank_2025": 100, "aliases": []},
-    "Qatar": {"confederation": "AFC", "fifa_rank_2025": 76, "aliases": []},
-    "Saudi Arabia": {"confederation": "AFC", "fifa_rank_2025": 63, "aliases": []},
+    "Qatar": {"confederation": "AFC", "fifa_rank_2025": 37, "aliases": []},
+    "Saudi Arabia": {"confederation": "AFC", "fifa_rank_2025": 56, "aliases": []},
     "Singapore": {"confederation": "AFC", "fifa_rank_2025": None, "aliases": []},
     "Sri Lanka": {"confederation": "AFC", "fifa_rank_2025": None, "aliases": []},
     "Syria": {"confederation": "AFC", "fifa_rank_2025": None, "aliases": []},

@@ -166,3 +166,39 @@ def test_predict_bracket_modal_uses_modal_champion():
         else:
             # modal[103] is an impossible finalist given earlier modal picks — fallback used
             assert result["champion"] in (finalist1, finalist2)
+
+
+def test_predict_match_proba_accepts_squad_ratings():
+    """Issue #140: predict_match_proba must accept squad_ratings and pass it to build_match_row."""
+    from src.simulation.tournament import predict_match_proba
+    import pandas as pd
+
+    # Build a minimal stub model that returns probabilities.
+    stub_model = MagicMock()
+    stub_model.predict_proba.return_value = [[0.5, 0.3, 0.2]]
+    stub_clf = MagicMock()
+    stub_clf.classes_ = [0, 1, 2]
+    stub_model.named_steps = {"classifier": stub_clf}
+
+    tracker = _make_stub_tracker()
+    cfg = {}
+    squad_ratings = {"Brazil": {"attack": 85.0, "defense": 80.0}}
+
+    # Patch build_match_row to capture the kwargs it receives.
+    with patch("src.simulation.tournament.build_match_row") as mock_build:
+        mock_build.return_value = {"dummy_feature": 1.0}
+        predict_match_proba(
+            "Brazil", "Germany", tracker, stub_model, cfg,
+            squad_ratings=squad_ratings,
+        )
+        called_kwargs = mock_build.call_args
+        assert called_kwargs is not None, "build_match_row was not called"
+        # squad_ratings must be forwarded to build_match_row
+        passed_squad_ratings = (
+            called_kwargs.kwargs.get("squad_ratings")
+            if called_kwargs.kwargs
+            else called_kwargs[1].get("squad_ratings")
+        )
+        assert passed_squad_ratings == squad_ratings, (
+            f"squad_ratings not forwarded to build_match_row; got {passed_squad_ratings!r}"
+        )

@@ -43,6 +43,7 @@ def predict_match_proba(
     home: str, away: str, tracker: TeamStateTracker, model: Any, cfg: dict,
     match_date: pd.Timestamp = _TOURNAMENT_DATE,
     stage: str = "Group Stage",
+    squad_ratings: "dict | None" = None,
 ) -> dict[str, float]:
     """Return {home_win, draw, away_win} for a single match. Used for one-off predictions."""
     from src.models.common import TARGET_MAP
@@ -59,6 +60,7 @@ def predict_match_proba(
         away_fifa_rank=get_fifa_rank(away),
         tournament_stage=stage,
         elo_inactivity_halflife=float(cfg.get("features", {}).get("elo_inactivity_halflife", 0.0)),
+        squad_ratings=squad_ratings,
     )
     feature_row = pd.DataFrame([record])
     probs_raw = model.predict_proba(feature_row)[0]

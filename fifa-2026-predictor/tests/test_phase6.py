@@ -144,11 +144,11 @@ class TestTeams:
         assert "confederation" in meta
         assert "fifa_rank" in meta
 
-    def test_unknown_team_returns_200_with_is_known_false(self):
+    def test_unknown_team_returns_404(self):
         resp = client.get("/api/v1/teams/FakeTeamXYZ")
-        assert resp.status_code == 200
+        assert resp.status_code == 404
         data = resp.json()
-        assert data["is_known"] is False
+        assert "not found" in data["detail"].lower()
 
 
 # ---------------------------------------------------------------------------

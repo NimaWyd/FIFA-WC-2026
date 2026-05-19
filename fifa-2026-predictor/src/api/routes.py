@@ -57,6 +57,8 @@ def list_teams(
 def get_team(team_name: str) -> schemas.TeamInfo:
     """Return canonical metadata for a single team (accepts any known alias)."""
     info = services.get_team_info(team_name)
+    if not info["is_known"]:
+        raise HTTPException(status_code=404, detail=f"Team '{team_name}' not found")
     return schemas.TeamInfo(**info)
 
 
