@@ -10,6 +10,7 @@ interface Player {
   club: string;
   age?: number;
   espn_id?: string;
+  sofascore_id?: string;
 }
 
 interface TeamRoster {
@@ -48,12 +49,24 @@ function getInitials(name: string): string {
 }
 
 function PlayerPhoto({ player, accent }: { player: Player; accent: string }) {
-  const [failed, setFailed] = useState(false);
-  const photoUrl = player.espn_id
+  // 0 = sofascore, 1 = espn, 2 = initials
+  const [stage, setStage] = useState(0);
+
+  const sofascoreUrl = player.sofascore_id
+    ? `https://api.sofascore.com/api/v1/player/${player.sofascore_id}/image`
+    : null;
+  const espnUrl = player.espn_id
     ? `https://a.espncdn.com/i/headshots/soccer/players/full/${player.espn_id}.png`
     : null;
 
-  if (photoUrl && !failed) {
+  const photoUrl = stage === 0 ? sofascoreUrl : stage === 1 ? espnUrl : null;
+
+  const handleError = () => {
+    if (stage === 0 && espnUrl) setStage(1);
+    else setStage(2);
+  };
+
+  if (photoUrl && stage < 2) {
     return (
       <div className="relative w-14 h-14 rounded-xl overflow-hidden flex-shrink-0 bg-navy-700 border border-navy-600">
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -61,13 +74,12 @@ function PlayerPhoto({ player, accent }: { player: Player; accent: string }) {
           src={photoUrl}
           alt={player.name}
           className="w-full h-full object-cover object-top"
-          onError={() => setFailed(true)}
+          onError={handleError}
         />
       </div>
     );
   }
 
-  // Initials fallback
   return (
     <div className={`w-14 h-14 rounded-xl flex-shrink-0 flex items-center justify-center border ${accent} font-bold text-base`}>
       {getInitials(player.name)}

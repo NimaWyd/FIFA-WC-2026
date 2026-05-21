@@ -117,6 +117,17 @@ The frontend calls the backend at `http://localhost:8000/api/v1` (configured via
 
 Next.js 14 (App Router), TypeScript, Tailwind CSS, Framer Motion, Headless UI, flag-icons.
 
+### Roster data (`frontend/src/lib/rosters.json`)
+
+Static JSON with all 48 WC 2026 squads. Each released team has `{ manager, goalkeepers, defenders, midfielders, forwards }`; unreleased teams have `{ released: false, manager? }`. Each player has `{ name, club, age?, espn_id?, sofascore_id? }`.
+
+**Photo priority in `RosterSection.tsx`:** SofaScore CDN first (`https://api.sofascore.com/api/v1/player/{sofascore_id}/image`), ESPN fallback (`https://a.espncdn.com/i/headshots/soccer/players/full/{espn_id}.png`), then initials. Handled via a `stage` state (0/1/2) with `onError` cascading.
+
+**Roster scripts** (run from repo root, require `espn_article.txt` / `espn_player_links.json` inputs):
+- `scripts/parse_rosters.py` — parses ESPN article into rosters.json
+- `scripts/enrich_rosters.py` — adds `espn_id` + `age` via ESPN article links + search API
+- `scripts/enrich_sofascore.py` — adds `sofascore_id` from `sofascore_squads.json` (fetched via Playwright browser session on sofascore.com)
+
 ---
 
 ## Simulation (`fifa-2026-predictor/src/simulation/`)

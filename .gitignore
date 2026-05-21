@@ -52,6 +52,8 @@ frontend/.next/
 # Scraping temp files
 espn_article.txt
 espn_player_links.json
+sofascore_squads.json
+players_chunk_*.json
 
 # Screenshots / test images at repo root
 *.png
