@@ -2,137 +2,161 @@
 
 import { useState, useRef, useLayoutEffect, useEffect } from "react";
 import { motion, AnimatePresence, useMotionValue, useTransform, animate } from "framer-motion";
+import dynamic from "next/dynamic";
 import FlagIcon from "@/components/FlagIcon";
 import { useBracket } from "@/hooks/useBracket";
 import { useSimulation } from "@/hooks/useSimulation";
 import type { BracketMatch, BracketRound, TeamSimResult } from "@/lib/types";
 
-// ─── Round tab labels ─────────────────────────────────────────────────────────
+const TrophyEmbed = dynamic(() => import("@/components/TrophyEmbed"), { ssr: false });
+
+// ─── Bracket layout constants (linear: R32 → R16 → QF → SF → Final → Champion) ─
+const D_ROW_H    = 26
+const D_CARD_H   = D_ROW_H * 2 + 2         // 54
+const D_CARD_W   = 152
+const D_FINAL_W  = 172
+const D_CHAMP_W  = 210
+const D_GAP      = 8
+const D_SVG_W    = 26
+const D_HDR_H    = 28
+
+// R32 compact card dimensions
+const D_R32_ROW_H  = 18
+const D_R32_CARD_H = D_R32_ROW_H * 2 + 2   // 38
+const D_R32_CARD_W = 136
+const D_R32_GAP    = 4
+
+// Column height is now driven by 16 R32 matches
+const D_COL_H = 16 * D_R32_CARD_H + 15 * D_R32_GAP  // 608 + 60 = 668
+
+// Vertical centres per round — everything derived from R32 spacing
+const D_R32_Y = Array.from({ length: 16 }, (_, i) => i * (D_R32_CARD_H + D_R32_GAP) + D_R32_CARD_H / 2)
+const D_R16_Y = Array.from({ length: 8 },  (_, i) => (D_R32_Y[i * 2] + D_R32_Y[i * 2 + 1]) / 2)
+const D_QF_Y  = [0, 1, 2, 3].map(i => (D_R16_Y[i * 2] + D_R16_Y[i * 2 + 1]) / 2)
+const D_SF_Y  = [0, 1].map(i => (D_QF_Y[i * 2] + D_QF_Y[i * 2 + 1]) / 2)
+const D_FIN_Y = (D_SF_Y[0] + D_SF_Y[1]) / 2
+
+// 3rd-place playoff x-offset: centered under the Final column
+// Final left edge = 696; Final width = 172; 3rd-place card width = 172 → same width, same x
+const D_3P_X = D_R32_CARD_W + D_SVG_W + D_CARD_W + D_SVG_W + D_CARD_W + D_SVG_W + D_CARD_W + D_SVG_W  // 696
+
+const D_3P_H  = 96
+const D_NAT_H = D_HDR_H + D_COL_H + 16 + D_3P_H   // 28+668+16+96 = 808
+const D_NAT_W =
+  D_R32_CARD_W + D_SVG_W + D_CARD_W + D_SVG_W + D_CARD_W + D_SVG_W + D_CARD_W + D_SVG_W + D_FINAL_W + D_SVG_W + D_CHAMP_W + 40
+// 136+26+152+26+152+26+152+26+172+26+210+40 = 1144
+
+// ─── Round tab labels (mobile) ────────────────────────────────────────────────
 const ROUND_LABELS: Record<string, string> = {
-  "Round of 32":      "R32",
-  "Round of 16":      "R16",
-  "Quarter-Final":    "QF",
-  "Semi-Final":       "SF",
-  "3rd Place Playoff":"3rd Place",
-  "Final":            "Final",
+  "Round of 32":       "R32",
+  "Round of 16":       "R16",
+  "Quarter-Final":     "QF",
+  "Semi-Final":        "SF",
+  "3rd Place Playoff": "3rd",
+  "Final":             "Final",
 };
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// Visual bracket diagram (R16 → QF → SF → Final)
-// Only rendered on md+ screens (too dense on mobile).
-// ═══════════════════════════════════════════════════════════════════════════════
-
-const D_ROW_H    = 35
-const D_CARD_H   = D_ROW_H * 2 + 2       // 72px — 2 rows + 2px divider
-const D_CARD_W   = 175
-const D_FINAL_W  = 192
-const D_GAP      = 14                    // vertical gap between stacked cards
-const D_SVG_W    = 28
-const D_HLINE_W  = 16
-const D_HDR_H    = 26
-
-const D_BRACKET_H = 4 * D_CARD_H + 3 * D_GAP   // 330
-
-// Vertical centres for each round (left side; right mirrors by symmetry)
-const D_R16_Y = [0, 1, 2, 3].map(i => i * (D_CARD_H + D_GAP) + D_CARD_H / 2)
-// ≈ [36, 122, 208, 294]
-const D_QF_Y = [
-  (D_R16_Y[0] + D_R16_Y[1]) / 2,   // ≈ 79
-  (D_R16_Y[2] + D_R16_Y[3]) / 2,   // ≈ 251
-]
-const D_SF_Y = D_BRACKET_H / 2      // 165
-
-// Total natural width = two sides × (R16 + SVG + QF + SVG + SF + HLine) + Final + padding
-const D_NATURAL_W =
-  (D_CARD_W + D_SVG_W + D_CARD_W + D_SVG_W + D_CARD_W + D_HLINE_W) * 2 +
-  D_FINAL_W + 48
-// = 597 × 2 + 192 + 48 = 1434
-
-const D_3P_SECTION_H = 120                        // label + card + padding
-const D_NATURAL_H = D_HDR_H + D_BRACKET_H + 16 + D_3P_SECTION_H  // 492
-
-// ── Label above each column ───────────────────────────────────────────────────
-function DLabel({ text, icon }: { text: string; icon: string }) {
+// ─── Column header label ──────────────────────────────────────────────────────
+function DLabel({ text }: { text: string }) {
   return (
-    <div className="flex items-center gap-1 text-[9px] font-bold uppercase tracking-[0.14em] text-slate-600">
-      <span>{icon}</span>
-      <span>{text}</span>
-    </div>
+    <span className="font-jb text-[9px] uppercase tracking-[0.18em]" style={{ color: "rgba(245,239,225,0.38)" }}>
+      {text}
+    </span>
   );
 }
 
-// ── Team row inside a diagram card ────────────────────────────────────────────
-function DRow({ team, prob, isWinner, large = false }: {
-  team: string; prob: number; isWinner: boolean; large?: boolean;
+// ─── Team row inside a card ───────────────────────────────────────────────────
+function DRow({ team, prob, isWinner, large = false, compact = false }: {
+  team: string; prob: number; isWinner: boolean; large?: boolean; compact?: boolean;
 }) {
-  const pct = (prob * 100).toFixed(0);
+  const rowH = compact ? D_R32_ROW_H : D_ROW_H;
   return (
     <div
-      className={`relative flex items-center gap-1.5 px-2 transition-colors ${isWinner ? "bg-gold-500/[0.06]" : ""}`}
-      style={{ height: D_ROW_H }}
+      className={`relative flex items-center gap-1 ${compact ? "px-1.5" : "px-2 gap-1.5"}`}
+      style={{ height: rowH }}
     >
       {isWinner && (
-        <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-gold-400 rounded-r-sm" />
+        <div
+          className="absolute left-0 top-0 bottom-0 rounded-r"
+          style={{ width: 2.5, background: "#f5c842" }}
+        />
       )}
       <FlagIcon
         team={team}
-        className={large ? "w-6 h-[16px] rounded-sm shrink-0" : "w-[18px] h-[12px] rounded-sm shrink-0"}
+        className={`rounded-sm shrink-0 ${
+          large   ? "w-6 h-[16px]"    :
+          compact ? "w-[12px] h-[8px]" :
+                    "w-[15px] h-[10px]"
+        }`}
       />
-      <span className={`flex-1 truncate leading-none font-medium ${large ? "text-[11.5px]" : "text-[10px]"} ${isWinner ? "text-white" : "text-slate-500"}`}>
+      <span
+        className={`flex-1 truncate font-anton leading-none ${
+          large ? "text-[13px]" : compact ? "text-[10px]" : "text-[11.5px]"
+        }`}
+        style={{ color: isWinner ? "#f5efe1" : "rgba(245,239,225,0.3)" }}
+      >
         {team}
       </span>
-      <span className={`font-bold tabular-nums ${large ? "text-[12px]" : "text-[10px]"} ${isWinner ? "text-gold-400" : "text-slate-600"}`}>
-        {pct}%
+      <span
+        className={`font-jb tabular-nums shrink-0 ${compact ? "text-[8px]" : "text-[9px]"}`}
+        style={{ color: isWinner ? "#f5c842" : "rgba(245,239,225,0.22)" }}
+      >
+        {(prob * 100).toFixed(0)}%
       </span>
     </div>
   );
 }
 
-// ── Match card inside the diagram ─────────────────────────────────────────────
-function DCard({ match, isFinal = false, fromLeft = true, delay = 0 }: {
-  match: BracketMatch; isFinal?: boolean; fromLeft?: boolean; delay?: number;
+// ─── Match card ───────────────────────────────────────────────────────────────
+function DCard({ match, variant = "default", delay = 0 }: {
+  match: BracketMatch;
+  variant?: "default" | "sf" | "final" | "compact";
+  delay?: number;
 }) {
-  const w = isFinal ? D_FINAL_W : D_CARD_W;
-  const transition = isFinal
-    ? { duration: 0.4, delay, type: "spring" as const, stiffness: 220, damping: 22 }
-    : { duration: 0.32, delay, ease: "easeOut" as const };
+  const w = variant === "final" ? D_FINAL_W : variant === "compact" ? D_R32_CARD_W : D_CARD_W;
+  const h = variant === "compact" ? D_R32_CARD_H : D_CARD_H;
+  const cardStyle: React.CSSProperties =
+    variant === "final" ? {
+      width: w, height: h, borderRadius: 4,
+      background: "rgba(245,200,66,0.07)",
+      border: "1px solid rgba(245,200,66,0.5)",
+      boxShadow: "0 0 14px rgba(245,200,66,0.07)",
+    } : variant === "sf" ? {
+      width: w, height: h, borderRadius: 4,
+      background: "rgba(255,255,255,0.04)",
+      border: "1px solid rgba(245,200,66,0.2)",
+    } : variant === "compact" ? {
+      width: w, height: h, borderRadius: 3,
+      background: "rgba(255,255,255,0.025)",
+      border: "1px solid rgba(255,255,255,0.06)",
+    } : {
+      width: w, height: h, borderRadius: 4,
+      background: "rgba(255,255,255,0.03)",
+      border: "1px solid rgba(255,255,255,0.07)",
+    };
 
+  const isCompact = variant === "compact";
   return (
     <motion.div
-      initial={{
-        opacity: 0,
-        x:     isFinal ? 0            : (fromLeft ? -12 : 12),
-        y:     isFinal ? 10           : 0,
-        scale: isFinal ? 0.93         : 1,
-      }}
-      animate={{ opacity: 1, x: 0, y: 0, scale: 1 }}
-      transition={transition}
-      whileHover={{ scale: 1.014, transition: { duration: 0.15 } }}
-      className="overflow-hidden rounded-lg border border-navy-600/60 bg-navy-800 shrink-0 cursor-default"
-      style={{
-        width:  w,
-        height: D_CARD_H,
-        ...(isFinal ? {
-          background: "linear-gradient(135deg, rgba(197,130,39,0.10) 0%, rgba(21,24,41,1) 70%)",
-          border:     "1px solid rgba(245,200,66,0.26)",
-          boxShadow:  "0 0 22px rgba(245,200,66,0.06), inset 0 1px 0 rgba(245,200,66,0.08)",
-        } : {}),
-      }}
+      initial={{ opacity: 0, x: -8 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.26, delay, ease: "easeOut" }}
+      className="overflow-hidden shrink-0"
+      style={cardStyle}
     >
-      <DRow team={match.team1} prob={match.team1_win_prob} isWinner={match.predicted_winner === match.team1} large={isFinal} />
-      <div className="h-px bg-navy-600/35 mx-1.5" />
-      <DRow team={match.team2} prob={match.team2_win_prob} isWinner={match.predicted_winner === match.team2} large={isFinal} />
+      <DRow team={match.team1} prob={match.team1_win_prob} isWinner={match.predicted_winner === match.team1} large={variant === "final"} compact={isCompact} />
+      <div style={{ height: 1, margin: `0 ${isCompact ? 5 : 8}px`, background: "rgba(255,255,255,0.05)" }} />
+      <DRow team={match.team2} prob={match.team2_win_prob} isWinner={match.predicted_winner === match.team2} large={variant === "final"} compact={isCompact} />
     </motion.div>
   );
 }
 
-// ── Animated SVG connector (pathLength draw-on) ───────────────────────────────
+// ─── SVG connector between rounds ────────────────────────────────────────────
 function DConnector({ from, to, height, width = D_SVG_W, delay = 0 }: {
   from: number[]; to: number[]; height: number; width?: number; delay?: number;
 }) {
   const mx = width / 2;
   const paths: string[] = [];
-
   if (from.length >= to.length) {
     const ratio = from.length / to.length;
     to.forEach((toY, ti) =>
@@ -148,7 +172,6 @@ function DConnector({ from, to, height, width = D_SVG_W, delay = 0 }: {
       )
     );
   }
-
   return (
     <svg width={width} height={height} className="shrink-0" style={{ marginTop: D_HDR_H }}>
       {paths.map((d, i) => (
@@ -156,15 +179,15 @@ function DConnector({ from, to, height, width = D_SVG_W, delay = 0 }: {
           key={d}
           d={d}
           fill="none"
-          stroke="rgba(100,116,139,0.5)"
-          strokeWidth="1.5"
+          stroke="rgba(255,255,255,0.10)"
+          strokeWidth="1"
           strokeLinecap="round"
           strokeLinejoin="round"
           initial={{ pathLength: 0, opacity: 0 }}
           animate={{ pathLength: 1, opacity: 1 }}
           transition={{
-            pathLength: { duration: 0.38, delay: delay + i * 0.03, ease: "easeInOut" },
-            opacity:    { duration: 0.12, delay },
+            pathLength: { duration: 0.32, delay: delay + i * 0.015, ease: "easeInOut" },
+            opacity: { duration: 0.1, delay },
           }}
         />
       ))}
@@ -172,39 +195,23 @@ function DConnector({ from, to, height, width = D_SVG_W, delay = 0 }: {
   );
 }
 
-// ── Gold horizontal line connecting SF to Final ───────────────────────────────
-function DHLine({ y, height, delay = 0 }: { y: number; height: number; delay?: number }) {
-  return (
-    <svg width={D_HLINE_W} height={height} className="shrink-0" style={{ marginTop: D_HDR_H }}>
-      <motion.path
-        d={`M 0,${y} L ${D_HLINE_W},${y}`}
-        fill="none"
-        stroke="rgba(245,200,66,0.45)"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={{ pathLength: 1, opacity: 1 }}
-        transition={{
-          pathLength: { duration: 0.18, delay, ease: "easeInOut" },
-          opacity:    { duration: 0.12, delay },
-        }}
-      />
-    </svg>
-  );
-}
-
-// ── Column of N stacked, positioned cards ─────────────────────────────────────
-function DCol({ matches, centers, label, fromLeft, delay }: {
-  matches: BracketMatch[]; centers: number[]; label: React.ReactNode;
-  fromLeft: boolean; delay: number;
+// ─── Column of cards at specified vertical centres ────────────────────────────
+function DCol({ matches, centers, label, variant = "default", delay, cardH = D_CARD_H }: {
+  matches: BracketMatch[];
+  centers: number[];
+  label: React.ReactNode;
+  variant?: "default" | "sf" | "final" | "compact";
+  delay: number;
+  cardH?: number;
 }) {
+  const w = variant === "final" ? D_FINAL_W : variant === "compact" ? D_R32_CARD_W : D_CARD_W;
   return (
-    <div className="shrink-0" style={{ width: D_CARD_W }}>
+    <div className="shrink-0" style={{ width: w }}>
       <div className="flex items-center justify-center" style={{ height: D_HDR_H }}>{label}</div>
-      <div className="relative" style={{ height: D_BRACKET_H }}>
+      <div className="relative" style={{ height: D_COL_H }}>
         {matches.map((m, i) => (
-          <div key={m.match_id} className="absolute" style={{ top: centers[i] - D_CARD_H / 2 }}>
-            <DCard match={m} fromLeft={fromLeft} delay={delay + i * 0.055} />
+          <div key={m.match_id} className="absolute" style={{ top: centers[i] - cardH / 2 }}>
+            <DCard match={m} variant={variant} delay={delay + i * 0.04} />
           </div>
         ))}
       </div>
@@ -212,48 +219,100 @@ function DCol({ matches, centers, label, fromLeft, delay }: {
   );
 }
 
-// ── Single card centred at a given y ─────────────────────────────────────────
-function DSingleCol({ match, center, label, fromLeft, delay }: {
-  match: BracketMatch; center: number; label: React.ReactNode;
-  fromLeft: boolean; delay: number;
+// ─── Champion column ──────────────────────────────────────────────────────────
+const CHAMP_PARTICLES = [
+  { x: 18,  y: 22, size: 2, delay: 0.0, dur: 3.2 },
+  { x: 82,  y: 18, size: 2, delay: 1.1, dur: 2.9 },
+  { x: 12,  y: 74, size: 1.5, delay: 0.6, dur: 3.5 },
+  { x: 88,  y: 70, size: 2, delay: 1.7, dur: 2.8 },
+  { x: 50,  y: 8,  size: 1.5, delay: 2.0, dur: 3.0 },
+];
+
+function DChampionCol({ champion, championOdds, delay }: {
+  champion: string; championOdds?: number; delay: number;
 }) {
   return (
-    <div className="shrink-0" style={{ width: D_CARD_W }}>
-      <div className="flex items-center justify-center" style={{ height: D_HDR_H }}>{label}</div>
-      <div className="relative" style={{ height: D_BRACKET_H }}>
-        <div className="absolute" style={{ top: center - D_CARD_H / 2 }}>
-          <DCard match={match} fromLeft={fromLeft} delay={delay} />
-        </div>
+    <div className="shrink-0" style={{ width: D_CHAMP_W }}>
+      <div className="flex items-center justify-center" style={{ height: D_HDR_H }}>
+        <DLabel text="Champion" />
+      </div>
+      <div className="relative flex flex-col items-center justify-center" style={{ height: D_COL_H }}>
+        {/* Trophy frame */}
+        <motion.div
+          initial={{ opacity: 0, y: 16, scale: 0.92 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ delay, duration: 0.5, ease: [0.21, 1, 0.73, 1] }}
+          className="relative"
+          style={{ width: 152, height: 220 }}
+        >
+          {/* Glow behind trophy */}
+          <div
+            className="pointer-events-none absolute inset-0 blur-2xl"
+            style={{ background: "radial-gradient(circle, rgba(245,200,66,0.22) 0%, transparent 70%)", transform: "scale(1.6)" }}
+          />
+          {/* Pulsing border */}
+          <motion.div
+            className="pointer-events-none absolute inset-0 rounded-md"
+            animate={{ opacity: [0.3, 0.8, 0.3] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            style={{ boxShadow: "0 0 0 1px rgba(245,200,66,0.3), 0 12px 40px rgba(245,200,66,0.12)" }}
+          />
+          {/* Floating particles */}
+          {CHAMP_PARTICLES.map((p, k) => (
+            <motion.div
+              key={k}
+              className="pointer-events-none absolute rounded-full"
+              style={{ left: `${p.x}%`, top: `${p.y}%`, width: p.size, height: p.size, background: "#f5c842" }}
+              animate={{ y: [0, -14, 0], opacity: [0, 0.5, 0] }}
+              transition={{ duration: p.dur, delay: p.delay, repeat: Infinity, ease: "easeInOut" }}
+            />
+          ))}
+          <div className="relative w-full h-full rounded-md overflow-hidden">
+            <TrophyEmbed className="w-full h-full" />
+          </div>
+        </motion.div>
+
+        {/* Team name */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: delay + 0.18, duration: 0.32 }}
+          className="font-anton text-[42px] leading-none mt-3 text-center"
+          style={{ color: "#f5c842", textShadow: "0 0 28px rgba(245,200,66,0.3)" }}
+        >
+          {champion}
+        </motion.div>
+
+        {/* Odds caption */}
+        {championOdds !== undefined && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: delay + 0.32 }}
+            className="font-jb text-[9px] tracking-[0.18em] mt-1.5 text-center"
+            style={{ color: "rgba(245,239,225,0.4)" }}
+          >
+            {(championOdds * 100).toFixed(1)}% TO WIN
+          </motion.div>
+        )}
       </div>
     </div>
   );
 }
 
-// ── Wider Final card column ───────────────────────────────────────────────────
-function DFinalCol({ match, center, label, delay }: {
-  match: BracketMatch; center: number; label: React.ReactNode; delay: number;
+// ─── Full linear bracket diagram ─────────────────────────────────────────────
+function BracketDiagram({ rounds, champion, championOdds }: {
+  rounds: BracketRound[];
+  champion: string;
+  championOdds?: number;
 }) {
-  return (
-    <div className="shrink-0" style={{ width: D_FINAL_W }}>
-      <div className="flex items-center justify-center" style={{ height: D_HDR_H }}>{label}</div>
-      <div className="relative" style={{ height: D_BRACKET_H }}>
-        <div className="absolute" style={{ top: center - D_CARD_H / 2 }}>
-          <DCard match={match} isFinal={true} delay={delay} />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ── Full animated bracket diagram ────────────────────────────────────────────
-function BracketDiagram({ rounds }: { rounds: BracketRound[] }) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [scale, setScale]  = useState(1);
+  const [scale, setScale] = useState(1);
 
   useLayoutEffect(() => {
     const update = () => {
-      const w = containerRef.current?.clientWidth ?? D_NATURAL_W;
-      setScale(Math.min(1, w / D_NATURAL_W));
+      const w = containerRef.current?.clientWidth ?? D_NAT_W;
+      setScale(Math.min(1, w / D_NAT_W));
     };
     update();
     const ro = new ResizeObserver(update);
@@ -261,95 +320,77 @@ function BracketDiagram({ rounds }: { rounds: BracketRound[] }) {
     return () => ro.disconnect();
   }, []);
 
+  const r32 = rounds.find(r => r.round === "Round of 32")?.matches ?? [];
   const r16 = rounds.find(r => r.round === "Round of 16")?.matches ?? [];
   const qf  = rounds.find(r => r.round === "Quarter-Final")?.matches ?? [];
   const sf  = rounds.find(r => r.round === "Semi-Final")?.matches ?? [];
   const fin = rounds.find(r => r.round === "Final")?.matches ?? [];
   const tp  = rounds.find(r => r.round === "3rd Place Playoff")?.matches?.[0];
 
+  const hasR32 = r32.length >= 16;
   if (r16.length < 8 || qf.length < 4 || sf.length < 2 || !fin[0]) return null;
 
-  const r16L = r16.slice(0, 4);
-  const r16R = r16.slice(4);
-  const qfL  = qf.slice(0, 2);
-  const qfR  = qf.slice(2);
-
-  const r16Label  = <DLabel text="Round of 16"  icon="⚡" />;
-  const qfLabel   = <DLabel text="Quarterfinals" icon="⚽" />;
-  const sfLabel   = <DLabel text="Semifinals"    icon="🌟" />;
-  const finLabel  = <DLabel text="Final"         icon="⭐" />;
-
   return (
-    // Outer: measures available width, collapses to scaled height
-    <div ref={containerRef} className="w-full overflow-hidden" style={{ height: D_NATURAL_H * scale }}>
-      {/* Inner: scaled to fit, centred via left:50% + negative margin */}
-      <div style={{
-        transform:       `scale(${scale})`,
-        transformOrigin: "top center",
-        width:           D_NATURAL_W,
-        position:        "relative",
-        left:            "50%",
-        marginLeft:      -D_NATURAL_W / 2,
-      }}>
-        <div className="flex items-start px-6 py-2">
-
-          {/* ── Left R16 → QF → SF ─────────────────────────────────────── */}
-          <DCol    matches={r16L}  centers={D_R16_Y}      label={r16Label} fromLeft={true}  delay={0} />
-          <DConnector from={D_R16_Y} to={D_QF_Y}          height={D_BRACKET_H} delay={0.12} />
-          <DCol    matches={qfL}   centers={D_QF_Y}       label={qfLabel}  fromLeft={true}  delay={0.22} />
-          <DConnector from={D_QF_Y}  to={[D_SF_Y]}        height={D_BRACKET_H} delay={0.35} />
-          <DSingleCol match={sf[0]}  center={D_SF_Y}      label={sfLabel}  fromLeft={true}  delay={0.48} />
-          <DHLine y={D_SF_Y} height={D_BRACKET_H} delay={0.60} />
-
-          {/* ── Final (centre) ─────────────────────────────────────────── */}
-          <DFinalCol match={fin[0]} center={D_SF_Y} label={finLabel} delay={0.70} />
-
-          {/* ── Right SF → QF → R16 ────────────────────────────────────── */}
-          <DHLine y={D_SF_Y} height={D_BRACKET_H} delay={0.60} />
-          <DSingleCol match={sf[1]}  center={D_SF_Y}      label={sfLabel}  fromLeft={false} delay={0.48} />
-          <DConnector from={[D_SF_Y]} to={D_QF_Y}         height={D_BRACKET_H} delay={0.35} />
-          <DCol    matches={qfR}   centers={D_QF_Y}       label={qfLabel}  fromLeft={false} delay={0.22} />
-          <DConnector from={D_QF_Y}  to={D_R16_Y}         height={D_BRACKET_H} delay={0.12} />
-          <DCol    matches={r16R}  centers={D_R16_Y}      label={r16Label} fromLeft={false} delay={0} />
-
+    <div ref={containerRef} className="w-full" style={{ height: D_NAT_H * scale }}>
+      <div
+        style={{
+          transform: `scale(${scale})`,
+          transformOrigin: "top left",
+          width: D_NAT_W,
+          height: D_NAT_H,
+        }}
+      >
+        {/* Main bracket row */}
+        <div className="flex items-start" style={{ paddingLeft: 20, paddingTop: 0 }}>
+          {hasR32 && (
+            <>
+              <DCol matches={r32} centers={D_R32_Y} label={<DLabel text="Round of 32" />} variant="compact" cardH={D_R32_CARD_H} delay={0} />
+              <DConnector from={D_R32_Y} to={D_R16_Y} height={D_COL_H} delay={0.06} />
+            </>
+          )}
+          <DCol matches={r16} centers={D_R16_Y} label={<DLabel text="Round of 16" />} delay={hasR32 ? 0.12 : 0} />
+          <DConnector from={D_R16_Y} to={D_QF_Y} height={D_COL_H} delay={hasR32 ? 0.20 : 0.10} />
+          <DCol matches={qf}  centers={D_QF_Y}  label={<DLabel text="Quarter-Finals" />} delay={hasR32 ? 0.28 : 0.20} />
+          <DConnector from={D_QF_Y}  to={D_SF_Y}  height={D_COL_H} delay={hasR32 ? 0.36 : 0.30} />
+          <DCol matches={sf}  centers={D_SF_Y}  label={<DLabel text="Semi-Finals" />} variant="sf" delay={hasR32 ? 0.44 : 0.40} />
+          <DConnector from={D_SF_Y}  to={[D_FIN_Y]} height={D_COL_H} delay={hasR32 ? 0.52 : 0.50} />
+          <DCol matches={fin} centers={[D_FIN_Y]} label={<DLabel text="Final" />} variant="final" delay={hasR32 ? 0.58 : 0.58} />
+          <DConnector from={[D_FIN_Y]} to={[D_FIN_Y]} height={D_COL_H} delay={hasR32 ? 0.66 : 0.66} />
+          <DChampionCol champion={champion} championOdds={championOdds} delay={hasR32 ? 0.74 : 0.74} />
         </div>
 
-        {/* ── 3rd Place Playoff ──────────────────────────────────────── */}
+        {/* 3rd Place Playoff — aligned with Final column (same x, same width) */}
         {tp && (
-          <div className="flex flex-col items-center gap-2 pt-1 pb-4">
-            <div className="flex items-center gap-2">
-              <div className="h-px w-16 bg-gradient-to-r from-transparent to-amber-700/30" />
-              <DLabel text="3rd Place Playoff" icon="🥉" />
-              <div className="h-px w-16 bg-gradient-to-l from-transparent to-amber-700/30" />
+          <div
+            className="flex flex-col items-start gap-1.5"
+            style={{ paddingLeft: 20 + (hasR32 ? D_3P_X : D_3P_X - D_R32_CARD_W - D_SVG_W), paddingTop: 14 }}
+          >
+            <div className="flex items-center justify-center" style={{ width: D_FINAL_W, height: D_HDR_H }}>
+              <DLabel text="3rd Place Playoff" />
             </div>
             <motion.div
-              initial={{ opacity: 0, y: 8 }}
+              initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.32, delay: 0.88, ease: "easeOut" }}
-              className="overflow-hidden rounded-lg border shrink-0 cursor-default"
+              transition={{ duration: 0.26, delay: 0.9 }}
+              className="overflow-hidden shrink-0"
               style={{
-                width: D_CARD_W,
-                height: D_CARD_H,
-                background: "linear-gradient(135deg, rgba(120,53,15,0.12) 0%, rgba(21,24,41,1) 70%)",
-                border: "1px solid rgba(180,120,60,0.28)",
+                width: D_FINAL_W, height: D_CARD_H, borderRadius: 4,
+                background: "rgba(255,255,255,0.03)",
+                border: "1px solid rgba(160,100,40,0.3)",
               }}
             >
-              <DRow team={tp.team1} prob={tp.team1_win_prob} isWinner={tp.predicted_winner === tp.team1} />
-              <div className="h-px bg-navy-600/35 mx-1.5" />
-              <DRow team={tp.team2} prob={tp.team2_win_prob} isWinner={tp.predicted_winner === tp.team2} />
+              <DRow team={tp.team1} prob={tp.team1_win_prob} isWinner={tp.predicted_winner === tp.team1} large />
+              <div style={{ height: 1, margin: "0 8px", background: "rgba(255,255,255,0.05)" }} />
+              <DRow team={tp.team2} prob={tp.team2_win_prob} isWinner={tp.predicted_winner === tp.team2} large />
             </motion.div>
           </div>
         )}
-
       </div>
     </div>
   );
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// Round-detail match cards (existing tab view)
-// ═══════════════════════════════════════════════════════════════════════════════
-
+// ─── Mobile tab view (round by round) ────────────────────────────────────────
 function TeamRow({ team, prob, isWinner }: { team: string; prob: number; isWinner: boolean }) {
   const pct = (prob * 100).toFixed(1);
   return (
@@ -375,21 +416,6 @@ function MatchCard({ match }: { match: BracketMatch }) {
   );
 }
 
-function FinalTeamRow({ team, prob, isWinner }: { team: string; prob: number; isWinner: boolean }) {
-  const pct = (prob * 100).toFixed(1);
-  return (
-    <div className={`relative flex items-center gap-3 px-5 py-3 ${isWinner ? "bg-gold-500/[0.05]" : ""}`}>
-      {isWinner && <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-gold-400" />}
-      <FlagIcon team={team} className="w-10 h-[27px] rounded shrink-0 shadow-md" />
-      <span className={`text-[15px] font-semibold flex-1 truncate ${isWinner ? "text-white" : "text-slate-400"}`}>{team}</span>
-      <span
-        className={`font-black text-[20px] tabular-nums ${isWinner ? "text-gold-400" : "text-slate-500"}`}
-        style={isWinner ? { textShadow: "0 0 16px rgba(245,200,66,0.3)" } : {}}
-      >{pct}%</span>
-    </div>
-  );
-}
-
 function FinalCard({ match }: { match: BracketMatch }) {
   return (
     <div className="rounded-2xl overflow-hidden mx-auto max-w-md" style={{
@@ -401,205 +427,83 @@ function FinalCard({ match }: { match: BracketMatch }) {
         <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gold-500/70">World Cup Final</span>
       </div>
       <div className="py-2">
-        <FinalTeamRow team={match.team1} prob={match.team1_win_prob} isWinner={match.predicted_winner === match.team1} />
-        <div className="flex items-center gap-3 px-5 py-1">
-          <div className="flex-1 h-px bg-navy-600/50" />
-          <span className="text-[10px] text-slate-600 font-medium uppercase tracking-widest">vs</span>
-          <div className="flex-1 h-px bg-navy-600/50" />
-        </div>
-        <FinalTeamRow team={match.team2} prob={match.team2_win_prob} isWinner={match.predicted_winner === match.team2} />
+        {[match.team1, match.team2].map((team, i) => {
+          const prob = i === 0 ? match.team1_win_prob : match.team2_win_prob;
+          const isWinner = match.predicted_winner === team;
+          return (
+            <div key={team} className={`relative flex items-center gap-3 px-5 ${i === 0 ? "py-3" : "py-3"} ${isWinner ? "bg-gold-500/[0.05]" : ""}`}>
+              {isWinner && <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-gold-400" />}
+              <FlagIcon team={team} className="w-10 h-[27px] rounded shrink-0 shadow-md" />
+              <span className={`text-[15px] font-semibold flex-1 truncate ${isWinner ? "text-white" : "text-slate-400"}`}>{team}</span>
+              <span className={`font-black text-[20px] tabular-nums ${isWinner ? "text-gold-400" : "text-slate-500"}`} style={isWinner ? { textShadow: "0 0 16px rgba(245,200,66,0.3)" } : {}}>
+                {(prob * 100).toFixed(1)}%
+              </span>
+              {i === 0 && (
+                <div className="absolute bottom-0 left-5 right-5 flex items-center gap-3">
+                  <div className="flex-1 h-px bg-navy-600/50" />
+                  <span className="text-[10px] text-slate-600 font-medium uppercase tracking-widest">vs</span>
+                  <div className="flex-1 h-px bg-navy-600/50" />
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
 }
 
-// ─── Animated number counter for champion odds ───────────────────────────────
-function AnimatedOdds({ value }: { value: number }) {
-  const count = useMotionValue(0);
-  const display = useTransform(count, (v) => (v * 100).toFixed(1) + "%");
-  useEffect(() => {
-    const ctrl = animate(count, value, { duration: 1.4, delay: 0.65, ease: [0.16, 1, 0.3, 1] });
-    return ctrl.stop;
-  }, [count, value]);
-  return <motion.span className="text-base font-black text-gold-400 tabular-nums">{display}</motion.span>;
-}
+function BracketRounds({ rounds }: { rounds: BracketRound[] }) {
+  const roundNames = rounds.map(r => r.round);
+  const [active, setActive] = useState(roundNames[0] ?? "Round of 32");
+  const activeRound = rounds.find(r => r.round === active);
 
-// ─── Champion banner ──────────────────────────────────────────────────────────
-const CHAMPION_PARTICLES = [
-  { id: 0, x: 6,  y: 70, size: 2.5, delay: 0.0, dur: 3.2 },
-  { id: 1, x: 16, y: 38, size: 2.0, delay: 0.9, dur: 2.8 },
-  { id: 2, x: 78, y: 28, size: 2.5, delay: 1.4, dur: 3.5 },
-  { id: 3, x: 86, y: 65, size: 2.0, delay: 0.5, dur: 2.6 },
-  { id: 4, x: 93, y: 18, size: 3.0, delay: 1.8, dur: 3.0 },
-  { id: 5, x: 72, y: 82, size: 2.0, delay: 0.3, dur: 2.9 },
-  { id: 6, x: 24, y: 88, size: 2.5, delay: 1.2, dur: 3.4 },
-  { id: 7, x: 50, y: 8,  size: 2.0, delay: 2.1, dur: 2.7 },
-];
-
-function ChampionBanner({ champion, championOdds }: { champion: string; championOdds?: number }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 16, scale: 0.97 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.5, ease: [0.21, 1.02, 0.73, 1.0] }}
-      className="relative w-full rounded-3xl overflow-hidden"
-      style={{
-        background: "linear-gradient(160deg, rgba(30,22,4,1) 0%, rgba(14,16,32,1) 55%, rgba(10,12,24,1) 100%)",
-        border:     "1.5px solid rgba(245,200,66,0.28)",
-        boxShadow:  "0 0 80px rgba(245,200,66,0.07), 0 0 160px rgba(245,200,66,0.03), inset 0 1px 0 rgba(245,200,66,0.10)",
-      }}
-    >
-      {/* Ambient radial glow */}
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{ background: "radial-gradient(ellipse 70% 60% at 50% 0%, rgba(245,200,66,0.09) 0%, transparent 70%)" }}
-      />
-
-      {/* Pulsing border glow */}
-      <motion.div
-        className="pointer-events-none absolute inset-0 rounded-3xl"
-        animate={{ opacity: [0.4, 1, 0.4] }}
-        transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
-        style={{ boxShadow: "0 0 60px rgba(245,200,66,0.1), inset 0 0 0 1.5px rgba(245,200,66,0.18)" }}
-      />
-
-      {/* One-shot shimmer sweep on mount */}
-      <motion.div
-        initial={{ x: "-140%" }}
-        animate={{ x: "240%" }}
-        transition={{ delay: 0.7, duration: 1.1, ease: "easeInOut" }}
-        className="pointer-events-none absolute inset-y-0 w-1/2"
-        style={{
-          background: "linear-gradient(90deg, transparent 0%, rgba(245,200,66,0.06) 40%, rgba(255,255,255,0.05) 50%, rgba(245,200,66,0.06) 60%, transparent 100%)",
-        }}
-      />
-
-      {/* Floating gold particles */}
-      {CHAMPION_PARTICLES.map(p => (
-        <motion.div
-          key={p.id}
-          className="pointer-events-none absolute rounded-full bg-gold-400"
-          style={{ left: `${p.x}%`, top: `${p.y}%`, width: p.size, height: p.size }}
-          animate={{ y: [0, -18, 0], opacity: [0, 0.55, 0] }}
-          transition={{ duration: p.dur, delay: p.delay, repeat: Infinity, ease: "easeInOut" }}
-        />
-      ))}
-
-      {/* Content */}
-      <div className="relative z-10 flex flex-col items-center py-10 px-6 text-center gap-5">
-        {/* Eyebrow */}
-        <div className="flex items-center gap-3">
+    <div className="space-y-4">
+      <div className="flex items-center gap-1 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none]">
+        {roundNames.map(name => {
+          const isActive = name === active;
+          return (
+            <button
+              key={name}
+              onClick={() => setActive(name)}
+              className={`shrink-0 px-3.5 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider transition-colors ${
+                isActive
+                  ? "bg-navy-600 text-white border border-white/10"
+                  : "text-slate-500 hover:text-slate-300 hover:bg-navy-700"
+              }`}
+            >
+              {ROUND_LABELS[name] ?? name}
+            </button>
+          );
+        })}
+      </div>
+      <AnimatePresence mode="wait">
+        {activeRound && (
           <motion.div
-            initial={{ scaleX: 0, opacity: 0 }}
-            animate={{ scaleX: 1, opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
-            className="h-px w-10 bg-gradient-to-r from-transparent to-gold-500/40"
-            style={{ transformOrigin: "right center" }}
-          />
-          <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-gold-500/60">
-            FIFA World Cup 2026 · Predicted Champion
-          </span>
-          <motion.div
-            initial={{ scaleX: 0, opacity: 0 }}
-            animate={{ scaleX: 1, opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
-            className="h-px w-10 bg-gradient-to-l from-transparent to-gold-500/40"
-            style={{ transformOrigin: "left center" }}
-          />
-        </div>
-
-        {/* Trophy — spring entrance, then continuous float */}
-        <div className="relative">
-          <div
-            className="pointer-events-none absolute inset-0 blur-2xl"
-            style={{ background: "radial-gradient(circle, rgba(245,200,66,0.3) 0%, transparent 65%)", transform: "scale(2.2)" }}
-          />
-          <motion.div
-            initial={{ scale: 0, rotate: -20, opacity: 0 }}
-            animate={{ scale: 1, rotate: 0, opacity: 1, y: [0, -6, 0] }}
-            transition={{
-              scale:   { delay: 0.1, duration: 0.55, type: "spring", stiffness: 240, damping: 16 },
-              rotate:  { delay: 0.1, duration: 0.55, type: "spring", stiffness: 240, damping: 16 },
-              opacity: { delay: 0.1, duration: 0.2 },
-              y:       { delay: 0.8, duration: 3.5, repeat: Infinity, ease: "easeInOut" },
-            }}
+            key={active}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.18 }}
           >
-            <span className="text-5xl" style={{ filter: "drop-shadow(0 0 16px rgba(245,200,66,0.55))" }}>🏆</span>
-          </motion.div>
-        </div>
-
-        {/* Flag with expanding pulse rings */}
-        <motion.div
-          initial={{ scale: 0.75, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.45, type: "spring", stiffness: 180, damping: 16 }}
-          className="relative"
-        >
-          {[0, 1].map(i => (
-            <motion.div
-              key={i}
-              className="absolute inset-0 rounded-lg border border-gold-500/25"
-              animate={{ scale: [1, 1.5 + i * 0.25], opacity: [0.45, 0] }}
-              transition={{ duration: 2.0, delay: 0.5 + i * 1.0, repeat: Infinity, ease: "easeOut" }}
-            />
-          ))}
-          <div style={{ filter: "drop-shadow(0 6px 18px rgba(0,0,0,0.55)) drop-shadow(0 0 22px rgba(245,200,66,0.2))" }}>
-            <FlagIcon team={champion} className="w-24 h-16 rounded-lg" />
-          </div>
-          <div className="absolute inset-0 rounded-lg pointer-events-none" style={{ boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.13)" }} />
-        </motion.div>
-
-        {/* Team name with star accents */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.4 }}
-          className="flex items-center gap-3"
-        >
-          <motion.span
-            className="text-gold-500/35 text-sm select-none"
-            animate={{ opacity: [0.35, 0.75, 0.35], scale: [1, 1.35, 1] }}
-            transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
-          >★</motion.span>
-          <h2
-            className="font-anton text-4xl md:text-5xl text-white tracking-wide leading-none"
-            style={{ textShadow: "0 0 48px rgba(245,200,66,0.22), 0 2px 8px rgba(0,0,0,0.4)" }}
-          >
-            {champion}
-          </h2>
-          <motion.span
-            className="text-gold-500/35 text-sm select-none"
-            animate={{ opacity: [0.35, 0.75, 0.35], scale: [1, 1.35, 1] }}
-            transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut", delay: 1.2 }}
-          >★</motion.span>
-        </motion.div>
-
-        {/* Champion probability badge */}
-        {championOdds !== undefined && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.5, duration: 0.3 }}
-            className="flex items-center gap-2.5 px-4 py-1.5 rounded-full"
-            style={{
-              background: "rgba(245,200,66,0.08)",
-              border:     "1px solid rgba(245,200,66,0.22)",
-            }}
-          >
-            <span className="text-[11px] font-semibold uppercase tracking-widest text-gold-500/60">
-              Champion Probability
-            </span>
-            <AnimatedOdds value={championOdds} />
+            {active === "Final" ? (
+              <div className="py-2"><FinalCard match={activeRound.matches[0]} /></div>
+            ) : (
+              <div className={`grid gap-3 ${
+                activeRound.matches.length >= 8
+                  ? "grid-cols-1 sm:grid-cols-2 xl:grid-cols-4"
+                  : activeRound.matches.length >= 4
+                  ? "grid-cols-1 sm:grid-cols-2"
+                  : "grid-cols-1 sm:grid-cols-2 max-w-xl"
+              }`}>
+                {activeRound.matches.map(m => <MatchCard key={m.match_id} match={m} />)}
+              </div>
+            )}
           </motion.div>
         )}
-      </div>
-
-      {/* Bottom shimmer line */}
-      <div
-        className="absolute bottom-0 left-0 right-0 h-px"
-        style={{ background: "linear-gradient(90deg, transparent 0%, rgba(245,200,66,0.25) 30%, rgba(245,200,66,0.45) 50%, rgba(245,200,66,0.25) 70%, transparent 100%)" }}
-      />
-    </motion.div>
+      </AnimatePresence>
+    </div>
   );
 }
 
@@ -610,13 +514,15 @@ const PLACE_COLOR = ["text-gold-400", "text-slate-300", "text-amber-700/90", "te
 function GroupStandings({ standings }: { standings: Record<string, string[]> }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="rounded-xl border border-navy-600/60 bg-navy-800/50 overflow-hidden">
+    <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)", background: "rgba(255,255,255,0.02)" }}>
       <button
         onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center justify-between px-4 py-3 text-sm font-semibold text-slate-300 hover:text-white transition-colors"
+        className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/[0.02] transition-colors"
       >
-        <span className="uppercase tracking-wider text-xs">Expected Group Standings</span>
-        <span className="text-slate-500 text-xs">{open ? "▲ Hide" : "▼ Show"}</span>
+        <span className="font-jb text-[10px] uppercase tracking-[0.18em]" style={{ color: "rgba(245,239,225,0.45)" }}>
+          Expected Group Standings
+        </span>
+        <span className="font-jb text-[9px]" style={{ color: "rgba(245,239,225,0.3)" }}>{open ? "▲ HIDE" : "▼ SHOW"}</span>
       </button>
       <AnimatePresence initial={false}>
         {open && (
@@ -625,16 +531,21 @@ function GroupStandings({ standings }: { standings: Record<string, string[]> }) 
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25 }}
+            transition={{ duration: 0.22 }}
             className="overflow-hidden"
           >
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-px bg-navy-600/30 border-t border-navy-600/30">
+            <div
+              className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-px"
+              style={{ background: "rgba(255,255,255,0.05)", borderTop: "1px solid rgba(255,255,255,0.06)" }}
+            >
               {Object.entries(standings).map(([groupId, teams]) => (
-                <div key={groupId} className="bg-navy-900 px-3 py-2.5">
-                  <div className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1.5">Group {groupId}</div>
+                <div key={groupId} className="px-3 py-2.5" style={{ background: "#090b14" }}>
+                  <div className="font-jb text-[9px] uppercase tracking-widest mb-1.5" style={{ color: "rgba(245,239,225,0.35)" }}>
+                    Group {groupId}
+                  </div>
                   {teams.map((team, i) => (
                     <div key={team} className="flex items-center gap-1.5 py-[3px]">
-                      <span className={`text-[10px] font-bold w-6 shrink-0 ${PLACE_COLOR[i]}`}>{PLACE_LABEL[i]}</span>
+                      <span className={`font-jb text-[9px] w-6 shrink-0 ${PLACE_COLOR[i]}`}>{PLACE_LABEL[i]}</span>
                       <FlagIcon team={team} className="w-5 h-[13px] rounded-sm shrink-0" />
                       <span className={`text-[11px] truncate ${i === 3 ? "text-slate-600 line-through" : "text-slate-300"}`}>{team}</span>
                     </div>
@@ -649,63 +560,19 @@ function GroupStandings({ standings }: { standings: Record<string, string[]> }) 
   );
 }
 
-// ─── Round detail tabs ────────────────────────────────────────────────────────
-function BracketRounds({ rounds }: { rounds: BracketRound[] }) {
-  const roundNames = rounds.map(r => r.round);
-  const [activeRound, setActiveRound] = useState(roundNames[0] ?? "Round of 32");
-  const active = rounds.find(r => r.round === activeRound);
-
-  return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-1 overflow-x-auto pb-1 scrollbar-none">
-        {roundNames.map(name => {
-          const isActive = name === activeRound;
-          return (
-            <button
-              key={name}
-              onClick={() => setActiveRound(name)}
-              className={`shrink-0 px-3.5 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider transition-colors ${
-                isActive ? "bg-fifa-blue text-white" : "text-slate-500 hover:text-slate-300 hover:bg-navy-700"
-              }`}
-            >
-              {ROUND_LABELS[name] ?? name}
-            </button>
-          );
-        })}
-      </div>
-
-      <AnimatePresence mode="wait">
-        {active && (
-          <motion.div
-            key={activeRound}
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            transition={{ duration: 0.18 }}
-          >
-            {activeRound === "Final" ? (
-              <div className="py-2"><FinalCard match={active.matches[0]} /></div>
-            ) : (
-              <div className={`grid gap-3 ${
-                active.matches.length >= 8
-                  ? "grid-cols-1 sm:grid-cols-2 xl:grid-cols-4"
-                  : active.matches.length >= 4
-                  ? "grid-cols-1 sm:grid-cols-2"
-                  : "grid-cols-1 sm:grid-cols-2 max-w-xl"
-              }`}>
-                {active.matches.map(m => <MatchCard key={m.match_id} match={m} />)}
-              </div>
-            )}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
+// ─── Animated number for champion odds ───────────────────────────────────────
+function AnimatedOdds({ value }: { value: number }) {
+  const count = useMotionValue(0);
+  const display = useTransform(count, v => (v * 100).toFixed(1) + "%");
+  useEffect(() => {
+    const ctrl = animate(count, value, { duration: 1.4, delay: 0.5, ease: [0.16, 1, 0.3, 1] });
+    return ctrl.stop;
+  }, [count, value]);
+  return <motion.span className="font-jb font-bold tabular-nums text-gold-400">{display}</motion.span>;
 }
 
-// ─── Champion Odds (from Monte Carlo simulation) ──────────────────────────────
-const MEDALS    = ["🥇", "🥈", "🥉"];
-const BAR_COLORS = ["bg-gold-400", "bg-slate-400", "bg-amber-700", "bg-pitch-400"];
+// ─── Top 10 champion odds ─────────────────────────────────────────────────────
+const MEDALS = ["🥇", "🥈", "🥉"];
 
 function ChampionOdds({ teams }: { teams: TeamSimResult[] }) {
   const top10 = [...teams].sort((a, b) => b.champion - a.champion).slice(0, 10);
@@ -718,22 +585,34 @@ function ChampionOdds({ teams }: { teams: TeamSimResult[] }) {
           initial={{ opacity: 0, x: -8 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: i * 0.04 }}
-          className={`flex items-center gap-3 px-4 py-2.5 rounded-xl border transition-colors ${
-            i === 0 ? "bg-gold-500/[0.06] border-gold-500/20" : "bg-navy-800 border-navy-700/60"
-          }`}
+          className="flex items-center gap-3 px-4 py-2.5 rounded-xl transition-colors"
+          style={{
+            background: i === 0 ? "rgba(245,200,66,0.06)" : "rgba(255,255,255,0.02)",
+            border: `1px solid ${i === 0 ? "rgba(245,200,66,0.2)" : "rgba(255,255,255,0.06)"}`,
+          }}
         >
           <div className="w-6 text-center shrink-0">
-            {i < 3 ? <span className="text-sm">{MEDALS[i]}</span> : <span className="text-slate-600 text-xs">{i + 1}</span>}
+            {i < 3
+              ? <span className="text-sm">{MEDALS[i]}</span>
+              : <span className="font-jb text-[10px]" style={{ color: "rgba(245,239,225,0.3)" }}>{i + 1}</span>
+            }
           </div>
           <FlagIcon team={t.team} className="w-8 h-6 rounded shrink-0" />
           <span className={`text-sm font-medium flex-1 truncate ${i === 0 ? "text-gold-300" : "text-white"}`}>{t.team}</span>
-          <span className="text-slate-500 text-xs shrink-0 hidden sm:block">{t.group}</span>
-          <div className="w-28 bg-navy-700 rounded-full h-1.5 shrink-0 hidden sm:block overflow-hidden">
-            <div className={`h-1.5 rounded-full transition-all ${BAR_COLORS[Math.min(i, 3)]}`} style={{ width: `${(t.champion / maxPct) * 100}%` }} />
+          <span className="font-jb text-[10px] shrink-0 hidden sm:block" style={{ color: "rgba(245,239,225,0.3)" }}>{t.group}</span>
+          <div className="w-28 rounded-full h-1.5 shrink-0 hidden sm:block overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
+            <div
+              className={`h-1.5 rounded-full transition-all ${i === 0 ? "bg-gold-400" : i === 1 ? "bg-slate-400" : i === 2 ? "bg-amber-700" : "bg-pitch-400"}`}
+              style={{ width: `${(t.champion / maxPct) * 100}%` }}
+            />
           </div>
-          <span className={`font-bold text-sm tabular-nums w-14 text-right shrink-0 ${
-            i === 0 ? "text-gold-400" : i === 1 ? "text-slate-300" : i === 2 ? "text-amber-600" : "text-pitch-400"
-          }`}>{(t.champion * 100).toFixed(1)}%</span>
+          <span
+            className={`font-jb font-bold text-sm tabular-nums w-14 text-right shrink-0 ${
+              i === 0 ? "text-gold-400" : i === 1 ? "text-slate-300" : i === 2 ? "text-amber-600" : "text-pitch-400"
+            }`}
+          >
+            {(t.champion * 100).toFixed(1)}%
+          </span>
         </motion.div>
       ))}
     </div>
@@ -748,132 +627,132 @@ export default function SimulatePage() {
   const bracket    = useBracket();
   const simulation = useSimulation();
 
+  const simChampion = simulation.data
+    ? [...simulation.data.teams].sort((a, b) => b.champion - a.champion)[0]
+    : null;
+
+  const champion     = simChampion?.team ?? bracket.data?.champion ?? "";
+  const championOdds = simChampion?.champion;
+
   return (
-    <main className="min-h-screen bg-navy-900">
+    <main className="min-h-screen" style={{ background: "#090b14" }}>
+      {/* Radial green glow at bottom */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-0"
+        style={{ background: "radial-gradient(ellipse at 50% 100%, rgba(34,160,82,0.10) 0%, transparent 55%)", zIndex: 0 }}
+      />
 
-      {/* ── Hero ── */}
-      <section className="relative overflow-hidden border-b border-navy-700 py-14 px-6 md:px-14">
-        <div className="pointer-events-none absolute inset-0">
-          <div className="absolute left-1/2 -translate-x-1/2 top-0 w-[700px] h-[320px] rounded-full bg-fifa-blue/[0.04] blur-3xl" />
-          <div className="absolute left-1/2 -translate-x-1/2 top-4 w-[220px] h-[180px] rounded-full bg-gold-500/[0.05] blur-2xl" />
+      {/* ── Header bar ── */}
+      <header
+        className="relative z-10 flex items-center justify-between px-8 md:px-14 py-[18px]"
+        style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
+      >
+        <div className="font-anton text-[18px] tracking-[0.08em] text-white">
+          BRACKET PREDICTOR
         </div>
-        <div className="relative max-w-3xl mx-auto text-center">
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-pitch-400 mb-3">
-              Model Prediction · Head-to-Head Win Probabilities
-            </p>
-            <h1 className="font-anton text-4xl md:text-5xl text-white tracking-wide mb-3">BRACKET PREDICTOR</h1>
-            <p className="text-slate-400 text-sm max-w-xl mx-auto leading-relaxed">
-              The model&apos;s most likely path through the tournament.
-              Each matchup shows the head-to-head win probability for that specific game.
-            </p>
-          </motion.div>
+        <div className="hidden md:flex items-center gap-6 font-jb text-[10px] tracking-[0.14em]" style={{ color: "rgba(245,239,225,0.5)" }}>
+          {simulation.data && (
+            <span>{simulation.data.n_simulations.toLocaleString()} SIMULATIONS</span>
+          )}
+          {bracket.data && (
+            <span style={{ color: "rgba(245,239,225,0.35)" }}>
+              {new Date(bracket.data.generated_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+            </span>
+          )}
+          {champion && championOdds !== undefined && (
+            <span style={{ color: "#f5c842" }}>
+              {champion} · <AnimatedOdds value={championOdds} />
+            </span>
+          )}
         </div>
-      </section>
+        <div className="font-jb text-[10px] tracking-[0.14em]" style={{ color: "rgba(245,239,225,0.3)" }}>
+          {bracket.loading ? "COMPUTING…" : bracket.data ? "READY" : ""}
+        </div>
+      </header>
 
-      {/* ── Content ── */}
-      <div className="max-w-screen-xl mx-auto px-4 md:px-6 py-10 space-y-10">
+      {/* ── Main content ── */}
+      <div className="relative z-10 px-4 md:px-8 lg:px-14 pt-8 pb-24 space-y-10">
 
+        {/* Loading */}
         {bracket.loading && (
-          <div className="flex flex-col items-center justify-center py-24 gap-4">
-            <div className="w-10 h-10 border-2 border-fifa-blue border-t-transparent rounded-full animate-spin" />
-            <p className="text-slate-400 text-sm">Computing bracket predictions…</p>
+          <div className="flex flex-col items-center justify-center py-32 gap-4">
+            <div className="w-8 h-8 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: "rgba(255,255,255,0.15)", borderTopColor: "#22a052" }} />
+            <p className="font-jb text-[11px] tracking-[0.14em] uppercase" style={{ color: "rgba(245,239,225,0.4)" }}>
+              Computing bracket…
+            </p>
           </div>
         )}
 
+        {/* Error */}
         {bracket.error && (
-          <div className="max-w-lg mx-auto bg-red-950/40 border border-red-800 rounded-xl px-5 py-4 text-red-300 text-sm text-center">
-            Prediction failed: {bracket.error}.{" "}
-            <span className="text-red-400">Make sure the backend is running on port 8000.</span>
+          <div className="max-w-lg mx-auto rounded-lg px-5 py-4 text-sm text-center" style={{ background: "rgba(220,50,50,0.08)", border: "1px solid rgba(220,50,50,0.25)", color: "rgba(255,160,160,0.9)" }}>
+            Prediction failed: {bracket.error}. Make sure the backend is running on port 8000.
           </div>
         )}
 
         {bracket.data && (
           <>
-            {/* ── Champion banner ── */}
-            {(() => {
-              const simChampion = simulation.data
-                ? [...simulation.data.teams].sort((a, b) => b.champion - a.champion)[0]
-                : null;
-              const bannerTeam = simChampion?.team ?? bracket.data.champion;
-              const bannerOdds = simChampion?.champion;
-              return (
-                <ChampionBanner
-                  champion={bannerTeam}
-                  championOdds={bannerOdds}
-                />
-              );
-            })()}
-
-            {/* ── Visual bracket diagram (desktop only) ── */}
+            {/* ── Desktop bracket ── */}
             <section className="hidden md:block">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-400">
-                  Predicted Bracket
-                </h2>
-                <span className="text-xs text-slate-600 hidden lg:block">
-                  R16 → QF → SF → Final · 3rd Place
-                </span>
-              </div>
               <div
-                className="relative rounded-2xl border border-navy-600/80 overflow-hidden"
+                className="rounded-xl overflow-hidden"
                 style={{
-                  background: "linear-gradient(180deg, rgba(21,24,41,1) 0%, rgba(14,16,32,1) 100%)",
-                  boxShadow:  "inset 0 1px 0 rgba(255,255,255,0.03)",
+                  background: "rgba(255,255,255,0.015)",
+                  border: "1px solid rgba(255,255,255,0.07)",
+                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.03)",
                 }}
               >
-                {/* centre glow */}
-                <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-                  <div className="w-72 h-72 rounded-full bg-gold-500/[0.03] blur-3xl" />
-                </div>
                 {/* top accent */}
-                <div className="absolute top-0 left-[25%] right-[25%] h-px bg-gradient-to-r from-transparent via-gold-500/15 to-transparent" />
-                <div className="relative py-6">
-                  <BracketDiagram rounds={bracket.data.rounds} />
+                <div
+                  className="pointer-events-none"
+                  style={{ height: 1, background: "linear-gradient(90deg, transparent 0%, rgba(245,200,66,0.15) 40%, rgba(245,200,66,0.25) 50%, rgba(245,200,66,0.15) 60%, transparent 100%)" }}
+                />
+                <div className="py-6 px-2">
+                  <BracketDiagram
+                    rounds={bracket.data.rounds}
+                    champion={champion}
+                    championOdds={championOdds}
+                  />
                 </div>
+              </div>
+            </section>
+
+            {/* ── Mobile bracket tabs ── */}
+            <section className="md:hidden">
+              <div
+                className="rounded-xl p-4"
+                style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}
+              >
+                <BracketRounds rounds={bracket.data.rounds} />
               </div>
             </section>
 
             {/* ── Group standings ── */}
             <GroupStandings standings={bracket.data.group_standings} />
 
-            {/* ── Round detail tabs ── */}
-            <section>
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-400">Knockout Bracket</h2>
-                <span className="text-xs text-slate-600 hidden sm:block">
-                  {new Date(bracket.data.generated_at).toLocaleString()}
-                </span>
-              </div>
-              <div
-                className="relative rounded-2xl border border-navy-600/80 overflow-hidden p-5"
-                style={{
-                  background: "linear-gradient(180deg, rgba(21,24,41,1) 0%, rgba(14,16,32,1) 100%)",
-                  boxShadow:  "inset 0 1px 0 rgba(255,255,255,0.04)",
-                }}
-              >
-                <BracketRounds rounds={bracket.data.rounds} />
-              </div>
-            </section>
-
-            {/* ── Champion Odds (Monte Carlo) ── */}
-            <section>
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-400">Top 10 Champion Odds</h2>
-                {simulation.data && (
-                  <span className="text-xs text-slate-600 hidden sm:block">
-                    {simulation.data.n_simulations.toLocaleString()} Monte Carlo simulations
+            {/* ── Champion odds ── */}
+            {(simulation.loading || simulation.data) && (
+              <section>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="font-jb text-[10px] uppercase tracking-[0.18em]" style={{ color: "rgba(245,239,225,0.4)" }}>
+                    Champion Odds · Top 10
                   </span>
-                )}
-              </div>
-              {simulation.loading && (
-                <div className="flex items-center gap-2 text-slate-500 text-sm py-4">
-                  <div className="w-4 h-4 border-2 border-slate-600 border-t-transparent rounded-full animate-spin" />
-                  Loading simulation odds…
+                  {simulation.loading && (
+                    <div className="flex items-center gap-2" style={{ color: "rgba(245,239,225,0.35)" }}>
+                      <div className="w-3.5 h-3.5 rounded-full border border-t-transparent animate-spin" style={{ borderColor: "rgba(255,255,255,0.15)", borderTopColor: "#22a052" }} />
+                      <span className="font-jb text-[10px] tracking-[0.14em]">Simulating…</span>
+                    </div>
+                  )}
+                  {simulation.data && (
+                    <span className="font-jb text-[10px] tracking-[0.14em] hidden sm:block" style={{ color: "rgba(245,239,225,0.28)" }}>
+                      {simulation.data.n_simulations.toLocaleString()} Monte Carlo runs
+                    </span>
+                  )}
                 </div>
-              )}
-              {simulation.data && <ChampionOdds teams={simulation.data.teams} />}
-            </section>
+                {simulation.data && <ChampionOdds teams={simulation.data.teams} />}
+              </section>
+            )}
           </>
         )}
       </div>
