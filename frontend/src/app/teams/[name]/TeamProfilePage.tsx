@@ -13,6 +13,7 @@ import {
 } from "@heroicons/react/24/solid";
 import { motion } from "framer-motion";
 import { fetchTeam } from "@/lib/api";
+import RosterSection from "@/components/RosterSection";
 import { WC2026_GROUPS } from "@/lib/wc2026Groups";
 import FlagIcon from "@/components/FlagIcon";
 import type { TeamInfo } from "@/lib/types";
@@ -416,6 +417,9 @@ export default function TeamProfilePage({ name }: Props) {
                 </div>
               </motion.div>
             )}
+
+            {/* ── Squad Roster ── */}
+            <RosterSection team={name} />
 
             {/* ── Predict CTA ── */}
             <motion.div
