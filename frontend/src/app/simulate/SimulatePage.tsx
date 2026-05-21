@@ -10,7 +10,7 @@ import type { BracketMatch, BracketRound, TeamSimResult } from "@/lib/types";
 
 const TrophyEmbed = dynamic(() => import("@/components/TrophyEmbed"), { ssr: false });
 
-// ─── Bracket layout constants (linear: R16 → QF → SF → Final → Champion) ─────
+// ─── Bracket layout constants (linear: R32 → R16 → QF → SF → Final → Champion) ─
 const D_ROW_H    = 26
 const D_CARD_H   = D_ROW_H * 2 + 2         // 54
 const D_CARD_W   = 152
@@ -19,19 +19,31 @@ const D_CHAMP_W  = 210
 const D_GAP      = 8
 const D_SVG_W    = 26
 const D_HDR_H    = 28
-const D_COL_H    = 8 * D_CARD_H + 7 * D_GAP  // 488
 
-// Vertical centres per round
-const D_R16_Y = Array.from({ length: 8 }, (_, i) => i * (D_CARD_H + D_GAP) + D_CARD_H / 2)
+// R32 compact card dimensions
+const D_R32_ROW_H  = 18
+const D_R32_CARD_H = D_R32_ROW_H * 2 + 2   // 38
+const D_R32_CARD_W = 136
+const D_R32_GAP    = 4
+
+// Column height is now driven by 16 R32 matches
+const D_COL_H = 16 * D_R32_CARD_H + 15 * D_R32_GAP  // 608 + 60 = 668
+
+// Vertical centres per round — everything derived from R32 spacing
+const D_R32_Y = Array.from({ length: 16 }, (_, i) => i * (D_R32_CARD_H + D_R32_GAP) + D_R32_CARD_H / 2)
+const D_R16_Y = Array.from({ length: 8 },  (_, i) => (D_R32_Y[i * 2] + D_R32_Y[i * 2 + 1]) / 2)
 const D_QF_Y  = [0, 1, 2, 3].map(i => (D_R16_Y[i * 2] + D_R16_Y[i * 2 + 1]) / 2)
 const D_SF_Y  = [0, 1].map(i => (D_QF_Y[i * 2] + D_QF_Y[i * 2 + 1]) / 2)
 const D_FIN_Y = (D_SF_Y[0] + D_SF_Y[1]) / 2
 
-const D_3P_H     = 96
-const D_NAT_H    = D_HDR_H + D_COL_H + 16 + D_3P_H   // 628
-const D_NAT_W    =
-  D_CARD_W + D_SVG_W + D_CARD_W + D_SVG_W + D_CARD_W + D_SVG_W + D_FINAL_W + D_SVG_W + D_CHAMP_W + 40
-// 152+26+152+26+152+26+172+26+210+40 = 982
+// 3rd-place playoff x-offset: starts at the SF column left edge
+const D_3P_X = D_R32_CARD_W + D_SVG_W + D_CARD_W + D_SVG_W + D_CARD_W + D_SVG_W  // 520
+
+const D_3P_H  = 96
+const D_NAT_H = D_HDR_H + D_COL_H + 16 + D_3P_H   // 28+668+16+96 = 808
+const D_NAT_W =
+  D_R32_CARD_W + D_SVG_W + D_CARD_W + D_SVG_W + D_CARD_W + D_SVG_W + D_CARD_W + D_SVG_W + D_FINAL_W + D_SVG_W + D_CHAMP_W + 40
+// 136+26+152+26+152+26+152+26+172+26+210+40 = 1144
 
 // ─── Round tab labels (mobile) ────────────────────────────────────────────────
 const ROUND_LABELS: Record<string, string> = {
@@ -53,11 +65,15 @@ function DLabel({ text }: { text: string }) {
 }
 
 // ─── Team row inside a card ───────────────────────────────────────────────────
-function DRow({ team, prob, isWinner, large = false }: {
-  team: string; prob: number; isWinner: boolean; large?: boolean;
+function DRow({ team, prob, isWinner, large = false, compact = false }: {
+  team: string; prob: number; isWinner: boolean; large?: boolean; compact?: boolean;
 }) {
+  const rowH = compact ? D_R32_ROW_H : D_ROW_H;
   return (
-    <div className="relative flex items-center gap-1.5 px-2" style={{ height: D_ROW_H }}>
+    <div
+      className={`relative flex items-center gap-1 ${compact ? "px-1.5" : "px-2 gap-1.5"}`}
+      style={{ height: rowH }}
+    >
       {isWinner && (
         <div
           className="absolute left-0 top-0 bottom-0 rounded-r"
@@ -66,16 +82,22 @@ function DRow({ team, prob, isWinner, large = false }: {
       )}
       <FlagIcon
         team={team}
-        className={`rounded-sm shrink-0 ${large ? "w-6 h-[16px]" : "w-[15px] h-[10px]"}`}
+        className={`rounded-sm shrink-0 ${
+          large   ? "w-6 h-[16px]"    :
+          compact ? "w-[12px] h-[8px]" :
+                    "w-[15px] h-[10px]"
+        }`}
       />
       <span
-        className={`flex-1 truncate font-anton leading-none ${large ? "text-[13px]" : "text-[11.5px]"}`}
+        className={`flex-1 truncate font-anton leading-none ${
+          large ? "text-[13px]" : compact ? "text-[10px]" : "text-[11.5px]"
+        }`}
         style={{ color: isWinner ? "#f5efe1" : "rgba(245,239,225,0.3)" }}
       >
         {team}
       </span>
       <span
-        className="font-jb tabular-nums text-[9px] shrink-0"
+        className={`font-jb tabular-nums shrink-0 ${compact ? "text-[8px]" : "text-[9px]"}`}
         style={{ color: isWinner ? "#f5c842" : "rgba(245,239,225,0.22)" }}
       >
         {(prob * 100).toFixed(0)}%
@@ -87,26 +109,32 @@ function DRow({ team, prob, isWinner, large = false }: {
 // ─── Match card ───────────────────────────────────────────────────────────────
 function DCard({ match, variant = "default", delay = 0 }: {
   match: BracketMatch;
-  variant?: "default" | "sf" | "final";
+  variant?: "default" | "sf" | "final" | "compact";
   delay?: number;
 }) {
-  const w = variant === "final" ? D_FINAL_W : D_CARD_W;
+  const w = variant === "final" ? D_FINAL_W : variant === "compact" ? D_R32_CARD_W : D_CARD_W;
+  const h = variant === "compact" ? D_R32_CARD_H : D_CARD_H;
   const cardStyle: React.CSSProperties =
     variant === "final" ? {
-      width: w, height: D_CARD_H, borderRadius: 4,
+      width: w, height: h, borderRadius: 4,
       background: "rgba(245,200,66,0.07)",
       border: "1px solid rgba(245,200,66,0.5)",
       boxShadow: "0 0 14px rgba(245,200,66,0.07)",
     } : variant === "sf" ? {
-      width: w, height: D_CARD_H, borderRadius: 4,
+      width: w, height: h, borderRadius: 4,
       background: "rgba(255,255,255,0.04)",
       border: "1px solid rgba(245,200,66,0.2)",
+    } : variant === "compact" ? {
+      width: w, height: h, borderRadius: 3,
+      background: "rgba(255,255,255,0.025)",
+      border: "1px solid rgba(255,255,255,0.06)",
     } : {
-      width: w, height: D_CARD_H, borderRadius: 4,
+      width: w, height: h, borderRadius: 4,
       background: "rgba(255,255,255,0.03)",
       border: "1px solid rgba(255,255,255,0.07)",
     };
 
+  const isCompact = variant === "compact";
   return (
     <motion.div
       initial={{ opacity: 0, x: -8 }}
@@ -115,9 +143,9 @@ function DCard({ match, variant = "default", delay = 0 }: {
       className="overflow-hidden shrink-0"
       style={cardStyle}
     >
-      <DRow team={match.team1} prob={match.team1_win_prob} isWinner={match.predicted_winner === match.team1} large={variant === "final"} />
-      <div style={{ height: 1, margin: "0 8px", background: "rgba(255,255,255,0.05)" }} />
-      <DRow team={match.team2} prob={match.team2_win_prob} isWinner={match.predicted_winner === match.team2} large={variant === "final"} />
+      <DRow team={match.team1} prob={match.team1_win_prob} isWinner={match.predicted_winner === match.team1} large={variant === "final"} compact={isCompact} />
+      <div style={{ height: 1, margin: `0 ${isCompact ? 5 : 8}px`, background: "rgba(255,255,255,0.05)" }} />
+      <DRow team={match.team2} prob={match.team2_win_prob} isWinner={match.predicted_winner === match.team2} large={variant === "final"} compact={isCompact} />
     </motion.div>
   );
 }
@@ -167,21 +195,22 @@ function DConnector({ from, to, height, width = D_SVG_W, delay = 0 }: {
 }
 
 // ─── Column of cards at specified vertical centres ────────────────────────────
-function DCol({ matches, centers, label, variant = "default", delay }: {
+function DCol({ matches, centers, label, variant = "default", delay, cardH = D_CARD_H }: {
   matches: BracketMatch[];
   centers: number[];
   label: React.ReactNode;
-  variant?: "default" | "sf" | "final";
+  variant?: "default" | "sf" | "final" | "compact";
   delay: number;
+  cardH?: number;
 }) {
-  const w = variant === "final" ? D_FINAL_W : D_CARD_W;
+  const w = variant === "final" ? D_FINAL_W : variant === "compact" ? D_R32_CARD_W : D_CARD_W;
   return (
     <div className="shrink-0" style={{ width: w }}>
       <div className="flex items-center justify-center" style={{ height: D_HDR_H }}>{label}</div>
       <div className="relative" style={{ height: D_COL_H }}>
         {matches.map((m, i) => (
-          <div key={m.match_id} className="absolute" style={{ top: centers[i] - D_CARD_H / 2 }}>
-            <DCard match={m} variant={variant} delay={delay + i * 0.055} />
+          <div key={m.match_id} className="absolute" style={{ top: centers[i] - cardH / 2 }}>
+            <DCard match={m} variant={variant} delay={delay + i * 0.04} />
           </div>
         ))}
       </div>
@@ -290,12 +319,14 @@ function BracketDiagram({ rounds, champion, championOdds }: {
     return () => ro.disconnect();
   }, []);
 
+  const r32 = rounds.find(r => r.round === "Round of 32")?.matches ?? [];
   const r16 = rounds.find(r => r.round === "Round of 16")?.matches ?? [];
   const qf  = rounds.find(r => r.round === "Quarter-Final")?.matches ?? [];
   const sf  = rounds.find(r => r.round === "Semi-Final")?.matches ?? [];
   const fin = rounds.find(r => r.round === "Final")?.matches ?? [];
   const tp  = rounds.find(r => r.round === "3rd Place Playoff")?.matches?.[0];
 
+  const hasR32 = r32.length >= 16;
   if (r16.length < 8 || qf.length < 4 || sf.length < 2 || !fin[0]) return null;
 
   return (
@@ -310,20 +341,29 @@ function BracketDiagram({ rounds, champion, championOdds }: {
       >
         {/* Main bracket row */}
         <div className="flex items-start" style={{ paddingLeft: 20, paddingTop: 0 }}>
-          <DCol matches={r16} centers={D_R16_Y} label={<DLabel text="Round of 16" />} delay={0} />
-          <DConnector from={D_R16_Y} to={D_QF_Y} height={D_COL_H} delay={0.10} />
-          <DCol matches={qf}  centers={D_QF_Y}  label={<DLabel text="Quarter-Finals" />} delay={0.20} />
-          <DConnector from={D_QF_Y}  to={D_SF_Y}  height={D_COL_H} delay={0.30} />
-          <DCol matches={sf}  centers={D_SF_Y}  label={<DLabel text="Semi-Finals" />} variant="sf" delay={0.40} />
-          <DConnector from={D_SF_Y}  to={[D_FIN_Y]} height={D_COL_H} delay={0.50} />
-          <DCol matches={fin} centers={[D_FIN_Y]} label={<DLabel text="Final" />} variant="final" delay={0.58} />
-          <DConnector from={[D_FIN_Y]} to={[D_FIN_Y]} height={D_COL_H} delay={0.66} />
-          <DChampionCol champion={champion} championOdds={championOdds} delay={0.74} />
+          {hasR32 && (
+            <>
+              <DCol matches={r32} centers={D_R32_Y} label={<DLabel text="Round of 32" />} variant="compact" cardH={D_R32_CARD_H} delay={0} />
+              <DConnector from={D_R32_Y} to={D_R16_Y} height={D_COL_H} delay={0.06} />
+            </>
+          )}
+          <DCol matches={r16} centers={D_R16_Y} label={<DLabel text="Round of 16" />} delay={hasR32 ? 0.12 : 0} />
+          <DConnector from={D_R16_Y} to={D_QF_Y} height={D_COL_H} delay={hasR32 ? 0.20 : 0.10} />
+          <DCol matches={qf}  centers={D_QF_Y}  label={<DLabel text="Quarter-Finals" />} delay={hasR32 ? 0.28 : 0.20} />
+          <DConnector from={D_QF_Y}  to={D_SF_Y}  height={D_COL_H} delay={hasR32 ? 0.36 : 0.30} />
+          <DCol matches={sf}  centers={D_SF_Y}  label={<DLabel text="Semi-Finals" />} variant="sf" delay={hasR32 ? 0.44 : 0.40} />
+          <DConnector from={D_SF_Y}  to={[D_FIN_Y]} height={D_COL_H} delay={hasR32 ? 0.52 : 0.50} />
+          <DCol matches={fin} centers={[D_FIN_Y]} label={<DLabel text="Final" />} variant="final" delay={hasR32 ? 0.58 : 0.58} />
+          <DConnector from={[D_FIN_Y]} to={[D_FIN_Y]} height={D_COL_H} delay={hasR32 ? 0.66 : 0.66} />
+          <DChampionCol champion={champion} championOdds={championOdds} delay={hasR32 ? 0.74 : 0.74} />
         </div>
 
-        {/* 3rd Place Playoff */}
+        {/* 3rd Place Playoff — positioned under the SF column */}
         {tp && (
-          <div className="flex items-center gap-3" style={{ paddingLeft: 20, paddingTop: 14 }}>
+          <div
+            className="flex items-center gap-3"
+            style={{ paddingLeft: 20 + (hasR32 ? D_3P_X : D_3P_X - D_R32_CARD_W - D_SVG_W), paddingTop: 14 }}
+          >
             <DLabel text="3rd Place Playoff" />
             <motion.div
               initial={{ opacity: 0, y: 6 }}
