@@ -249,7 +249,8 @@
       },
       {
         "name": "Jeremy Márquez",
-        "club": "Cruz Azul"
+        "club": "Cruz Azul",
+        "sofascore_id": "1046703"
       },
       {
         "name": "Jordan Carrillo",
@@ -377,11 +378,13 @@
         "espn_id": "260775",
         "age": 25
       }
-    ]
+    ],
+    "manager_sofascore_id": "784504"
   },
   "South Africa": {
     "released": false,
-    "manager": "Hugo Broos"
+    "manager": "Hugo Broos",
+    "manager_sofascore_id": "786568"
   },
   "Korea Republic": {
     "manager": "Hong Myung-Bo",
@@ -945,11 +948,13 @@
         "age": 34,
         "sofascore_id": "58488"
       }
-    ]
+    ],
+    "manager_sofascore_id": "68799"
   },
   "Canada": {
     "released": false,
-    "manager": "Jesse Marsch"
+    "manager": "Jesse Marsch",
+    "manager_sofascore_id": "784568"
   },
   "Bosnia and Herzegovina": {
     "manager": "Sergej Barbarez",
@@ -1138,7 +1143,8 @@
         "age": 40,
         "sofascore_id": "14990"
       }
-    ]
+    ],
+    "manager_sofascore_id": "804862"
   },
   "Qatar": {
     "manager": "Julen Lopetegui",
@@ -1164,7 +1170,8 @@
       },
       {
         "name": "Mahmoud Abunada",
-        "club": "Al Rayyan"
+        "club": "Al Rayyan",
+        "sofascore_id": "1218997"
       }
     ],
     "defenders": [
@@ -1195,7 +1202,8 @@
       },
       {
         "name": "Al-Hashmi Al-Hussain",
-        "club": "Al Arabi"
+        "club": "Al Arabi",
+        "sofascore_id": "1148402"
       },
       {
         "name": "Ayoub Al-Alawi",
@@ -1210,7 +1218,8 @@
       },
       {
         "name": "Rayyan Al-Ali",
-        "club": "Al Gharafa"
+        "club": "Al Gharafa",
+        "sofascore_id": "1501526"
       },
       {
         "name": "Issa Laye",
@@ -1351,7 +1360,8 @@
         "age": 26,
         "sofascore_id": "985156"
       }
-    ]
+    ],
+    "manager_sofascore_id": "138570"
   },
   "Switzerland": {
     "manager": "Murat Yakin",
@@ -1544,7 +1554,8 @@
         "age": 29,
         "sofascore_id": "352290"
       }
-    ]
+    ],
+    "manager_sofascore_id": "67424"
   },
   "Brazil": {
     "manager": "Carlo Ancelotti",
@@ -1737,11 +1748,13 @@
         "age": 25,
         "sofascore_id": "868812"
       }
-    ]
+    ],
+    "manager_sofascore_id": "52965"
   },
   "Morocco": {
     "released": false,
-    "manager": "Mohamed Ouahbi"
+    "manager": "Mohamed Ouahbi",
+    "manager_sofascore_id": "807706"
   },
   "Haiti": {
     "manager": "Sebastien Migne",
@@ -1934,7 +1947,8 @@
         "age": 25,
         "sofascore_id": "1010126"
       }
-    ]
+    ],
+    "manager_sofascore_id": "790200"
   },
   "Scotland": {
     "manager": "Steve Clarke",
@@ -2120,15 +2134,18 @@
         "age": 29,
         "sofascore_id": "886117"
       }
-    ]
+    ],
+    "manager_sofascore_id": "784471"
   },
   "United States": {
     "released": false,
-    "manager": "Mauricio Pochettino"
+    "manager": "Mauricio Pochettino",
+    "manager_sofascore_id": "3377"
   },
   "Australia": {
     "released": false,
-    "manager": "Tony Popovic"
+    "manager": "Tony Popovic",
+    "manager_sofascore_id": "635"
   },
   "Paraguay": {
     "manager": "Gustavo Alfaro",
@@ -2485,7 +2502,8 @@
         "espn_id": "272499",
         "age": 26
       }
-    ]
+    ],
+    "manager_sofascore_id": "53366"
   },
   "Turkey": {
     "manager": "Vincenzo Montella",
@@ -2520,7 +2538,8 @@
       },
       {
         "name": "Ersin Destanoglou",
-        "club": "Besiktas"
+        "club": "Besiktas",
+        "sofascore_id": "913656"
       }
     ],
     "defenders": [
@@ -2723,7 +2742,8 @@
         "age": 23,
         "sofascore_id": "999186"
       }
-    ]
+    ],
+    "manager_sofascore_id": "1774"
   },
   "Germany": {
     "manager": "Julian Nagelsmann",
@@ -2909,7 +2929,8 @@
         "age": 24,
         "sofascore_id": "980623"
       }
-    ]
+    ],
+    "manager_sofascore_id": "786670"
   },
   "Curaçao": {
     "manager": "Dick Advocaat",
@@ -3096,7 +3117,8 @@
         "age": 26,
         "sofascore_id": "1036004"
       }
-    ]
+    ],
+    "manager_sofascore_id": "53298"
   },
   "Côte d'Ivoire": {
     "manager": "Emerse Faé",
@@ -3289,15 +3311,18 @@
         "age": 23,
         "sofascore_id": "979315"
       }
-    ]
+    ],
+    "manager_sofascore_id": "803796"
   },
   "Ecuador": {
     "released": false,
-    "manager": "Sebastián Beccacece"
+    "manager": "Sebastián Beccacece",
+    "manager_sofascore_id": "786550"
   },
   "Netherlands": {
     "released": false,
-    "manager": "Ronald Koeman"
+    "manager": "Ronald Koeman",
+    "manager_sofascore_id": "52985"
   },
   "Japan": {
     "manager": "Hajime Moriyasu",
@@ -3489,7 +3514,8 @@
         "espn_id": "346208",
         "sofascore_id": "1391315"
       }
-    ]
+    ],
+    "manager_sofascore_id": "156178"
   },
   "Sweden": {
     "manager": "Graham Potter",
@@ -3681,7 +3707,8 @@
         "age": 24,
         "sofascore_id": "918517"
       }
-    ]
+    ],
+    "manager_sofascore_id": "309534"
   },
   "Tunisia": {
     "manager": "Sabri Lamouchi",
@@ -3878,7 +3905,8 @@
         "age": 26,
         "sofascore_id": "1130946"
       }
-    ]
+    ],
+    "manager_sofascore_id": "9062"
   },
   "Belgium": {
     "manager": "Rudi Garcia",
@@ -4071,7 +4099,8 @@
         "age": 31,
         "sofascore_id": "135666"
       }
-    ]
+    ],
+    "manager_sofascore_id": "53059"
   },
   "Egypt": {
     "manager": "Hossam Hassan",
@@ -4255,7 +4284,8 @@
         "age": 18,
         "sofascore_id": "1961596"
       }
-    ]
+    ],
+    "manager_sofascore_id": "790139"
   },
   "IR Iran": {
     "manager": "Amir Ghalenoei",
@@ -4450,7 +4480,8 @@
         "age": 33,
         "sofascore_id": "812533"
       }
-    ]
+    ],
+    "manager_sofascore_id": "785362"
   },
   "New Zealand": {
     "manager": "Darren Bazeley",
@@ -4642,11 +4673,13 @@
         "age": 23,
         "sofascore_id": "1414979"
       }
-    ]
+    ],
+    "manager_sofascore_id": "784912"
   },
   "Spain": {
     "released": false,
-    "manager": "Luis de la Fuente"
+    "manager": "Luis de la Fuente",
+    "manager_sofascore_id": "331371"
   },
   "Cape Verde Islands": {
     "manager": "Bubista",
@@ -4825,15 +4858,18 @@
         "age": 24,
         "sofascore_id": "1094395"
       }
-    ]
+    ],
+    "manager_sofascore_id": "794980"
   },
   "Uruguay": {
     "released": false,
-    "manager": "Marcelo Bielsa"
+    "manager": "Marcelo Bielsa",
+    "manager_sofascore_id": "53560"
   },
   "Saudi Arabia": {
     "released": false,
-    "manager": "Georgios Donis"
+    "manager": "Georgios Donis",
+    "manager_sofascore_id": "53300"
   },
   "France": {
     "manager": "Didier Deschamps",
@@ -5026,7 +5062,8 @@
         "age": 28,
         "sofascore_id": "791702"
       }
-    ]
+    ],
+    "manager_sofascore_id": "69075"
   },
   "Senegal": {
     "manager": "Pape Thiaw",
@@ -5229,11 +5266,13 @@
         "age": 30,
         "sofascore_id": "868268"
       }
-    ]
+    ],
+    "manager_sofascore_id": "798718"
   },
   "Iraq": {
     "released": false,
-    "manager": "Graham Arnold"
+    "manager": "Graham Arnold",
+    "manager_sofascore_id": "53524"
   },
   "Norway": {
     "manager": "Stale Solbakken",
@@ -5422,7 +5461,8 @@
         "age": 26,
         "sofascore_id": "876599"
       }
-    ]
+    ],
+    "manager_sofascore_id": "53102"
   },
   "Argentina": {
     "manager": "Lionel Scaloni",
@@ -5807,11 +5847,13 @@
         "espn_id": "312757",
         "age": 24
       }
-    ]
+    ],
+    "manager_sofascore_id": "790728"
   },
   "Algeria": {
     "released": false,
-    "manager": "Vladimir Petkovic"
+    "manager": "Vladimir Petkovic",
+    "manager_sofascore_id": "52898"
   },
   "Austria": {
     "manager": "Ralf Rangnick",
@@ -6002,7 +6044,8 @@
         "age": 28,
         "sofascore_id": "870038"
       }
-    ]
+    ],
+    "manager_sofascore_id": "785379"
   },
   "Jordan": {
     "manager": "Jamal Sellami",
@@ -6165,7 +6208,8 @@
       },
       {
         "name": "Ali Azaizeh",
-        "club": "Al-Shabab"
+        "club": "Al-Shabab",
+        "sofascore_id": "1652199"
       },
       {
         "name": "Odeh Al-Fakhouri",
@@ -6183,7 +6227,8 @@
         "club": "Lokomotiva Zagreb",
         "sofascore_id": "1522038"
       }
-    ]
+    ],
+    "manager_sofascore_id": "793874"
   },
   "Portugal": {
     "manager": "Roberto Martinez",
@@ -6211,7 +6256,8 @@
       },
       {
         "name": "Ricardo Velho",
-        "club": "Gençlerbirliği"
+        "club": "Gençlerbirliği",
+        "sofascore_id": "845792"
       }
     ],
     "defenders": [
@@ -6378,7 +6424,8 @@
         "age": 26,
         "sofascore_id": "830431"
       }
-    ]
+    ],
+    "manager_sofascore_id": "19518"
   },
   "DR Congo": {
     "manager": "Sebastien Desabre",
@@ -6567,7 +6614,8 @@
         "age": 35,
         "sofascore_id": "115665"
       }
-    ]
+    ],
+    "manager_sofascore_id": "789575"
   },
   "Uzbekistan": {
     "manager": "Fabio Cannavaro",
@@ -6831,7 +6879,8 @@
         "age": 30,
         "sofascore_id": "791355"
       }
-    ]
+    ],
+    "manager_sofascore_id": "784893"
   },
   "Colombia": {
     "manager": "Nestor Lorenzo",
@@ -7209,11 +7258,13 @@
         "espn_id": "336809",
         "age": 27
       }
-    ]
+    ],
+    "manager_sofascore_id": "795312"
   },
   "England": {
     "released": false,
-    "manager": "Thomas Tuchel"
+    "manager": "Thomas Tuchel",
+    "manager_sofascore_id": "785186"
   },
   "Croatia": {
     "manager": "Zlatko Dalic",
@@ -7405,14 +7456,17 @@
         "age": 23,
         "sofascore_id": "1019321"
       }
-    ]
+    ],
+    "manager_sofascore_id": "784902"
   },
   "Ghana": {
     "released": false,
-    "manager": "Carlos Queiroz"
+    "manager": "Carlos Queiroz",
+    "manager_sofascore_id": "53636"
   },
   "Panama": {
     "released": false,
-    "manager": "Thomas Christiansen"
+    "manager": "Thomas Christiansen",
+    "manager_sofascore_id": "396"
   }
 }

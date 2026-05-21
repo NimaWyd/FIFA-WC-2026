@@ -15,6 +15,7 @@ interface Player {
 
 interface TeamRoster {
   manager: string;
+  manager_sofascore_id?: string;
   goalkeepers: Player[];
   defenders: Player[];
   midfielders: Player[];
@@ -24,6 +25,7 @@ interface TeamRoster {
 interface UnreleasedRoster {
   released: false;
   manager?: string;
+  manager_sofascore_id?: string;
 }
 
 type RosterEntry = TeamRoster | UnreleasedRoster;
@@ -49,15 +51,15 @@ function getInitials(name: string): string {
 }
 
 function PlayerPhoto({ player, accent }: { player: Player; accent: string }) {
-  // 0 = sofascore, 1 = espn, 2 = initials
-  const [stage, setStage] = useState(0);
-
   const sofascoreUrl = player.sofascore_id
     ? `https://api.sofascore.com/api/v1/player/${player.sofascore_id}/image`
     : null;
   const espnUrl = player.espn_id
     ? `https://a.espncdn.com/i/headshots/soccer/players/full/${player.espn_id}.png`
     : null;
+
+  // Start at whichever source exists first
+  const [stage, setStage] = useState(() => sofascoreUrl ? 0 : espnUrl ? 1 : 2);
 
   const photoUrl = stage === 0 ? sofascoreUrl : stage === 1 ? espnUrl : null;
 
@@ -66,7 +68,7 @@ function PlayerPhoto({ player, accent }: { player: Player; accent: string }) {
     else setStage(2);
   };
 
-  if (photoUrl && stage < 2) {
+  if (photoUrl) {
     return (
       <div className="relative w-14 h-14 rounded-xl overflow-hidden flex-shrink-0 bg-navy-700 border border-navy-600">
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -83,6 +85,33 @@ function PlayerPhoto({ player, accent }: { player: Player; accent: string }) {
   return (
     <div className={`w-14 h-14 rounded-xl flex-shrink-0 flex items-center justify-center border ${accent} font-bold text-base`}>
       {getInitials(player.name)}
+    </div>
+  );
+}
+
+function ManagerPhoto({ sofascoreId }: { sofascoreId?: string }) {
+  const [failed, setFailed] = useState(false);
+  const photoUrl = sofascoreId
+    ? `https://api.sofascore.com/api/v1/manager/${sofascoreId}/image`
+    : null;
+
+  if (photoUrl && !failed) {
+    return (
+      <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 border border-gold-500/30 bg-navy-700">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={photoUrl}
+          alt="manager"
+          className="w-full h-full object-cover object-top"
+          onError={() => setFailed(true)}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-10 h-10 rounded-full bg-gold-500/10 border border-gold-500/30 flex items-center justify-center flex-shrink-0">
+      <UserIcon className="w-5 h-5 text-gold-500" />
     </div>
   );
 }
@@ -157,9 +186,12 @@ export default function RosterSection({ team }: { team: string }) {
             {team}&apos;s official WC 2026 squad hasn&apos;t been released yet. Final squads must be submitted by June 1.
           </p>
           {(entry as UnreleasedRoster).manager && (
-            <div className="mt-2 flex items-center gap-2 px-4 py-2 rounded-lg bg-navy-700 border border-navy-600">
-              <span className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">Head Coach</span>
-              <span className="text-sm text-white font-semibold">{(entry as UnreleasedRoster).manager}</span>
+            <div className="mt-2 flex items-center gap-3 px-4 py-2 rounded-lg bg-navy-700 border border-navy-600">
+              <ManagerPhoto sofascoreId={(entry as UnreleasedRoster).manager_sofascore_id} />
+              <div className="flex flex-col min-w-0">
+                <span className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">Head Coach</span>
+                <span className="text-sm text-white font-semibold">{(entry as UnreleasedRoster).manager}</span>
+              </div>
             </div>
           )}
         </div>
@@ -168,9 +200,7 @@ export default function RosterSection({ team }: { team: string }) {
           {/* Manager */}
           {(entry as TeamRoster).manager && (
             <div className="flex items-center gap-3 p-3 rounded-xl bg-navy-700/50 border border-navy-600">
-              <div className="w-10 h-10 rounded-full bg-gold-500/10 border border-gold-500/30 flex items-center justify-center flex-shrink-0">
-                <UserIcon className="w-5 h-5 text-gold-500" />
-              </div>
+              <ManagerPhoto sofascoreId={(entry as TeamRoster).manager_sofascore_id} />
               <div className="flex flex-col min-w-0">
                 <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Head Coach</span>
                 <span className="text-sm font-bold text-white">{(entry as TeamRoster).manager}</span>
