@@ -10,7 +10,9 @@
       },
       {
         "name": "Antonio Rodríguez",
-        "club": "Tijuana"
+        "club": "Tijuana",
+        "espn_id": "300734",
+        "age": 30
       },
       {
         "name": "Carlos Acevedo",
@@ -20,7 +22,9 @@
       },
       {
         "name": "Carlos Moreno",
-        "club": "Pachuca"
+        "club": "Pachuca",
+        "espn_id": "216888",
+        "age": 34
       },
       {
         "name": "Guillermo Ochoa",
@@ -30,29 +34,40 @@
       },
       {
         "name": "Raúl Rangel",
-        "club": "Chivas"
+        "club": "Chivas",
+        "espn_id": "290899",
+        "age": 26
       }
     ],
     "defenders": [
       {
         "name": "Bryan González",
-        "club": "Chivas"
+        "club": "Chivas",
+        "espn_id": "297284"
       },
       {
         "name": "César Montes",
-        "club": "Lokomotiv Moscow"
+        "club": "Lokomotiv Moscow",
+        "espn_id": "224323",
+        "age": 29
       },
       {
         "name": "Edson Álvarez",
-        "club": "Fenerbahçe"
+        "club": "Fenerbahçe",
+        "espn_id": "241627",
+        "age": 28
       },
       {
         "name": "Eduardo Águila",
-        "club": "Atlético de San Luis"
+        "club": "Atlético de San Luis",
+        "espn_id": "346233",
+        "age": 24
       },
       {
         "name": "Everardo López",
-        "club": "Toluca"
+        "club": "Toluca",
+        "espn_id": "338878",
+        "age": 21
       },
       {
         "name": "Israel Reyes",
@@ -62,27 +77,38 @@
       },
       {
         "name": "Jesús Angulo",
-        "club": "Tigres"
+        "club": "Tigres",
+        "espn_id": "282615",
+        "age": 29
       },
       {
         "name": "Jesús Gallardo",
-        "club": "Toluca"
+        "club": "Toluca",
+        "espn_id": "132098",
+        "age": 31
       },
       {
         "name": "Jesús Gómez",
-        "club": "Tijuana"
+        "club": "Tijuana",
+        "espn_id": "4886806"
       },
       {
         "name": "Johan Vásquez",
-        "club": "Genoa"
+        "club": "Genoa",
+        "espn_id": "259975",
+        "age": 27
       },
       {
         "name": "Jorge Sánchez",
-        "club": "PAOK"
+        "club": "PAOK",
+        "espn_id": "178746",
+        "age": 28
       },
       {
         "name": "Julián Araujo",
-        "club": "Celtic"
+        "club": "Celtic",
+        "espn_id": "280764",
+        "age": 24
       },
       {
         "name": "Luis Rey",
@@ -90,11 +116,15 @@
       },
       {
         "name": "Mateo Chávez",
-        "club": "AZ Alkmaar"
+        "club": "AZ Alkmaar",
+        "espn_id": "379193",
+        "age": 22
       },
       {
         "name": "Ramón Juárez",
-        "club": "América"
+        "club": "América",
+        "espn_id": "307891",
+        "age": 25
       },
       {
         "name": "Richard Ledezma",
@@ -104,17 +134,23 @@
       },
       {
         "name": "Víctor Guzmán",
-        "club": "Monterrey"
+        "club": "Monterrey",
+        "espn_id": "290348",
+        "age": 24
       }
     ],
     "midfielders": [
       {
         "name": "Alexei Domínguez",
-        "club": "Pachuca"
+        "club": "Pachuca",
+        "espn_id": "365134",
+        "age": 21
       },
       {
         "name": "Alexis Gutiérrez",
-        "club": "America"
+        "club": "America",
+        "espn_id": "265866",
+        "age": 26
       },
       {
         "name": "Álvaro Fidalgo",
@@ -124,15 +160,21 @@
       },
       {
         "name": "Brian Gutiérrez",
-        "club": "Chivas"
+        "club": "Chivas",
+        "espn_id": "303577",
+        "age": 19
       },
       {
         "name": "Carlos Rodríguez",
-        "club": "Cruz Azul"
+        "club": "Cruz Azul",
+        "espn_id": "239990",
+        "age": 29
       },
       {
         "name": "Denzell Garcia",
-        "club": "FC Juarez"
+        "club": "FC Juarez",
+        "espn_id": "337308",
+        "age": 22
       },
       {
         "name": "Diego Lainez",
@@ -142,15 +184,21 @@
       },
       {
         "name": "Efrain Álvarez",
-        "club": "Chivas"
+        "club": "Chivas",
+        "espn_id": "260173",
+        "age": 23
       },
       {
         "name": "Elias Montiel",
-        "club": "Pachuca"
+        "club": "Pachuca",
+        "espn_id": "364455",
+        "age": 20
       },
       {
         "name": "Erick Sánchez",
-        "club": "America"
+        "club": "America",
+        "espn_id": "129421",
+        "age": 26
       },
       {
         "name": "Erik Lira",
@@ -166,7 +214,9 @@
       },
       {
         "name": "Isaías Violante",
-        "club": "America"
+        "club": "America",
+        "espn_id": "308956",
+        "age": 22
       },
       {
         "name": "Jeremy Márquez",
@@ -174,7 +224,9 @@
       },
       {
         "name": "Jordan Carrillo",
-        "club": "Pumas"
+        "club": "Pumas",
+        "espn_id": "301898",
+        "age": 24
       },
       {
         "name": "Jorge Ruvalcaba",
@@ -184,11 +236,15 @@
       },
       {
         "name": "Kevin Castañeda",
-        "club": "Tijuana"
+        "club": "Tijuana",
+        "espn_id": "276398",
+        "age": 26
       },
       {
         "name": "Luis Chávez",
-        "club": "Dinamo Moscu"
+        "club": "Dinamo Moscu",
+        "espn_id": "104497",
+        "age": 30
       },
       {
         "name": "Luis Romo",
@@ -216,7 +272,9 @@
       },
       {
         "name": "Jesús Angulo",
-        "club": "Toluca"
+        "club": "Toluca",
+        "espn_id": "282615",
+        "age": 29
       }
     ],
     "forwards": [
@@ -228,27 +286,39 @@
       },
       {
         "name": "Armando González",
-        "club": "Chivas"
+        "club": "Chivas",
+        "espn_id": "376110",
+        "age": 23
       },
       {
         "name": "César Huerta",
-        "club": "Anderlecht"
+        "club": "Anderlecht",
+        "espn_id": "265969",
+        "age": 25
       },
       {
         "name": "Germán Berterame",
-        "club": "Inter Miami"
+        "club": "Inter Miami",
+        "espn_id": "228394",
+        "age": 27
       },
       {
         "name": "Guillermo Martínez",
-        "club": "Pumas"
+        "club": "Pumas",
+        "espn_id": "193566",
+        "age": 31
       },
       {
         "name": "Julián Quiñones",
-        "club": "Al-Qadisiyah"
+        "club": "Al-Qadisiyah",
+        "espn_id": "233075",
+        "age": 29
       },
       {
         "name": "Raúl Jiménez",
-        "club": "Fulham"
+        "club": "Fulham",
+        "espn_id": "167060",
+        "age": 35
       },
       {
         "name": "Roberto Alvarado",
@@ -258,7 +328,9 @@
       },
       {
         "name": "Santiago Giménez",
-        "club": "Milan"
+        "club": "Milan",
+        "espn_id": "260775",
+        "age": 25
       }
     ]
   },
@@ -299,11 +371,15 @@
       },
       {
         "name": "Lee Han-Beom",
-        "club": "Midtjylland"
+        "club": "Midtjylland",
+        "espn_id": "297788",
+        "age": 23
       },
       {
         "name": "Kim Tae-Hyun",
-        "club": "Kashima Antlers"
+        "club": "Kashima Antlers",
+        "espn_id": "336168",
+        "age": 29
       },
       {
         "name": "Park Jin-Seop",
@@ -317,7 +393,9 @@
       },
       {
         "name": "Lee Tae-Seok",
-        "club": "Austria Vienna"
+        "club": "Austria Vienna",
+        "espn_id": "297270",
+        "age": 23
       },
       {
         "name": "Seol Young-Woo",
@@ -359,7 +437,9 @@
       },
       {
         "name": "Kim Jin-Kyu",
-        "club": "Jeonbuk Hyundai"
+        "club": "Jeonbuk Hyundai",
+        "espn_id": "46568",
+        "age": 41
       },
       {
         "name": "Bae Jun-Ho",
@@ -379,7 +459,9 @@
       },
       {
         "name": "Lee Dong-Gyeong",
-        "club": "Ulsan HD"
+        "club": "Ulsan HD",
+        "espn_id": "271702",
+        "age": 28
       },
       {
         "name": "Lee Jae-Sung",
@@ -389,7 +471,9 @@
       },
       {
         "name": "Lee Kang-In",
-        "club": "Paris Saint-Germain"
+        "club": "Paris Saint-Germain",
+        "espn_id": "274197",
+        "age": 25
       }
     ],
     "forwards": [
@@ -420,7 +504,9 @@
       },
       {
         "name": "Martin Jedlicka",
-        "club": "Banik Ostrava"
+        "club": "Banik Ostrava",
+        "espn_id": "257081",
+        "age": 28
       },
       {
         "name": "Antonín Kinsky",
@@ -430,7 +516,9 @@
       },
       {
         "name": "Jan Koutny",
-        "club": "Sigma Olomouc"
+        "club": "Sigma Olomouc",
+        "espn_id": "405508",
+        "age": 21
       },
       {
         "name": "Matej Kovar",
@@ -460,55 +548,81 @@
       },
       {
         "name": "David Douděra",
-        "club": "Slavia Prague"
+        "club": "Slavia Prague",
+        "espn_id": "343937",
+        "age": 27
       },
       {
         "name": "Matěj Hadaš",
-        "club": "Sigma Olomouc"
+        "club": "Sigma Olomouc",
+        "espn_id": "343738",
+        "age": 22
       },
       {
         "name": "Tomáš Holeš",
-        "club": "Slavia Prague"
+        "club": "Slavia Prague",
+        "espn_id": "280885",
+        "age": 33
       },
       {
         "name": "Robin Hranáč",
-        "club": "TSG Hoffenheim"
+        "club": "TSG Hoffenheim",
+        "espn_id": "322510",
+        "age": 26
       },
       {
         "name": "Štěpán Chaloupek",
-        "club": "Slavia Prague"
+        "club": "Slavia Prague",
+        "espn_id": "370744",
+        "age": 23
       },
       {
         "name": "Václav Jemelka",
-        "club": "Viktoria Plzen"
+        "club": "Viktoria Plzen",
+        "espn_id": "274358",
+        "age": 30
       },
       {
         "name": "David Jurásek",
-        "club": "Slavia Prague"
+        "club": "Slavia Prague",
+        "espn_id": "335996",
+        "age": 25
       },
       {
         "name": "Ladislav Krejčí",
-        "club": "Wolverhampton Wanderers"
+        "club": "Wolverhampton Wanderers",
+        "espn_id": "151714",
+        "age": 27
       },
       {
         "name": "Karel Spáčil",
-        "club": "Viktoria Plzen"
+        "club": "Viktoria Plzen",
+        "espn_id": "391012",
+        "age": 23
       },
       {
         "name": "Adam Ševínský",
-        "club": "Sparta Prague"
+        "club": "Sparta Prague",
+        "espn_id": "380527",
+        "age": 21
       },
       {
         "name": "Martin Vitík",
-        "club": "Bologna"
+        "club": "Bologna",
+        "espn_id": "309110",
+        "age": 23
       },
       {
         "name": "Tomáš Vlček",
-        "club": "Slavia Prague"
+        "club": "Slavia Prague",
+        "espn_id": "283008",
+        "age": 25
       },
       {
         "name": "Jaroslav Zelený",
-        "club": "Sparta Prague"
+        "club": "Sparta Prague",
+        "espn_id": "276659",
+        "age": 33
       },
       {
         "name": "David Zima",
@@ -520,11 +634,15 @@
     "midfielders": [
       {
         "name": "Lukas Ambros",
-        "club": "Gornik Zabrze"
+        "club": "Gornik Zabrze",
+        "espn_id": "351860",
+        "age": 21
       },
       {
         "name": "Michal Beran",
-        "club": "Sigma Olomouc"
+        "club": "Sigma Olomouc",
+        "espn_id": "306010",
+        "age": 25
       },
       {
         "name": "Pavel Bucha",
@@ -540,15 +658,21 @@
       },
       {
         "name": "Krystof Danek",
-        "club": "LASK Linz"
+        "club": "LASK Linz",
+        "espn_id": "306899",
+        "age": 23
       },
       {
         "name": "Vladimir Darida",
-        "club": "Hradec Kralove"
+        "club": "Hradec Kralove",
+        "espn_id": "165637",
+        "age": 35
       },
       {
         "name": "Patrik Hellebrand",
-        "club": "Gornik Zabrze"
+        "club": "Gornik Zabrze",
+        "espn_id": "260525",
+        "age": 27
       },
       {
         "name": "Adam Karabec",
@@ -558,15 +682,21 @@
       },
       {
         "name": "Ondrej Kricfaluši",
-        "club": "Banik Ostrava"
+        "club": "Banik Ostrava",
+        "espn_id": "347386",
+        "age": 22
       },
       {
         "name": "Tomáš Ladra",
-        "club": "Viktoria Plzen"
+        "club": "Viktoria Plzen",
+        "espn_id": "290630",
+        "age": 29
       },
       {
         "name": "David Planka",
-        "club": "Banik Ostrava"
+        "club": "Banik Ostrava",
+        "espn_id": "409910",
+        "age": 20
       },
       {
         "name": "Lukás Provod",
@@ -576,57 +706,83 @@
       },
       {
         "name": "Matěj Ryneš",
-        "club": "Sparta Prague"
+        "club": "Sparta Prague",
+        "espn_id": "311476",
+        "age": 24
       },
       {
         "name": "Lukas Sadílek",
-        "club": "Gornik Zabrze"
+        "club": "Gornik Zabrze",
+        "espn_id": "260520",
+        "age": 29
       },
       {
         "name": "Michal Sadílek",
-        "club": "Slavia Prague"
+        "club": "Slavia Prague",
+        "espn_id": "249525",
+        "age": 26
       },
       {
         "name": "Hugo Sochůrek",
-        "club": "Sparta Prague"
+        "club": "Sparta Prague",
+        "espn_id": "403974",
+        "age": 17
       },
       {
         "name": "Alexandr Sojka",
-        "club": "Viktoria Plzen"
+        "club": "Viktoria Plzen",
+        "espn_id": "387865",
+        "age": 23
       },
       {
         "name": "Tomáš Souček",
-        "club": "West Ham"
+        "club": "West Ham",
+        "espn_id": "230666",
+        "age": 31
       },
       {
         "name": "Pavel Šulc",
-        "club": "Lyon"
+        "club": "Lyon",
+        "espn_id": "305545",
+        "age": 25
       },
       {
         "name": "Denis Višinský",
-        "club": "Viktoria Plzen"
+        "club": "Viktoria Plzen",
+        "espn_id": "310027",
+        "age": 23
       }
     ],
     "forwards": [
       {
         "name": "Adam Hložek",
-        "club": "TSG Hoffenheim"
+        "club": "TSG Hoffenheim",
+        "espn_id": "292169",
+        "age": 23
       },
       {
         "name": "Tomáš Chorý",
-        "club": "Slavia Prague"
+        "club": "Slavia Prague",
+        "espn_id": "257336",
+        "age": 31
       },
       {
         "name": "Mojmír Chytil",
-        "club": "Slavia Prague"
+        "club": "Slavia Prague",
+        "espn_id": "343733",
+        "age": 27
       },
       {
         "name": "Christophe Kabongo",
-        "club": "Mlada Boleslav"
+        "club": "Mlada Boleslav",
+        "espn_id": "370742",
+        "age": 22
       },
       {
         "name": "Jan Kliment",
-        "club": "Sigma Olomouc"
+        "club": "Sigma Olomouc",
+        "espn_id": "220193",
+        "age": 32
       },
       {
         "name": "Jan Kuchta",
@@ -636,19 +792,27 @@
       },
       {
         "name": "Vasil Kušej",
-        "club": "Slavia Prague"
+        "club": "Slavia Prague",
+        "espn_id": "275818",
+        "age": 25
       },
       {
         "name": "Ondřej Mihálik",
-        "club": "Hradec Kralove"
+        "club": "Hradec Kralove",
+        "espn_id": "266828",
+        "age": 29
       },
       {
         "name": "Vojtěch Patrák",
-        "club": "Pardubice"
+        "club": "Pardubice",
+        "espn_id": "309113",
+        "age": 26
       },
       {
         "name": "Václav Sejk",
-        "club": "Sigma Olomouc"
+        "club": "Sigma Olomouc",
+        "espn_id": "326597",
+        "age": 24
       },
       {
         "name": "Patrik Schick",
@@ -658,7 +822,9 @@
       },
       {
         "name": "Matej Vydra",
-        "club": "Viktoria Plzen"
+        "club": "Viktoria Plzen",
+        "espn_id": "148624",
+        "age": 34
       }
     ]
   },
@@ -675,11 +841,15 @@
       },
       {
         "name": "Martin Zlomislic",
-        "club": "Rijeka"
+        "club": "Rijeka",
+        "espn_id": "258757",
+        "age": 27
       },
       {
         "name": "Osman Hadzikic",
-        "club": "Slaven Belupo"
+        "club": "Slaven Belupo",
+        "espn_id": "193888",
+        "age": 30
       }
     ],
     "defenders": [
@@ -697,11 +867,15 @@
       },
       {
         "name": "Nihad Mujakic",
-        "club": "Gaziantep"
+        "club": "Gaziantep",
+        "espn_id": "257942",
+        "age": 28
       },
       {
         "name": "Nikola Katic",
-        "club": "Schalke 04"
+        "club": "Schalke 04",
+        "espn_id": "220538",
+        "age": 29
       },
       {
         "name": "Tarik Muharemovic",
@@ -711,7 +885,9 @@
       },
       {
         "name": "Stjepan Radeljic",
-        "club": "Rijeka"
+        "club": "Rijeka",
+        "espn_id": "275414",
+        "age": 28
       },
       {
         "name": "Dennis Hadzikadunic",
@@ -741,27 +917,39 @@
       },
       {
         "name": "Ivan Basic",
-        "club": "Astana"
+        "club": "Astana",
+        "espn_id": "306256",
+        "age": 24
       },
       {
         "name": "Dzenis Burnic",
-        "club": "Karlsruher SC"
+        "club": "Karlsruher SC",
+        "espn_id": "225571",
+        "age": 27
       },
       {
         "name": "Ermin Mahmic",
-        "club": "Slovan Liberec"
+        "club": "Slovan Liberec",
+        "espn_id": "414676",
+        "age": 21
       },
       {
         "name": "Benjamin Tahirovic",
-        "club": "Brondby"
+        "club": "Brondby",
+        "espn_id": "352660",
+        "age": 23
       },
       {
         "name": "Amar Memic",
-        "club": "Viktoria Plzen"
+        "club": "Viktoria Plzen",
+        "espn_id": "338199",
+        "age": 25
       },
       {
         "name": "Armin Gigovic",
-        "club": "Young Boys"
+        "club": "Young Boys",
+        "espn_id": "288932",
+        "age": 24
       },
       {
         "name": "Kerim Alajbegovic",
@@ -783,11 +971,15 @@
       },
       {
         "name": "Jovo Lukic",
-        "club": "Universitatea Cluj"
+        "club": "Universitatea Cluj",
+        "espn_id": "305118",
+        "age": 27
       },
       {
         "name": "Samed Bazdar",
-        "club": "Jagiellonia Bialystok"
+        "club": "Jagiellonia Bialystok",
+        "espn_id": "322244",
+        "age": 22
       },
       {
         "name": "Haris Tabakovic",
@@ -836,7 +1028,9 @@
       },
       {
         "name": "Pedro Miguel",
-        "club": "Al Sadd"
+        "club": "Al Sadd",
+        "espn_id": "373831",
+        "age": 26
       },
       {
         "name": "Sultan Al Brake",
@@ -884,7 +1078,9 @@
       },
       {
         "name": "Niall Mason",
-        "club": "Qatar"
+        "club": "Qatar",
+        "espn_id": "233525",
+        "age": 29
       }
     ],
     "midfielders": [
@@ -944,7 +1140,9 @@
       },
       {
         "name": "Edmílson Junior",
-        "club": "Al Duhail"
+        "club": "Al Duhail",
+        "espn_id": "109204",
+        "age": 31
       },
       {
         "name": "Ahmed Al-Ganehi",
@@ -956,7 +1154,9 @@
       },
       {
         "name": "Sebastián Soria",
-        "club": "Qatar"
+        "club": "Qatar",
+        "espn_id": "243302",
+        "age": 42
       },
       {
         "name": "Hassan Al-Haydos",
@@ -999,13 +1199,17 @@
       },
       {
         "name": "Marvin Keller",
-        "club": "Young Boys"
+        "club": "Young Boys",
+        "espn_id": "341948",
+        "age": 23
       }
     ],
     "defenders": [
       {
         "name": "Manuel Akanji",
-        "club": "Inter Milan"
+        "club": "Inter Milan",
+        "espn_id": "214562",
+        "age": 30
       },
       {
         "name": "Nico Elvedi",
@@ -1033,11 +1237,15 @@
       },
       {
         "name": "Aurèle Amenda",
-        "club": "Eintracht Frankfurt"
+        "club": "Eintracht Frankfurt",
+        "espn_id": "319404",
+        "age": 22
       },
       {
         "name": "Eray Cömert",
-        "club": "Valencia"
+        "club": "Valencia",
+        "espn_id": "231697",
+        "age": 28
       },
       {
         "name": "Luca Jaquez",
@@ -1049,11 +1257,15 @@
     "midfielders": [
       {
         "name": "Granit Xhaka",
-        "club": "Sunderland"
+        "club": "Sunderland",
+        "espn_id": "149981",
+        "age": 33
       },
       {
         "name": "Johan Manzambi",
-        "club": "Freiburg"
+        "club": "Freiburg",
+        "espn_id": "386992",
+        "age": 20
       },
       {
         "name": "Remo Freuler",
@@ -1081,7 +1293,9 @@
       },
       {
         "name": "Christian Fassnacht",
-        "club": "Young Boys"
+        "club": "Young Boys",
+        "espn_id": "238502",
+        "age": 32
       },
       {
         "name": "Michel Aebischer",
@@ -1097,7 +1311,9 @@
       },
       {
         "name": "Rubén Vargas",
-        "club": "Sevilla"
+        "club": "Sevilla",
+        "espn_id": "259513",
+        "age": 27
       }
     ],
     "forwards": [
@@ -1121,11 +1337,15 @@
       },
       {
         "name": "Zeki Amdouni",
-        "club": "Burnley"
+        "club": "Burnley",
+        "espn_id": "320757",
+        "age": 25
       },
       {
         "name": "Cedric Itten",
-        "club": "Fortuna Dusseldorf"
+        "club": "Fortuna Dusseldorf",
+        "espn_id": "234153",
+        "age": 29
       }
     ]
   },
@@ -1532,11 +1752,14 @@
       },
       {
         "name": "Andy Robertson",
-        "club": "Liverpool"
+        "club": "Liverpool",
+        "espn_id": "4073936"
       },
       {
         "name": "John Souttar",
-        "club": "Rangers"
+        "club": "Rangers",
+        "espn_id": "181394",
+        "age": 29
       },
       {
         "name": "Kieran Tierney",
@@ -1637,7 +1860,9 @@
     "goalkeepers": [
       {
         "name": "Roberto Fernández",
-        "club": "Cerro Porteño"
+        "club": "Cerro Porteño",
+        "espn_id": "318773",
+        "age": 23
       },
       {
         "name": "Orlando Gill",
@@ -1645,7 +1870,9 @@
       },
       {
         "name": "Gastón Olveira",
-        "club": "Olimpia"
+        "club": "Olimpia",
+        "espn_id": "190375",
+        "age": 33
       },
       {
         "name": "Carlos Coronel",
@@ -1670,8 +1897,7 @@
       {
         "name": "Gustavo Gómez",
         "club": "Palmeiras",
-        "espn_id": "118395",
-        "age": 33
+        "espn_id": "118395"
       },
       {
         "name": "Júnior Alonso",
@@ -1693,7 +1919,8 @@
       },
       {
         "name": "Juan Caceres",
-        "club": "Dynamo Moscow"
+        "club": "Dynamo Moscow",
+        "espn_id": "34323"
       },
       {
         "name": "Blas Riveros",
@@ -1703,11 +1930,15 @@
       },
       {
         "name": "Alan Benitez",
-        "club": "Libertad"
+        "club": "Libertad",
+        "espn_id": "184081",
+        "age": 32
       },
       {
         "name": "Agustin Sandez",
-        "club": "Rosario Central"
+        "club": "Rosario Central",
+        "espn_id": "307599",
+        "age": 25
       },
       {
         "name": "Mateo Gamarra",
@@ -1717,11 +1948,15 @@
       },
       {
         "name": "Saul Salcedo",
-        "club": "Newell's Old Boys"
+        "club": "Newell's Old Boys",
+        "espn_id": "234429",
+        "age": 28
       },
       {
         "name": "Jose Canale",
-        "club": "Lanus"
+        "club": "Lanus",
+        "espn_id": "227682",
+        "age": 29
       },
       {
         "name": "Diego León",
@@ -1731,11 +1966,15 @@
       },
       {
         "name": "Alexandro Maidana",
-        "club": "Talleres"
+        "club": "Talleres",
+        "espn_id": "399687",
+        "age": 20
       },
       {
         "name": "Alcides Benitez",
-        "club": "Belgrano"
+        "club": "Belgrano",
+        "espn_id": "268135",
+        "age": 23
       },
       {
         "name": "Ronaldo Dejesus",
@@ -1763,7 +2002,9 @@
       },
       {
         "name": "Kaku",
-        "club": "Al Ain"
+        "club": "Al Ain",
+        "espn_id": "188160",
+        "age": 31
       },
       {
         "name": "Andrés Cubas",
@@ -1803,21 +2044,26 @@
       },
       {
         "name": "Robert Piris Da Motta",
-        "club": "Cerro Porteno"
+        "club": "Cerro Porteno",
+        "espn_id": "224154",
+        "age": 31
       },
       {
         "name": "Alvaro Campuzano",
-        "club": "Libertad"
+        "club": "Libertad",
+        "espn_id": "252622",
+        "age": 30
       },
       {
         "name": "Diego Gonzalez",
         "club": "Atlas",
-        "espn_id": "362345",
-        "age": 23
+        "espn_id": "362345"
       },
       {
         "name": "Hugo Cuenca",
-        "club": "Burgos"
+        "club": "Burgos",
+        "espn_id": "365843",
+        "age": 21
       },
       {
         "name": "Mauricio Magalhaes",
@@ -1825,7 +2071,9 @@
       },
       {
         "name": "Lucas Romero",
-        "club": "Universidad de Chile"
+        "club": "Universidad de Chile",
+        "espn_id": "77577",
+        "age": 23
       },
       {
         "name": "Enso González",
@@ -1835,13 +2083,17 @@
       },
       {
         "name": "Ruben Lezcano",
-        "club": "Olimpia"
+        "club": "Olimpia",
+        "espn_id": "346629",
+        "age": 22
       }
     ],
     "forwards": [
       {
         "name": "Oscar Romero",
-        "club": "Huracan"
+        "club": "Huracan",
+        "espn_id": "375394",
+        "age": 24
       },
       {
         "name": "Ángel Romero",
@@ -1863,11 +2115,15 @@
       },
       {
         "name": "Gabriel Avalos",
-        "club": "Independiente"
+        "club": "Independiente",
+        "espn_id": "176853",
+        "age": 35
       },
       {
         "name": "Carlos Gonzalez",
-        "club": "Independiente del Valle"
+        "club": "Independiente del Valle",
+        "espn_id": "421828",
+        "age": 26
       },
       {
         "name": "Alex Arce",
@@ -1889,27 +2145,39 @@
       },
       {
         "name": "Isidro Pitta",
-        "club": "Red Bull Bragantino"
+        "club": "Red Bull Bragantino",
+        "espn_id": "287035",
+        "age": 26
       },
       {
         "name": "Ronaldo Martinez",
-        "club": "Talleres"
+        "club": "Talleres",
+        "espn_id": "285775",
+        "age": 30
       },
       {
         "name": "Gustavo Caballero",
-        "club": "Portsmouth"
+        "club": "Portsmouth",
+        "espn_id": "154853",
+        "age": 24
       },
       {
         "name": "Robert Morales",
-        "club": "UNAM"
+        "club": "UNAM",
+        "espn_id": "255942",
+        "age": 27
       },
       {
         "name": "Adrian Alcaraz",
-        "club": "Olimpia"
+        "club": "Olimpia",
+        "espn_id": "333706",
+        "age": 26
       },
       {
         "name": "Rodney Redes",
-        "club": "LDU Quito"
+        "club": "LDU Quito",
+        "espn_id": "272499",
+        "age": 26
       }
     ]
   },
@@ -1918,19 +2186,27 @@
     "goalkeepers": [
       {
         "name": "Ugurcan Cakir",
-        "club": "Galatasaray"
+        "club": "Galatasaray",
+        "espn_id": "222922",
+        "age": 30
       },
       {
         "name": "Mert Gunok",
-        "club": "Fenerbahce"
+        "club": "Fenerbahce",
+        "espn_id": "124880",
+        "age": 37
       },
       {
         "name": "Altay Bayindir",
-        "club": "Man United"
+        "club": "Man United",
+        "espn_id": "274272",
+        "age": 28
       },
       {
         "name": "Muhammed Sengezer",
-        "club": "Istanbul Basaksehir"
+        "club": "Istanbul Basaksehir",
+        "espn_id": "241800",
+        "age": 29
       },
       {
         "name": "Ersin Destanoglou",
@@ -1940,51 +2216,75 @@
     "defenders": [
       {
         "name": "Merih Demiral",
-        "club": "Al-Ahli"
+        "club": "Al-Ahli",
+        "espn_id": "267178",
+        "age": 28
       },
       {
         "name": "Zeki Celik",
-        "club": "AS Roma"
+        "club": "AS Roma",
+        "espn_id": "271873",
+        "age": 29
       },
       {
         "name": "Caglar Soyuncu",
-        "club": "Fenerbahce"
+        "club": "Fenerbahce",
+        "espn_id": "230757",
+        "age": 29
       },
       {
         "name": "Mert Muldur",
-        "club": "Fenerbahce"
+        "club": "Fenerbahce",
+        "espn_id": "266002",
+        "age": 27
       },
       {
         "name": "Ferdi Kadioglu",
-        "club": "Brighton & Hove Albion"
+        "club": "Brighton & Hove Albion",
+        "espn_id": "238318",
+        "age": 26
       },
       {
         "name": "Ozan Kabak",
-        "club": "TSG Hoffenheim"
+        "club": "TSG Hoffenheim",
+        "espn_id": "266565",
+        "age": 26
       },
       {
         "name": "Abdulkerim Bardakci",
-        "club": "Galatasaray"
+        "club": "Galatasaray",
+        "espn_id": "193149",
+        "age": 31
       },
       {
         "name": "Eren Elmali",
-        "club": "Galatasaray"
+        "club": "Galatasaray",
+        "espn_id": "287678",
+        "age": 25
       },
       {
         "name": "Samet Akaydin",
-        "club": "Caykur Rizesport"
+        "club": "Caykur Rizesport",
+        "espn_id": "322807",
+        "age": 32
       },
       {
         "name": "Mustafa Eskihellac",
-        "club": "Trabzonspor"
+        "club": "Trabzonspor",
+        "espn_id": "270325",
+        "age": 29
       },
       {
         "name": "Yusuf Akcicek",
-        "club": "Al-Hilal"
+        "club": "Al-Hilal",
+        "espn_id": "373930",
+        "age": 20
       },
       {
         "name": "Ahmetcan Kaplan",
-        "club": "NEC Nijmegen"
+        "club": "NEC Nijmegen",
+        "espn_id": "306806",
+        "age": 23
       }
     ],
     "midfielders": [
@@ -1994,11 +2294,15 @@
       },
       {
         "name": "Orkun Kokcu",
-        "club": "Besiktas"
+        "club": "Besiktas",
+        "espn_id": "272700",
+        "age": 25
       },
       {
         "name": "Ismail Yuksek",
-        "club": "Fenerbahce"
+        "club": "Fenerbahce",
+        "espn_id": "305629",
+        "age": 27
       },
       {
         "name": "Salih Ozcan",
@@ -2006,21 +2310,29 @@
       },
       {
         "name": "Atakan Karazor",
-        "club": "VfB Stuttgart"
+        "club": "VfB Stuttgart",
+        "espn_id": "241742",
+        "age": 29
       },
       {
         "name": "Demir Ege Tiknaz",
-        "club": "Besiktas"
+        "club": "Besiktas",
+        "espn_id": "328795",
+        "age": 21
       }
     ],
     "forwards": [
       {
         "name": "Kerem Akturkoglu",
-        "club": "Fenerbahce"
+        "club": "Fenerbahce",
+        "espn_id": "306789",
+        "age": 27
       },
       {
         "name": "Irfan Can Kahveci",
-        "club": "Kasimpasa"
+        "club": "Kasimpasa",
+        "espn_id": "211923",
+        "age": 30
       },
       {
         "name": "Baris Apler Yilmaz",
@@ -2028,35 +2340,51 @@
       },
       {
         "name": "Arda Guler",
-        "club": "Real Madrid"
+        "club": "Real Madrid",
+        "espn_id": "310452",
+        "age": 21
       },
       {
         "name": "Kenan Yildiz",
-        "club": "Juventus"
+        "club": "Juventus",
+        "espn_id": "366509",
+        "age": 21
       },
       {
         "name": "Yunus Akgun",
-        "club": "Galatasaray"
+        "club": "Galatasaray",
+        "espn_id": "266575",
+        "age": 25
       },
       {
         "name": "Oguz Aydin",
-        "club": "Fenerbahce"
+        "club": "Fenerbahce",
+        "espn_id": "322813",
+        "age": 25
       },
       {
         "name": "Deniz Gul",
-        "club": "Porto"
+        "club": "Porto",
+        "espn_id": "350513",
+        "age": 21
       },
       {
         "name": "Yusuf Sari",
-        "club": "Basaksehir"
+        "club": "Basaksehir",
+        "espn_id": "262947",
+        "age": 27
       },
       {
         "name": "Can Uzun",
-        "club": "Eintracht Frankfurt"
+        "club": "Eintracht Frankfurt",
+        "espn_id": "355369",
+        "age": 20
       },
       {
         "name": "Aral Simsir",
-        "club": "Midtjylland"
+        "club": "Midtjylland",
+        "espn_id": "303000",
+        "age": 23
       }
     ]
   },
@@ -2226,21 +2554,29 @@
     "goalkeepers": [
       {
         "name": "Eloy Room",
-        "club": "Miami FC"
+        "club": "Miami FC",
+        "espn_id": "127444",
+        "age": 37
       },
       {
         "name": "Tyrick Bodak",
-        "club": "Telstar"
+        "club": "Telstar",
+        "espn_id": "297542",
+        "age": 24
       },
       {
         "name": "Trevor Doornbusch",
-        "club": "VVV Venlo"
+        "club": "VVV Venlo",
+        "espn_id": "262109",
+        "age": 26
       }
     ],
     "defenders": [
       {
         "name": "Riechedly Bazoer",
-        "club": "Konyaspor"
+        "club": "Konyaspor",
+        "espn_id": "188411",
+        "age": 29
       },
       {
         "name": "Joshua Brenet",
@@ -2248,79 +2584,115 @@
       },
       {
         "name": "Roshon van Eijma",
-        "club": "RKC Waalwijk"
+        "club": "RKC Waalwijk",
+        "espn_id": "270807",
+        "age": 27
       },
       {
         "name": "Sherel Floranus",
-        "club": "PEC Zwolle"
+        "club": "PEC Zwolle",
+        "espn_id": "224786",
+        "age": 27
       },
       {
         "name": "Deveron Fonville",
-        "club": "NEC Nijmegen"
+        "club": "NEC Nijmegen",
+        "espn_id": "335203",
+        "age": 23
       },
       {
         "name": "Jurien Gaari",
-        "club": "Abha"
+        "club": "Abha",
+        "espn_id": "246281",
+        "age": 32
       },
       {
         "name": "Armando Obispo",
-        "club": "PSV Eindhoven"
+        "club": "PSV Eindhoven",
+        "espn_id": "245918",
+        "age": 27
       },
       {
         "name": "Shurandy Sambo",
-        "club": "Sparta Rotterdam"
+        "club": "Sparta Rotterdam",
+        "espn_id": "301456",
+        "age": 24
       }
     ],
     "midfielders": [
       {
         "name": "Juninho Bacuna",
-        "club": "Volendam"
+        "club": "Volendam",
+        "espn_id": "216287",
+        "age": 28
       },
       {
         "name": "Leandro Bacuna",
-        "club": "Igdir"
+        "club": "Igdir",
+        "espn_id": "138664",
+        "age": 34
       },
       {
         "name": "Livano Comenencia",
-        "club": "Zurich"
+        "club": "Zurich",
+        "espn_id": "317285",
+        "age": 22
       },
       {
         "name": "Kevin Felida",
-        "club": "Den Bosch"
+        "club": "Den Bosch",
+        "espn_id": "262738",
+        "age": 26
       },
       {
         "name": "Ar'jany Martha",
-        "club": "Rotherham United"
+        "club": "Rotherham United",
+        "espn_id": "306553",
+        "age": 22
       },
       {
         "name": "Tyrese Noslin",
-        "club": "Telstar"
+        "club": "Telstar",
+        "espn_id": "359132",
+        "age": 23
       },
       {
         "name": "Godfried Roemeratoe",
-        "club": "RKC Waalwijk"
+        "club": "RKC Waalwijk",
+        "espn_id": "273295",
+        "age": 26
       }
     ],
     "forwards": [
       {
         "name": "Jeremy Antonisse",
-        "club": "Kifisia"
+        "club": "Kifisia",
+        "espn_id": "310925",
+        "age": 24
       },
       {
         "name": "Tahith Chong",
-        "club": "Sheffield United"
+        "club": "Sheffield United",
+        "espn_id": "276218",
+        "age": 26
       },
       {
         "name": "Kenji Gorre",
-        "club": "Maccabi Haifa"
+        "club": "Maccabi Haifa",
+        "espn_id": "188452",
+        "age": 31
       },
       {
         "name": "Sontje Hansen",
-        "club": "Middlesbrough"
+        "club": "Middlesbrough",
+        "espn_id": "297299",
+        "age": 24
       },
       {
         "name": "Gervane Kastaneer",
-        "club": "Terengganu"
+        "club": "Terengganu",
+        "espn_id": "178273",
+        "age": 29
       },
       {
         "name": "Brandley Kuwas",
@@ -2332,7 +2704,9 @@
       },
       {
         "name": "Jearl Margaritha",
-        "club": "Beveren"
+        "club": "Beveren",
+        "espn_id": "301441",
+        "age": 26
       }
     ]
   },
@@ -2673,8 +3047,7 @@
       {
         "name": "Keisuke Goto",
         "club": "Sint-Truiden",
-        "espn_id": "346208",
-        "age": 20
+        "espn_id": "346208"
       }
     ]
   },
@@ -2695,7 +3068,9 @@
       },
       {
         "name": "Jacob Widell Zetterstrom",
-        "club": "Derby County"
+        "club": "Derby County",
+        "espn_id": "286810",
+        "age": 27
       }
     ],
     "defenders": [
@@ -2737,7 +3112,8 @@
       },
       {
         "name": "Erik Smith",
-        "club": "St. Pauli"
+        "club": "St. Pauli",
+        "espn_id": "2215"
       },
       {
         "name": "Carl Starfelt",
@@ -2747,7 +3123,9 @@
       },
       {
         "name": "Elliot Stroud",
-        "club": "Mjallby"
+        "club": "Mjallby",
+        "espn_id": "357145",
+        "age": 23
       },
       {
         "name": "Daniel Svensson",
@@ -2759,7 +3137,9 @@
     "midfielders": [
       {
         "name": "Taha Ali",
-        "club": "Malmo"
+        "club": "Malmo",
+        "espn_id": "314164",
+        "age": 27
       },
       {
         "name": "Yasin Ayari",
@@ -2801,7 +3181,9 @@
     "forwards": [
       {
         "name": "Alexander Bernhardsson",
-        "club": "Holstein Kiel"
+        "club": "Holstein Kiel",
+        "espn_id": "301370",
+        "age": 27
       },
       {
         "name": "Anthony Elanga",
@@ -2829,7 +3211,9 @@
       },
       {
         "name": "Benjamin Nygren",
-        "club": "Celtic"
+        "club": "Celtic",
+        "espn_id": "274522",
+        "age": 24
       }
     ]
   },
@@ -2930,7 +3314,9 @@
       },
       {
         "name": "Hadj Mahmoud",
-        "club": "Lugano"
+        "club": "Lugano",
+        "espn_id": "299861",
+        "age": 26
       },
       {
         "name": "Rani Khedira",
@@ -3190,7 +3576,9 @@
       },
       {
         "name": "Mohamed Alaa",
-        "club": "El Gouna"
+        "club": "El Gouna",
+        "espn_id": "420953",
+        "age": 26
       }
     ],
     "defenders": [
@@ -3202,7 +3590,9 @@
       },
       {
         "name": "Tarek Alaa",
-        "club": "Zed"
+        "club": "Zed",
+        "espn_id": "393565",
+        "age": 24
       },
       {
         "name": "Hamdy Fathy",
@@ -3238,7 +3628,9 @@
       },
       {
         "name": "Karim Hafez",
-        "club": "Pyramids"
+        "club": "Pyramids",
+        "espn_id": "216119",
+        "age": 30
       }
     ],
     "midfielders": [
@@ -3299,8 +3691,7 @@
       {
         "name": "Omar Marmoush",
         "club": "Manchester City",
-        "espn_id": "303745",
-        "age": 27
+        "espn_id": "303745"
       },
       {
         "name": "Mohamed Salah",
@@ -3310,11 +3701,15 @@
       },
       {
         "name": "Aqtay Abdallah",
-        "club": "Enppi"
+        "club": "Enppi",
+        "espn_id": "422281",
+        "age": 22
       },
       {
         "name": "Hamza Abdelkarim",
-        "club": "Barcelona"
+        "club": "Barcelona",
+        "espn_id": "399200",
+        "age": 18
       }
     ]
   },
@@ -3323,15 +3718,21 @@
     "goalkeepers": [
       {
         "name": "Alireza Beiranvand",
-        "club": "Tractor"
+        "club": "Tractor",
+        "espn_id": "214798",
+        "age": 33
       },
       {
         "name": "Hossein Hosseini",
-        "club": "Sepahan"
+        "club": "Sepahan",
+        "espn_id": "185648",
+        "age": 33
       },
       {
         "name": "Payam Niazmand",
-        "club": "Persepolis"
+        "club": "Persepolis",
+        "espn_id": "284219",
+        "age": 31
       },
       {
         "name": "Mohammed Khalifeh",
@@ -3345,15 +3746,21 @@
       },
       {
         "name": "Ehsan Hajsafi",
-        "club": "Sepahan"
+        "club": "Sepahan",
+        "espn_id": "203453",
+        "age": 36
       },
       {
         "name": "Saleh Hardani",
-        "club": "Esteghlal"
+        "club": "Esteghlal",
+        "espn_id": "317748",
+        "age": 27
       },
       {
         "name": "Hossein Kanaani",
-        "club": "Persepolis"
+        "club": "Persepolis",
+        "espn_id": "211717",
+        "age": 32
       },
       {
         "name": "Shoka Khalilzadeh",
@@ -3361,7 +3768,9 @@
       },
       {
         "name": "Milad Mohammadi",
-        "club": "Persepolis"
+        "club": "Persepolis",
+        "espn_id": "226302",
+        "age": 32
       },
       {
         "name": "Ali Nemati Omid Noorafkan",
@@ -3369,7 +3778,9 @@
       },
       {
         "name": "Ramin Rezaeian",
-        "club": "Foolad"
+        "club": "Foolad",
+        "espn_id": "218086",
+        "age": 36
       }
     ],
     "midfielders": [
@@ -3379,7 +3790,9 @@
       },
       {
         "name": "Saeid Ezatolahi",
-        "club": "Shabab Al-Ahli"
+        "club": "Shabab Al-Ahli",
+        "espn_id": "194863",
+        "age": 29
       },
       {
         "name": "Mehdi Ghaedi",
@@ -3387,19 +3800,27 @@
       },
       {
         "name": "Saman Ghoddos",
-        "club": "Kalba"
+        "club": "Kalba",
+        "espn_id": "235519",
+        "age": 32
       },
       {
         "name": "Mohammad Ghorbani",
-        "club": "Al-Wahda"
+        "club": "Al-Wahda",
+        "espn_id": "355158",
+        "age": 24
       },
       {
         "name": "Alireza Jahanbakhsh",
-        "club": "Dender"
+        "club": "Dender",
+        "espn_id": "188055",
+        "age": 32
       },
       {
         "name": "Mohammad Mohebi",
-        "club": "Rostovv"
+        "club": "Rostovv",
+        "espn_id": "302776",
+        "age": 26
       },
       {
         "name": "Amir Mohammad Razzaghinia",
@@ -3407,17 +3828,23 @@
       },
       {
         "name": "Mehdi Torabi",
-        "club": "Tractor"
+        "club": "Tractor",
+        "espn_id": "226301",
+        "age": 31
       },
       {
         "name": "Aria Yousefi",
-        "club": "Sepahan"
+        "club": "Sepahan",
+        "espn_id": "339178",
+        "age": 24
       }
     ],
     "forwards": [
       {
         "name": "Ali Alipour",
-        "club": "Persepolis"
+        "club": "Persepolis",
+        "espn_id": "219617",
+        "age": 30
       },
       {
         "name": "Dennis Dargahi",
@@ -3425,23 +3852,33 @@
       },
       {
         "name": "Hadi Habibinejad",
-        "club": "Chadormalou"
+        "club": "Chadormalou",
+        "espn_id": "317746",
+        "age": 30
       },
       {
         "name": "Amirhossein Hosseinzadeh",
-        "club": "Tractor"
+        "club": "Tractor",
+        "espn_id": "266729",
+        "age": 25
       },
       {
         "name": "Amirhossein Mahmoudi",
-        "club": "Persepolis"
+        "club": "Persepolis",
+        "espn_id": "399467",
+        "age": 19
       },
       {
         "name": "Kasra Taheri",
-        "club": "Paykan"
+        "club": "Paykan",
+        "espn_id": "372045",
+        "age": 19
       },
       {
         "name": "Mehdi Taremi",
-        "club": "Olympiacos"
+        "club": "Olympiacos",
+        "espn_id": "219611",
+        "age": 33
       }
     ]
   },
@@ -3621,11 +4058,14 @@
     "goalkeepers": [
       {
         "name": "Vozinha",
-        "club": "Chaves"
+        "club": "Chaves",
+        "espn_id": "181330",
+        "age": 39
       },
       {
         "name": "Marcio Rosa",
-        "club": "Montana"
+        "club": "Montana",
+        "espn_id": "263612"
       },
       {
         "name": "CJ dos Santos",
@@ -3635,15 +4075,20 @@
     "defenders": [
       {
         "name": "Steven Moreira",
-        "club": "Columbus Crew"
+        "club": "Columbus Crew",
+        "espn_id": "180113",
+        "age": 31
       },
       {
         "name": "Wagner Pina",
-        "club": "Trabzonspor"
+        "club": "Trabzonspor",
+        "espn_id": "365810",
+        "age": 23
       },
       {
         "name": "Joao Paulo",
-        "club": "FCSB"
+        "club": "FCSB",
+        "espn_id": "74847"
       },
       {
         "name": "Sidny Lopes Cabral",
@@ -3651,7 +4096,9 @@
       },
       {
         "name": "Logan Costa",
-        "club": "Villarreal"
+        "club": "Villarreal",
+        "espn_id": "271129",
+        "age": 25
       },
       {
         "name": "Pico",
@@ -3663,21 +4110,29 @@
       },
       {
         "name": "Stopira",
-        "club": "Torreense"
+        "club": "Torreense",
+        "espn_id": "148146",
+        "age": 38
       },
       {
         "name": "Diney",
-        "club": "Al Bataeh"
+        "club": "Al Bataeh",
+        "espn_id": "203812",
+        "age": 35
       }
     ],
     "midfielders": [
       {
         "name": "Jamiro Monteiro",
-        "club": "PEC Zwolle"
+        "club": "PEC Zwolle",
+        "espn_id": "227441",
+        "age": 32
       },
       {
         "name": "Telmo Arcanjo",
-        "club": "Vitoria Guimaraes"
+        "club": "Vitoria Guimaraes",
+        "espn_id": "304076",
+        "age": 24
       },
       {
         "name": "Yannick Semedo",
@@ -3685,41 +4140,59 @@
       },
       {
         "name": "Laros Duarte",
-        "club": "Puskas Akademia"
+        "club": "Puskas Akademia",
+        "espn_id": "222236",
+        "age": 29
       },
       {
         "name": "Deroy Duarte",
-        "club": "Ludogorets Razgrad"
+        "club": "Ludogorets Razgrad",
+        "espn_id": "246442",
+        "age": 26
       },
       {
         "name": "Kevin Pina",
-        "club": "Krasnodar"
+        "club": "Krasnodar",
+        "espn_id": "340899",
+        "age": 29
       }
     ],
     "forwards": [
       {
         "name": "Ryan Mendes",
-        "club": "Igdir"
+        "club": "Igdir",
+        "espn_id": "135216",
+        "age": 36
       },
       {
         "name": "Willy Semedo",
-        "club": "Omonia"
+        "club": "Omonia",
+        "espn_id": "308610",
+        "age": 32
       },
       {
         "name": "Garry Rodrigues",
-        "club": "Apollon Limassol"
+        "club": "Apollon Limassol",
+        "espn_id": "175012",
+        "age": 35
       },
       {
         "name": "Jovane Cabral",
-        "club": "Estrela Amadora"
+        "club": "Estrela Amadora",
+        "espn_id": "250059",
+        "age": 27
       },
       {
         "name": "Nuno da Costa",
-        "club": "Istanbul Basaksehir"
+        "club": "Istanbul Basaksehir",
+        "espn_id": "224798",
+        "age": 35
       },
       {
         "name": "Dailon Livramento",
-        "club": "Casa Pia"
+        "club": "Casa Pia",
+        "espn_id": "330211",
+        "age": 25
       },
       {
         "name": "Gilson Benchimol",
@@ -3727,7 +4200,9 @@
       },
       {
         "name": "Helio Varela",
-        "club": "Maccabi Tel Aviv"
+        "club": "Maccabi Tel Aviv",
+        "espn_id": "366092",
+        "age": 24
       }
     ]
   },
@@ -3985,7 +4460,9 @@
       },
       {
         "name": "Ilay Camara",
-        "club": "Anderlecht"
+        "club": "Anderlecht",
+        "espn_id": "370492",
+        "age": 23
       }
     ],
     "midfielders": [
@@ -4255,7 +4732,9 @@
     "goalkeepers": [
       {
         "name": "Emiliano Martínez",
-        "club": "Aston Villa"
+        "club": "Aston Villa",
+        "espn_id": "158626",
+        "age": 33
       },
       {
         "name": "Gerónimo Rulli",
@@ -4271,21 +4750,29 @@
       },
       {
         "name": "Walter Benítez",
-        "club": "Crystal Palace"
+        "club": "Crystal Palace",
+        "espn_id": "195738",
+        "age": 33
       },
       {
         "name": "Facundo Cambeses",
-        "club": "Racing Club"
+        "club": "Racing Club",
+        "espn_id": "233910",
+        "age": 29
       },
       {
         "name": "Santiago Beltran",
-        "club": "River Plate"
+        "club": "River Plate",
+        "espn_id": "361402",
+        "age": 21
       }
     ],
     "defenders": [
       {
         "name": "Agustín Giay",
-        "club": "Palmeiras"
+        "club": "Palmeiras",
+        "espn_id": "315619",
+        "age": 22
       },
       {
         "name": "Gonzalo Montiel",
@@ -4325,7 +4812,9 @@
       },
       {
         "name": "Lisandro Martínez",
-        "club": "Manchester United"
+        "club": "Manchester United",
+        "espn_id": "233937",
+        "age": 28
       },
       {
         "name": "Nicolás Otamendi",
@@ -4353,7 +4842,9 @@
       },
       {
         "name": "Lautaro Di Lollo",
-        "club": "Boca Juniors"
+        "club": "Boca Juniors",
+        "espn_id": "341457",
+        "age": 22
       },
       {
         "name": "Zaid Romero",
@@ -4369,7 +4860,9 @@
       },
       {
         "name": "Marcos Acuña",
-        "club": "River Plate"
+        "club": "River Plate",
+        "espn_id": "157557",
+        "age": 34
       },
       {
         "name": "Nicolás Tagliafico",
@@ -4379,7 +4872,9 @@
       },
       {
         "name": "Gabriel Rojas",
-        "club": "Racing Club"
+        "club": "Racing Club",
+        "espn_id": "238734",
+        "age": 28
       }
     ],
     "midfielders": [
@@ -4397,15 +4892,21 @@
       },
       {
         "name": "Guido Rodríguez",
-        "club": "Valencia"
+        "club": "Valencia",
+        "espn_id": "212185",
+        "age": 32
       },
       {
         "name": "Anibal Moreno",
-        "club": "River Plate"
+        "club": "River Plate",
+        "espn_id": "286406",
+        "age": 27
       },
       {
         "name": "Milton Delgado",
-        "club": "Boca Juniors"
+        "club": "Boca Juniors",
+        "espn_id": "382978",
+        "age": 20
       },
       {
         "name": "Alan Varela",
@@ -4451,7 +4952,9 @@
       },
       {
         "name": "Nicolas Domínguez",
-        "club": "Nottingham Forest"
+        "club": "Nottingham Forest",
+        "espn_id": "254118",
+        "age": 27
       },
       {
         "name": "Emiliano Buendía",
@@ -4461,7 +4964,9 @@
       },
       {
         "name": "Valentín Barco",
-        "club": "Strasbourg"
+        "club": "Strasbourg",
+        "espn_id": "320760",
+        "age": 21
       }
     ],
     "forwards": [
@@ -4473,7 +4978,9 @@
       },
       {
         "name": "Nicolas Paz",
-        "club": "Como"
+        "club": "Como",
+        "espn_id": "336737",
+        "age": 23
       },
       {
         "name": "Franco Mastantuono",
@@ -4489,7 +4996,9 @@
       },
       {
         "name": "Tomas Aranda",
-        "club": "Boca Juniors"
+        "club": "Boca Juniors",
+        "espn_id": "400359",
+        "age": 19
       },
       {
         "name": "Nicolás González",
@@ -4511,7 +5020,9 @@
       },
       {
         "name": "Matías Soule",
-        "club": "Roma"
+        "club": "Roma",
+        "espn_id": "323974",
+        "age": 23
       },
       {
         "name": "Claudio Echeverri",
@@ -4533,11 +5044,15 @@
       },
       {
         "name": "Lautaro Martínez",
-        "club": "Inter Milan"
+        "club": "Inter Milan",
+        "espn_id": "219713",
+        "age": 28
       },
       {
         "name": "Jose Manuel Lopez",
-        "club": "Palmeiras"
+        "club": "Palmeiras",
+        "espn_id": "409297",
+        "age": 23
       },
       {
         "name": "Julián Álvarez",
@@ -4562,37 +5077,53 @@
     "goalkeepers": [
       {
         "name": "Alexander Schlager",
-        "club": "RB Salzburg"
+        "club": "RB Salzburg",
+        "espn_id": "195082",
+        "age": 30
       },
       {
         "name": "Florian Wiegele",
-        "club": "Viktoria Plzen"
+        "club": "Viktoria Plzen",
+        "espn_id": "387869",
+        "age": 25
       },
       {
         "name": "Patrick Pentz",
-        "club": "Brondby"
+        "club": "Brondby",
+        "espn_id": "237966",
+        "age": 29
       }
     ],
     "defenders": [
       {
         "name": "David Affengruber",
-        "club": "Elche"
+        "club": "Elche",
+        "espn_id": "313230",
+        "age": 25
       },
       {
         "name": "Kevin Danso",
-        "club": "Tottehham"
+        "club": "Tottehham",
+        "espn_id": "250543",
+        "age": 27
       },
       {
         "name": "Stefan Posch",
-        "club": "Mainz 05"
+        "club": "Mainz 05",
+        "espn_id": "238906",
+        "age": 29
       },
       {
         "name": "David Alaba",
-        "club": "Real Madrid"
+        "club": "Real Madrid",
+        "espn_id": "118444",
+        "age": 33
       },
       {
         "name": "Philipp Lienhart",
-        "club": "SC Freiburg"
+        "club": "SC Freiburg",
+        "espn_id": "219316",
+        "age": 29
       },
       {
         "name": "Philipp Mwene",
@@ -4600,75 +5131,109 @@
       },
       {
         "name": "Alexander Prass",
-        "club": "TSG Hoffenheim"
+        "club": "TSG Hoffenheim",
+        "espn_id": "320939",
+        "age": 24
       },
       {
         "name": "Marco Friedl",
-        "club": "Werder Bremen"
+        "club": "Werder Bremen",
+        "espn_id": "232477",
+        "age": 28
       },
       {
         "name": "Michael Svoboda",
-        "club": "Venezia"
+        "club": "Venezia",
+        "espn_id": "289942",
+        "age": 27
       }
     ],
     "midfielders": [
       {
         "name": "Xaver Schlager",
-        "club": "RB Leipzig"
+        "club": "RB Leipzig",
+        "espn_id": "238886",
+        "age": 28
       },
       {
         "name": "Nicolas Seiwald",
-        "club": "RB Leipzig"
+        "club": "RB Leipzig",
+        "espn_id": "305956",
+        "age": 25
       },
       {
         "name": "Marcel Sabitzer",
-        "club": "Borussia Dortmund"
+        "club": "Borussia Dortmund",
+        "espn_id": "173907",
+        "age": 32
       },
       {
         "name": "Florian Grillitsch",
-        "club": "Braga"
+        "club": "Braga",
+        "espn_id": "219304",
+        "age": 30
       },
       {
         "name": "Carney Chukwuemeka",
-        "club": "Borussia Dortmund"
+        "club": "Borussia Dortmund",
+        "espn_id": "294317",
+        "age": 22
       },
       {
         "name": "Romano Schmid",
-        "club": "Werder Bremen"
+        "club": "Werder Bremen",
+        "espn_id": "238296",
+        "age": 26
       },
       {
         "name": "Christoph Baumgartner",
-        "club": "RB Leipzig"
+        "club": "RB Leipzig",
+        "espn_id": "274897",
+        "age": 26
       },
       {
         "name": "Konrad Laimer",
-        "club": "Bayern Munich"
+        "club": "Bayern Munich",
+        "espn_id": "169189",
+        "age": 28
       },
       {
         "name": "Patrick Wimmer",
-        "club": "Wolfsburg"
+        "club": "Wolfsburg",
+        "espn_id": "300095",
+        "age": 24
       },
       {
         "name": "Paul Wanner",
-        "club": "PSV Eindhoven"
+        "club": "PSV Eindhoven",
+        "espn_id": "333399",
+        "age": 20
       },
       {
         "name": "Alessandro Schopf",
-        "club": "Wolfsberger AC"
+        "club": "Wolfsberger AC",
+        "espn_id": "203868",
+        "age": 32
       }
     ],
     "forwards": [
       {
         "name": "Marko Arnautovic",
-        "club": "Red Star Belgrade"
+        "club": "Red Star Belgrade",
+        "espn_id": "98193",
+        "age": 37
       },
       {
         "name": "Michael Gregoritsch",
-        "club": "FC Augsburg"
+        "club": "FC Augsburg",
+        "espn_id": "146804",
+        "age": 32
       },
       {
         "name": "Sasa Kalajdzic",
-        "club": "LASK Linz"
+        "club": "LASK Linz",
+        "espn_id": "259131",
+        "age": 28
       }
     ]
   },
@@ -4681,7 +5246,9 @@
       },
       {
         "name": "Abdallah Al-Fakhouri",
-        "club": "Al-Wehdat"
+        "club": "Al-Wehdat",
+        "espn_id": "293352",
+        "age": 26
       },
       {
         "name": "Ahmad Al-Juiadi",
@@ -4695,7 +5262,9 @@
     "defenders": [
       {
         "name": "Mohammad Abualnadi",
-        "club": "Selangor"
+        "club": "Selangor",
+        "espn_id": "286761",
+        "age": 25
       },
       {
         "name": "Yousef Abu Al-Jazar",
@@ -4711,11 +5280,15 @@
       },
       {
         "name": "Mohannad Abu Taha",
-        "club": "Al-Quwa Al-Jawiya"
+        "club": "Al-Quwa Al-Jawiya",
+        "espn_id": "317847",
+        "age": 23
       },
       {
         "name": "Yazan Al-Arab",
-        "club": "FC Seoul"
+        "club": "FC Seoul",
+        "espn_id": "274269",
+        "age": 30
       },
       {
         "name": "Saed Al-Rosna",
@@ -4723,23 +5296,33 @@
       },
       {
         "name": "Ahmad Assaf",
-        "club": "Al-Hussein"
+        "club": "Al-Hussein",
+        "espn_id": "389219",
+        "age": 26
       },
       {
         "name": "Anas Badawi",
-        "club": "Al-Faisaly"
+        "club": "Al-Faisaly",
+        "espn_id": "422263",
+        "age": 28
       },
       {
         "name": "Abdallah Nasib",
-        "club": "Al-Zawraa"
+        "club": "Al-Zawraa",
+        "espn_id": "317819",
+        "age": 32
       },
       {
         "name": "Ehsan Haddad",
-        "club": "Al-Hussein"
+        "club": "Al-Hussein",
+        "espn_id": "229021",
+        "age": 32
       },
       {
         "name": "Saleem Obaid",
-        "club": "Al-Hussein"
+        "club": "Al-Hussein",
+        "espn_id": "289005",
+        "age": 34
       },
       {
         "name": "Mohammad Abu Taha",
@@ -4753,15 +5336,21 @@
       },
       {
         "name": "Nizar Al-Rashdan",
-        "club": "Qatar SC"
+        "club": "Qatar SC",
+        "espn_id": "321515",
+        "age": 27
       },
       {
         "name": "Noor Al-Rawabdeh",
-        "club": "Selangor"
+        "club": "Selangor",
+        "espn_id": "295462",
+        "age": 29
       },
       {
         "name": "Rajaei Ayed",
-        "club": "Al-Hussein"
+        "club": "Al-Hussein",
+        "espn_id": "244036",
+        "age": 32
       },
       {
         "name": "Amer Jamous",
@@ -4773,17 +5362,23 @@
       },
       {
         "name": "Ibrahim Sadeh",
-        "club": "Al-Karma"
+        "club": "Al-Karma",
+        "espn_id": "320910",
+        "age": 26
       }
     ],
     "forwards": [
       {
         "name": "Mohammed Abu Zraiq",
-        "club": "Raja Casablanca"
+        "club": "Raja Casablanca",
+        "espn_id": "289004",
+        "age": 28
       },
       {
         "name": "Mousa Al-Tamari",
-        "club": "Rennes"
+        "club": "Rennes",
+        "espn_id": "257489",
+        "age": 28
       },
       {
         "name": "Ali Azaizeh",
@@ -4795,7 +5390,9 @@
       },
       {
         "name": "Ali Olwan",
-        "club": "Al-Sailiaya"
+        "club": "Al-Sailiaya",
+        "espn_id": "320908",
+        "age": 26
       },
       {
         "name": "Ibrahim Sabra",
@@ -5140,7 +5737,9 @@
     "goalkeepers": [
       {
         "name": "Vladimir Nazarov",
-        "club": "Pakhtakor"
+        "club": "Pakhtakor",
+        "espn_id": "384266",
+        "age": 23
       },
       {
         "name": "Utkir Yusupov",
@@ -5238,11 +5837,15 @@
       },
       {
         "name": "Sherzod Esanov",
-        "club": "Buxoro"
+        "club": "Buxoro",
+        "espn_id": "362333",
+        "age": 23
       },
       {
         "name": "Nodirbek Abdurazzokov",
-        "club": "AGMK"
+        "club": "AGMK",
+        "espn_id": "317547",
+        "age": 21
       },
       {
         "name": "Odiljon Khamrobekov",
@@ -5250,11 +5853,15 @@
       },
       {
         "name": "Umarali Rakhmonaliev",
-        "club": "Sabah"
+        "club": "Sabah",
+        "espn_id": "362336",
+        "age": 22
       },
       {
         "name": "Alisher Odilov",
-        "club": "Neftchi"
+        "club": "Neftchi",
+        "espn_id": "307571",
+        "age": 24
       },
       {
         "name": "Sardorbek Rakhmonov",
@@ -5262,7 +5869,9 @@
       },
       {
         "name": "Akmal Mozgovoy",
-        "club": "Pakhtakor"
+        "club": "Pakhtakor",
+        "espn_id": "270461",
+        "age": 27
       },
       {
         "name": "Otabek Shukurov",
@@ -5278,7 +5887,9 @@
       },
       {
         "name": "Jasurbek Jaloliddinov",
-        "club": "Sogdiana"
+        "club": "Sogdiana",
+        "espn_id": "304605",
+        "age": 24
       },
       {
         "name": "Azizjon Ganiev",
@@ -5298,7 +5909,9 @@
       },
       {
         "name": "Dostonbek Khamdamov",
-        "club": "Pakhtakor"
+        "club": "Pakhtakor",
+        "espn_id": "195274",
+        "age": 29
       },
       {
         "name": "Oston Urunov",
@@ -5308,7 +5921,9 @@
       },
       {
         "name": "Ruslanbek Jiyanov",
-        "club": "Navbahor"
+        "club": "Navbahor",
+        "espn_id": "354940",
+        "age": 24
       },
       {
         "name": "Azizbek Amonov",
@@ -5318,11 +5933,15 @@
       },
       {
         "name": "Khusain Norchaev",
-        "club": "Navbahor"
+        "club": "Navbahor",
+        "espn_id": "321737",
+        "age": 24
       },
       {
         "name": "Sherzod Temirov",
-        "club": "Erbil"
+        "club": "Erbil",
+        "espn_id": "317791",
+        "age": 27
       },
       {
         "name": "Igor Sergeev",
@@ -5332,7 +5951,9 @@
       },
       {
         "name": "Eldor Shomurodov",
-        "club": "Istanbul Basaksehir"
+        "club": "Istanbul Basaksehir",
+        "espn_id": "216937",
+        "age": 30
       }
     ]
   },
@@ -5787,8 +6408,7 @@
       {
         "name": "Kristijan Jakic",
         "club": "Augsburg",
-        "espn_id": "238929",
-        "age": 29
+        "espn_id": "238929"
       },
       {
         "name": "Petar Sucic",
