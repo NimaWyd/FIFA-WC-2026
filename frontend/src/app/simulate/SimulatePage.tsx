@@ -672,7 +672,7 @@ export default function SimulatePage() {
       </header>
 
       {/* ── Main content ── */}
-      <div className="relative z-10 px-4 md:px-8 lg:px-14 py-8 space-y-10">
+      <div className="relative z-10 px-4 md:px-8 lg:px-14 pt-8 pb-24 space-y-10">
 
         {/* Loading */}
         {bracket.loading && (
