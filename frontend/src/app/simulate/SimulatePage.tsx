@@ -36,8 +36,8 @@ const D_QF_Y  = [0, 1, 2, 3].map(i => (D_R16_Y[i * 2] + D_R16_Y[i * 2 + 1]) / 2)
 const D_SF_Y  = [0, 1].map(i => (D_QF_Y[i * 2] + D_QF_Y[i * 2 + 1]) / 2)
 const D_FIN_Y = (D_SF_Y[0] + D_SF_Y[1]) / 2
 
-// 3rd-place playoff x-offset: starts at the SF column left edge
-const D_3P_X = D_R32_CARD_W + D_SVG_W + D_CARD_W + D_SVG_W + D_CARD_W + D_SVG_W  // 520
+// 3rd-place playoff x-offset: starts at the Final column left edge
+const D_3P_X = D_R32_CARD_W + D_SVG_W + D_CARD_W + D_SVG_W + D_CARD_W + D_SVG_W + D_CARD_W + D_SVG_W  // 672
 
 const D_3P_H  = 96
 const D_NAT_H = D_HDR_H + D_COL_H + 16 + D_3P_H   // 28+668+16+96 = 808
