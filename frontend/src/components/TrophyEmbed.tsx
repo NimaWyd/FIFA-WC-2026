@@ -1,18 +1,53 @@
 "use client";
 
-const SKETCHFAB_SRC =
-  "https://sketchfab.com/models/76fe488adc344a4bbd2e18698f551bd6/embed?autostart=1&ui_theme=dark&ui_infos=0&ui_controls=0&ui_watermark=0&transparent=1";
+import { Suspense, useRef, useMemo } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { useGLTF, OrbitControls, Environment } from "@react-three/drei";
+import * as THREE from "three";
+
+function Trophy() {
+  const { scene } = useGLTF("/trophy.glb");
+  const ref = useRef<THREE.Group>(null);
+
+  const [scale, position] = useMemo(() => {
+    const box = new THREE.Box3().setFromObject(scene);
+    const size = new THREE.Vector3();
+    const center = new THREE.Vector3();
+    box.getSize(size);
+    box.getCenter(center);
+    const maxDim = Math.max(size.x, size.y, size.z);
+    const s = 3 / maxDim;
+    const p: [number, number, number] = [-center.x * s, -center.y * s, -center.z * s];
+    return [s, p];
+  }, [scene]);
+
+  useFrame((_, delta) => {
+    if (ref.current) ref.current.rotation.y += delta * 0.25;
+  });
+
+  return <primitive ref={ref} object={scene} scale={scale} position={position} />;
+}
+
+useGLTF.preload("/trophy.glb");
 
 export default function TrophyEmbed({ className }: { className?: string }) {
   return (
     <div className={className}>
-      <iframe
-        title="FIFA World Cup Trophy"
-        src={SKETCHFAB_SRC}
-        allow="autoplay; fullscreen; xr-spatial-tracking"
-        allowFullScreen
-        style={{ width: "100%", height: "100%", border: "none", borderRadius: 12 }}
-      />
+      <Canvas
+        dpr={[1, 2]}
+        camera={{ position: [0, 0, 6], fov: 40 }}
+        gl={{ alpha: true, antialias: true }}
+        style={{ background: "transparent" }}
+      >
+        <ambientLight intensity={0.6} />
+        <directionalLight position={[4, 8, 4]} intensity={1.4} />
+        <directionalLight position={[-4, 2, -2]} intensity={0.4} color="#f5c842" />
+        <Suspense fallback={null}>
+          <Trophy />
+          <Environment preset="studio" />
+        </Suspense>
+        <OrbitControls enableZoom={false} enablePan={false} minPolarAngle={Math.PI / 4} maxPolarAngle={Math.PI / 1.8} />
+      </Canvas>
     </div>
   );
 }
