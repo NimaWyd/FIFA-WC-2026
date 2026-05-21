@@ -45,3 +45,13 @@ fifa-2026-predictor/data/raw/open_data_prepared.csv
 .env
 fifa-2026-predictor/.env
 fifa-2026-predictor/env
+
+# Next.js build cache
+frontend/.next/
+
+# Scraping temp files
+espn_article.txt
+espn_player_links.json
+
+# Screenshots / test images at repo root
+*.png

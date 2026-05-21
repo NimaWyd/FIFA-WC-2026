@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { UserGroupIcon, UserIcon } from "@heroicons/react/24/solid";
 import rostersData from "@/lib/rosters.json";
@@ -8,6 +9,7 @@ interface Player {
   name: string;
   club: string;
   age?: number;
+  espn_id?: string;
 }
 
 interface TeamRoster {
@@ -27,11 +29,11 @@ type RosterEntry = TeamRoster | UnreleasedRoster;
 
 const rosters = rostersData as Record<string, RosterEntry>;
 
-const POSITIONS: { key: keyof TeamRoster; label: string; color: string }[] = [
-  { key: "goalkeepers", label: "Goalkeepers", color: "text-yellow-400" },
-  { key: "defenders",   label: "Defenders",   color: "text-sky-400"    },
-  { key: "midfielders", label: "Midfielders", color: "text-emerald-400" },
-  { key: "forwards",    label: "Forwards",    color: "text-red-400"    },
+const POSITIONS: { key: keyof TeamRoster; label: string; accent: string }[] = [
+  { key: "goalkeepers", label: "Goalkeepers", accent: "text-yellow-400 border-yellow-400/30 bg-yellow-400/10" },
+  { key: "defenders",   label: "Defenders",   accent: "text-sky-400 border-sky-400/30 bg-sky-400/10"         },
+  { key: "midfielders", label: "Midfielders", accent: "text-emerald-400 border-emerald-400/30 bg-emerald-400/10" },
+  { key: "forwards",    label: "Forwards",    accent: "text-red-400 border-red-400/30 bg-red-400/10"         },
 ];
 
 const fadeUp = {
@@ -39,47 +41,74 @@ const fadeUp = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as const } },
 };
 
-function PlayerCard({ player }: { player: Player }) {
+function getInitials(name: string): string {
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 1) return parts[0][0]?.toUpperCase() ?? "?";
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+function PlayerPhoto({ player, accent }: { player: Player; accent: string }) {
+  const [failed, setFailed] = useState(false);
+  const photoUrl = player.espn_id
+    ? `https://a.espncdn.com/i/headshots/soccer/players/full/${player.espn_id}.png`
+    : null;
+
+  if (photoUrl && !failed) {
+    return (
+      <div className="relative w-14 h-14 rounded-xl overflow-hidden flex-shrink-0 bg-navy-700 border border-navy-600">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={photoUrl}
+          alt={player.name}
+          className="w-full h-full object-cover object-top"
+          onError={() => setFailed(true)}
+        />
+      </div>
+    );
+  }
+
+  // Initials fallback
   return (
-    <div className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-navy-700/60 border border-navy-600/60 hover:border-navy-500 transition-colors">
-      <div className="w-7 h-7 rounded-full bg-navy-600 border border-navy-500 flex items-center justify-center flex-shrink-0">
-        <UserIcon className="w-3.5 h-3.5 text-slate-400" />
-      </div>
-      <div className="flex flex-col min-w-0 flex-1">
-        <span className="text-sm font-semibold text-white leading-tight truncate">{player.name}</span>
-        <span className="text-xs text-slate-400 truncate">{player.club}</span>
-      </div>
-      {player.age != null && player.age > 0 && (
-        <span className="flex-shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded bg-navy-600 border border-navy-500 text-slate-400 tabular-nums">
-          {player.age}
-        </span>
-      )}
+    <div className={`w-14 h-14 rounded-xl flex-shrink-0 flex items-center justify-center border ${accent} font-bold text-base`}>
+      {getInitials(player.name)}
     </div>
   );
 }
 
-function PositionGroup({
-  label,
-  color,
-  players,
-}: {
+function PlayerCard({ player, accent }: { player: Player; accent: string }) {
+  return (
+    <div className="flex items-center gap-3 p-2.5 rounded-xl bg-navy-700/50 border border-navy-600/60 hover:border-navy-500 hover:bg-navy-700 transition-all duration-150">
+      <PlayerPhoto player={player} accent={accent} />
+      <div className="flex flex-col min-w-0 flex-1">
+        <span className="text-sm font-semibold text-white leading-tight truncate">{player.name}</span>
+        <span className="text-xs text-slate-400 truncate mt-0.5">{player.club}</span>
+        {player.age != null && (
+          <span className="text-[10px] text-slate-500 mt-0.5">Age {player.age}</span>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function PositionGroup({ label, accent, players }: {
   label: string;
-  color: string;
+  accent: string;
   players: Player[];
 }) {
   if (players.length === 0) return null;
+  const [textClass] = accent.split(" ");
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2.5">
       <div className="flex items-center gap-2">
-        <span className={`text-[10px] font-bold tracking-[0.18em] uppercase ${color}`}>
+        <span className={`text-[10px] font-bold tracking-[0.18em] uppercase ${textClass}`}>
           {label}
         </span>
         <span className="text-[10px] text-slate-600 font-medium">· {players.length}</span>
         <div className="flex-1 h-px bg-navy-600" />
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
         {players.map((p) => (
-          <PlayerCard key={p.name} player={p} />
+          <PlayerCard key={p.name} player={p} accent={accent} />
         ))}
       </div>
     </div>
@@ -88,7 +117,6 @@ function PositionGroup({
 
 export default function RosterSection({ team }: { team: string }) {
   const entry = rosters[team];
-
   if (!entry) return null;
 
   const isUnreleased = "released" in entry && entry.released === false;
@@ -99,10 +127,15 @@ export default function RosterSection({ team }: { team: string }) {
       <div className="px-6 py-4 border-b border-navy-600 flex items-center gap-3">
         <UserGroupIcon className="h-4 w-4 text-slate-500" />
         <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Squad</h2>
+        {!isUnreleased && (
+          <span className="ml-auto text-[10px] text-slate-600">
+            {["goalkeepers","defenders","midfielders","forwards"]
+              .reduce((sum, k) => sum + ((entry as TeamRoster)[k as keyof TeamRoster] as Player[]).length, 0)} players
+          </span>
+        )}
       </div>
 
       {isUnreleased ? (
-        /* Not yet announced */
         <div className="px-6 py-10 flex flex-col items-center gap-3 text-center">
           <div className="w-12 h-12 rounded-full bg-navy-700 border border-navy-600 flex items-center justify-center">
             <UserGroupIcon className="w-6 h-6 text-slate-600" />
@@ -119,13 +152,12 @@ export default function RosterSection({ team }: { team: string }) {
           )}
         </div>
       ) : (
-        /* Full roster */
         <div className="px-6 py-5 flex flex-col gap-6">
           {/* Manager */}
           {(entry as TeamRoster).manager && (
             <div className="flex items-center gap-3 p-3 rounded-xl bg-navy-700/50 border border-navy-600">
-              <div className="w-8 h-8 rounded-full bg-gold-500/10 border border-gold-500/30 flex items-center justify-center flex-shrink-0">
-                <UserIcon className="w-4 h-4 text-gold-500" />
+              <div className="w-10 h-10 rounded-full bg-gold-500/10 border border-gold-500/30 flex items-center justify-center flex-shrink-0">
+                <UserIcon className="w-5 h-5 text-gold-500" />
               </div>
               <div className="flex flex-col min-w-0">
                 <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Head Coach</span>
@@ -135,11 +167,11 @@ export default function RosterSection({ team }: { team: string }) {
           )}
 
           {/* Position groups */}
-          {POSITIONS.map(({ key, label, color }) => (
+          {POSITIONS.map(({ key, label, accent }) => (
             <PositionGroup
               key={key}
               label={label}
-              color={color}
+              accent={accent}
               players={(entry as TeamRoster)[key] as Player[]}
             />
           ))}
