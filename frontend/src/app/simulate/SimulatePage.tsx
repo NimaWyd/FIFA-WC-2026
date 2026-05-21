@@ -36,8 +36,9 @@ const D_QF_Y  = [0, 1, 2, 3].map(i => (D_R16_Y[i * 2] + D_R16_Y[i * 2 + 1]) / 2)
 const D_SF_Y  = [0, 1].map(i => (D_QF_Y[i * 2] + D_QF_Y[i * 2 + 1]) / 2)
 const D_FIN_Y = (D_SF_Y[0] + D_SF_Y[1]) / 2
 
-// 3rd-place playoff x-offset: starts at the Final column left edge
-const D_3P_X = D_R32_CARD_W + D_SVG_W + D_CARD_W + D_SVG_W + D_CARD_W + D_SVG_W + D_CARD_W + D_SVG_W  // 672
+// 3rd-place playoff x-offset: centered under the Final column
+// Final left edge = 696; Final width = 172; 3rd-place card width = 172 → same width, same x
+const D_3P_X = D_R32_CARD_W + D_SVG_W + D_CARD_W + D_SVG_W + D_CARD_W + D_SVG_W + D_CARD_W + D_SVG_W  // 696
 
 const D_3P_H  = 96
 const D_NAT_H = D_HDR_H + D_COL_H + 16 + D_3P_H   // 28+668+16+96 = 808
@@ -358,27 +359,29 @@ function BracketDiagram({ rounds, champion, championOdds }: {
           <DChampionCol champion={champion} championOdds={championOdds} delay={hasR32 ? 0.74 : 0.74} />
         </div>
 
-        {/* 3rd Place Playoff — positioned under the SF column */}
+        {/* 3rd Place Playoff — aligned with Final column (same x, same width) */}
         {tp && (
           <div
-            className="flex items-center gap-3"
+            className="flex flex-col items-start gap-1.5"
             style={{ paddingLeft: 20 + (hasR32 ? D_3P_X : D_3P_X - D_R32_CARD_W - D_SVG_W), paddingTop: 14 }}
           >
-            <DLabel text="3rd Place Playoff" />
+            <div className="flex items-center justify-center" style={{ width: D_FINAL_W, height: D_HDR_H }}>
+              <DLabel text="3rd Place Playoff" />
+            </div>
             <motion.div
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.26, delay: 0.9 }}
               className="overflow-hidden shrink-0"
               style={{
-                width: D_CARD_W, height: D_CARD_H, borderRadius: 4,
+                width: D_FINAL_W, height: D_CARD_H, borderRadius: 4,
                 background: "rgba(255,255,255,0.03)",
-                border: "1px solid rgba(160,100,40,0.22)",
+                border: "1px solid rgba(160,100,40,0.3)",
               }}
             >
-              <DRow team={tp.team1} prob={tp.team1_win_prob} isWinner={tp.predicted_winner === tp.team1} />
+              <DRow team={tp.team1} prob={tp.team1_win_prob} isWinner={tp.predicted_winner === tp.team1} large />
               <div style={{ height: 1, margin: "0 8px", background: "rgba(255,255,255,0.05)" }} />
-              <DRow team={tp.team2} prob={tp.team2_win_prob} isWinner={tp.predicted_winner === tp.team2} />
+              <DRow team={tp.team2} prob={tp.team2_win_prob} isWinner={tp.predicted_winner === tp.team2} large />
             </motion.div>
           </div>
         )}
