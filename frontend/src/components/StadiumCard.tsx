@@ -184,7 +184,7 @@ export default function StadiumCard({ venueCity }: Props) {
 
       {/* ══════════════ STATS STRIP ══════════════════════════════ */}
       <motion.div
-        className="px-5 py-3.5 flex items-center justify-between gap-3"
+        className="px-4 py-3 flex flex-wrap items-center gap-2"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.4, delay: 0.5 }}
@@ -214,25 +214,25 @@ export default function StadiumCard({ venueCity }: Props) {
           </div>
         )}
 
-        {/* Host nation flag + Wikipedia link */}
-        <div className="ml-auto flex items-center gap-2">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-navy-900/60 border border-navy-600/60">
-            <span className="text-[11px]">
-              {stadium.country === "USA" ? "🇺🇸" : stadium.country === "Mexico" ? "🇲🇽" : "🇨🇦"}
-            </span>
-            <span className="text-[11px] font-semibold text-slate-300">{stadium.country}</span>
-          </div>
-          <a
-            href={stadium.wikipediaUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-navy-900/60 border border-navy-600/60 text-slate-400 hover:text-white hover:border-slate-500 transition-colors"
-            title="View on Wikipedia"
-          >
-            <ArrowTopRightOnSquareIcon className="h-3.5 w-3.5" />
-            <span className="text-[11px] font-semibold">Wiki</span>
-          </a>
+        {/* Host nation flag */}
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-navy-900/60 border border-navy-600/60">
+          <span className="text-[11px]">
+            {stadium.country === "USA" ? "🇺🇸" : stadium.country === "Mexico" ? "🇲🇽" : "🇨🇦"}
+          </span>
+          <span className="text-[11px] font-semibold text-slate-300">{stadium.country}</span>
         </div>
+
+        {/* Wikipedia link — hidden on mobile */}
+        <a
+          href={stadium.wikipediaUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hidden sm:flex items-center gap-1 px-3 py-1.5 rounded-lg bg-navy-900/60 border border-navy-600/60 text-slate-400 hover:text-white hover:border-slate-500 transition-colors"
+          title="View on Wikipedia"
+        >
+          <ArrowTopRightOnSquareIcon className="h-3.5 w-3.5" />
+          <span className="text-[11px] font-semibold">Wiki</span>
+        </a>
       </motion.div>
 
       {/* ── Bottom shimmer ───────────────────────────────────── */}
