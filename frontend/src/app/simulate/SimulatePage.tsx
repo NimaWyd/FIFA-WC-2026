@@ -394,23 +394,23 @@ function BracketDiagram({ rounds, champion, championOdds }: {
 function TeamRow({ team, prob, isWinner }: { team: string; prob: number; isWinner: boolean }) {
   const pct = (prob * 100).toFixed(1);
   return (
-    <div className={`relative flex items-center gap-2.5 px-3 py-[11px] ${isWinner ? "bg-gold-500/[0.06]" : ""}`}>
-      {isWinner && <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-gold-400 rounded-r-sm" />}
-      <FlagIcon team={team} className="w-7 h-[19px] rounded-sm shrink-0 shadow-sm" />
-      <span className={`text-[13px] font-medium flex-1 truncate leading-tight ${isWinner ? "text-white" : "text-slate-400"}`}>{team}</span>
+    <div className={`relative flex items-center gap-1.5 sm:gap-2.5 px-2 py-[7px] sm:px-3 sm:py-[11px] ${isWinner ? "bg-gold-500/[0.06]" : ""}`}>
+      {isWinner && <div className="absolute left-0 top-0 bottom-0 w-[2.5px] bg-gold-400 rounded-r-sm" />}
+      <FlagIcon team={team} className="w-5 h-[14px] sm:w-7 sm:h-[19px] rounded-sm shrink-0 shadow-sm" />
+      <span className={`text-[11px] sm:text-[13px] font-medium flex-1 truncate leading-tight ${isWinner ? "text-white" : "text-slate-400"}`}>{team}</span>
       <div className="w-20 bg-navy-700/80 rounded-full h-[5px] shrink-0 overflow-hidden hidden sm:block">
         <div className={`h-[5px] rounded-full transition-all ${isWinner ? "bg-gold-400" : "bg-slate-600"}`} style={{ width: `${pct}%` }} />
       </div>
-      <span className={`font-bold text-[13px] tabular-nums w-[46px] text-right shrink-0 ${isWinner ? "text-gold-400" : "text-slate-500"}`}>{pct}%</span>
+      <span className={`font-bold tabular-nums text-right shrink-0 w-[32px] text-[10px] sm:w-[46px] sm:text-[13px] ${isWinner ? "text-gold-400" : "text-slate-500"}`}>{pct}%</span>
     </div>
   );
 }
 
 function MatchCard({ match }: { match: BracketMatch }) {
   return (
-    <div className="rounded-xl border border-navy-600/60 bg-navy-800 overflow-hidden hover:border-navy-500/80 transition-colors">
+    <div className="rounded-lg sm:rounded-xl border border-navy-600/60 bg-navy-800 overflow-hidden hover:border-navy-500/80 transition-colors">
       <TeamRow team={match.team1} prob={match.team1_win_prob} isWinner={match.predicted_winner === match.team1} />
-      <div className="h-px bg-navy-600/40 mx-3" />
+      <div className="h-px bg-navy-600/40 mx-2 sm:mx-3" />
       <TeamRow team={match.team2} prob={match.team2_win_prob} isWinner={match.predicted_winner === match.team2} />
     </div>
   );
@@ -490,12 +490,12 @@ function BracketRounds({ rounds }: { rounds: BracketRound[] }) {
             {active === "Final" ? (
               <div className="py-2"><FinalCard match={activeRound.matches[0]} /></div>
             ) : (
-              <div className={`grid gap-3 ${
+              <div className={`grid gap-2 sm:gap-3 ${
                 activeRound.matches.length >= 8
-                  ? "grid-cols-1 sm:grid-cols-2 xl:grid-cols-4"
+                  ? "grid-cols-2 sm:grid-cols-2 xl:grid-cols-4"
                   : activeRound.matches.length >= 4
-                  ? "grid-cols-1 sm:grid-cols-2"
-                  : "grid-cols-1 sm:grid-cols-2 max-w-xl"
+                  ? "grid-cols-2 sm:grid-cols-2"
+                  : "grid-cols-1 sm:grid-cols-2 max-w-sm mx-auto sm:max-w-xl"
               }`}>
                 {activeRound.matches.map(m => <MatchCard key={m.match_id} match={m} />)}
               </div>
