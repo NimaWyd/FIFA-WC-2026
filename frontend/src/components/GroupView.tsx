@@ -304,9 +304,61 @@ export default function GroupView({ group, onBack, onPredict }: Props) {
                         {/* Hover shimmer on top edge */}
                         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-fifa-blue/0 to-transparent group-hover:via-fifa-blue/40 transition-all duration-500" />
 
-                        <div className="flex items-center px-4 py-3 gap-3">
+                        {/* ── Mobile layout: 2-row ── */}
+                        <div className="sm:hidden flex flex-col gap-2 px-4 py-3">
+                          {/* Row 1: Flag · Name · VS/score · Name · Flag */}
+                          <div className="flex items-center gap-2">
+                            <FlagIcon
+                              team={match.home}
+                              className="w-7 h-5 rounded-sm shadow-sm flex-shrink-0"
+                            />
+                            <span className="flex-1 min-w-0 text-sm font-semibold text-white truncate">
+                              {match.home === "United States" ? "USA" : match.home}
+                            </span>
+
+                            {mr ? (
+                              <div className="flex flex-col items-center flex-shrink-0 px-1 gap-0.5">
+                                <span className="text-[12px] font-bold text-white tabular-nums">
+                                  {mr.homeGoals}–{mr.awayGoals}
+                                </span>
+                                <div className="flex w-10 h-0.5 rounded-full overflow-hidden">
+                                  <div className="bg-blue-400/80" style={{ width: `${Math.round(mr.homeWinProb * 100)}%` }} />
+                                  <div className="bg-slate-500/50" style={{ width: `${Math.round(mr.drawProb * 100)}%` }} />
+                                  <div className="bg-red-400/70" style={{ width: `${Math.round(mr.awayWinProb * 100)}%` }} />
+                                </div>
+                              </div>
+                            ) : (
+                              <span className="flex-shrink-0 text-[11px] font-bold text-navy-500 bg-navy-900 px-2 py-0.5 rounded border border-navy-600">
+                                VS
+                              </span>
+                            )}
+
+                            <span className="flex-1 min-w-0 text-sm font-semibold text-white text-right truncate">
+                              {match.away === "United States" ? "USA" : match.away}
+                            </span>
+                            <FlagIcon
+                              team={match.away}
+                              className="w-7 h-5 rounded-sm shadow-sm flex-shrink-0"
+                            />
+                          </div>
+
+                          {/* Row 2: Date · Predict button */}
+                          <div className="flex items-center justify-between">
+                            <span className="text-[11px] text-slate-500">{formatDate(match.date)}</span>
+                            <button
+                              onClick={() => onPredict(match)}
+                              className="flex items-center gap-1 px-3 py-1 rounded-lg bg-fifa-blue/10 border border-fifa-blue/20 text-fifa-blue-light text-xs font-semibold hover:bg-fifa-blue/20 hover:border-fifa-blue/50 transition-all"
+                            >
+                              Predict
+                              <ChevronRightIcon className="h-3 w-3" />
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* ── Desktop layout: single row ── */}
+                        <div className="hidden sm:flex items-center px-4 py-3 gap-3">
                           {/* Date / venue */}
-                          <div className="hidden sm:block w-16 flex-shrink-0 text-center">
+                          <div className="w-16 flex-shrink-0 text-center">
                             <div className="text-xs font-semibold text-slate-300">
                               {formatDate(match.date)}
                             </div>
@@ -361,9 +413,6 @@ export default function GroupView({ group, onBack, onPredict }: Props) {
                             <div className="flex-shrink-0 flex flex-col items-center gap-0.5 w-14">
                               <span className="text-[11px] font-bold text-navy-500 bg-navy-900 px-2.5 py-1 rounded-lg border border-navy-600">
                                 VS
-                              </span>
-                              <span className="sm:hidden text-[10px] text-slate-600">
-                                {formatDate(match.date)}
                               </span>
                             </div>
                           )}
