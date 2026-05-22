@@ -149,7 +149,7 @@ export default function GroupView({ group, onBack, onPredict }: Props) {
   return (
     <div className="flex flex-col gap-6">
       {/* ── Group hero banner ───────────────────────────────────── */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-navy-700/80 to-navy-900 border border-navy-600 p-6">
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-navy-700/80 to-navy-900 border border-navy-600 p-4 sm:p-6">
         {/* Top shimmer line */}
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-fifa-blue/50 to-transparent" />
 
@@ -158,58 +158,60 @@ export default function GroupView({ group, onBack, onPredict }: Props) {
           {group.id}
         </span>
 
-        <div className="relative z-10 flex items-start gap-4">
-          {/* Back button */}
-          <button
-            onClick={onBack}
-            className="mt-1 p-2.5 rounded-xl bg-navy-900/70 border border-navy-600 text-slate-400 hover:text-white hover:border-fifa-blue/50 transition-all flex-shrink-0"
-          >
-            <ArrowLeftIcon className="h-4 w-4" />
-          </button>
-
-          <div className="flex-1 min-w-0">
-            <p className="text-[11px] font-bold tracking-[0.3em] text-fifa-blue uppercase mb-1">
-              FIFA World Cup 2026
-            </p>
-            <h2 className="font-anton text-5xl sm:text-6xl text-white uppercase tracking-wide leading-none">
-              Group {group.id}
-            </h2>
-            <div className="flex flex-wrap gap-x-2 gap-y-1 mt-3">
-              {group.teams.map((t, i) => (
-                <span key={t} className="flex items-center gap-2 text-sm text-slate-400">
-                  {i > 0 && <span className="w-0.5 h-0.5 rounded-full bg-navy-500" />}
-                  {t === "United States" ? "USA" : t}
-                  {HOSTS.has(t) && (
-                    <span className="text-[9px] font-bold text-gold-500">★ HOST</span>
-                  )}
-                </span>
-              ))}
-            </div>
+        {/* ── Mobile layout: stacked ── */}
+        <div className="sm:hidden relative z-10 flex flex-col gap-3">
+          {/* Back + Predict All row */}
+          <div className="flex items-center justify-between">
+            <button
+              onClick={onBack}
+              className="p-2 rounded-xl bg-navy-900/70 border border-navy-600 text-slate-400 hover:text-white hover:border-fifa-blue/50 transition-all"
+            >
+              <ArrowLeftIcon className="h-4 w-4" />
+            </button>
+            <button
+              onClick={handlePredictAll}
+              disabled={predicting}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-fifa-blue text-white text-sm font-bold hover:bg-fifa-blue/90 shadow-[0_4px_20px_rgba(26,63,255,0.4)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {predicting ? (
+                <>
+                  <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  {progress}/6
+                </>
+              ) : (
+                <>
+                  <BoltIcon className="h-4 w-4" />
+                  Predict All
+                </>
+              )}
+            </button>
           </div>
 
-          {/* Predict All button */}
-          <button
-            onClick={handlePredictAll}
-            disabled={predicting}
-            className="flex-shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-xl bg-fifa-blue text-white text-sm font-bold hover:bg-fifa-blue/90 shadow-[0_4px_20px_rgba(26,63,255,0.4)] hover:shadow-[0_4px_28px_rgba(26,63,255,0.65)] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {predicting ? (
-              <>
-                <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                {progress}/6
-              </>
-            ) : (
-              <>
-                <BoltIcon className="h-4 w-4" />
-                Predict All
-              </>
-            )}
-          </button>
-        </div>
+          {/* Eyebrow + heading */}
+          <div>
+            <p className="text-[10px] font-bold tracking-[0.2em] text-fifa-blue uppercase mb-1">
+              FIFA World Cup 2026
+            </p>
+            <h2 className="font-anton text-[44px] text-white uppercase tracking-wide leading-none">
+              Group {group.id}
+            </h2>
+          </div>
 
-        {/* Progress bar */}
-        {predicting && (
-          <div className="relative z-10 mt-4 ml-14">
+          {/* Team names — whitespace-nowrap prevents mid-word wrapping */}
+          <div className="flex flex-wrap gap-x-3 gap-y-1">
+            {group.teams.map((t, i) => (
+              <span key={t} className="flex items-center gap-1.5 text-sm text-slate-400 whitespace-nowrap">
+                {i > 0 && <span className="w-1 h-1 rounded-full bg-navy-500 inline-block" />}
+                {t === "United States" ? "USA" : t}
+                {HOSTS.has(t) && (
+                  <span className="text-[9px] font-bold text-gold-500 ml-0.5">★ HOST</span>
+                )}
+              </span>
+            ))}
+          </div>
+
+          {/* Progress bar */}
+          {predicting && (
             <div className="flex items-center gap-3">
               <div className="flex-1 h-1 bg-navy-900 rounded-full overflow-hidden">
                 <motion.div
@@ -219,12 +221,83 @@ export default function GroupView({ group, onBack, onPredict }: Props) {
                   transition={{ duration: 0.35, ease: "easeOut" }}
                 />
               </div>
-              <span className="text-[11px] text-slate-500 tabular-nums w-16 text-right">
+              <span className="text-[11px] text-slate-500 tabular-nums w-14 text-right">
                 {progress} of 6
               </span>
             </div>
+          )}
+        </div>
+
+        {/* ── Desktop layout: 3-column row ── */}
+        <div className="hidden sm:block relative z-10">
+          <div className="flex items-start gap-4">
+            {/* Back button */}
+            <button
+              onClick={onBack}
+              className="mt-1 p-2.5 rounded-xl bg-navy-900/70 border border-navy-600 text-slate-400 hover:text-white hover:border-fifa-blue/50 transition-all flex-shrink-0"
+            >
+              <ArrowLeftIcon className="h-4 w-4" />
+            </button>
+
+            <div className="flex-1 min-w-0">
+              <p className="text-[11px] font-bold tracking-[0.3em] text-fifa-blue uppercase mb-1">
+                FIFA World Cup 2026
+              </p>
+              <h2 className="font-anton text-5xl sm:text-6xl text-white uppercase tracking-wide leading-none">
+                Group {group.id}
+              </h2>
+              <div className="flex flex-wrap gap-x-2 gap-y-1 mt-3">
+                {group.teams.map((t, i) => (
+                  <span key={t} className="flex items-center gap-2 text-sm text-slate-400">
+                    {i > 0 && <span className="w-0.5 h-0.5 rounded-full bg-navy-500" />}
+                    {t === "United States" ? "USA" : t}
+                    {HOSTS.has(t) && (
+                      <span className="text-[9px] font-bold text-gold-500">★ HOST</span>
+                    )}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Predict All button */}
+            <button
+              onClick={handlePredictAll}
+              disabled={predicting}
+              className="flex-shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-xl bg-fifa-blue text-white text-sm font-bold hover:bg-fifa-blue/90 shadow-[0_4px_20px_rgba(26,63,255,0.4)] hover:shadow-[0_4px_28px_rgba(26,63,255,0.65)] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {predicting ? (
+                <>
+                  <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  {progress}/6
+                </>
+              ) : (
+                <>
+                  <BoltIcon className="h-4 w-4" />
+                  Predict All
+                </>
+              )}
+            </button>
           </div>
-        )}
+
+          {/* Progress bar */}
+          {predicting && (
+            <div className="mt-4 ml-14">
+              <div className="flex items-center gap-3">
+                <div className="flex-1 h-1 bg-navy-900 rounded-full overflow-hidden">
+                  <motion.div
+                    className="h-full bg-gradient-to-r from-fifa-blue to-fifa-blue-light rounded-full"
+                    initial={{ width: "0%" }}
+                    animate={{ width: `${(progress / 6) * 100}%` }}
+                    transition={{ duration: 0.35, ease: "easeOut" }}
+                  />
+                </div>
+                <span className="text-[11px] text-slate-500 tabular-nums w-16 text-right">
+                  {progress} of 6
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* ── Error ───────────────────────────────────────────────── */}
