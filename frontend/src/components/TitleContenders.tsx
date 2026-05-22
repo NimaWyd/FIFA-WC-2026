@@ -182,7 +182,7 @@ export default function TitleContenders() {
             01
           </div>
 
-          <div className="relative flex flex-col md:flex-row md:items-center gap-6 p-8 md:px-12 md:py-10">
+          <div className="relative flex flex-col md:flex-row md:items-center gap-5 p-5 md:px-12 md:py-10">
             {/* Left: label · flag · name · stage breakdown */}
             <div className="flex flex-col gap-5 flex-1 min-w-0">
               <span className="inline-flex items-center gap-2.5 font-jb text-[10px] tracking-[0.18em] uppercase text-pitch-400">
@@ -237,25 +237,25 @@ export default function TitleContenders() {
               transition={{ duration: 0.45, delay: 0.32 + i * 0.065 }}
             >
               {i > 0 && <div className="border-t border-white/[0.05]" />}
-              <div className="flex items-center gap-4 md:gap-6 px-6 md:px-8 py-[18px] hover:bg-white/[0.02] transition-colors">
+              <div className="flex items-center gap-2.5 md:gap-6 px-4 md:px-8 py-[18px] hover:bg-white/[0.02] transition-colors">
 
                 {/* Rank */}
-                <span className="font-anton text-[30px] leading-none tabular-nums w-10 flex-shrink-0 text-[rgba(240,236,226,0.1)]">
+                <span className="font-anton text-[20px] md:text-[30px] leading-none tabular-nums w-7 md:w-10 flex-shrink-0 text-[rgba(240,236,226,0.1)]">
                   {String(i + 2).padStart(2, "0")}
                 </span>
 
                 {/* Flag + name */}
-                <div className="flex items-center gap-3 flex-shrink-0 w-[148px] md:w-[210px]">
-                  <FlagIcon team={team.team} className="w-9 h-[26px] rounded-[2px]" />
-                  <span className="font-semibold text-[14px] text-[rgba(240,236,226,0.88)] truncate">
+                <div className="flex items-center gap-2.5 flex-shrink-0 w-[110px] md:w-[210px]">
+                  <FlagIcon team={team.team} className="w-8 h-[22px] md:w-9 md:h-[26px] rounded-[2px]" />
+                  <span className="font-semibold text-[13px] md:text-[14px] text-[rgba(240,236,226,0.88)] truncate">
                     {team.team}
                   </span>
                 </div>
 
                 {/* Probability bar + percentage */}
-                <div className="flex-1 flex items-center gap-4 min-w-0">
+                <div className="flex-1 flex items-center gap-2.5 md:gap-4 min-w-0">
                   <Bar value={team.champion} max={champion.champion} delay={0.35 + i * 0.07} />
-                  <span className="font-jb text-[13px] text-pitch-300 tabular-nums w-12 text-right flex-shrink-0">
+                  <span className="font-jb text-[12px] md:text-[13px] text-pitch-300 tabular-nums w-11 md:w-12 text-right flex-shrink-0">
                     {(team.champion * 100).toFixed(1)}%
                   </span>
                 </div>

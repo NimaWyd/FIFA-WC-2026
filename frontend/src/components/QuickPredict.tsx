@@ -129,10 +129,10 @@ function ResultPanel({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -8 }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      className="mt-8 pt-8 border-t border-white/[0.07]"
+      className="mt-5 pt-5 border-t border-white/[0.07]"
     >
       {/* Match header */}
-      <div className="flex items-center gap-3 mb-6 flex-wrap">
+      <div className="flex items-center gap-2.5 mb-4 flex-wrap">
         <FlagIcon team={result.home_team} className="w-7 h-5 rounded-[2px]" />
         <span className="font-anton text-[18px] leading-none">{homeDisplay}</span>
         <span className="font-jb text-[10px] text-[rgba(240,236,226,0.22)] tracking-[0.2em] mx-0.5">
@@ -152,17 +152,17 @@ function ResultPanel({
       <div className="grid grid-cols-3 gap-2.5 mb-4">
         {/* Home win */}
         <div
-          className={`rounded-[4px] px-4 py-4 md:px-5 md:py-5 ${
+          className={`rounded-[4px] px-2.5 py-3 md:px-5 md:py-5 ${
             homeWins
               ? "bg-pitch-400/[0.09] border border-pitch-400/25"
               : "bg-white/[0.03] border border-white/[0.06]"
           }`}
         >
-          <div className="font-jb text-[9px] uppercase tracking-[0.14em] text-[rgba(240,236,226,0.35)] mb-2 truncate">
+          <div className="font-jb text-[8px] md:text-[9px] uppercase tracking-[0.14em] text-[rgba(240,236,226,0.35)] mb-1.5 truncate">
             {homeDisplay}
           </div>
           <div
-            className={`font-anton text-[38px] md:text-[46px] leading-none tabular-nums ${
+            className={`font-anton text-[28px] md:text-[46px] leading-none tabular-nums ${
               homeWins ? "text-pitch-400" : "text-[rgba(240,236,226,0.52)]"
             }`}
           >
@@ -177,17 +177,17 @@ function ResultPanel({
 
         {/* Draw */}
         <div
-          className={`rounded-[4px] px-4 py-4 md:px-5 md:py-5 flex flex-col items-center text-center ${
+          className={`rounded-[4px] px-2.5 py-3 md:px-5 md:py-5 flex flex-col items-center text-center ${
             isDraw
               ? "bg-white/[0.06] border border-white/[0.14]"
               : "bg-white/[0.03] border border-white/[0.06]"
           }`}
         >
-          <div className="font-jb text-[9px] uppercase tracking-[0.14em] text-[rgba(240,236,226,0.35)] mb-2">
+          <div className="font-jb text-[8px] md:text-[9px] uppercase tracking-[0.14em] text-[rgba(240,236,226,0.35)] mb-1.5">
             Draw
           </div>
           <div
-            className={`font-anton text-[38px] md:text-[46px] leading-none tabular-nums ${
+            className={`font-anton text-[28px] md:text-[46px] leading-none tabular-nums ${
               isDraw ? "text-[#f0ece2]" : "text-[rgba(240,236,226,0.42)]"
             }`}
           >
@@ -202,17 +202,17 @@ function ResultPanel({
 
         {/* Away win */}
         <div
-          className={`rounded-[4px] px-4 py-4 md:px-5 md:py-5 text-right ${
+          className={`rounded-[4px] px-2.5 py-3 md:px-5 md:py-5 text-right ${
             awayWins
               ? "bg-[rgba(245,200,66,0.07)] border border-[rgba(245,200,66,0.20)]"
               : "bg-white/[0.03] border border-white/[0.06]"
           }`}
         >
-          <div className="font-jb text-[9px] uppercase tracking-[0.14em] text-[rgba(240,236,226,0.35)] mb-2 truncate">
+          <div className="font-jb text-[8px] md:text-[9px] uppercase tracking-[0.14em] text-[rgba(240,236,226,0.35)] mb-1.5 truncate">
             {awayDisplay}
           </div>
           <div
-            className={`font-anton text-[38px] md:text-[46px] leading-none tabular-nums ${
+            className={`font-anton text-[28px] md:text-[46px] leading-none tabular-nums ${
               awayWins ? "text-gold-500" : "text-[rgba(240,236,226,0.52)]"
             }`}
           >
@@ -304,7 +304,7 @@ export default function QuickPredict() {
         }}
       />
 
-      <div className="relative max-w-7xl mx-auto px-8 md:px-14 py-16 md:py-20">
+      <div className="relative max-w-7xl mx-auto px-8 md:px-14 py-10 md:py-20">
         <p className="font-jb text-[11px] tracking-[0.18em] uppercase text-pitch-400 mb-6">
           ◆ Quick Predict
         </p>

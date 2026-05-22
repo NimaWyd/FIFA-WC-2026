@@ -1,9 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
+import { InformationCircleIcon } from "@heroicons/react/24/solid";
 
 const NAV_LINKS = [
   { label: "Live",     href: "/live" },
@@ -16,8 +15,6 @@ const NAV_LINKS = [
 
 export default function Navbar() {
   const pathname = usePathname();
-  const [open, setOpen] = useState(false);
-
   const isHome = pathname === "/";
 
   function isActive(href: string) {
@@ -85,64 +82,21 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* Mobile hamburger */}
-        <button
-          onClick={() => setOpen((v) => !v)}
-          aria-label={open ? "Close menu" : "Open menu"}
-          aria-expanded={open}
+        {/* Mobile: About icon only (bottom nav handles the rest) */}
+        <Link
+          href="/about"
+          aria-label="About"
           className={`md:hidden p-2 rounded-md transition-colors ${
-            isHome
-              ? "text-[rgba(240,236,226,0.65)] hover:text-[#f0ece2] hover:bg-white/[0.06]"
-              : "text-slate-400 hover:text-white hover:bg-navy-800"
+            isActive("/about")
+              ? "text-pitch-400"
+              : isHome
+              ? "text-[rgba(240,236,226,0.55)] hover:text-[#f0ece2]"
+              : "text-slate-400 hover:text-white"
           }`}
         >
-          {open ? <XMarkIcon className="h-5 w-5" /> : <Bars3Icon className="h-5 w-5" />}
-        </button>
+          <InformationCircleIcon className="h-5 w-5" />
+        </Link>
       </div>
-
-      {/* Mobile drawer */}
-      {open && (
-        <nav
-          aria-label="Mobile navigation"
-          className={`md:hidden border-t flex flex-col ${
-            isHome
-              ? "border-white/[0.06] bg-navy-900/80 backdrop-blur-md"
-              : "border-navy-700 bg-navy-900"
-          }`}
-        >
-          {NAV_LINKS.map(({ label, href }) => {
-            const active = isActive(href);
-            const isLive = label === "Live";
-            return (
-              <Link
-                key={label}
-                href={href}
-                onClick={() => setOpen(false)}
-                className={`px-6 py-4 text-sm font-semibold uppercase tracking-wider border-b border-white/[0.04] flex items-center justify-between transition-colors ${
-                  active
-                    ? "text-white"
-                    : isHome
-                    ? "text-[rgba(240,236,226,0.55)] hover:text-[#f0ece2]"
-                    : "text-slate-400 hover:text-white"
-                }`}
-              >
-                <span className="flex items-center gap-2">
-                  {isLive && (
-                    <span className="relative flex h-2 w-2 shrink-0">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75" />
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
-                    </span>
-                  )}
-                  {label}
-                </span>
-                {active && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-pitch-400 flex-shrink-0" />
-                )}
-              </Link>
-            );
-          })}
-        </nav>
-      )}
     </header>
   );
 }

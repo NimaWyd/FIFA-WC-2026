@@ -109,7 +109,7 @@ export default function AboutPage() {
       {/* ═══════════════════════════════════════════════════════
           HERO
       ══════════════════════════════════════════════════════ */}
-      <section className="relative min-h-[88vh] flex items-center overflow-hidden">
+      <section className="relative min-h-[60vh] md:min-h-[88vh] flex items-center overflow-hidden">
         {/* Atmospheric glows */}
         <div className="absolute inset-0 pointer-events-none">
           <div
@@ -122,7 +122,7 @@ export default function AboutPage() {
           />
         </div>
 
-        <div className="relative max-w-4xl mx-auto px-4 py-24 w-full">
+        <div className="relative max-w-4xl mx-auto px-4 py-10 md:py-24 w-full">
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_430px] gap-14 items-center">
 
             {/* ── Text ── */}

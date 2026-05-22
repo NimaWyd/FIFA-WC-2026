@@ -76,7 +76,7 @@ function TeamPanel({
             />
             <FlagIcon
               team={team.canonical_name}
-              className="relative w-40 h-[107px] rounded-xl shadow-2xl"
+              className="relative w-24 h-[64px] sm:w-40 sm:h-[107px] rounded-xl shadow-2xl"
             />
           </motion.div>
           <div className="text-center mt-1">
@@ -88,7 +88,7 @@ function TeamPanel({
         </>
       ) : (
         <div className="flex flex-col items-center gap-2">
-          <div className="w-40 h-[107px] rounded-xl border-2 border-dashed border-navy-600 flex items-center justify-center">
+          <div className="w-24 h-[64px] sm:w-40 sm:h-[107px] rounded-xl border-2 border-dashed border-navy-600 flex items-center justify-center">
             <span className="text-navy-600 text-[10px] font-bold tracking-wider">{emptyLabel}</span>
           </div>
           <div className={`text-[10px] font-bold tracking-[0.25em] uppercase ${labelColor} opacity-40`}>
@@ -458,7 +458,7 @@ export default function PredictPage() {
                         <div className="absolute -inset-1 bg-fifa-blue rounded-2xl blur-md opacity-20" />
                         <FlagIcon
                           team={result.home_team}
-                          className="relative w-40 h-[107px] sm:w-56 sm:h-[150px] rounded-xl shadow-2xl"
+                          className="relative w-24 h-[64px] sm:w-40 sm:h-[107px] rounded-xl shadow-2xl"
                         />
                       </motion.div>
                       <div className="text-center">
@@ -471,7 +471,7 @@ export default function PredictPage() {
                     <div className="flex flex-col items-center gap-2">
                       {predictedScore ? (
                         <>
-                          <div className="font-anton text-5xl sm:text-6xl text-white tracking-widest tabular-nums">
+                          <div className="font-anton text-3xl sm:text-5xl text-white tracking-widest tabular-nums">
                             {predictedScore[0]}–{predictedScore[1]}
                           </div>
                           <div className="text-[9px] font-bold tracking-[0.3em] text-slate-600 uppercase">
@@ -494,7 +494,7 @@ export default function PredictPage() {
                         <div className="absolute -inset-1 bg-gold-500 rounded-2xl blur-md opacity-20" />
                         <FlagIcon
                           team={result.away_team}
-                          className="relative w-40 h-[107px] sm:w-56 sm:h-[150px] rounded-xl shadow-2xl"
+                          className="relative w-24 h-[64px] sm:w-40 sm:h-[107px] rounded-xl shadow-2xl"
                         />
                       </motion.div>
                       <div className="text-center">

@@ -17,7 +17,7 @@ const STATS = [
 
 export default function LandingHero() {
   return (
-    <section className="relative min-h-screen bg-navy-900 overflow-hidden text-[#f0ece2]">
+    <section className="relative min-h-[90vh] sm:min-h-screen bg-navy-900 overflow-hidden text-[#f0ece2]">
       {/* Radial gradients */}
       <div
         aria-hidden
@@ -48,7 +48,14 @@ export default function LandingHero() {
             <span className="block">match.</span>
           </h1>
 
-          <p className="max-w-[480px] text-[16px] leading-[1.55] text-[rgba(240,236,226,0.68)] mt-6 md:mt-7">
+          {/* Mobile trophy — visible only below md breakpoint */}
+          <div className="md:hidden relative h-[180px] mt-4 -mx-2">
+            <div className="animate-float w-full h-full">
+              <TrophyEmbed className="w-full h-full" />
+            </div>
+          </div>
+
+          <p className="max-w-[480px] text-[16px] leading-[1.55] text-[rgba(240,236,226,0.68)] mt-3 md:mt-7">
             Build your bracket. Track 104 matches across 16 host cities. Climb the leaderboard
             with predictions that the world will be talking about.
           </p>
@@ -69,7 +76,7 @@ export default function LandingHero() {
           </div>
 
           {/* Stats row */}
-          <div className="grid grid-cols-4 mt-12 md:mt-14 pt-[22px] border-t border-white/[0.08]">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-6 sm:gap-y-0 mt-12 md:mt-14 pt-[22px] border-t border-white/[0.08]">
             {STATS.map(([n, l]) => (
               <div key={l}>
                 <div className="font-anton text-[36px] md:text-[44px] leading-none">{n}</div>

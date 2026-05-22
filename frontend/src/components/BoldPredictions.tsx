@@ -136,10 +136,10 @@ function buildCards(teams: TeamSimResult[]): PredCard[] {
 }
 
 /* ── Individual card ───────────────────────────────────────── */
-function PredCard({ card }: { card: PredCard }) {
+function PredCard({ card, mobile = false }: { card: PredCard; mobile?: boolean }) {
   return (
     <div
-      className="flex-shrink-0 w-[270px] flex flex-col gap-4 rounded-[4px] px-6 py-5"
+      className={`flex-shrink-0 ${mobile ? "w-full" : "w-[270px]"} flex flex-col gap-4 rounded-[4px] px-6 py-5`}
       style={{
         background: `radial-gradient(ellipse at 30% 0%, ${card.glowColor} 0%, transparent 65%), rgba(255,255,255,0.03)`,
         border: `1px solid ${card.borderColor}`,
@@ -239,26 +239,35 @@ export default function BoldPredictions() {
           )}
         </div>
 
-        {/* Scrolling strip — full width */}
+        {/* Cards — vertical stack on mobile, scrolling marquee on md+ */}
         {loading ? (
           <Skeleton />
         ) : (
-          <div
-            className="relative overflow-hidden"
-            style={{
-              maskImage:
-                "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
-              WebkitMaskImage:
-                "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
-            }}
-          >
-            {/* Duplicate cards for seamless loop */}
-            <div className="flex gap-4 animate-marquee w-max">
-              {[...cards, ...cards].map((card, i) => (
-                <PredCard key={`${card.id}-${i}`} card={card} />
+          <>
+            {/* Mobile: static vertical list */}
+            <div className="md:hidden flex flex-col gap-3 px-8">
+              {cards.map((card) => (
+                <PredCard key={card.id} card={card} mobile />
               ))}
             </div>
-          </div>
+
+            {/* Desktop: scrolling marquee */}
+            <div
+              className="hidden md:block relative overflow-hidden"
+              style={{
+                maskImage:
+                  "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
+                WebkitMaskImage:
+                  "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
+              }}
+            >
+              <div className="flex gap-4 animate-marquee w-max">
+                {[...cards, ...cards].map((card, i) => (
+                  <PredCard key={`${card.id}-${i}`} card={card} />
+                ))}
+              </div>
+            </div>
+          </>
         )}
       </div>
     </section>

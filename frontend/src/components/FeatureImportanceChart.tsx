@@ -32,7 +32,7 @@ export default function FeatureImportanceChart({ features }: Props) {
         const color = barColor(f.feature, i);
         return (
           <div key={f.feature} className="flex items-center gap-3">
-            <span className="text-xs text-slate-400 w-44 flex-shrink-0 truncate text-right pr-1">
+            <span className="text-xs text-slate-400 w-28 sm:w-44 flex-shrink-0 truncate text-right pr-1">
               {f.label}
             </span>
             <div className="flex-1 h-5 bg-navy-700 rounded-full overflow-hidden relative">

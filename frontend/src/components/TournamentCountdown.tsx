@@ -40,7 +40,7 @@ function DigitBlock({
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 20, opacity: 0 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className={`block font-anton tabular-nums leading-none text-[72px] sm:text-[96px] md:text-[112px] lg:text-[128px] ${
+            className={`block font-anton tabular-nums leading-none text-[52px] sm:text-[80px] md:text-[112px] lg:text-[128px] ${
               accent ? "text-pitch-400" : "text-[#f0ece2]"
             }`}
           >
@@ -121,7 +121,7 @@ export default function TournamentCountdown() {
             <div key={label} className="flex items-start gap-2 sm:gap-4 md:gap-6">
               <DigitBlock value={value} label={label} accent={accent} />
               {i < units.length - 1 && (
-                <span className="font-anton text-[48px] sm:text-[64px] md:text-[80px] text-[rgba(240,236,226,0.18)] leading-none mt-2 select-none">
+                <span className="font-anton text-[36px] sm:text-[56px] md:text-[80px] text-[rgba(240,236,226,0.18)] leading-none mt-2 select-none">
                   :
                 </span>
               )}
