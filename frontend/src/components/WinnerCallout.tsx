@@ -11,7 +11,7 @@ interface Props {
 
 const R = 40;
 const C = 2 * Math.PI * R;
-const SIZE = 100;
+const VIEWBOX = 100;
 
 const COLORS = {
   home: "#1a3fff",
@@ -28,20 +28,21 @@ interface RingProps {
 
 function ConfidenceRing({ confidence, color, isDraw, team }: RingProps) {
   return (
-    <div className="relative flex-shrink-0" style={{ width: SIZE, height: SIZE }}>
-      <svg width={SIZE} height={SIZE} viewBox={`0 0 ${SIZE} ${SIZE}`}>
+    /* w/h set via parent class — SVG fills 100% so it scales with the container */
+    <div className="relative w-full h-full">
+      <svg width="100%" height="100%" viewBox={`0 0 ${VIEWBOX} ${VIEWBOX}`}>
         <circle
           r={R}
-          cx={SIZE / 2}
-          cy={SIZE / 2}
+          cx={VIEWBOX / 2}
+          cy={VIEWBOX / 2}
           fill="none"
           stroke="rgba(255,255,255,0.06)"
           strokeWidth={5}
         />
         <motion.circle
           r={R}
-          cx={SIZE / 2}
-          cy={SIZE / 2}
+          cx={VIEWBOX / 2}
+          cy={VIEWBOX / 2}
           fill="none"
           stroke={color}
           strokeWidth={5}
@@ -95,14 +96,15 @@ export default function WinnerCallout({ probabilities, homeTeam, awayTeam }: Pro
     : winnerLabel;
 
   return (
-    <div className="flex flex-col items-center gap-4">
-      <span className="text-[10px] font-bold tracking-[0.3em] text-slate-500 uppercase">
+    <div className="w-full flex flex-col items-center gap-4 py-2">
+      <span className="text-[10px] font-bold tracking-[0.3em] text-slate-500 uppercase text-center">
         Predicted Winner
       </span>
 
-      <div className="relative">
+      {/* Ring — 120px on mobile, 100px on sm+ */}
+      <div className="relative w-[120px] h-[120px] sm:w-[100px] sm:h-[100px] flex-shrink-0">
         <div
-          className="absolute inset-0 rounded-full blur-2xl opacity-25 scale-[2.5]"
+          className="absolute inset-0 rounded-full blur-2xl opacity-25 scale-[2.2]"
           style={{ background: color }}
         />
         <ConfidenceRing
@@ -114,8 +116,8 @@ export default function WinnerCallout({ probabilities, homeTeam, awayTeam }: Pro
       </div>
 
       <div className="text-center">
-        <div className="font-anton text-4xl text-white leading-none">{displayName}</div>
-        <div className="text-3xl font-black tabular-nums mt-1.5" style={{ color }}>
+        <div className="font-anton text-4xl sm:text-4xl text-white leading-none">{displayName}</div>
+        <div className="text-4xl sm:text-3xl font-black tabular-nums mt-1.5" style={{ color }}>
           {(winnerPct * 100).toFixed(1)}%
         </div>
         <div className="text-[9px] font-bold tracking-[0.3em] text-slate-600 uppercase mt-2">

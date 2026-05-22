@@ -435,9 +435,9 @@ export default function PredictPage() {
                   <div className="absolute inset-y-0 right-0 w-2/5 bg-gradient-to-l from-gold-500/[0.09] to-transparent" />
                 </div>
 
-                <div className="relative z-10 p-6 sm:p-8">
+                <div className="relative z-10 p-5 sm:p-8">
                   {/* Match meta row */}
-                  <div className="flex items-center justify-center gap-2 mb-8 flex-wrap">
+                  <div className="flex items-center justify-center gap-2 mb-4 sm:mb-8 flex-wrap">
                     <span className="text-[10px] font-bold tracking-[0.25em] text-fifa-blue uppercase">{stage}</span>
                     <span className="w-0.5 h-0.5 rounded-full bg-navy-600" />
                     <span className="text-[10px] text-slate-500 tracking-wider">{formatMatchDate(result.match_date)}</span>
@@ -514,7 +514,7 @@ export default function PredictPage() {
                 variants={cardVariants}
                 className="rounded-2xl border border-navy-600 bg-navy-800 overflow-hidden"
               >
-                <div className="p-6 sm:p-8 flex flex-col gap-8">
+                <div className="p-5 sm:p-8 flex flex-col gap-6 sm:gap-8">
                   <WinnerCallout
                     probabilities={result.probabilities}
                     homeTeam={result.home_team}
