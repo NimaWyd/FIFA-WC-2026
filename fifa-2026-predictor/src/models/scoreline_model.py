@@ -258,6 +258,15 @@ class TeamDependentScoreModel:
             bounds=[(0.5, 2.5), (0.5, 2.5)],
             options={"ftol": 1e-10, "gtol": 1e-7},
         )
+        if not result.success:
+            import logging
+            logging.getLogger(__name__).warning(
+                "calibrate_lambdas_to_outcomes did not converge: %s | "
+                "p_win=%.3f p_draw=%.3f p_away=%.3f | λ_init=(%.3f, %.3f)",
+                result.message,
+                p_home_win, p_draw, p_away_win,
+                lambda_home_init, lambda_away_init,
+            )
         return float(result.x[0]), float(result.x[1])
 
     # ------------------------------------------------------------------

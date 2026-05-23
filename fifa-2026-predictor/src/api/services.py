@@ -432,7 +432,7 @@ def predict(
 
     # Scoreline distribution (optional — no error if params file absent)
     top_scorelines: list[dict] = []
-    expected_goals: dict[str, float] = {}
+    expected_goals: dict[str, float] = {"home": 0.0, "away": 0.0}
     scoreline_status = "unavailable"
     scoreline_path = PROJECT_ROOT / "src/models/artifacts/scoreline_params.json"
     if not scoreline_path.exists():

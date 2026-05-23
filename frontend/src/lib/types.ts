@@ -59,7 +59,7 @@ export interface PredictResponse {
   match_date: string;
   probabilities: Probabilities;
   top_scorelines: Scoreline[];
-  expected_goals: { home: number; away: number };
+  expected_goals?: { home: number; away: number };
   explanation: Explanation;
   metadata: Record<string, unknown>;
   confidence?: ConfidenceInterval;
