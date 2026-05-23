@@ -38,6 +38,7 @@ fifa-2026-predictor/data/raw/open_data_prepared.csv
 # fifa-2026-predictor/src/models/artifacts/*.joblib
 
 *.md
+!README.md
 *.claude
 .superpowers/
 
