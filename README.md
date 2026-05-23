@@ -2,13 +2,17 @@
 
 A full-stack machine learning platform that predicts match outcomes, simulates the entire 2026 World Cup bracket via Monte Carlo methods, and visualises team rosters for all 48 competing nations.
 
-![Hero](assets/hero.png)
+<p align="center">
+  <img src="assets/hero.png" alt="Hero" />
+</p>
 
-![Python](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white)
-![Next.js](https://img.shields.io/badge/Next.js-14-black?logo=next.js)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi&logoColor=white)
-![XGBoost](https://img.shields.io/badge/XGBoost-Ensemble-orange)
-![Tests](https://img.shields.io/badge/tests-533%20passing-brightgreen)
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white" alt="Python" />
+  <img src="https://img.shields.io/badge/Next.js-14-black?logo=next.js" alt="Next.js" />
+  <img src="https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi&logoColor=white" alt="FastAPI" />
+  <img src="https://img.shields.io/badge/XGBoost-Ensemble-orange" alt="XGBoost" />
+  <img src="https://img.shields.io/badge/tests-533%20passing-brightgreen" alt="Tests" />
+</p>
 
 ---
 
