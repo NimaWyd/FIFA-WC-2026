@@ -71,8 +71,8 @@ function buildCards(teams: TeamSimResult[]): PredCard[] {
     });
   }
 
-  /* 3 — Dark horse (hardcoded to Japan — consensus #1 dark horse pick) */
-  const darkHorse = byTeam["Japan"];
+  /* 3 — Dark horse (hardcoded to Morocco — 2022 SF run, North America advantage) */
+  const darkHorse = byTeam["Morocco"];
   if (darkHorse) {
     cards.push({
       id: "dark_horse",
