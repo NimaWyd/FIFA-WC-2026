@@ -17,7 +17,14 @@ from src.simulation.wc2026_bracket import (
     _THIRD_PLACE_LOOKUP,
 )
 
-_TOURNAMENT_DATE = pd.Timestamp("2026-06-11")
+def _get_tournament_date(cfg: dict | None = None) -> pd.Timestamp:
+    if cfg is not None:
+        date_str = cfg.get("simulation", {}).get("tournament_start_date", "2026-06-11")
+        return pd.Timestamp(date_str)
+    from src.utils import load_config
+    return pd.Timestamp(load_config().get("simulation", {}).get("tournament_start_date", "2026-06-11"))
+
+_TOURNAMENT_DATE = _get_tournament_date()
 _COMPETITION = "FIFA World Cup"
 
 # Type alias for the pre-computed probability cache
@@ -93,6 +100,19 @@ def precompute_all_probabilities(
     Reduces simulation time from O(n * matches) model calls to O(1) amortized.
     """
     from src.models.common import TARGET_MAP
+    from src.data.team_identity import resolve_team
+    unresolved = []
+    for g in WC2026_GROUPS:
+        for t in g["teams"]:
+            try:
+                resolve_team(t)
+            except Exception:
+                unresolved.append(t)
+    if unresolved:
+        raise ValueError(
+            f"Bracket team name(s) not found in team registry: {unresolved}. "
+            "Check wc2026_bracket.py for typos and update team_identity.py if needed."
+        )
 
     all_teams = [t for g in WC2026_GROUPS for t in g["teams"]]
     halflife = float(cfg.get("features", {}).get("elo_inactivity_halflife", 0.0))
@@ -342,7 +362,7 @@ def simulate_once(
             t1, t2 = t2, t1
         third, fourth = _knockout_winner(t1, t2, prob_cache, rng)
         results[third] = "third_place"
-        # loser stays "semi_final"
+        results[fourth] = "fourth_place"
 
     # -- Final ----------------------------------------------------------------
     finalist1, finalist2 = match_winners[101], match_winners[102]
@@ -746,7 +766,7 @@ def run_simulation(
 
     all_teams = {t: g["id"] for g in WC2026_GROUPS for t in g["teams"]}
     stage_keys = ["group_exit", "round_of_32", "round_of_16", "quarter_final",
-                  "semi_final", "third_place", "final", "champion"]
+                  "semi_final", "fourth_place", "third_place", "final", "champion"]
     counts: dict[str, dict[str, int]] = {t: {s: 0 for s in stage_keys} for t in all_teams}
 
     # Slots: R32 73-88, R16 89-96, QF 97-100, SF 101-102, Final 103, 3rd-place 104
