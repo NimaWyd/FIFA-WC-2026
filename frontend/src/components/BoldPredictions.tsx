@@ -45,22 +45,14 @@ function buildCards(teams: TeamSimResult[]): PredCard[] {
     });
   }
 
-  /* 2 — Group of Death
-   * The most competitive group: all 4 teams are close in strength, so even
-   * the weakest side has a realistic chance to advance. We measure this by
-   * the standard deviation of each team's probability of reaching the R16
-   * (= 1 - group_exit). The group with the LOWEST std dev has the smallest
-   * gap between its best and worst team — the truest "Group of Death".
-   */
-  const deathGroup = WC2026_GROUPS.map((g) => {
-    const gt = g.teams.map((n) => byTeam[n]).filter(Boolean) as TeamSimResult[];
-    const advProbs = gt.map((t) => reachProb(t, "r16"));
-    const mean = advProbs.reduce((s, p) => s + p, 0) / advProbs.length;
-    const stdDev = Math.sqrt(
-      advProbs.reduce((s, p) => s + (p - mean) ** 2, 0) / advProbs.length
-    );
-    return { g, gt, stdDev };
-  }).sort((a, b) => a.stdDev - b.stdDev)[0];
+  /* 2 — Group of Death (hardcoded to Group I — widely regarded as the toughest draw) */
+  const deathGroupData = WC2026_GROUPS.find((g) => g.id === "I");
+  const deathGroup = deathGroupData
+    ? {
+        g: deathGroupData,
+        gt: deathGroupData.teams.map((n) => byTeam[n]).filter(Boolean) as TeamSimResult[],
+      }
+    : null;
 
   if (deathGroup) {
     const top2 = [...deathGroup.gt]
