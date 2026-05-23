@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 import { WC2026_GROUPS, WCGroup } from "@/lib/wc2026Groups";
 import FlagIcon from "@/components/FlagIcon";
+import { displayName } from "@/lib/utils";
 
 interface Props {
   onSelectGroup: (group: WCGroup) => void;
@@ -94,7 +95,7 @@ export default function GroupBracket({ onSelectGroup, showHeader = true }: Props
                       HOST_COLORS[team] ?? "text-slate-200"
                     }`}
                   >
-                    {team === "United States" ? "USA" : team}
+                    {displayName(team)}
                   </span>
                   {HOSTS.has(team) && (
                     <span className="ml-auto flex-shrink-0 text-[8px] font-bold text-gold-500 bg-gold-500/10 border border-gold-500/20 px-1.5 py-0.5 rounded tracking-wider">

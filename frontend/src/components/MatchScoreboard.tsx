@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import FlagIcon from "@/components/FlagIcon";
+import { displayName } from "@/lib/utils";
 
 interface Props {
   homeTeam: string;
@@ -11,9 +12,6 @@ interface Props {
   compact?: boolean;
 }
 
-function teamLabel(name: string) {
-  return name === "United States" ? "USA" : name;
-}
 
 const STEP_MS = 350;
 const START_DELAY_MS = 400;
@@ -77,7 +75,7 @@ export default function MatchScoreboard({ homeTeam, awayTeam, homeGoals, awayGoa
       <div className="flex items-center justify-between gap-4">
         <div className="flex-1 flex flex-col items-center gap-2">
           <FlagIcon team={homeTeam} className="w-16 h-12 rounded" />
-          <span className="text-sm font-semibold text-white text-center">{teamLabel(homeTeam)}</span>
+          <span className="text-sm font-semibold text-white text-center">{displayName(homeTeam)}</span>
         </div>
         <div className="flex items-center gap-3 px-8 py-4 bg-navy-700 rounded-2xl border border-gold-500/40">
           <AnimatedGoals target={homeGoals} />
@@ -86,7 +84,7 @@ export default function MatchScoreboard({ homeTeam, awayTeam, homeGoals, awayGoa
         </div>
         <div className="flex-1 flex flex-col items-center gap-2">
           <FlagIcon team={awayTeam} className="w-16 h-12 rounded" />
-          <span className="text-sm font-semibold text-white text-center">{teamLabel(awayTeam)}</span>
+          <span className="text-sm font-semibold text-white text-center">{displayName(awayTeam)}</span>
         </div>
       </div>
     </div>

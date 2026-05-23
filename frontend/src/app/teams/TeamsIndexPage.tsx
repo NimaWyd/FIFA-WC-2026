@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { WC2026_TEAMS } from "@/lib/wc2026Teams";
 import { WC2026_GROUPS } from "@/lib/wc2026Groups";
 import FlagIcon from "@/components/FlagIcon";
+import { displayName } from "@/lib/utils";
 
 const HOST_TEAMS = new Set(["United States", "Canada", "Mexico"]);
 
@@ -78,7 +79,7 @@ function TeamCard({ team }: { team: string }) {
   const cs = conf ? CONF_STYLES[conf] : null;
   const group = getGroup(team);
   const isHost = HOST_TEAMS.has(team);
-  const displayName = team === "United States" ? "USA" : team;
+  const teamDisplayName = displayName(team);
 
   return (
     <motion.div variants={cardVariants}>
@@ -108,7 +109,7 @@ function TeamCard({ team }: { team: string }) {
 
         <div className="min-h-[2.5rem] flex items-center justify-center w-full relative z-10">
           <span className="text-sm font-bold text-white text-center leading-tight group-hover:text-fifa-blue-light transition-colors line-clamp-2">
-            {displayName}
+            {teamDisplayName}
           </span>
         </div>
 

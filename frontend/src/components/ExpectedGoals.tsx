@@ -1,5 +1,6 @@
 "use client";
 import FlagIcon from "@/components/FlagIcon";
+import { displayName } from "@/lib/utils";
 
 interface Props {
   xg: { home: number; away: number };
@@ -23,7 +24,7 @@ export default function ExpectedGoals({ xg, homeTeam, awayTeam }: Props) {
             {xg.home.toFixed(2)}
           </div>
           <div className="text-[11px] text-slate-500 truncate max-w-[110px] text-center">
-            {homeTeam === "United States" ? "USA" : homeTeam}
+            {displayName(homeTeam)}
           </div>
         </div>
         <div className="font-anton text-xl text-navy-600 tracking-widest">xG</div>
@@ -33,7 +34,7 @@ export default function ExpectedGoals({ xg, homeTeam, awayTeam }: Props) {
             {xg.away.toFixed(2)}
           </div>
           <div className="text-[11px] text-slate-500 truncate max-w-[110px] text-center">
-            {awayTeam === "United States" ? "USA" : awayTeam}
+            {displayName(awayTeam)}
           </div>
         </div>
       </div>

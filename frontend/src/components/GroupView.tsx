@@ -6,6 +6,7 @@ import { WCGroup, WCMatch } from "@/lib/wc2026Groups";
 import FlagIcon from "@/components/FlagIcon";
 import GroupStandings, { Standing } from "@/components/GroupStandings";
 import { predict } from "@/lib/api";
+import { displayName } from "@/lib/utils";
 
 interface Props {
   group: WCGroup;
@@ -202,7 +203,7 @@ export default function GroupView({ group, onBack, onPredict }: Props) {
             {group.teams.map((t, i) => (
               <span key={t} className="flex items-center gap-1.5 text-sm text-slate-400 whitespace-nowrap">
                 {i > 0 && <span className="w-1 h-1 rounded-full bg-navy-500 inline-block" />}
-                {t === "United States" ? "USA" : t}
+                {displayName(t)}
                 {HOSTS.has(t) && (
                   <span className="text-[9px] font-bold text-gold-500 ml-0.5">★ HOST</span>
                 )}
@@ -250,7 +251,7 @@ export default function GroupView({ group, onBack, onPredict }: Props) {
                 {group.teams.map((t, i) => (
                   <span key={t} className="flex items-center gap-2 text-sm text-slate-400">
                     {i > 0 && <span className="w-0.5 h-0.5 rounded-full bg-navy-500" />}
-                    {t === "United States" ? "USA" : t}
+                    {displayName(t)}
                     {HOSTS.has(t) && (
                       <span className="text-[9px] font-bold text-gold-500">★ HOST</span>
                     )}
@@ -334,7 +335,7 @@ export default function GroupView({ group, onBack, onPredict }: Props) {
           >
             <FlagIcon team={team} className="w-14 h-9 rounded shadow-md" />
             <span className="text-xs font-semibold text-slate-200 text-center leading-tight">
-              {team === "United States" ? "USA" : team}
+              {displayName(team)}
             </span>
             {HOSTS.has(team) && (
               <span className="text-[9px] font-bold tracking-widest text-gold-500 uppercase">
@@ -386,7 +387,7 @@ export default function GroupView({ group, onBack, onPredict }: Props) {
                               className="w-7 h-5 rounded-sm shadow-sm flex-shrink-0"
                             />
                             <span className="flex-1 min-w-0 text-sm font-semibold text-white truncate">
-                              {match.home === "United States" ? "USA" : match.home}
+                              {displayName(match.home)}
                             </span>
 
                             {mr ? (
@@ -407,7 +408,7 @@ export default function GroupView({ group, onBack, onPredict }: Props) {
                             )}
 
                             <span className="flex-1 min-w-0 text-sm font-semibold text-white text-right truncate">
-                              {match.away === "United States" ? "USA" : match.away}
+                              {displayName(match.away)}
                             </span>
                             <FlagIcon
                               team={match.away}
@@ -447,7 +448,7 @@ export default function GroupView({ group, onBack, onPredict }: Props) {
                               className="w-7 h-5 rounded-sm shadow-sm flex-shrink-0"
                             />
                             <span className="text-sm font-semibold text-white truncate">
-                              {match.home === "United States" ? "USA" : match.home}
+                              {displayName(match.home)}
                             </span>
                           </div>
 
@@ -493,7 +494,7 @@ export default function GroupView({ group, onBack, onPredict }: Props) {
                           {/* Away team */}
                           <div className="flex items-center gap-2 flex-1 justify-end min-w-0">
                             <span className="text-sm font-semibold text-white truncate text-right">
-                              {match.away === "United States" ? "USA" : match.away}
+                              {displayName(match.away)}
                             </span>
                             <FlagIcon
                               team={match.away}

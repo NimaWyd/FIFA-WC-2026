@@ -17,6 +17,7 @@ import RosterSection from "@/components/RosterSection";
 import { WC2026_GROUPS } from "@/lib/wc2026Groups";
 import FlagIcon from "@/components/FlagIcon";
 import type { TeamInfo } from "@/lib/types";
+import { displayName } from "@/lib/utils";
 
 interface Props {
   name: string;
@@ -114,7 +115,7 @@ export default function TeamProfilePage({ name }: Props) {
   const teammates = wcGroup?.teams.filter((t) => t !== name) ?? [];
 
   const conf = CONF_CONFIG[team?.confederation ?? "_default"] ?? CONF_CONFIG["_default"];
-  const shortName = name === "United States" ? "USA" : name;
+  const shortName = displayName(name);
 
   return (
     <main className="min-h-screen bg-navy-900 relative overflow-x-hidden">
@@ -298,7 +299,7 @@ export default function TeamProfilePage({ name }: Props) {
                 </span>
                 <span className="text-[10px] text-slate-500 truncate leading-tight">
                   {teammates.length > 0
-                    ? teammates.map((t) => (t === "United States" ? "USA" : t)).join(" · ")
+                    ? teammates.map((t) => displayName(t)).join(" · ")
                     : "Group TBD"}
                 </span>
               </div>
@@ -324,7 +325,7 @@ export default function TeamProfilePage({ name }: Props) {
                       >
                         <FlagIcon team={tm} className="w-16 h-11 rounded-lg shadow-md" />
                         <span className="text-xs font-semibold text-slate-300 text-center leading-tight group-hover:text-white transition-colors">
-                          {tm === "United States" ? "USA" : tm}
+                          {displayName(tm)}
                         </span>
                       </Link>
                     </motion.div>
@@ -382,7 +383,7 @@ export default function TeamProfilePage({ name }: Props) {
                                 match.home === name ? "text-white" : "text-slate-400"
                               }`}
                             >
-                              {match.home === "United States" ? "USA" : match.home}
+                              {displayName(match.home)}
                             </span>
                           </div>
 
@@ -397,7 +398,7 @@ export default function TeamProfilePage({ name }: Props) {
                                 match.away === name ? "text-white" : "text-slate-400"
                               }`}
                             >
-                              {match.away === "United States" ? "USA" : match.away}
+                              {displayName(match.away)}
                             </span>
                             <FlagIcon team={match.away} className="w-9 h-6 rounded-md flex-shrink-0" />
                           </div>

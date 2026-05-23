@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 import FlagIcon from "@/components/FlagIcon";
 import type { Probabilities } from "@/lib/types";
+import { displayName } from "@/lib/utils";
 
 interface Props {
   probabilities: Probabilities;
@@ -90,10 +91,9 @@ export default function WinnerCallout({ probabilities, homeTeam, awayTeam }: Pro
     color = COLORS.away;
   }
 
-  const displayName =
+  const winnerDisplayName =
     winnerLabel === "Draw" ? "Draw"
-    : winnerLabel === "United States" ? "USA"
-    : winnerLabel;
+    : displayName(winnerLabel);
 
   return (
     <div className="w-full flex flex-col items-center gap-4 py-2">
@@ -116,7 +116,7 @@ export default function WinnerCallout({ probabilities, homeTeam, awayTeam }: Pro
       </div>
 
       <div className="text-center">
-        <div className="font-anton text-4xl sm:text-4xl text-white leading-none">{displayName}</div>
+        <div className="font-anton text-4xl sm:text-4xl text-white leading-none">{winnerDisplayName}</div>
         <div className="text-4xl sm:text-3xl font-black tabular-nums mt-1.5" style={{ color }}>
           {(winnerPct * 100).toFixed(1)}%
         </div>

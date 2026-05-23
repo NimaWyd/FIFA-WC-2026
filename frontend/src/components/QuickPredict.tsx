@@ -16,6 +16,7 @@ import { usePredict } from "@/hooks/usePredict";
 import FlagIcon from "@/components/FlagIcon";
 import type { TeamInfo, PredictResponse } from "@/lib/types";
 import { WC2026_TEAMS } from "@/lib/wc2026Teams";
+import { displayName } from "@/lib/utils";
 
 /* ── Team picker (hero-themed combobox) ─────────────────────── */
 function TeamPicker({
@@ -118,8 +119,8 @@ function ResultPanel({
   const isDraw = !homeWins && !awayWins;
   const topScore = top_scorelines[0];
 
-  const homeDisplay = result.home_team === "United States" ? "USA" : result.home_team;
-  const awayDisplay = result.away_team === "United States" ? "USA" : result.away_team;
+  const homeDisplay = displayName(result.home_team);
+  const awayDisplay = displayName(result.away_team);
 
   const predictLink = `/predict?home=${encodeURIComponent(result.home_team)}&away=${encodeURIComponent(result.away_team)}&date=2026-06-11&stage=Group+Stage`;
 

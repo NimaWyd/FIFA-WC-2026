@@ -3,6 +3,7 @@ import { useState } from "react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Explanation } from "@/lib/types";
+import { displayName } from "@/lib/utils";
 
 interface Props {
   explanation: Explanation;
@@ -23,8 +24,8 @@ function StatRow({ label, home, away }: { label: string; home: string; away: str
 export default function ExplanationPanel({ explanation, homeTeam, awayTeam }: Props) {
   const [open, setOpen] = useState(false);
 
-  const homeDisplay = homeTeam === "United States" ? "USA" : homeTeam;
-  const awayDisplay = awayTeam === "United States" ? "USA" : awayTeam;
+  const homeDisplay = displayName(homeTeam);
+  const awayDisplay = displayName(awayTeam);
 
   return (
     <div className="flex flex-col gap-0">

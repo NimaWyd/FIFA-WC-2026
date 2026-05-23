@@ -21,6 +21,7 @@ import { WC2026_TEAMS } from "@/lib/wc2026Teams";
 import { WC2026_GROUPS } from "@/lib/wc2026Groups";
 import type { TeamInfo } from "@/lib/types";
 import { selectScoreline } from "@/lib/scoreline";
+import { displayName } from "@/lib/utils";
 
 const TOURNAMENT_START = "2026-06-11";
 const TOURNAMENT_END = "2026-07-19";
@@ -82,7 +83,7 @@ function TeamPanel({
           <div className="text-center mt-1">
             <div className={`text-[10px] font-bold tracking-[0.25em] uppercase ${labelColor}`}>{label}</div>
             <div className="font-anton text-xl text-white mt-0.5 leading-none">
-              {team.canonical_name === "United States" ? "USA" : team.canonical_name}
+              {displayName(team.canonical_name)}
             </div>
           </div>
         </>
@@ -404,9 +405,9 @@ export default function PredictPage() {
             );
           }
 
-          const homeDisplay = result.home_team === "United States" ? "USA" : result.home_team;
+          const homeDisplay = displayName(result.home_team);
           const c = venueCity ? 1 : 0; // card delay offset when stadium card is shown
-          const awayDisplay = result.away_team === "United States" ? "USA" : result.away_team;
+          const awayDisplay = displayName(result.away_team);
 
           return (
             <motion.div

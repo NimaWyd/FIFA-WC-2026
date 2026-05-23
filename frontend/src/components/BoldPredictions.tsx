@@ -6,8 +6,7 @@ import { useSimulation } from "@/hooks/useSimulation";
 import { WC2026_GROUPS } from "@/lib/wc2026Groups";
 import { reachProb } from "@/lib/types";
 import type { TeamSimResult } from "@/lib/types";
-
-const display = (name: string) => (name === "United States" ? "USA" : name);
+import { displayName } from "@/lib/utils";
 
 /* ── Card data ─────────────────────────────────────────────── */
 type PredCard = {
@@ -38,7 +37,7 @@ function buildCards(teams: TeamSimResult[]): PredCard[] {
       borderColor: "rgba(245,200,66,0.22)",
       glowColor: "rgba(245,200,66,0.10)",
       teams: [fav.team],
-      headline: `${display(fav.team)} lead the field`,
+      headline: `${displayName(fav.team)} lead the field`,
       bigStat: `${(fav.champion * 100).toFixed(1)}%`,
       statLabel: "to lift the trophy",
       sub: `${(reachProb(fav, "final") * 100).toFixed(0)}% reach Final · ${(reachProb(fav, "sf") * 100).toFixed(0)}% reach SF`,
@@ -68,7 +67,7 @@ function buildCards(teams: TeamSimResult[]): PredCard[] {
       headline: `Group ${deathGroup.g.id} is loaded`,
       bigStat: `GROUP ${deathGroup.g.id}`,
       statLabel: "the toughest draw in the tournament",
-      sub: top2.map((t) => `${display(t.team)} ${(t.champion * 100).toFixed(1)}%`).join("  ·  "),
+      sub: top2.map((t) => `${displayName(t.team)} ${(t.champion * 100).toFixed(1)}%`).join("  ·  "),
     });
   }
 
@@ -82,7 +81,7 @@ function buildCards(teams: TeamSimResult[]): PredCard[] {
       borderColor: "rgba(34,160,82,0.22)",
       glowColor: "rgba(34,160,82,0.08)",
       teams: [darkHorse.team],
-      headline: `Don't sleep on ${display(darkHorse.team)}`,
+      headline: `Don't sleep on ${displayName(darkHorse.team)}`,
       bigStat: `${(reachProb(darkHorse, "sf") * 100).toFixed(0)}%`,
       statLabel: "chance to reach the semis",
       sub: `${(reachProb(darkHorse, "qf") * 100).toFixed(0)}% reach QF · ${(darkHorse.champion * 100).toFixed(1)}% to win it all`,
@@ -99,7 +98,7 @@ function buildCards(teams: TeamSimResult[]): PredCard[] {
       borderColor: "rgba(255,190,60,0.20)",
       glowColor: "rgba(255,190,60,0.07)",
       teams: [shockTeam.team],
-      headline: `${display(shockTeam.team)} could crash out early`,
+      headline: `${displayName(shockTeam.team)} could crash out early`,
       bigStat: `${(shockTeam.group_exit * 100).toFixed(0)}%`,
       statLabel: "chance of a group-stage exit",
       sub: `Group ${shockTeam.group}  ·  only ${(reachProb(shockTeam, "qf") * 100).toFixed(0)}% to reach QF`,
@@ -117,10 +116,10 @@ function buildCards(teams: TeamSimResult[]): PredCard[] {
       borderColor: "rgba(255,255,255,0.10)",
       glowColor: "rgba(255,255,255,0.025)",
       teams: [f1.team, f2.team],
-      headline: `${display(f1.team)} vs ${display(f2.team)}`,
+      headline: `${displayName(f1.team)} vs ${displayName(f2.team)}`,
       bigStat: `${(f1.champion * 100).toFixed(1)}% — ${(f2.champion * 100).toFixed(1)}%`,
       statLabel: "to win the World Cup",
-      sub: `${display(f1.team)} ${(reachProb(f1, "final") * 100).toFixed(0)}% reach Final  ·  ${display(f2.team)} ${(reachProb(f2, "final") * 100).toFixed(0)}% reach Final`,
+      sub: `${displayName(f1.team)} ${(reachProb(f1, "final") * 100).toFixed(0)}% reach Final  ·  ${displayName(f2.team)} ${(reachProb(f2, "final") * 100).toFixed(0)}% reach Final`,
     });
   }
 

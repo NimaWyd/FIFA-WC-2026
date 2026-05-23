@@ -1,6 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import FlagIcon from "@/components/FlagIcon";
+import { displayName } from "@/lib/utils";
 
 export type Standing = {
   team: string;
@@ -123,7 +124,7 @@ export default function GroupStandings({ standings, groupId }: Props) {
                     i < 2 ? "text-white" : "text-slate-400"
                   }`}
                 >
-                  {s.team === "United States" ? "USA" : s.team}
+                  {displayName(s.team)}
                 </span>
                 <span className={`text-[9px] font-bold flex-shrink-0 ${zone.labelColor}`}>
                   {zone.label}
