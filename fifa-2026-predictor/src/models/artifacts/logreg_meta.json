@@ -31,11 +31,8 @@
     "elo_win_prob",
     "form_diff_home_away",
     "goal_balance_diff",
-    "rank_diff",
     "competition_weight",
-    "is_same_confederation",
     "match_weight",
-    "stage_importance",
     "home_form_w3",
     "away_form_w3",
     "home_form_w10",
@@ -73,12 +70,6 @@
     "elo_diff_effective",
     "neutral_x_elo_diff",
     "neutral_x_rank_diff",
-    "home_win_streak",
-    "away_win_streak",
-    "home_unbeaten_streak",
-    "away_unbeaten_streak",
-    "home_loss_streak",
-    "away_loss_streak",
     "tier_home_rate",
     "tier_draw_rate",
     "tier_away_rate",
@@ -100,7 +91,6 @@
     "away_home_form_w5",
     "away_away_form_w5",
     "home_venue_form_diff",
-    "away_venue_form_diff",
-    "confederation_strength_diff"
+    "away_venue_form_diff"
   ]
 }
