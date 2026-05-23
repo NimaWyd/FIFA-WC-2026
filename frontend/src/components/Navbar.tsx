@@ -29,7 +29,7 @@ export default function Navbar() {
           : "sticky top-0 z-50 border-b border-navy-700 bg-navy-900/95 backdrop-blur-sm"
       }
     >
-      <div className="max-w-7xl mx-auto px-6 md:px-14 flex items-center justify-between h-14">
+      <div className="w-full px-6 md:px-14 flex items-center justify-between h-14">
         {/* Logo */}
         <Link
           href="/"
@@ -42,7 +42,7 @@ export default function Navbar() {
               isHome ? "text-[#f0ece2]" : "text-white"
             }`}
           >
-            WC PREDICTOR 26
+            World Cup 2026
           </span>
         </Link>
 
