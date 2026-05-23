@@ -11,6 +11,17 @@ features:
   form_window: 5
   elo_k_factor: 25.0
   elo_home_advantage: 100.0
+  # Confederation opponent K-discount: winning against a weaker-confederation
+  # team earns less Elo. Effective discount = avg(home_disc, away_disc).
+  # Prevents AFC qualification dominance from inflating Elo disproportionately.
+  elo_opponent_conf_k_discount:
+    UEFA: 1.00
+    CONMEBOL: 1.00
+    CAF: 0.90
+    AFC: 0.85
+    CONCACAF: 0.80
+    OFC: 0.65
+    UNKNOWN: 0.90
   elo_home_advantage_by_confederation:
     UEFA: 80.0
     CONMEBOL: 110.0

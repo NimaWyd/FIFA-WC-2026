@@ -67,6 +67,9 @@ class TeamStateTracker:
             home_advantage=float(cfg["features"]["elo_home_advantage"]),
             home_advantage_by_confederation=cfg["features"].get("elo_home_advantage_by_confederation"),
         )
+        self._conf_k_discount: dict[str, float] | None = cfg["features"].get(
+            "elo_opponent_conf_k_discount"
+        )
         self._form_window = form_window
         self._recency_halflife = float(
             cfg["features"].get("recency_halflife_days", 180.0)
@@ -392,17 +395,25 @@ class TeamStateTracker:
         neutral: bool,
         date: pd.Timestamp,
         competition: str = "Unknown",
+        home_confederation: str | None = None,
+        away_confederation: str | None = None,
     ) -> None:
         """Advance state after a completed match result.
 
         *competition* drives the K-factor multiplier so World Cup matches
         move ratings more than friendlies.
+
+        *home_confederation* / *away_confederation* override the lookup from
+        team_identity when provided (used in tests with synthetic team names).
         """
         # Capture pre-match Elos before update (needed for opp_elo_pre in history)
         home_elo_pre = float(self._ratings[home_team])
         away_elo_pre = float(self._ratings[away_team])
 
-        # Competition-aware Elo update (normalise name before lookup)
+        h_conf = home_confederation or get_confederation(home_team)
+        a_conf = away_confederation or get_confederation(away_team)
+
+        # Competition-aware + confederation-discount Elo update
         comp_k = get_competition_k_multiplier(competition)
         home_new, away_new = update_ratings(
             home_rating=home_elo_pre,
@@ -412,7 +423,9 @@ class TeamStateTracker:
             neutral=neutral,
             cfg=self.elo_cfg,
             competition_k_multiplier=comp_k,
-            home_confederation=get_confederation(home_team),
+            home_confederation=h_conf,
+            away_confederation=a_conf,
+            conf_k_discount=self._conf_k_discount,
         )
         self._ratings[home_team] = home_new
         self._ratings[away_team] = away_new

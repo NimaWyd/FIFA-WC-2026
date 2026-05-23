@@ -64,11 +64,18 @@ def update_ratings(
     cfg: EloConfig,
     competition_k_multiplier: float = 1.0,
     home_confederation: str = "UNKNOWN",
+    away_confederation: str = "UNKNOWN",
+    conf_k_discount: "dict[str, float] | None" = None,
 ) -> tuple[float, float]:
     """Update two team ratings after a match.
 
     *competition_k_multiplier* scales the K-factor by competition importance:
     >1 for high-stakes tournaments, <1 for friendlies.
+
+    *conf_k_discount* maps confederation name → multiplier (0–1). The effective
+    discount is the average of both teams' values, so matches between two
+    weak-confederation teams earn less Elo than cross-confederation clashes.
+    Missing keys default to 1.0 (no discount).
     """
     if neutral:
         ha = 0.0
@@ -81,7 +88,15 @@ def update_ratings(
     exp_away = 1.0 - exp_home
     act_home, act_away = actual_score(home_goals, away_goals)
     mult = goal_margin_multiplier(home_goals, away_goals)
-    effective_k = cfg.k_factor * competition_k_multiplier
+
+    if conf_k_discount:
+        home_disc = conf_k_discount.get(home_confederation, 1.0)
+        away_disc = conf_k_discount.get(away_confederation, 1.0)
+        disc_avg = (home_disc + away_disc) / 2.0
+    else:
+        disc_avg = 1.0
+
+    effective_k = cfg.k_factor * competition_k_multiplier * disc_avg
 
     new_home = home_rating + effective_k * mult * (act_home - exp_home)
     new_away = away_rating + effective_k * mult * (act_away - exp_away)
