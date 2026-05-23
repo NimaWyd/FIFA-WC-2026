@@ -72,8 +72,8 @@ function buildCards(teams: TeamSimResult[]): PredCard[] {
     });
   }
 
-  /* 3 — Dark horse (outside top 8, highest SF reach odds) */
-  const darkHorse = [...sorted.slice(8)].sort((a, b) => reachProb(b, "sf") - reachProb(a, "sf"))[0];
+  /* 3 — Dark horse (hardcoded to Japan — consensus #1 dark horse pick) */
+  const darkHorse = byTeam["Japan"];
   if (darkHorse) {
     cards.push({
       id: "dark_horse",
