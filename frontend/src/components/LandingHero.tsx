@@ -49,7 +49,7 @@ export default function LandingHero() {
           </h1>
 
           {/* Mobile trophy — visible only below md breakpoint */}
-          <div className="md:hidden relative h-[180px] mt-4 -mx-2">
+          <div className="md:hidden relative h-[280px] mt-4 -mx-2 overflow-hidden">
             <div className="animate-float w-full h-full">
               <TrophyEmbed className="w-full h-full" />
             </div>

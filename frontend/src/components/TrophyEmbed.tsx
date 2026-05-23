@@ -9,8 +9,14 @@ function Trophy() {
   const { scene } = useGLTF("/trophy.glb");
   const ref = useRef<THREE.Group>(null);
 
+  // Clone so each Canvas instance owns its own copy of the scene graph.
+  // useGLTF caches by URL — sharing the same object across two <Canvas> elements
+  // causes Three.js to move the object to the most-recently-committing parent,
+  // leaving the other canvas with scrambled transforms.
+  const clonedScene = useMemo(() => scene.clone(true), [scene]);
+
   const [scale, position] = useMemo(() => {
-    const box = new THREE.Box3().setFromObject(scene);
+    const box = new THREE.Box3().setFromObject(clonedScene);
     const size = new THREE.Vector3();
     const center = new THREE.Vector3();
     box.getSize(size);
@@ -19,13 +25,13 @@ function Trophy() {
     const s = 3 / maxDim;
     const p: [number, number, number] = [-center.x * s, -center.y * s, -center.z * s];
     return [s, p];
-  }, [scene]);
+  }, [clonedScene]);
 
   useFrame((_, delta) => {
     if (ref.current) ref.current.rotation.y += delta * 0.25;
   });
 
-  return <primitive ref={ref} object={scene} scale={scale} position={position} />;
+  return <primitive ref={ref} object={clonedScene} scale={scale} position={position} />;
 }
 
 useGLTF.preload("/trophy.glb");
