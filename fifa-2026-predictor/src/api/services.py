@@ -145,12 +145,71 @@ def simulate(n: int = 1000) -> dict:
     return _simulation_cache
 
 
+def build_group_standings_from_predict(
+    groups: list,
+    predict_fn: "callable",
+    match_date: str = "2026-06-20",
+) -> "tuple[dict[str, list[str]], dict[str, float]]":
+    """Compute WC group standings using individual match predictions.
+
+    For each group match calls predict_fn(home, away, ...) and accumulates
+    expected points (3*P(win) + 1*P(draw)) per team, symmetrised for neutral
+    ground.  Returns (standings_dict, expected_pts_dict).
+    """
+    from src.data.team_identity import get_fifa_rank
+    all_expected_pts: dict[str, float] = {}
+    group_standings: dict[str, list[str]] = {}
+
+    for group in groups:
+        exp_pts: dict[str, float] = {t: 0.0 for t in group["teams"]}
+        for match in group["matches"]:
+            h, a = match["home"], match["away"]
+            # Call predict in both orderings and average (neutral symmetry)
+            r_ha = predict_fn(
+                home_team=h, away_team=a,
+                match_date=match_date,
+                competition="FIFA World Cup",
+                neutral=True,
+                home_confederation=None, away_confederation=None,
+                home_fifa_rank=None, away_fifa_rank=None,
+                tournament_stage="Group Stage",
+            )
+            r_ah = predict_fn(
+                home_team=a, away_team=h,
+                match_date=match_date,
+                competition="FIFA World Cup",
+                neutral=True,
+                home_confederation=None, away_confederation=None,
+                home_fifa_rank=None, away_fifa_rank=None,
+                tournament_stage="Group Stage",
+            )
+            p_h = r_ha["probabilities"]
+            p_ah = r_ah["probabilities"]
+            # Symmetrised neutral probabilities
+            ph_wins = 0.5 * (p_h["home_win"] + p_ah["away_win"])
+            p_draw  = 0.5 * (p_h["draw"]     + p_ah["draw"])
+            pa_wins = 0.5 * (p_h["away_win"] + p_ah["home_win"])
+            exp_pts[h] += ph_wins * 3 + p_draw
+            exp_pts[a] += pa_wins * 3 + p_draw
+
+        all_expected_pts.update(exp_pts)
+        standings = sorted(
+            group["teams"],
+            key=lambda t: (exp_pts[t], -(get_fifa_rank(t) or 999)),
+            reverse=True,
+        )
+        group_standings[group["id"]] = standings
+
+    return group_standings, all_expected_pts
+
+
 def predict_bracket() -> dict:
     """Predict WC2026 bracket using Monte Carlo modal winners (cached with 1-hour TTL).
 
     Runs (or reuses) the Monte Carlo simulation to get modal per-slot winners,
     then builds the bracket display from those — guaranteeing the bracket champion
-    matches the simulation's most-likely champion.
+    matches the simulation's most-likely champion.  Group standings are derived
+    from individual predict() calls so they are consistent with match predictions.
     """
     import time
     global _bracket_cache, _bracket_cache_ts
@@ -174,9 +233,18 @@ def predict_bracket() -> dict:
         precompute_all_probabilities,
         predict_bracket_modal as _predict_bracket_modal,
     )
+    from src.simulation.wc2026_bracket import WC2026_GROUPS
     tracker = build_tournament_states(history_df, cfg)
     prob_cache = precompute_all_probabilities(tracker, model, cfg, squad_ratings=_get_squad_ratings())
-    _bracket_cache = _predict_bracket_modal(modal_match_winners, prob_cache, _match_winner_counts_cache)
+
+    # Group standings from individual predict() so they match displayed match odds
+    group_standings, all_expected_pts = build_group_standings_from_predict(
+        WC2026_GROUPS, predict, match_date="2026-06-20"
+    )
+    _bracket_cache = _predict_bracket_modal(
+        modal_match_winners, prob_cache, _match_winner_counts_cache,
+        group_standings=group_standings, all_expected_pts=all_expected_pts,
+    )
     _bracket_cache_ts = time.time()
     return _bracket_cache
 

@@ -568,6 +568,8 @@ def predict_bracket_modal(
     modal_match_winners: dict[int, str],
     prob_cache: ProbCache,
     match_winner_counts: "dict[int, dict[str, int]] | None" = None,
+    group_standings: "dict[str, list[str]] | None" = None,
+    all_expected_pts: "dict[str, float] | None" = None,
 ) -> dict:
     """Build the WC2026 bracket using modal (most-likely) winners from Monte Carlo simulation.
 
@@ -577,24 +579,28 @@ def predict_bracket_modal(
 
     When match_winner_counts is provided, the Final (slot 103) and 3rd Place (slot 104) match
     cards display MC-frequency-based probabilities so the champion always appears as the favorite.
+
+    group_standings / all_expected_pts: optional overrides so callers can supply group
+    standings derived from individual predict() calls instead of the prob_cache.
     """
-    # --- Group stage expected standings (same as predict_bracket) ---
-    all_expected_pts: dict[str, float] = {}
-    group_standings: dict[str, list[str]] = {}
-    for group in WC2026_GROUPS:
-        exp_pts = {t: 0.0 for t in group["teams"]}
-        for match in group["matches"]:
-            h, a = match["home"], match["away"]
-            p_h, p_d, p_a = _neutral_probs(h, a, prob_cache)
-            exp_pts[h] += p_h * 3 + p_d
-            exp_pts[a] += p_a * 3 + p_d
-        all_expected_pts.update(exp_pts)
-        standings = sorted(
-            group["teams"],
-            key=lambda t: (exp_pts[t], -(get_fifa_rank(t) or 999)),
-            reverse=True,
-        )
-        group_standings[group["id"]] = standings
+    # --- Group stage expected standings ---
+    if group_standings is None or all_expected_pts is None:
+        all_expected_pts = {}
+        group_standings = {}
+        for group in WC2026_GROUPS:
+            exp_pts = {t: 0.0 for t in group["teams"]}
+            for match in group["matches"]:
+                h, a = match["home"], match["away"]
+                p_h, p_d, p_a = _neutral_probs(h, a, prob_cache)
+                exp_pts[h] += p_h * 3 + p_d
+                exp_pts[a] += p_a * 3 + p_d
+            all_expected_pts.update(exp_pts)
+            standings = sorted(
+                group["teams"],
+                key=lambda t: (exp_pts[t], -(get_fifa_rank(t) or 999)),
+                reverse=True,
+            )
+            group_standings[group["id"]] = standings
 
     winners    = {gid: teams[0] for gid, teams in group_standings.items()}
     runners_up = {gid: teams[1] for gid, teams in group_standings.items()}
