@@ -79,3 +79,16 @@ evaluation:
   n_backtest_windows: 5
   min_train_frac: 0.60        # Minimum fraction of data used as initial training window
   reports_dir: "reports"      # All Phase 2 outputs land here
+
+simulation:
+  # Blend each pre-computed match probability toward the uniform [1/3, 1/3, 1/3]
+  # distribution before running Monte Carlo.  Adds tournament variance so that
+  # compounding 7-game paths do not over-concentrate championship odds on the
+  # highest-Elo teams.  0.0 = no compression, 0.15 = 15% toward uniform.
+  tournament_variance_factor: 0.12
+  # Known penalty-shootout results not tracked in the source dataset.
+  # Each entry adjusts Elo by +K*0.5 for the winner and -K*0.5 for the loser.
+  penalty_elo_corrections:
+    - winner: "Portugal"
+      loser: "Spain"
+      note: "UEFA Nations League 2024-25 final, 08 Jun 2025 (2-2 AET, Portugal win on pens)"

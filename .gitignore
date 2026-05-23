@@ -23,6 +23,10 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
+# Editor settings
+.vscode/
+.idea/
+
 # Generated data files — reproducible from code, not committed
 fifa-2026-predictor/data/processed/*.csv
 # Exception: these files must be committed so all users get identical inference features
@@ -36,6 +40,8 @@ fifa-2026-predictor/data/raw/open_data_prepared.csv
 
 # Model artifacts — committed so all users get identical predictions
 # fifa-2026-predictor/src/models/artifacts/*.joblib
+# Temporary backup artifacts (created during patching, not needed in repo)
+fifa-2026-predictor/src/models/artifacts/*_backup.joblib
 
 *.md
 !README.md

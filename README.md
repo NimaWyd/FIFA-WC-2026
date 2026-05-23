@@ -318,10 +318,20 @@ This ensures xG always points in the same direction as the win probability — t
 The Monte Carlo engine in `src/simulation/tournament.py` runs the full 48-team tournament from group stage to the final:
 
 ```
-1. Precompute all 48×47 match probabilities in a single batched model call
+1. Build TeamStateTracker from full match history up to tournament date
+   ├── Apply Elo corrections for known penalty-shootout results not
+   │   tracked in raw data (e.g. Portugal beat Spain on pens in the
+   │   2024-25 UEFA Nations League final — recorded as a draw in the
+   │   source CSV, so Portugal gets the missing +K×0.5 Elo credit)
+
+2. Precompute all 48×47 match probabilities in a single batched model call
+   ├── Apply tournament variance compression: blend each probability
+   │   12% toward the uniform [⅓, ⅓, ⅓] distribution
+   │   (reduces over-concentration of championship odds on highest-Elo
+   │   teams across 7 compounding rounds)
    → cached as {(home, away): {home_win, draw, away_win}}
 
-2. For each of N simulations:
+3. For each of N simulations:
    ├── Group stage: simulate all 48 group matches
    │   ├── Assign points, apply 3rd-place tiebreaker
    │   │   (points → goal difference → goals scored → FIFA rank)
@@ -333,7 +343,7 @@ The Monte Carlo engine in `src/simulation/tournament.py` runs the full 48-team t
        └── Home/away coin-flipped each run (cancels home-advantage
            artifact on neutral World Cup venues)
 
-3. Aggregate: reach_prob[team][stage] = n_times_reached / N
+4. Aggregate: reach_prob[team][stage] = n_times_reached / N
 ```
 
 **Outputs per team:**

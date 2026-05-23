@@ -36,6 +36,16 @@ def build_tournament_states(history_df: pd.DataFrame, cfg: dict) -> TeamStateTra
     history = history[history["date"] < _TOURNAMENT_DATE].sort_values("date")
     tracker = TeamStateTracker(cfg)
     tracker.replay_history(history)
+
+    # Apply Elo corrections for penalty-shootout results not tracked in raw data.
+    # Penalty wins are stored as draws in results.csv; winner deserves +K*0.5 instead.
+    k = float(cfg.get("features", {}).get("elo_k_factor", 25.0))
+    for correction in cfg.get("simulation", {}).get("penalty_elo_corrections", []):
+        winner = correction["winner"]
+        loser = correction["loser"]
+        tracker._ratings[winner] = tracker._ratings[winner] + k * 0.5
+        tracker._ratings[loser] = tracker._ratings[loser] - k * 0.5
+
     return tracker
 
 
@@ -116,14 +126,20 @@ def precompute_all_probabilities(
     clf = model.named_steps["classifier"]
     classes = [int(c) for c in clf.classes_]
 
+    variance_factor = float(cfg.get("simulation", {}).get("tournament_variance_factor", 0.0))
+    uniform = 1.0 / 3.0
+
     cache: ProbCache = {}
     for i, (home, away) in enumerate(pairs):
         prob_by_class = {c: float(probs_matrix[i, j]) for j, c in enumerate(classes)}
-        cache[(home, away)] = {
-            "home_win": prob_by_class.get(TARGET_MAP["H"], 0.0),
-            "draw":     prob_by_class.get(TARGET_MAP["D"], 0.0),
-            "away_win": prob_by_class.get(TARGET_MAP["A"], 0.0),
-        }
+        hw = prob_by_class.get(TARGET_MAP["H"], 0.0)
+        d  = prob_by_class.get(TARGET_MAP["D"], 0.0)
+        aw = prob_by_class.get(TARGET_MAP["A"], 0.0)
+        if variance_factor > 0.0:
+            hw = (1 - variance_factor) * hw + variance_factor * uniform
+            d  = (1 - variance_factor) * d  + variance_factor * uniform
+            aw = (1 - variance_factor) * aw + variance_factor * uniform
+        cache[(home, away)] = {"home_win": hw, "draw": d, "away_win": aw}
 
     return cache
 
