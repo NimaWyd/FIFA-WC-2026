@@ -430,6 +430,25 @@ def predict(
             "away_win": 0.5 * (probabilities["away_win"] + prob_swapped.get(TARGET_MAP["H"], 0.0)),
         }
 
+    # Issue #162: blend group-stage WC predictions toward uniform to match the
+    # tournament_variance_factor used internally by the Monte Carlo simulation.
+    # Only applied when: neutral ground + FIFA World Cup competition + Group Stage.
+    raw_probabilities = dict(probabilities)
+    _is_wc_group = (
+        is_neutral
+        and "FIFA World Cup" in comp
+        and "Qualification" not in comp
+        and stage == "Group Stage"
+    )
+    if _is_wc_group:
+        vf = float(cfg.get("simulation", {}).get("tournament_variance_factor", 0.0))
+        if vf > 0.0:
+            uniform = 1.0 / 3.0
+            probabilities = {
+                k: (1 - vf) * v + vf * uniform
+                for k, v in probabilities.items()
+            }
+
     # Scoreline distribution (optional — no error if params file absent)
     top_scorelines: list[dict] = []
     expected_goals: dict[str, float] = {"home": 0.0, "away": 0.0}
@@ -493,6 +512,8 @@ def predict(
             "competition_used": comp,
             "neutral": is_neutral,
             "neutral_symmetry_applied": is_neutral,
+            "tournament_variance_applied": _is_wc_group,
+            "raw_probabilities": raw_probabilities,
             "home_confederation": home_conf,
             "away_confederation": away_conf,
             "home_fifa_rank": home_rank,
