@@ -62,3 +62,4 @@ players_chunk_*.json
 # Generated evaluation reports (reproducible via run_accuracy_improvements / run_phase2)
 fifa-2026-predictor/reports/
 fifa-2026-predictor/feature_importance_output.json
+fifa-2026-predictor/data/processed/evaluation/

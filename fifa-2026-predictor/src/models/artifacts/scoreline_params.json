@@ -1,7 +1,7 @@
 {
-  "base_home_lambda": 1.675848207107252,
-  "base_away_lambda": 1.2840971217237498,
-  "home_advantage_factor": 1.2661493311734657,
-  "mean_attack": 1.4708416412070537,
-  "mean_defense": 1.4877220346250737
+  "base_home_lambda": 1.671673784628475,
+  "base_away_lambda": 1.281265851782763,
+  "home_advantage_factor": 1.2682453148201382,
+  "mean_attack": 1.4669325675388212,
+  "mean_defense": 1.4843380295518138
 }
