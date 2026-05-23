@@ -23,7 +23,7 @@ def load_squad_ratings(path: Path = DEFAULT_PATH) -> dict[str, dict[str, float]]
     """
     if not path.exists():
         return {}
-    df = pd.read_csv(path)
+    df = pd.read_csv(path, encoding="utf-8")
     missing = _REQUIRED_COLS - set(df.columns)
     if missing:
         return {}

@@ -37,6 +37,7 @@ fifa-2026-predictor/data/processed/*.csv
 fifa-2026-predictor/data/processed/*.png
 fifa-2026-predictor/data/processed/*.json
 fifa-2026-predictor/data/raw/open_data_prepared.csv
+fifa-2026-predictor/data/raw/fc26_players.csv
 
 # Model artifacts — committed so all users get identical predictions
 # fifa-2026-predictor/src/models/artifacts/*.joblib

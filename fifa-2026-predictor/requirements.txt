@@ -13,3 +13,4 @@ shap
 fastapi
 uvicorn[standard]
 httpx
+rapidfuzz>=3.0
