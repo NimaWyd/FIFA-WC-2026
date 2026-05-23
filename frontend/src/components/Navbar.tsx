@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { InformationCircleIcon } from "@heroicons/react/24/solid";
+import { InformationCircleIcon, TrophyIcon } from "@heroicons/react/24/solid";
 
 const NAV_LINKS = [
   { label: "Live",     href: "/live" },
@@ -36,7 +36,7 @@ export default function Navbar() {
           className="flex items-center gap-2.5 flex-shrink-0 group"
           aria-label="World Cup 26 home"
         >
-          <div className="w-[22px] h-[22px] bg-pitch-400 rounded-[3px] rotate-45 group-hover:bg-pitch-300 transition-colors" />
+          <TrophyIcon className="w-5 h-5 text-pitch-400 group-hover:text-pitch-300 transition-colors flex-shrink-0" />
           <span
             className={`font-anton text-[18px] tracking-[0.06em] ${
               isHome ? "text-[#f0ece2]" : "text-white"
