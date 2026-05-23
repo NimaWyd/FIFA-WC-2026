@@ -78,14 +78,11 @@ def build_preprocessor(df: pd.DataFrame) -> tuple[ColumnTransformer, list[str]]:
         "elo_win_prob",
         "form_diff_home_away",
         "goal_balance_diff",
-        "rank_diff",
         "competition_weight",
-        "is_same_confederation",
         "match_weight",
     ]
     # Phase 4 extended features (included when present)
     _phase4_numeric = [
-        "stage_importance",
         "home_form_w3",
         "away_form_w3",
         "home_form_w10",
@@ -199,11 +196,11 @@ def build_preprocessor(df: pd.DataFrame) -> tuple[ColumnTransformer, list[str]]:
     present_issue84 = [c for c in _issue84_numeric if c in df.columns]
     present_issue85 = [c for c in _issue85_numeric if c in df.columns]
     present_issue119 = [c for c in _issue119_numeric if c in df.columns]
+    # issue58 (streak) and issue119 (confederation_strength_diff) excluded: near-zero SHAP
     numeric_features = (_base_numeric + present_phase4 + present_phase7 + present_phase8
-                        + present_issue57 + present_issue58 + present_issue59
+                        + present_issue57 + present_issue59
                         + present_issue78 + present_issue87
-                        + present_issue88 + present_issue84 + present_issue85
-                        + present_issue119)
+                        + present_issue88 + present_issue84 + present_issue85)
     used_features = categorical_features + numeric_features
 
     missing = sorted(set(used_features) - set(df.columns))
