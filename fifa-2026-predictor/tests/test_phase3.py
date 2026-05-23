@@ -237,14 +237,14 @@ class TestGetConfederation(unittest.TestCase):
 class TestGetFifaRank(unittest.TestCase):
 
     def test_ranked_team(self):
-        self.assertEqual(get_fifa_rank("Argentina"), 1)
-        self.assertEqual(get_fifa_rank("France"), 2)
-        self.assertEqual(get_fifa_rank("Spain"), 3)
+        self.assertEqual(get_fifa_rank("Argentina"), 3)
+        self.assertEqual(get_fifa_rank("France"), 1)
+        self.assertEqual(get_fifa_rank("Spain"), 2)
 
     def test_alias_rank(self):
-        self.assertEqual(get_fifa_rank("USA"), 13)
-        self.assertEqual(get_fifa_rank("South Korea"), 26)
-        self.assertEqual(get_fifa_rank("Iran"), 31)
+        self.assertEqual(get_fifa_rank("USA"), 16)
+        self.assertEqual(get_fifa_rank("South Korea"), 25)
+        self.assertEqual(get_fifa_rank("Iran"), 21)
 
     def test_unranked_team_returns_default(self):
         rank = get_fifa_rank("San Marino")

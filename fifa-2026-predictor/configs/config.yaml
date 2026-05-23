@@ -9,7 +9,7 @@ paths:
 
 features:
   form_window: 5
-  elo_k_factor: 40.0
+  elo_k_factor: 25.0
   elo_home_advantage: 100.0
   elo_home_advantage_by_confederation:
     UEFA: 80.0

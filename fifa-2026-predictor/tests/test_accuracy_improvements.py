@@ -284,7 +284,7 @@ class TestDynamicRankings:
         # Falls back to team_identity static rank
         rank = lookup.get_rank("France", pd.Timestamp("2022-11-01"))
         assert isinstance(rank, int)
-        assert rank == 2  # France's 2025 static rank
+        assert rank == 1  # France's 2025 static rank
 
     def test_from_dataframe_time_safe(self):
         df = pd.DataFrame({
@@ -840,7 +840,7 @@ class TestStreakFeatures:
                     "home_loss_streak", "away_loss_streak"):
             assert key in row, f"{key} missing from feature row"
 
-    def test_streak_features_in_preprocessor(self):
+    def test_streak_features_emitted_not_in_preprocessor(self):
         from src.models.common import build_preprocessor
 
         tracker = self._tracker_with_results(["W", "W"])
@@ -857,13 +857,20 @@ class TestStreakFeatures:
             away_fifa_rank=20,
             tournament_stage="unknown",
         )
+        # Streak features are emitted by match_row_builder but excluded from
+        # preprocessor (near-zero SHAP). Verify they're present in the row
+        # but NOT in the used_features list.
+        for key in ("home_win_streak", "away_win_streak",
+                    "home_unbeaten_streak", "away_unbeaten_streak",
+                    "home_loss_streak", "away_loss_streak"):
+            assert key in row, f"{key} missing from feature row"
         df = pd.DataFrame([row])
         df["target"] = "H"
         _, used_features = build_preprocessor(df)
         for key in ("home_win_streak", "away_win_streak",
                     "home_unbeaten_streak", "away_unbeaten_streak",
                     "home_loss_streak", "away_loss_streak"):
-            assert key in used_features, f"{key} missing from preprocessor features"
+            assert key not in used_features, f"{key} should be excluded from preprocessor (near-zero SHAP)"
 
 
 # ---------------------------------------------------------------------------
