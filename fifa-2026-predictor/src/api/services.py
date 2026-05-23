@@ -10,6 +10,8 @@ from __future__ import annotations
 
 import json
 import logging
+import threading
+import time as _time_module
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Optional
@@ -55,6 +57,86 @@ _squad_ratings: dict = {}
 _squad_ratings_loaded: bool = False
 
 _CACHE_TTL_SECONDS: float = 3600.0
+_CACHE_REFRESH_THRESHOLD: float = 0.80  # start refresh at 80% of TTL (48 min)
+_refresh_in_progress: bool = False
+_refresh_lock = threading.Lock()
+
+
+def _maybe_trigger_background_refresh(cache_ts: float) -> None:
+    """Spawn a background refresh thread if the cache is near expiry and none is running."""
+    global _refresh_in_progress
+    age = _time_module.time() - cache_ts
+    if age <= _CACHE_TTL_SECONDS * _CACHE_REFRESH_THRESHOLD:
+        return
+    with _refresh_lock:
+        if _refresh_in_progress:
+            return
+        _refresh_in_progress = True
+    t = threading.Thread(target=_do_background_refresh, daemon=True, name="cache-refresh")
+    t.start()
+
+
+def _build_simulation(n: int = 1000) -> dict:
+    """Build simulation result and update globals. Always rebuilds, ignores TTL."""
+    global _simulation_cache, _simulation_cache_ts, _match_winner_counts_cache
+    model = _get_model()
+    if model is None:
+        raise RuntimeError("No trained model artifact found.")
+    history_df = _get_history()
+    if history_df is None:
+        raise RuntimeError("No match history file found.")
+    cfg = _get_cfg()
+    from src.simulation.tournament import build_tournament_states, run_simulation
+    tracker = build_tournament_states(history_df, cfg)
+    raw = run_simulation(tracker, model, cfg, n=n, squad_ratings=_get_squad_ratings())
+    _match_winner_counts_cache = raw.pop("match_winner_counts", None)
+    _simulation_cache = raw
+    _simulation_cache_ts = _time_module.time()
+    return _simulation_cache
+
+
+def _build_bracket() -> dict:
+    """Build bracket result and update globals. Always rebuilds, ignores TTL."""
+    global _bracket_cache, _bracket_cache_ts
+    model = _get_model()
+    if model is None:
+        raise RuntimeError("No trained model artifact found.")
+    history_df = _get_history()
+    if history_df is None:
+        raise RuntimeError("No match history file found.")
+    cfg = _get_cfg()
+    from src.simulation.tournament import (
+        build_tournament_states,
+        precompute_all_probabilities,
+        predict_bracket_modal as _predict_bracket_modal,
+    )
+    from src.simulation.wc2026_bracket import WC2026_GROUPS
+    tracker = build_tournament_states(history_df, cfg)
+    prob_cache = precompute_all_probabilities(tracker, model, cfg, squad_ratings=_get_squad_ratings())
+    modal_match_winners: dict[int, str] = (_simulation_cache or {}).get("modal_match_winners", {})
+    group_standings, all_expected_pts = build_group_standings_from_predict(
+        WC2026_GROUPS, predict, match_date="2026-06-20"
+    )
+    _bracket_cache = _predict_bracket_modal(
+        modal_match_winners, prob_cache, _match_winner_counts_cache,
+        group_standings=group_standings, all_expected_pts=all_expected_pts,
+    )
+    _bracket_cache_ts = _time_module.time()
+    return _bracket_cache
+
+
+def _do_background_refresh() -> None:
+    """Rebuild simulation then bracket caches in background. Always clears the in-progress flag."""
+    global _refresh_in_progress
+    try:
+        _build_simulation()
+        _build_bracket()
+        log.info("Background cache refresh complete.")
+    except Exception as exc:
+        log.warning("Background cache refresh failed: %s", exc)
+    finally:
+        with _refresh_lock:
+            _refresh_in_progress = False
 
 
 def _get_squad_ratings() -> dict:
@@ -67,7 +149,9 @@ def _get_squad_ratings() -> dict:
 
 def invalidate_data_caches() -> None:
     """Reset history and simulation caches so the next request reloads fresh data."""
-    global _history_df, _simulation_cache, _simulation_cache_ts, _bracket_cache, _bracket_cache_ts, _squad_ratings, _squad_ratings_loaded, _match_winner_counts_cache
+    global _history_df, _simulation_cache, _simulation_cache_ts, _bracket_cache, \
+        _bracket_cache_ts, _squad_ratings, _squad_ratings_loaded, _match_winner_counts_cache, \
+        _refresh_in_progress
     _history_df = None
     _simulation_cache = None
     _simulation_cache_ts = 0.0
@@ -76,6 +160,7 @@ def invalidate_data_caches() -> None:
     _match_winner_counts_cache = None
     _squad_ratings = {}
     _squad_ratings_loaded = False
+    _refresh_in_progress = False
 
 
 def _get_cfg() -> dict:
@@ -121,28 +206,11 @@ def _get_tournament_model() -> Any:
 
 
 def simulate(n: int = 1000) -> dict:
-    """Run tournament simulation (cached with 1-hour TTL)."""
-    import time
-    global _simulation_cache, _simulation_cache_ts
-    if _simulation_cache is not None and (time.time() - _simulation_cache_ts) < _CACHE_TTL_SECONDS:
+    """Run tournament simulation (cached with 1-hour TTL, stale-while-revalidate)."""
+    if _simulation_cache is not None and (_time_module.time() - _simulation_cache_ts) < _CACHE_TTL_SECONDS:
+        _maybe_trigger_background_refresh(_simulation_cache_ts)
         return _simulation_cache
-
-    model = _get_model()
-    if model is None:
-        raise RuntimeError("No trained model artifact found.")
-    history_df = _get_history()
-    if history_df is None:
-        raise RuntimeError("No match history file found.")
-    cfg = _get_cfg()
-
-    from src.simulation.tournament import build_tournament_states, run_simulation
-    tracker = build_tournament_states(history_df, cfg)
-    global _match_winner_counts_cache
-    raw = run_simulation(tracker, model, cfg, n=n, squad_ratings=_get_squad_ratings())
-    _match_winner_counts_cache = raw.pop("match_winner_counts", None)
-    _simulation_cache = raw
-    _simulation_cache_ts = time.time()
-    return _simulation_cache
+    return _build_simulation(n=n)
 
 
 def build_group_standings_from_predict(
@@ -204,49 +272,18 @@ def build_group_standings_from_predict(
 
 
 def predict_bracket() -> dict:
-    """Predict WC2026 bracket using Monte Carlo modal winners (cached with 1-hour TTL).
+    """Predict WC2026 bracket (cached with 1-hour TTL, stale-while-revalidate).
 
-    Runs (or reuses) the Monte Carlo simulation to get modal per-slot winners,
-    then builds the bracket display from those — guaranteeing the bracket champion
-    matches the simulation's most-likely champion.  Group standings are derived
-    from individual predict() calls so they are consistent with match predictions.
+    Group standings are derived from individual predict() calls so they are
+    consistent with displayed match predictions.
     """
-    import time
-    global _bracket_cache, _bracket_cache_ts
-    if _bracket_cache is not None and (time.time() - _bracket_cache_ts) < _CACHE_TTL_SECONDS:
+    if _bracket_cache is not None and (_time_module.time() - _bracket_cache_ts) < _CACHE_TTL_SECONDS:
+        _maybe_trigger_background_refresh(_bracket_cache_ts)
         return _bracket_cache
 
-    # Reuse cached simulation if available; run fresh if not
-    sim_result = simulate()
-    modal_match_winners: dict[int, str] = sim_result.get("modal_match_winners", {})
-
-    model = _get_model()
-    if model is None:
-        raise RuntimeError("No trained model artifact found.")
-    history_df = _get_history()
-    if history_df is None:
-        raise RuntimeError("No match history file found.")
-    cfg = _get_cfg()
-
-    from src.simulation.tournament import (
-        build_tournament_states,
-        precompute_all_probabilities,
-        predict_bracket_modal as _predict_bracket_modal,
-    )
-    from src.simulation.wc2026_bracket import WC2026_GROUPS
-    tracker = build_tournament_states(history_df, cfg)
-    prob_cache = precompute_all_probabilities(tracker, model, cfg, squad_ratings=_get_squad_ratings())
-
-    # Group standings from individual predict() so they match displayed match odds
-    group_standings, all_expected_pts = build_group_standings_from_predict(
-        WC2026_GROUPS, predict, match_date="2026-06-20"
-    )
-    _bracket_cache = _predict_bracket_modal(
-        modal_match_winners, prob_cache, _match_winner_counts_cache,
-        group_standings=group_standings, all_expected_pts=all_expected_pts,
-    )
-    _bracket_cache_ts = time.time()
-    return _bracket_cache
+    # Ensure simulation is built first (bracket depends on modal_match_winners)
+    simulate()
+    return _build_bracket()
 
 
 def _select_model(base_model: Any, tournament_model: Any, competition_weight: float, min_weight: int) -> Any:
