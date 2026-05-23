@@ -2,6 +2,8 @@
 
 A full-stack machine learning platform that predicts match outcomes, simulates the entire 2026 World Cup bracket via Monte Carlo methods, and visualises team rosters for all 48 competing nations.
 
+![Hero](https://d8j0ntlcm91z4.cloudfront.net/user_3E7kBEgts3CHO0FfBqJiEcXwUVy/hf_20260523_115648_d93da90d-22bc-4498-bd2e-73668809ab12.png)
+
 ![Python](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white)
 ![Next.js](https://img.shields.io/badge/Next.js-14-black?logo=next.js)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi&logoColor=white)
