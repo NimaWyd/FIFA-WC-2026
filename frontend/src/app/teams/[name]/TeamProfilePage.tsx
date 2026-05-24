@@ -19,6 +19,21 @@ import FlagIcon from "@/components/FlagIcon";
 import type { TeamInfo } from "@/lib/types";
 import { displayName } from "@/lib/utils";
 import countryPaths from "@/lib/countryPaths.json";
+const TEAM_CODE: Record<string, string> = {
+  "United States": "USA", "Canada": "CAN", "Mexico": "MEX",
+  "Germany": "GER", "France": "FRA", "Spain": "ESP", "England": "ENG",
+  "Scotland": "SCO", "Portugal": "POR", "Netherlands": "NED", "Belgium": "BEL",
+  "Bosnia and Herzegovina": "BIH", "Croatia": "CRO", "Czechia": "CZE",
+  "Switzerland": "SUI", "Austria": "AUT", "Norway": "NOR", "Sweden": "SWE",
+  "Turkey": "TUR", "Argentina": "ARG", "Brazil": "BRA", "Colombia": "COL",
+  "Uruguay": "URU", "Ecuador": "ECU", "Paraguay": "PAR", "Panama": "PAN",
+  "Curaçao": "CUW", "Haiti": "HAI", "Morocco": "MAR", "Senegal": "SEN",
+  "Egypt": "EGY", "Ghana": "GHA", "Côte d'Ivoire": "CIV", "South Africa": "RSA",
+  "DR Congo": "COD", "Tunisia": "TUN", "Algeria": "ALG", "Cape Verde Islands": "CPV",
+  "Japan": "JPN", "Korea Republic": "KOR", "IR Iran": "IRN", "Australia": "AUS",
+  "Saudi Arabia": "KSA", "Iraq": "IRQ", "Uzbekistan": "UZB", "Jordan": "JOR",
+  "Qatar": "QAT", "New Zealand": "NZL",
+};
 
 interface Props {
   name: string;
@@ -93,6 +108,7 @@ export default function TeamProfilePage({ name }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [rankReady, setRankReady] = useState(false);
 
+  const teamCode = TEAM_CODE[name] ?? null;
   const countryPath = (countryPaths as Record<string, { d: string; viewBox: string }>)[name] ?? null;
 
   useEffect(() => {
@@ -193,31 +209,46 @@ export default function TeamProfilePage({ name }: Props) {
                   boxShadow: `0 0 50px rgba(${conf.glowRgb}, 0.14), 0 0 100px rgba(${conf.glowRgb}, 0.06)`,
                 }}
               >
-                {/* ── Country silhouette background ── */}
-                {countryPath && (
+                {/* ── Geo silhouette + country code watermark ── */}
+                {(teamCode || countryPath) && (
                   <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                    <svg
-                      viewBox={countryPath.viewBox}
-                      aria-hidden
-                      style={{
-                        position: "absolute",
-                        right: "-8%",
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                        height: "200%",
-                        width: "auto",
-                        fill: `rgba(${conf.glowRgb}, 1)`,
-                        opacity: 0.55,
-                      }}
-                    >
-                      <path d={countryPath.d} />
-                    </svg>
-                    {/* Gradient: text area solid, right shows silhouette */}
+                    {/* Layer 1: country map silhouette — center-right zone */}
+                    {countryPath && (
+                      <svg
+                        aria-hidden
+                        viewBox={countryPath.viewBox}
+                        className="absolute top-1/2 -translate-y-1/2 h-[115%] w-auto"
+                        style={{ right: "26%", opacity: 0.20 }}
+                        preserveAspectRatio="xMidYMid meet"
+                      >
+                        <path d={countryPath.d} fill={`rgba(${conf.glowRgb}, 1)`} />
+                      </svg>
+                    )}
+                    {/* Layer 2: country code text — far-right edge */}
+                    {teamCode && (
+                      <div className="absolute top-1/2 -translate-y-1/2 right-5 flex items-center">
+                        <span
+                          aria-hidden
+                          className="font-anton select-none leading-none tracking-tight"
+                          style={{
+                            fontSize: "8.5rem",
+                            color: `rgba(${conf.glowRgb}, 1)`,
+                            opacity: 0.28,
+                            writingMode: "vertical-rl",
+                            textOrientation: "mixed",
+                            transform: "rotate(180deg)",
+                          }}
+                        >
+                          {teamCode}
+                        </span>
+                      </div>
+                    )}
+                    {/* Layer 3: gradient mask — solid left, transparent right */}
                     <div
                       className="absolute inset-0"
                       style={{
                         background:
-                          "linear-gradient(to right, #0e1020 28%, rgba(14,16,32,0.9) 45%, rgba(14,16,32,0.5) 65%, transparent 100%)",
+                          "linear-gradient(to right, #0e1020 22%, rgba(14,16,32,0.80) 44%, rgba(14,16,32,0.10) 72%, transparent 100%)",
                       }}
                     />
                   </div>
