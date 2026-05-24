@@ -16,7 +16,6 @@ const D_CARD_H   = D_ROW_H * 2 + 2         // 54
 const D_CARD_W   = 152
 const D_FINAL_W  = 172
 const D_CHAMP_W  = 210
-const D_GAP      = 8
 const D_SVG_W    = 26
 const D_HDR_H    = 28
 
