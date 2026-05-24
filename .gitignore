@@ -54,6 +54,7 @@ fifa-2026-predictor/src/models/artifacts/*_backup.joblib
 .env
 fifa-2026-predictor/.env
 fifa-2026-predictor/env
+frontend/.env.local
 
 # Next.js build cache
 frontend/.next/
