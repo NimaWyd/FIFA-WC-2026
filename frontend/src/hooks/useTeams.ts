@@ -38,12 +38,12 @@ function _fetchFresh() {
 }
 
 export function useTeams() {
-  _hydrateFromStorage();
-
   const [, rerender] = useState(0);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    _hydrateFromStorage();
+
     const refresh = () => rerender((n) => n + 1);
     _listeners.add(refresh);
 
@@ -53,6 +53,8 @@ export function useTeams() {
       } catch (e: unknown) {
         if (!_data) setError(e instanceof Error ? e.message : "Failed to load teams");
       }
+    } else {
+      rerender((n) => n + 1);
     }
 
     return () => { _listeners.delete(refresh); };
