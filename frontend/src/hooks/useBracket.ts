@@ -7,6 +7,7 @@ import { getCached, setCached, isStale } from "@/lib/localCache";
 const CACHE_KEY = "bracket_v2";
 
 let _data: BracketResponse | null = null;
+let _error: string | null = null;
 let _inflightPromise: Promise<BracketResponse> | null = null;
 const _listeners: Set<() => void> = new Set();
 
@@ -22,6 +23,7 @@ function _hydrateFromStorage() {
 
 function _fetchFresh() {
   if (_inflightPromise) return;
+  _error = null;
   _inflightPromise = fetchBracket()
     .then((d) => {
       _data = d;
@@ -30,16 +32,16 @@ function _fetchFresh() {
       _notify();
       return d;
     })
-    .catch((e) => {
+    .catch((e: unknown) => {
       _inflightPromise = null;
+      _error = e instanceof Error ? e.message : "Failed to load bracket";
       _notify();
-      throw e;
+      return Promise.reject(e);
     });
 }
 
 export function useBracket() {
   const [, rerender] = useState(0);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     _hydrateFromStorage();
@@ -48,11 +50,7 @@ export function useBracket() {
     _listeners.add(refresh);
 
     if (!_data || isStale(CACHE_KEY)) {
-      try {
-        _fetchFresh();
-      } catch (e: unknown) {
-        if (!_data) setError(e instanceof Error ? e.message : "Failed to load bracket");
-      }
+      _fetchFresh();
     } else {
       rerender((n) => n + 1);
     }
@@ -60,5 +58,5 @@ export function useBracket() {
     return () => { _listeners.delete(refresh); };
   }, []);
 
-  return { data: _data, loading: !_data && !error, error };
+  return { data: _data, loading: !_data && !_error, error: _error };
 }

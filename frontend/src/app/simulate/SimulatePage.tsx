@@ -684,9 +684,9 @@ export default function SimulatePage() {
         )}
 
         {/* Error */}
-        {bracket.error && (
+        {(bracket.error || simulation.error) && (
           <div className="max-w-lg mx-auto rounded-lg px-5 py-4 text-sm text-center" style={{ background: "rgba(220,50,50,0.08)", border: "1px solid rgba(220,50,50,0.25)", color: "rgba(255,160,160,0.9)" }}>
-            Prediction failed: {bracket.error}. Make sure the backend is running on port 8000.
+            {bracket.error || simulation.error}. Make sure the backend is running on port 8000.
           </div>
         )}
 
