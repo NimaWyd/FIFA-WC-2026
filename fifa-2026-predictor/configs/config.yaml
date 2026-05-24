@@ -109,3 +109,4 @@ simulation:
   # Works across both simulation (base 1500) and prediction (rank-based init) paths.
   team_elo_adjustments:
     "United States": 55.0
+    "Argentina": -80.0
