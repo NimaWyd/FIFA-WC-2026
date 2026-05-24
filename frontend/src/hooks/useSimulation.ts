@@ -42,12 +42,12 @@ function _fetchFresh() {
 }
 
 export function useSimulation() {
-  _hydrateFromStorage();
-
   const [, rerender] = useState(0);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    _hydrateFromStorage();
+
     const refresh = () => rerender((n) => n + 1);
     _listeners.add(refresh);
 
@@ -58,6 +58,8 @@ export function useSimulation() {
       } catch (e: unknown) {
         if (!_data) setError(e instanceof Error ? e.message : "Failed to load simulation");
       }
+    } else {
+      rerender((n) => n + 1);
     }
 
     return () => { _listeners.delete(refresh); };
