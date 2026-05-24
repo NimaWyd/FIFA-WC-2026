@@ -583,16 +583,16 @@ def predict_bracket_modal(
 ) -> dict:
     """Build the WC2026 bracket using modal (most-likely) winners from Monte Carlo simulation.
 
-    Uses the same group-stage and 3rd-place logic as predict_bracket(), but determines
-    the winner of each knockout slot from simulation modal counts rather than raw probabilities.
-    Falls back to higher-probability team when modal winner is neither slot team (rare upset paths).
-
-    When match_winner_counts is provided, the Final (slot 103) and 3rd Place (slot 104) match
-    cards display MC-frequency-based probabilities so the champion always appears as the favorite.
+    Uses the same group-stage and 3rd-place logic as predict_bracket(). Knockout
+    winners are chosen from the same probabilities displayed on each match card
+    so the shown favorite is always the team advanced to the next round.
 
     group_standings / all_expected_pts: optional overrides so callers can supply group
     standings derived from individual predict() calls instead of the prob_cache.
     """
+    def _winner_from_probs(team1: str, team2: str, p1: float, p2: float) -> str:
+        return team1 if p1 >= p2 else team2
+
     # --- Group stage expected standings ---
     if group_standings is None or all_expected_pts is None:
         all_expected_pts = {}
@@ -635,9 +635,7 @@ def predict_bracket_modal(
             else third_assignments.get(slot["match"], best_thirds[0][0])
         )
         p1, p2 = _knockout_neutral_probs(team1, team2, prob_cache)
-        predicted_winner = modal_match_winners.get(slot["match"])
-        if predicted_winner not in (team1, team2):
-            predicted_winner = team1 if p1 >= p2 else team2
+        predicted_winner = _winner_from_probs(team1, team2, p1, p2)
         match_predicted[slot["match"]] = predicted_winner
         r32_matches.append({
             "match_id": f"r32_{slot['match']}",
@@ -654,9 +652,7 @@ def predict_bracket_modal(
     for i, (ma, mb) in enumerate(WC2026_R16_PAIRS):
         team1, team2 = match_predicted[ma], match_predicted[mb]
         p1, p2 = _knockout_neutral_probs(team1, team2, prob_cache)
-        predicted_winner = modal_match_winners.get(89 + i)
-        if predicted_winner not in (team1, team2):
-            predicted_winner = team1 if p1 >= p2 else team2
+        predicted_winner = _winner_from_probs(team1, team2, p1, p2)
         match_predicted[89 + i] = predicted_winner
         r16_matches.append({
             "match_id": f"r16_{i + 1}",
@@ -674,9 +670,7 @@ def predict_bracket_modal(
     for i, (ma, mb) in enumerate(WC2026_QF_PAIRS):
         team1, team2 = match_predicted[ma], match_predicted[mb]
         p1, p2 = _knockout_neutral_probs(team1, team2, prob_cache)
-        predicted_winner = modal_match_winners.get(97 + i)
-        if predicted_winner not in (team1, team2):
-            predicted_winner = team1 if p1 >= p2 else team2
+        predicted_winner = _winner_from_probs(team1, team2, p1, p2)
         match_predicted[97 + i] = predicted_winner
         qf_matches.append({
             "match_id": f"qf_{i + 1}",
@@ -693,9 +687,7 @@ def predict_bracket_modal(
     for i, (ma, mb) in enumerate(WC2026_SF_PAIRS):
         team1, team2 = match_predicted[ma], match_predicted[mb]
         p1, p2 = _knockout_neutral_probs(team1, team2, prob_cache)
-        predicted_winner = modal_match_winners.get(101 + i)
-        if predicted_winner not in (team1, team2):
-            predicted_winner = team1 if p1 >= p2 else team2
+        predicted_winner = _winner_from_probs(team1, team2, p1, p2)
         match_predicted[101 + i] = predicted_winner
         sf_matches.append({
             "match_id": f"sf_{i + 1}",
@@ -715,16 +707,7 @@ def predict_bracket_modal(
         sf_losers.append(t2 if match_predicted[101 + i] == t1 else t1)
     tp1, tp2 = sf_losers[0], sf_losers[1]
     p1_tp, p2_tp = _knockout_neutral_probs(tp1, tp2, prob_cache)
-    third_place_winner = modal_match_winners.get(104)
-    if third_place_winner not in (tp1, tp2):
-        third_place_winner = tp1 if p1_tp >= p2_tp else tp2
-    # Use MC frequencies for 3rd place display probabilities when available
-    if match_winner_counts and 104 in match_winner_counts:
-        c1 = match_winner_counts[104].get(tp1, 0)
-        c2 = match_winner_counts[104].get(tp2, 0)
-        total = c1 + c2
-        if total > 0:
-            p1_tp, p2_tp = c1 / total, c2 / total
+    third_place_winner = _winner_from_probs(tp1, tp2, p1_tp, p2_tp)
     rounds_out.append({
         "round": "3rd Place Playoff",
         "matches": [{
@@ -740,16 +723,7 @@ def predict_bracket_modal(
     # --- Final ---
     finalist1, finalist2 = match_predicted[101], match_predicted[102]
     p1, p2 = _knockout_neutral_probs(finalist1, finalist2, prob_cache)
-    champion = modal_match_winners.get(103)
-    if champion not in (finalist1, finalist2):
-        champion = finalist1 if p1 >= p2 else finalist2
-    # Use MC frequencies for Final display probabilities so champion always shows as favorite
-    if match_winner_counts and 103 in match_winner_counts:
-        c1 = match_winner_counts[103].get(finalist1, 0)
-        c2 = match_winner_counts[103].get(finalist2, 0)
-        total = c1 + c2
-        if total > 0:
-            p1, p2 = c1 / total, c2 / total
+    champion = _winner_from_probs(finalist1, finalist2, p1, p2)
     rounds_out.append({
         "round": "Final",
         "matches": [{
