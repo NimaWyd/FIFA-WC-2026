@@ -105,7 +105,7 @@ simulation:
     - winner: "Portugal"
       loser: "Spain"
       note: "UEFA Nations League 2024-25 final, 08 Jun 2025 (2-2 AET, Portugal win on pens)"
-  # Post-replay Elo overrides: applied after full history replay, before any predictions.
-  # Use to correct teams whose historical Elo diverges from known current strength.
-  team_elo_seeds:
-    "United States": 1850.0
+  # Post-replay Elo adjustments: relative offsets applied after full history replay.
+  # Works across both simulation (base 1500) and prediction (rank-based init) paths.
+  team_elo_adjustments:
+    "United States": 55.0
