@@ -53,6 +53,9 @@ def build_tournament_states(history_df: pd.DataFrame, cfg: dict) -> TeamStateTra
         tracker._ratings[winner] = tracker._ratings[winner] + k * 0.5
         tracker._ratings[loser] = tracker._ratings[loser] - k * 0.5
 
+    for team, elo in cfg.get("simulation", {}).get("team_elo_seeds", {}).items():
+        tracker._ratings[team] = elo
+
     return tracker
 
 

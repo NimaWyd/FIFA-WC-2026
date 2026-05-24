@@ -63,6 +63,9 @@ def build_pre_match_row(
     tracker = TeamStateTracker(cfg, team_elo_init=team_elo_init)
     tracker.replay_history(history)
 
+    for team, elo in cfg.get("simulation", {}).get("team_elo_seeds", {}).items():
+        tracker._ratings[team] = elo
+
     record = build_match_row(
         tracker=tracker,
         home_team=home_team,
