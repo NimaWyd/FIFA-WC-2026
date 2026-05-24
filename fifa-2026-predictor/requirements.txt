@@ -12,5 +12,6 @@ scipy
 shap
 fastapi
 uvicorn[standard]
+slowapi
 httpx
 rapidfuzz>=3.0

@@ -819,11 +819,9 @@ def get_live_matches() -> dict[str, Any]:
 def _fetch_wc_matches() -> dict[str, Any]:
     import os
     import requests as _req
-    from dotenv import load_dotenv
 
     global _matches_throttle_until
 
-    load_dotenv()
     api_key = os.getenv("FOOTBALL_DATA_API_KEY")
     fetched_at = datetime.now(timezone.utc).isoformat()
 

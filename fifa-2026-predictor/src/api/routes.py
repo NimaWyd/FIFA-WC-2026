@@ -7,14 +7,19 @@ typed response objects.  No feature engineering or model logic here.
 from __future__ import annotations
 
 import logging
+import os
 from typing import Optional
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Header, HTTPException, Query, Request
+from slowapi import Limiter
+from slowapi.util import get_remote_address
+from starlette.concurrency import run_in_threadpool
 
 log = logging.getLogger(__name__)
 
 from src.api import schemas, services
 
+limiter = Limiter(key_func=get_remote_address)
 router = APIRouter()
 
 
@@ -67,7 +72,11 @@ def get_team(team_name: str) -> schemas.TeamInfo:
 # ---------------------------------------------------------------------------
 
 @router.post("/predict", response_model=schemas.PredictResponse, tags=["prediction"])
-def predict(request: schemas.PredictRequest) -> schemas.PredictResponse:
+@limiter.limit("30/minute")
+def predict(
+    request: Request,
+    body: schemas.PredictRequest,
+) -> schemas.PredictResponse:
     """Predict match outcome probabilities with optional scoreline distribution.
 
     Confederation, FIFA rank, competition, and stage are auto-filled from the
@@ -76,27 +85,27 @@ def predict(request: schemas.PredictRequest) -> schemas.PredictResponse:
     """
     try:
         result = services.predict(
-            home_team=request.home_team,
-            away_team=request.away_team,
-            match_date=request.match_date,
-            competition=request.competition,
-            neutral=request.neutral,
-            home_confederation=request.home_confederation,
-            away_confederation=request.away_confederation,
-            home_fifa_rank=request.home_fifa_rank,
-            away_fifa_rank=request.away_fifa_rank,
-            tournament_stage=request.tournament_stage,
+            home_team=body.home_team,
+            away_team=body.away_team,
+            match_date=body.match_date,
+            competition=body.competition,
+            neutral=body.neutral,
+            home_confederation=body.home_confederation,
+            away_confederation=body.away_confederation,
+            home_fifa_rank=body.home_fifa_rank,
+            away_fifa_rank=body.away_fifa_rank,
+            tournament_stage=body.tournament_stage,
         )
     except RuntimeError as exc:
         log.error(
             "Prediction service unavailable — home=%s away=%s date=%s: %s",
-            request.home_team, request.away_team, request.match_date, exc,
+            body.home_team, body.away_team, body.match_date, exc,
         )
         raise HTTPException(status_code=503, detail=str(exc))
     except Exception as exc:
         log.error(
             "Prediction failed unexpectedly — home=%s away=%s date=%s: %s",
-            request.home_team, request.away_team, request.match_date, exc,
+            body.home_team, body.away_team, body.match_date, exc,
         )
         raise HTTPException(status_code=500, detail=f"Prediction failed: {exc}")
 
@@ -118,14 +127,15 @@ def predict(request: schemas.PredictRequest) -> schemas.PredictResponse:
 # ---------------------------------------------------------------------------
 
 @router.get("/simulate", response_model=schemas.SimulationResponse, tags=["simulation"])
-def simulate_tournament() -> schemas.SimulationResponse:
+@limiter.limit("5/minute")
+async def simulate_tournament(request: Request) -> schemas.SimulationResponse:
     """Run 1000 Monte Carlo WC2026 simulations (cached after first call).
 
     Returns per-team probabilities for each stage: group exit, R32, QF, SF,
     Final, and Champion.
     """
     try:
-        result = services.simulate(n=1000)
+        result = await run_in_threadpool(services.simulate, n=1000)
     except RuntimeError as exc:
         raise HTTPException(status_code=503, detail=str(exc))
     except Exception as exc:
@@ -197,12 +207,19 @@ def live_matches() -> schemas.LiveMatchesResponse:
 # ---------------------------------------------------------------------------
 
 @router.post("/refresh", tags=["meta"])
-def refresh_live_data() -> dict:
+def refresh_live_data(x_refresh_token: str | None = Header(None)) -> dict:
     """Fetch the latest match results from football-data.org and clear caches.
 
     Requires FOOTBALL_DATA_API_KEY in the server environment.
     The next prediction after this call replays updated Elo/form history.
     """
+    refresh_secret = os.getenv("REFRESH_SECRET")
+    is_production = os.getenv("ENV", "development").lower() == "production"
+    if is_production and not refresh_secret:
+        raise HTTPException(status_code=503, detail="REFRESH_SECRET is not configured")
+    if refresh_secret and x_refresh_token != refresh_secret:
+        raise HTTPException(status_code=403, detail="Forbidden")
+
     from src.data.update_live_matches import fetch_and_append_new_results, DEFAULT_OUTPUT
     try:
         n = fetch_and_append_new_results(DEFAULT_OUTPUT)

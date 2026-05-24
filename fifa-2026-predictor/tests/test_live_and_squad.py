@@ -123,7 +123,7 @@ class TestInvalidateDataCaches:
 
 
 class TestRefreshEndpoint:
-    def test_refresh_returns_ok_status(self):
+    def test_refresh_returns_ok_status(self, monkeypatch):
         """POST /api/v1/refresh returns {status: ok, new_matches_added: N}."""
         try:
             from fastapi.testclient import TestClient
@@ -133,6 +133,8 @@ class TestRefreshEndpoint:
             pytest.skip("FastAPI or httpx not installed")
 
         from unittest.mock import patch
+        monkeypatch.delenv("REFRESH_SECRET", raising=False)
+        monkeypatch.setenv("ENV", "development")
         client = TestClient(app)
         with patch("src.data.update_live_matches.fetch_and_append_new_results", return_value=3):
             resp = client.post("/api/v1/refresh")
@@ -140,6 +142,49 @@ class TestRefreshEndpoint:
         data = resp.json()
         assert data["status"] == "ok"
         assert data["new_matches_added"] == 3
+
+    def test_refresh_rejects_bad_token_when_secret_configured(self, monkeypatch):
+        try:
+            from fastapi.testclient import TestClient
+            from src.api.main import app
+        except ImportError:
+            import pytest
+            pytest.skip("FastAPI or httpx not installed")
+
+        monkeypatch.setenv("REFRESH_SECRET", "expected-token")
+        client = TestClient(app)
+        resp = client.post("/api/v1/refresh", headers={"x-refresh-token": "wrong-token"})
+        assert resp.status_code == 403
+
+    def test_refresh_accepts_valid_token_when_secret_configured(self, monkeypatch):
+        try:
+            from fastapi.testclient import TestClient
+            from src.api.main import app
+        except ImportError:
+            import pytest
+            pytest.skip("FastAPI or httpx not installed")
+
+        from unittest.mock import patch
+        monkeypatch.setenv("REFRESH_SECRET", "expected-token")
+        client = TestClient(app)
+        with patch("src.data.update_live_matches.fetch_and_append_new_results", return_value=2):
+            resp = client.post("/api/v1/refresh", headers={"x-refresh-token": "expected-token"})
+        assert resp.status_code == 200
+        assert resp.json()["new_matches_added"] == 2
+
+    def test_refresh_fails_closed_in_production_without_secret(self, monkeypatch):
+        try:
+            from fastapi.testclient import TestClient
+            from src.api.main import app
+        except ImportError:
+            import pytest
+            pytest.skip("FastAPI or httpx not installed")
+
+        monkeypatch.delenv("REFRESH_SECRET", raising=False)
+        monkeypatch.setenv("ENV", "production")
+        client = TestClient(app)
+        resp = client.post("/api/v1/refresh")
+        assert resp.status_code == 503
 
 
 # ---------------------------------------------------------------------------

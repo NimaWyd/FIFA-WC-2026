@@ -66,3 +66,19 @@ class TestStartupCacheWarmup:
         # FastAPI stores lifespan as router.lifespan_context
         assert app.router.lifespan_context is not None, \
             "App has no lifespan registered — startup hook will never fire"
+
+    def test_startup_validation_fails_when_model_missing(self):
+        """Required model artifacts must be validated before serving traffic."""
+        from src.api.main import _validate_required_artifacts
+        with patch("src.api.services._get_model", return_value=None), \
+             patch("src.api.services._get_history", return_value=MagicMock()):
+            with pytest.raises(RuntimeError, match="No trained model artifact"):
+                _validate_required_artifacts()
+
+    def test_startup_validation_fails_when_history_missing(self):
+        """Required match history must be validated before serving traffic."""
+        from src.api.main import _validate_required_artifacts
+        with patch("src.api.services._get_model", return_value=MagicMock()), \
+             patch("src.api.services._get_history", return_value=None):
+            with pytest.raises(RuntimeError, match="No match history CSV"):
+                _validate_required_artifacts()

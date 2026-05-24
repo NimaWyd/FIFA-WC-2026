@@ -1,0 +1,52 @@
+{
+  "name": "vscode-5hr-limit-tracker",
+  "displayName": "5 Hour Limit Tracker",
+  "description": "A local VS Code status bar timer for tracking a manual 5-hour usage window.",
+  "version": "0.1.0",
+  "publisher": "local",
+  "engines": {
+    "vscode": "^1.88.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished",
+    "onCommand:fiveHourLimit.startWindow",
+    "onCommand:fiveHourLimit.resetWindow",
+    "onCommand:fiveHourLimit.pause",
+    "onCommand:fiveHourLimit.resume"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "fiveHourLimit.startWindow",
+        "title": "5 Hour Limit: Start Window"
+      },
+      {
+        "command": "fiveHourLimit.resetWindow",
+        "title": "5 Hour Limit: Reset Window"
+      },
+      {
+        "command": "fiveHourLimit.pause",
+        "title": "5 Hour Limit: Pause Timer"
+      },
+      {
+        "command": "fiveHourLimit.resume",
+        "title": "5 Hour Limit: Resume Timer"
+      }
+    ],
+    "configuration": {
+      "title": "5 Hour Limit Tracker",
+      "properties": {
+        "fiveHourLimit.windowMinutes": {
+          "type": "number",
+          "default": 300,
+          "minimum": 1,
+          "description": "Length of the tracked usage window in minutes."
+        }
+      }
+    }
+  }
+}
