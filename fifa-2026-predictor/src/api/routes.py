@@ -129,13 +129,13 @@ def predict(
 @router.get("/simulate", response_model=schemas.SimulationResponse, tags=["simulation"])
 @limiter.limit("5/minute")
 async def simulate_tournament(request: Request) -> schemas.SimulationResponse:
-    """Run 1000 Monte Carlo WC2026 simulations (cached after first call).
+    """Run 5000 Monte Carlo WC2026 simulations (cached after first call).
 
     Returns per-team probabilities for each stage: group exit, R32, QF, SF,
     Final, and Champion.
     """
     try:
-        result = await run_in_threadpool(services.simulate, n=1000)
+        result = await run_in_threadpool(services.simulate, n=5000)
     except RuntimeError as exc:
         raise HTTPException(status_code=503, detail=str(exc))
     except Exception as exc:
