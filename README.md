@@ -539,4 +539,4 @@ npm test
 
 
 
-run backend : cd fifa-2026-predictor py -3.11 -m uvicorn src.api.main:app --reload --port 8000 run frontend : npm run dev
+run backend : cd fifa-2026-predictor py -3.11 -m uvicorn src.api.main:app --reload --port 8001 run frontend : npm run dev
