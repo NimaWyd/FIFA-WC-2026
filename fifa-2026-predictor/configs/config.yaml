@@ -110,3 +110,4 @@ simulation:
   team_elo_adjustments:
     "United States": 55.0
     "Argentina": -80.0
+    "Germany": 50.0
