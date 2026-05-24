@@ -35,6 +35,11 @@ ProbCache = dict[tuple[str, str], dict[str, float]]
 # Right half (→ QF99+QF100 → SF102): R16-91,92,95,96 (indices 2,3,6,7)
 _R16_VIS = [0, 1, 4, 5, 2, 3, 6, 7]
 
+# Visual reorder for R32: pairs of R32 matches that feed each R16 slot (after _R16_VIS)
+# must appear at consecutive positions so the frontend connector (R32[2i],R32[2i+1] → R16[i]) is correct.
+# Derived from _R16_VIS applied to WC2026_R16_PAIRS, then flattening each pair's R32 natural indices.
+_R32_VIS = [1, 4, 0, 2, 10, 11, 8, 9, 3, 5, 6, 7, 13, 15, 12, 14]
+
 
 def build_tournament_states(history_df: pd.DataFrame, cfg: dict) -> TeamStateTracker:
     """Replay all match history before the tournament start; return the tracker snapshot."""
@@ -467,7 +472,7 @@ def predict_bracket(prob_cache: ProbCache) -> dict:
             "team2_win_prob": round(p2, 4),
             "predicted_winner": predicted_winner,
         })
-    rounds_out: list[dict] = [{"round": "Round of 32", "matches": r32_matches}]
+    rounds_out: list[dict] = [{"round": "Round of 32", "matches": [r32_matches[i] for i in _R32_VIS]}]
 
     # --- Round of 16: official cross-pairings ---
     r16_matches = []
@@ -640,7 +645,7 @@ def predict_bracket_modal(
             "team2_win_prob": round(p2, 4),
             "predicted_winner": predicted_winner,
         })
-    rounds_out: list[dict] = [{"round": "Round of 32", "matches": r32_matches}]
+    rounds_out: list[dict] = [{"round": "Round of 32", "matches": [r32_matches[i] for i in _R32_VIS]}]
 
     # --- Round of 16 ---
     r16_matches = []
