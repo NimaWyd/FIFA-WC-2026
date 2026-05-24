@@ -4,7 +4,7 @@ import { fetchBracket } from "@/lib/api";
 import type { BracketResponse } from "@/lib/types";
 import { getCached, setCached, isStale } from "@/lib/localCache";
 
-const CACHE_KEY = "bracket_v1";
+const CACHE_KEY = "bracket_v2";
 
 let _data: BracketResponse | null = null;
 let _inflightPromise: Promise<BracketResponse> | null = null;
@@ -38,12 +38,12 @@ function _fetchFresh() {
 }
 
 export function useBracket() {
-  _hydrateFromStorage();
-
   const [, rerender] = useState(0);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    _hydrateFromStorage();
+
     const refresh = () => rerender((n) => n + 1);
     _listeners.add(refresh);
 
@@ -53,6 +53,8 @@ export function useBracket() {
       } catch (e: unknown) {
         if (!_data) setError(e instanceof Error ? e.message : "Failed to load bracket");
       }
+    } else {
+      rerender((n) => n + 1);
     }
 
     return () => { _listeners.delete(refresh); };
