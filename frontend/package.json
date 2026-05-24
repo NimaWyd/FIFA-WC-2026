@@ -17,6 +17,7 @@
     "@react-three/fiber": "^8.18.0",
     "@types/three": "^0.184.1",
     "clsx": "^2.1.1",
+    "d3-geo": "^3.1.1",
     "date-fns": "^4.1.0",
     "flag-icons": "^7.5.0",
     "framer-motion": "^12.38.0",
@@ -24,7 +25,9 @@
     "react": "^18",
     "react-day-picker": "^9.14.0",
     "react-dom": "^18",
-    "three": "^0.184.0"
+    "three": "^0.184.0",
+    "topojson-client": "^3.1.0",
+    "world-atlas": "^2.0.2"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",

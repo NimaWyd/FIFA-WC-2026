@@ -18,6 +18,7 @@ import { WC2026_GROUPS } from "@/lib/wc2026Groups";
 import FlagIcon from "@/components/FlagIcon";
 import type { TeamInfo } from "@/lib/types";
 import { displayName } from "@/lib/utils";
+import countryPaths from "@/lib/countryPaths.json";
 
 interface Props {
   name: string;
@@ -44,6 +45,7 @@ const CONF_TEAM_COUNTS: Record<string, number> = {
 };
 
 const HOST_TEAMS = new Set(["United States", "Canada", "Mexico"]);
+
 
 function formatDateShort(iso: string) {
   return new Date(iso + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" });
@@ -90,6 +92,8 @@ export default function TeamProfilePage({ name }: Props) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [rankReady, setRankReady] = useState(false);
+
+  const countryPath = (countryPaths as Record<string, { d: string; viewBox: string }>)[name] ?? null;
 
   useEffect(() => {
     setLoading(true);
@@ -189,6 +193,36 @@ export default function TeamProfilePage({ name }: Props) {
                   boxShadow: `0 0 50px rgba(${conf.glowRgb}, 0.14), 0 0 100px rgba(${conf.glowRgb}, 0.06)`,
                 }}
               >
+                {/* ── Country silhouette background ── */}
+                {countryPath && (
+                  <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                    <svg
+                      viewBox={countryPath.viewBox}
+                      aria-hidden
+                      style={{
+                        position: "absolute",
+                        right: "-8%",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        height: "200%",
+                        width: "auto",
+                        fill: `rgba(${conf.glowRgb}, 1)`,
+                        opacity: 0.55,
+                      }}
+                    >
+                      <path d={countryPath.d} />
+                    </svg>
+                    {/* Gradient: text area solid, right shows silhouette */}
+                    <div
+                      className="absolute inset-0"
+                      style={{
+                        background:
+                          "linear-gradient(to right, #0e1020 28%, rgba(14,16,32,0.9) 45%, rgba(14,16,32,0.5) 65%, transparent 100%)",
+                      }}
+                    />
+                  </div>
+                )}
+
                 {/* Radial glow overlay */}
                 <div
                   className="absolute inset-0"
