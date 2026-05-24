@@ -4,7 +4,7 @@ import { fetchBracket } from "@/lib/api";
 import type { BracketResponse } from "@/lib/types";
 import { getCached, setCached, isStale } from "@/lib/localCache";
 
-const CACHE_KEY = "bracket_v2";
+const CACHE_KEY = "bracket_v3";
 
 let _data: BracketResponse | null = null;
 let _error: string | null = null;

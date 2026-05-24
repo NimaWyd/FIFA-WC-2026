@@ -4,7 +4,7 @@ import { fetchSimulation } from "@/lib/api";
 import type { SimulationResponse } from "@/lib/types";
 import { getCached, setCached, isStale } from "@/lib/localCache";
 
-const CACHE_KEY = "simulation_v1";
+const CACHE_KEY = "simulation_v2";
 
 // Module-level cache: survives component unmount/remount within the same session.
 // Populated from localStorage on first access so page-refresh is also instant.
