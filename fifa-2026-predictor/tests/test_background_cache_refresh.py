@@ -64,6 +64,7 @@ class TestBackgroundCacheRefresh:
         import src.api.services as svc
         stale_result = {"teams": [{"team": "Test"}], "modal_match_winners": {}}
         svc._simulation_cache = stale_result
+        svc._simulation_cache_n = 100
         # Set timestamp to 85% of TTL — old but not expired
         svc._simulation_cache_ts = time.time() - svc._CACHE_TTL_SECONDS * 0.85
 

@@ -50,6 +50,7 @@ _tournament_model: Any = None
 _tournament_model_loaded: bool = False
 _simulation_cache: Optional[dict] = None
 _simulation_cache_ts: float = 0.0
+_simulation_cache_n: int = 0
 _bracket_cache: Optional[dict] = None
 _bracket_cache_ts: float = 0.0
 _match_winner_counts_cache: Optional[dict] = None
@@ -78,7 +79,7 @@ def _maybe_trigger_background_refresh(cache_ts: float) -> None:
 
 def _build_simulation(n: int = 1000) -> dict:
     """Build simulation result and update globals. Always rebuilds, ignores TTL."""
-    global _simulation_cache, _simulation_cache_ts, _match_winner_counts_cache
+    global _simulation_cache, _simulation_cache_ts, _simulation_cache_n, _match_winner_counts_cache
     model = _get_model()
     if model is None:
         raise RuntimeError("No trained model artifact found.")
@@ -92,6 +93,7 @@ def _build_simulation(n: int = 1000) -> dict:
     _match_winner_counts_cache = raw.pop("match_winner_counts", None)
     _simulation_cache = raw
     _simulation_cache_ts = _time_module.time()
+    _simulation_cache_n = n
     return _simulation_cache
 
 
@@ -149,12 +151,13 @@ def _get_squad_ratings() -> dict:
 
 def invalidate_data_caches() -> None:
     """Reset history and simulation caches so the next request reloads fresh data."""
-    global _history_df, _simulation_cache, _simulation_cache_ts, _bracket_cache, \
+    global _history_df, _simulation_cache, _simulation_cache_ts, _simulation_cache_n, _bracket_cache, \
         _bracket_cache_ts, _squad_ratings, _squad_ratings_loaded, _match_winner_counts_cache, \
         _refresh_in_progress
     _history_df = None
     _simulation_cache = None
     _simulation_cache_ts = 0.0
+    _simulation_cache_n = 0
     _bracket_cache = None
     _bracket_cache_ts = 0.0
     _match_winner_counts_cache = None
@@ -207,7 +210,11 @@ def _get_tournament_model() -> Any:
 
 def simulate(n: int = 1000) -> dict:
     """Run tournament simulation (cached with 1-hour TTL, stale-while-revalidate)."""
-    if _simulation_cache is not None and (_time_module.time() - _simulation_cache_ts) < _CACHE_TTL_SECONDS:
+    if (
+        _simulation_cache is not None
+        and _simulation_cache_n == n
+        and (_time_module.time() - _simulation_cache_ts) < _CACHE_TTL_SECONDS
+    ):
         _maybe_trigger_background_refresh(_simulation_cache_ts)
         return _simulation_cache
     return _build_simulation(n=n)
