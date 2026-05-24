@@ -48,6 +48,7 @@ fifa-2026-predictor/src/models/artifacts/*_backup.joblib
 !README.md
 *.claude
 .superpowers/
+*.agents
 
 # Environment files with secrets
 .env
