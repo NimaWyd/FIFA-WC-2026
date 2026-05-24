@@ -49,7 +49,8 @@
         "name": "Bryan González",
         "club": "Chivas",
         "espn_id": "297284",
-        "sofascore_id": "1595162"
+        "sofascore_id": "1595162",
+        "age": 23
       },
       {
         "name": "César Montes",
@@ -103,7 +104,8 @@
         "name": "Jesús Gómez",
         "club": "Tijuana",
         "espn_id": "4886806",
-        "sofascore_id": "1088274"
+        "sofascore_id": "1088274",
+        "age": 24
       },
       {
         "name": "Johan Vásquez",
@@ -129,7 +131,8 @@
       {
         "name": "Luis Rey",
         "club": "Puebla",
-        "sofascore_id": "1172773"
+        "sofascore_id": "1172773",
+        "age": 23
       },
       {
         "name": "Mateo Chávez",
@@ -250,7 +253,8 @@
       {
         "name": "Jeremy Márquez",
         "club": "Cruz Azul",
-        "sofascore_id": "1046703"
+        "sofascore_id": "1046703",
+        "age": 25
       },
       {
         "name": "Jordan Carrillo",
@@ -392,7 +396,8 @@
       {
         "name": "Jo Hyun-Woo",
         "club": "Ulsan HD",
-        "sofascore_id": "825502"
+        "sofascore_id": "825502",
+        "age": 34
       },
       {
         "name": "Kim Seung-Gyu",
@@ -420,7 +425,8 @@
       {
         "name": "Jo Yu-Min",
         "club": "Sharjah",
-        "sofascore_id": "1026122"
+        "sofascore_id": "1026122",
+        "age": 29
       },
       {
         "name": "Lee Han-Beom",
@@ -446,7 +452,8 @@
       {
         "name": "Lee Ki-Hyeok",
         "club": "Gangwon FC",
-        "sofascore_id": "917087"
+        "sofascore_id": "917087",
+        "age": 25
       },
       {
         "name": "Lee Tae-Seok",
@@ -516,7 +523,8 @@
       {
         "name": "Um Ji-Sung",
         "club": "Swansea City",
-        "sofascore_id": "1002508"
+        "sofascore_id": "1002508",
+        "age": 24
       },
       {
         "name": "Hwang Hee-Chan",
@@ -551,7 +559,8 @@
       {
         "name": "Oh Hyun-Kyu",
         "club": "Besiktas",
-        "sofascore_id": "1010634"
+        "sofascore_id": "1010634",
+        "age": 25
       },
       {
         "name": "Son Heung-Min",
@@ -563,7 +572,8 @@
       {
         "name": "Cho Kyu-Sung",
         "club": "Midtjylland",
-        "sofascore_id": "1014281"
+        "sofascore_id": "1014281",
+        "age": 28
       }
     ],
     "manager_sofascore_id": "786586"
@@ -963,7 +973,8 @@
       {
         "name": "Nikola Vasilj",
         "club": "St Pauli",
-        "sofascore_id": "325061"
+        "sofascore_id": "325061",
+        "age": 30
       },
       {
         "name": "Martin Zlomislic",
@@ -1098,7 +1109,8 @@
       {
         "name": "Kerim Alajbegovic",
         "club": "RB Salzburg",
-        "sofascore_id": "1425366"
+        "sofascore_id": "1425366",
+        "age": 18
       },
       {
         "name": "Esmir Bajraktarevic",
@@ -1153,7 +1165,8 @@
       {
         "name": "Shehab Elleithy",
         "club": "Al Shahania",
-        "sofascore_id": "832426"
+        "sofascore_id": "832426",
+        "age": 26
       },
       {
         "name": "Salah Zakaria",
@@ -1172,7 +1185,8 @@
       {
         "name": "Mahmoud Abunada",
         "club": "Al Rayyan",
-        "sofascore_id": "1218997"
+        "sofascore_id": "1218997",
+        "age": 26
       }
     ],
     "defenders": [
@@ -1192,7 +1206,8 @@
       },
       {
         "name": "Sultan Al Brake",
-        "club": "Al Duhail"
+        "club": "Al Duhail",
+        "age": 30
       },
       {
         "name": "Tarek Salman",
@@ -1204,11 +1219,13 @@
       {
         "name": "Al-Hashmi Al-Hussain",
         "club": "Al Arabi",
-        "sofascore_id": "1148402"
+        "sofascore_id": "1148402",
+        "age": 22
       },
       {
         "name": "Ayoub Al-Alawi",
-        "club": "Al Gharafa"
+        "club": "Al Gharafa",
+        "age": 21
       },
       {
         "name": "Bassam Al-Rawi",
@@ -1220,12 +1237,14 @@
       {
         "name": "Rayyan Al-Ali",
         "club": "Al Gharafa",
-        "sofascore_id": "1501526"
+        "sofascore_id": "1501526",
+        "age": 20
       },
       {
         "name": "Issa Laye",
         "club": "Al Arabi",
-        "sofascore_id": "1892282"
+        "sofascore_id": "1892282",
+        "age": 28
       },
       {
         "name": "Lucas Mendes",
@@ -1259,7 +1278,8 @@
       },
       {
         "name": "Jassim Gaber",
-        "club": "Al Rayyan"
+        "club": "Al Rayyan",
+        "age": 24
       },
       {
         "name": "Assim Madibo",
@@ -1285,12 +1305,14 @@
       {
         "name": "Mohammed Mannai",
         "club": "Al Shamal",
-        "sofascore_id": "326185"
+        "sofascore_id": "326185",
+        "age": 22
       },
       {
         "name": "Homam Al-Amin",
         "club": "Cultural Leonesa",
-        "sofascore_id": "933433"
+        "sofascore_id": "933433",
+        "age": 26
       }
     ],
     "forwards": [
@@ -1311,7 +1333,8 @@
       {
         "name": "Tahsin Mohammed",
         "club": "Al Duhail",
-        "sofascore_id": "1501518"
+        "sofascore_id": "1501518",
+        "age": 19
       },
       {
         "name": "Edmílson Junior",
@@ -1323,12 +1346,14 @@
       {
         "name": "Ahmed Al-Ganehi",
         "club": "Al Gharafa",
-        "sofascore_id": "936542"
+        "sofascore_id": "936542",
+        "age": 25
       },
       {
         "name": "Ahmed Alaa",
         "club": "Al Rayyan",
-        "sofascore_id": "229278"
+        "sofascore_id": "229278",
+        "age": 33
       },
       {
         "name": "Sebastián Soria",
@@ -1345,7 +1370,8 @@
       },
       {
         "name": "Mubarak Shannan",
-        "club": "Al Duhail"
+        "club": "Al Duhail",
+        "age": 22
       },
       {
         "name": "Mohammed Muntari",
@@ -2001,7 +2027,8 @@
       {
         "name": "Dom Hyam",
         "club": "Wrexham",
-        "sofascore_id": "802719"
+        "sofascore_id": "802719",
+        "age": 30
       },
       {
         "name": "Scott McKenna",
@@ -2028,7 +2055,8 @@
         "name": "Andy Robertson",
         "club": "Liverpool",
         "espn_id": "4073936",
-        "sofascore_id": "262911"
+        "sofascore_id": "262911",
+        "age": 32
       },
       {
         "name": "John Souttar",
@@ -2056,7 +2084,8 @@
       {
         "name": "Finlay Curtis",
         "club": "Kilmarnock",
-        "sofascore_id": "1489210"
+        "sofascore_id": "1489210",
+        "age": 20
       },
       {
         "name": "Lewis Ferguson",
@@ -2068,7 +2097,8 @@
       {
         "name": "Ben Gannon-Doak",
         "club": "Bournemouth",
-        "sofascore_id": "1154861"
+        "sofascore_id": "1154861",
+        "age": 20
       },
       {
         "name": "Billy Gilmour",
@@ -2161,7 +2191,8 @@
       {
         "name": "Orlando Gill",
         "club": "San Lorenzo",
-        "sofascore_id": "991709"
+        "sofascore_id": "991709",
+        "age": 26
       },
       {
         "name": "Gastón Olveira",
@@ -2195,7 +2226,8 @@
         "name": "Gustavo Gómez",
         "club": "Palmeiras",
         "espn_id": "118395",
-        "sofascore_id": "220833"
+        "sofascore_id": "220833",
+        "age": 33
       },
       {
         "name": "Júnior Alonso",
@@ -2222,7 +2254,8 @@
         "name": "Juan Caceres",
         "club": "Dynamo Moscow",
         "espn_id": "34323",
-        "sofascore_id": "989801"
+        "sofascore_id": "989801",
+        "age": 26
       },
       {
         "name": "Blas Riveros",
@@ -2285,7 +2318,8 @@
       },
       {
         "name": "Ronaldo Dejesus",
-        "club": "Lanus"
+        "club": "Lanus",
+        "age": 25
       },
       {
         "name": "Alan Nuñez",
@@ -2372,7 +2406,8 @@
         "name": "Diego Gonzalez",
         "club": "Atlas",
         "espn_id": "362345",
-        "sofascore_id": "1065588"
+        "sofascore_id": "1065588",
+        "age": 23
       },
       {
         "name": "Hugo Cuenca",
@@ -2383,7 +2418,8 @@
       {
         "name": "Mauricio Magalhaes",
         "club": "Palmeiras",
-        "sofascore_id": "986233"
+        "sofascore_id": "986233",
+        "age": 24
       },
       {
         "name": "Lucas Romero",
@@ -2540,7 +2576,9 @@
       {
         "name": "Ersin Destanoglou",
         "club": "Besiktas",
-        "sofascore_id": "913656"
+        "sofascore_id": "913656",
+        "age": 25,
+        "espn_id": "268587"
       }
     ],
     "defenders": [
@@ -2632,8 +2670,17 @@
     "midfielders": [
       {
         "name": "Hakan Calhanoglou",
-        "club": "Inter Milan, Kaan Ayhan (Galatasaray",
-        "sofascore_id": "135700"
+        "club": "Inter Milan",
+        "sofascore_id": "135700",
+        "age": 32,
+        "espn_id": "170785"
+      },
+      {
+        "name": "Kaan Ayhan",
+        "club": "Galatasaray",
+        "age": 31,
+        "espn_id": "159146",
+        "sofascore_id": "138152"
       },
       {
         "name": "Orkun Kokcu",
@@ -2652,7 +2699,8 @@
       {
         "name": "Salih Ozcan",
         "club": "Borussia Dortmund",
-        "sofascore_id": "795005"
+        "sofascore_id": "795005",
+        "age": 28
       },
       {
         "name": "Atakan Karazor",
@@ -2684,8 +2732,11 @@
         "sofascore_id": "226986"
       },
       {
-        "name": "Baris Apler Yilmaz",
-        "club": "Galatasaray"
+        "name": "Baris Alper Yilmaz",
+        "club": "Galatasaray",
+        "age": 26,
+        "espn_id": "322538",
+        "sofascore_id": "904096"
       },
       {
         "name": "Arda Guler",
@@ -2969,7 +3020,8 @@
       {
         "name": "Joshua Brenet",
         "club": "Kayserispor",
-        "sofascore_id": "296438"
+        "sofascore_id": "296438",
+        "age": 32
       },
       {
         "name": "Roshon van Eijma",
@@ -3104,12 +3156,14 @@
       {
         "name": "Brandley Kuwas",
         "club": "Volendam",
-        "sofascore_id": "252885"
+        "sofascore_id": "252885",
+        "age": 33
       },
       {
         "name": "Jurgen Locadia",
         "club": "Miami FC",
-        "sofascore_id": "97409"
+        "sofascore_id": "97409",
+        "age": 32
       },
       {
         "name": "Jearl Margaritha",
@@ -3513,7 +3567,8 @@
         "name": "Keisuke Goto",
         "club": "Sint-Truiden",
         "espn_id": "346208",
-        "sofascore_id": "1391315"
+        "sofascore_id": "1391315",
+        "age": 21
       }
     ],
     "manager_sofascore_id": "156178"
@@ -3590,7 +3645,8 @@
         "name": "Erik Smith",
         "club": "St. Pauli",
         "espn_id": "2215",
-        "sofascore_id": "542038"
+        "sofascore_id": "542038",
+        "age": 29
       },
       {
         "name": "Carl Starfelt",
@@ -3724,7 +3780,8 @@
       {
         "name": "Sabri Ben Hessen",
         "club": "Étoile du Sahel",
-        "sofascore_id": "359312"
+        "sofascore_id": "359312",
+        "age": 29
       },
       {
         "name": "Abdelmouhib Chamakh",
@@ -4122,7 +4179,8 @@
       {
         "name": "El Mahdi Soliman",
         "club": "Zamalek",
-        "sofascore_id": "918547"
+        "sofascore_id": "918547",
+        "age": 39
       },
       {
         "name": "Mohamed Alaa",
@@ -4157,7 +4215,8 @@
       {
         "name": "Rami Rabia",
         "club": "Al Ain",
-        "sofascore_id": "295339"
+        "sofascore_id": "295339",
+        "age": 33
       },
       {
         "name": "Yasser Ibrahim",
@@ -4176,7 +4235,8 @@
       {
         "name": "Mohamed Abdelmonemn",
         "club": "Nice",
-        "sofascore_id": "159665"
+        "sofascore_id": "159665",
+        "age": 27
       },
       {
         "name": "Ahmed Fatouh",
@@ -4197,7 +4257,8 @@
       {
         "name": "Marwan Ateya",
         "club": "Al Ahly",
-        "sofascore_id": "1013699"
+        "sofascore_id": "1013699",
+        "age": 27
       },
       {
         "name": "Mohanad Lasheen",
@@ -4223,7 +4284,8 @@
       {
         "name": "Ahmed Zizo",
         "club": "Al Ahly",
-        "sofascore_id": "547494"
+        "sofascore_id": "547494",
+        "age": 30
       },
       {
         "name": "Emam Ashour",
@@ -4235,12 +4297,14 @@
       {
         "name": "Mostafa Ziko",
         "club": "Pyramids",
-        "sofascore_id": "1418782"
+        "sofascore_id": "1418782",
+        "age": 29
       },
       {
         "name": "Mahmoud Trezeguet",
         "club": "Al Ahly",
-        "sofascore_id": "295361"
+        "sofascore_id": "295361",
+        "age": 31
       },
       {
         "name": "Ibrahim Adel",
@@ -4262,7 +4326,8 @@
         "name": "Omar Marmoush",
         "club": "Manchester City",
         "espn_id": "303745",
-        "sofascore_id": "873554"
+        "sofascore_id": "873554",
+        "age": 27
       },
       {
         "name": "Mohamed Salah",
@@ -4314,14 +4379,16 @@
       },
       {
         "name": "Mohammed Khalifeh",
-        "club": "Aluminium Arak"
+        "club": "Aluminium Arak",
+        "age": 21
       }
     ],
     "defenders": [
       {
         "name": "Danial Eiri",
         "club": "Malavan",
-        "sofascore_id": "1464876"
+        "sofascore_id": "1464876",
+        "age": 22
       },
       {
         "name": "Ehsan Hajsafi",
@@ -4347,7 +4414,8 @@
       {
         "name": "Shoka Khalilzadeh",
         "club": "Tractor",
-        "sofascore_id": "223340"
+        "sofascore_id": "223340",
+        "age": 37
       },
       {
         "name": "Milad Mohammadi",
@@ -4359,7 +4427,8 @@
       {
         "name": "Ali Nemati Omid Noorafkan",
         "club": "Foolad",
-        "sofascore_id": "871355"
+        "sofascore_id": "871355",
+        "age": 30
       },
       {
         "name": "Ramin Rezaeian",
@@ -4373,7 +4442,8 @@
       {
         "name": "Rouzbeh Cheshmi",
         "club": "Esteghlal",
-        "sofascore_id": "828230"
+        "sofascore_id": "828230",
+        "age": 32
       },
       {
         "name": "Saeid Ezatolahi",
@@ -4385,7 +4455,8 @@
       {
         "name": "Mehdi Ghaedi",
         "club": "Al-Nasr",
-        "sofascore_id": "812533"
+        "sofascore_id": "812533",
+        "age": 27
       },
       {
         "name": "Saman Ghoddos",
@@ -4417,7 +4488,8 @@
       },
       {
         "name": "Amir Mohammad Razzaghinia",
-        "club": "Esteghlal"
+        "club": "Esteghlal",
+        "age": 20
       },
       {
         "name": "Mehdi Torabi",
@@ -4444,7 +4516,8 @@
       },
       {
         "name": "Dennis Dargahi",
-        "club": "Standard Liege"
+        "club": "Standard Liege",
+        "age": 29
       },
       {
         "name": "Hadi Habibinejad",
@@ -4696,12 +4769,14 @@
         "name": "Marcio Rosa",
         "club": "Montana",
         "espn_id": "263612",
-        "sofascore_id": "892133"
+        "sofascore_id": "892133",
+        "age": 29
       },
       {
         "name": "CJ dos Santos",
         "club": "San Diego FC",
-        "sofascore_id": "906020"
+        "sofascore_id": "906020",
+        "age": 25
       }
     ],
     "defenders": [
@@ -4723,12 +4798,14 @@
         "name": "Joao Paulo",
         "club": "FCSB",
         "espn_id": "74847",
-        "sofascore_id": "1001675"
+        "sofascore_id": "1001675",
+        "age": 28
       },
       {
         "name": "Sidny Lopes Cabral",
         "club": "Benfica",
-        "sofascore_id": "1117723"
+        "sofascore_id": "1117723",
+        "age": 23
       },
       {
         "name": "Logan Costa",
@@ -4740,12 +4817,14 @@
       {
         "name": "Pico",
         "club": "Shamrock Rovers",
-        "sofascore_id": "147138"
+        "sofascore_id": "147138",
+        "age": 33
       },
       {
         "name": "Kelvin Pires",
         "club": "SJK",
-        "sofascore_id": "1048591"
+        "sofascore_id": "1048591",
+        "age": 26
       },
       {
         "name": "Stopira",
@@ -4780,7 +4859,8 @@
       {
         "name": "Yannick Semedo",
         "club": "Farense",
-        "sofascore_id": "818064"
+        "sofascore_id": "818064",
+        "age": 30
       },
       {
         "name": "Laros Duarte",
@@ -4850,7 +4930,8 @@
       {
         "name": "Gilson Benchimol",
         "club": "Akron Tolyatti",
-        "sofascore_id": "1111215"
+        "sofascore_id": "1111215",
+        "age": 24
       },
       {
         "name": "Helio Varela",
@@ -5167,7 +5248,8 @@
       {
         "name": "Idrissa Gana Gueye",
         "club": "Everton",
-        "sofascore_id": "106337"
+        "sofascore_id": "106337",
+        "age": 36
       },
       {
         "name": "Pape Gueye",
@@ -5186,7 +5268,8 @@
       {
         "name": "Habib Diarra",
         "club": "Sunderland",
-        "sofascore_id": "1128532"
+        "sofascore_id": "1128532",
+        "age": 22
       },
       {
         "name": "Pathé Ciss",
@@ -5920,7 +6003,8 @@
       {
         "name": "Philipp Mwene",
         "club": "Mainz 05",
-        "sofascore_id": "138126"
+        "sofascore_id": "138126",
+        "age": 32
       },
       {
         "name": "Alexander Prass",
@@ -6053,7 +6137,8 @@
     "goalkeepers": [
       {
         "name": "Yazid Abulaila",
-        "club": "Al-Hussein"
+        "club": "Al-Hussein",
+        "age": 33
       },
       {
         "name": "Abdallah Al-Fakhouri",
@@ -6065,11 +6150,13 @@
       {
         "name": "Ahmad Al-Juiadi",
         "club": "Shabab Al-Ordon",
-        "sofascore_id": "1141154"
+        "sofascore_id": "1141154",
+        "age": 25
       },
       {
         "name": "Nour Bani Attiah",
-        "club": "Al-Faisaly"
+        "club": "Al-Faisaly",
+        "age": 33
       }
     ],
     "defenders": [
@@ -6083,16 +6170,19 @@
       {
         "name": "Yousef Abu Al-Jazar",
         "club": "Al-Hussein",
-        "sofascore_id": "995678"
+        "sofascore_id": "995678",
+        "age": 26
       },
       {
         "name": "Husam Abu Dahab",
         "club": "Al-Faisaly",
-        "sofascore_id": "1218720"
+        "sofascore_id": "1218720",
+        "age": 26
       },
       {
         "name": "Mohammed Abu Hashish",
-        "club": "Al-Karma"
+        "club": "Al-Karma",
+        "age": 31
       },
       {
         "name": "Mohannad Abu Taha",
@@ -6110,7 +6200,8 @@
       },
       {
         "name": "Saed Al-Rosna",
-        "club": "Al-Hussein"
+        "club": "Al-Hussein",
+        "age": 29
       },
       {
         "name": "Ahmad Assaf",
@@ -6148,13 +6239,15 @@
       {
         "name": "Mohammad Abu Taha",
         "club": "Al-Quwa Al-Jawiya",
-        "sofascore_id": "986341"
+        "sofascore_id": "986341",
+        "age": 23
       }
     ],
     "midfielders": [
       {
         "name": "Mohammed Al-Dawoud",
-        "club": "Al-Wehdat"
+        "club": "Al-Wehdat",
+        "age": 33
       },
       {
         "name": "Nizar Al-Rashdan",
@@ -6178,12 +6271,14 @@
       {
         "name": "Amer Jamous",
         "club": "Al-Zawraa",
-        "sofascore_id": "1019495"
+        "sofascore_id": "1019495",
+        "age": 23
       },
       {
         "name": "Yousef Qashi",
         "club": "Al-Hussein",
-        "sofascore_id": "1403019"
+        "sofascore_id": "1403019",
+        "age": 21
       },
       {
         "name": "Ibrahim Sadeh",
@@ -6210,12 +6305,14 @@
       {
         "name": "Ali Azaizeh",
         "club": "Al-Shabab",
-        "sofascore_id": "1652199"
+        "sofascore_id": "1652199",
+        "age": 22
       },
       {
         "name": "Odeh Al-Fakhouri",
         "club": "Pyramids",
-        "sofascore_id": "1937497"
+        "sofascore_id": "1937497",
+        "age": 20
       },
       {
         "name": "Ali Olwan",
@@ -6226,7 +6323,8 @@
       {
         "name": "Ibrahim Sabra",
         "club": "Lokomotiva Zagreb",
-        "sofascore_id": "1522038"
+        "sofascore_id": "1522038",
+        "age": 20
       }
     ],
     "manager_sofascore_id": "793874"
@@ -6258,7 +6356,8 @@
       {
         "name": "Ricardo Velho",
         "club": "Gençlerbirliği",
-        "sofascore_id": "845792"
+        "sofascore_id": "845792",
+        "age": 27
       }
     ],
     "defenders": [
@@ -6321,7 +6420,8 @@
       {
         "name": "Tomás Araújo",
         "club": "Benfica",
-        "sofascore_id": "983542"
+        "sofascore_id": "983542",
+        "age": 24
       }
     ],
     "midfielders": [
@@ -6434,7 +6534,8 @@
       {
         "name": "Lionel Mpasi",
         "club": "Le Havre",
-        "sofascore_id": "599192"
+        "sofascore_id": "599192",
+        "age": 31
       },
       {
         "name": "Timothy Fayulu",
@@ -6562,7 +6663,8 @@
       {
         "name": "Meschak Elia",
         "club": "Alanyaspor",
-        "sofascore_id": "862078"
+        "sofascore_id": "862078",
+        "age": 28
       },
       {
         "name": "Brian Cipenga",
@@ -6645,24 +6747,28 @@
       {
         "name": "Abduvokhid Nematov",
         "club": "Nasaf",
-        "sofascore_id": "1000465"
+        "sofascore_id": "1000465",
+        "age": 25
       }
     ],
     "defenders": [
       {
         "name": "Ibrohimkhalil Yuldoshev",
         "club": "Neftchi",
-        "sofascore_id": "1033795"
+        "sofascore_id": "1033795",
+        "age": 25
       },
       {
         "name": "Avazbek Ulmasaliev",
         "club": "AGMK",
-        "sofascore_id": "978392"
+        "sofascore_id": "978392",
+        "age": 26
       },
       {
         "name": "Jakhongir Urozov",
         "club": "Dinamo Samarqand",
-        "sofascore_id": "1403414"
+        "sofascore_id": "1403414",
+        "age": 22
       },
       {
         "name": "Rustamjon Ashurmatov",
@@ -6674,7 +6780,8 @@
       {
         "name": "Mukhammadkodir Hamraliev",
         "club": "Pakhtakor",
-        "sofascore_id": "1156415"
+        "sofascore_id": "1156415",
+        "age": 24
       },
       {
         "name": "Umarbek Eshmurodov",
@@ -6720,24 +6827,28 @@
       {
         "name": "Muhammadrasul Abdumajidov",
         "club": "Pakhtakor",
-        "sofascore_id": "1489504"
+        "sofascore_id": "1489504",
+        "age": 21
       },
       {
         "name": "Behruz Karimov",
         "club": "Surkhon",
-        "sofascore_id": "1597255"
+        "sofascore_id": "1597255",
+        "age": 18
       },
       {
         "name": "Diyor Ortikboev",
         "club": "Khorazm",
-        "sofascore_id": "1199039"
+        "sofascore_id": "1199039",
+        "age": 23
       }
     ],
     "midfielders": [
       {
         "name": "Kuvondik Ruziev",
         "club": "Neftchi",
-        "sofascore_id": "832251"
+        "sofascore_id": "832251",
+        "age": 31
       },
       {
         "name": "Sherzod Esanov",
@@ -6756,7 +6867,8 @@
       {
         "name": "Odiljon Khamrobekov",
         "club": "Tractor",
-        "sofascore_id": "823992"
+        "sofascore_id": "823992",
+        "age": 30
       },
       {
         "name": "Umarali Rakhmonaliev",
@@ -6775,7 +6887,8 @@
       {
         "name": "Sardorbek Rakhmonov",
         "club": "Nasaf",
-        "sofascore_id": "1651894"
+        "sofascore_id": "1651894",
+        "age": 21
       },
       {
         "name": "Akmal Mozgovoy",
@@ -6808,14 +6921,16 @@
       {
         "name": "Azizjon Ganiev",
         "club": "Al Bataeh",
-        "sofascore_id": "793857"
+        "sofascore_id": "793857",
+        "age": 28
       }
     ],
     "forwards": [
       {
         "name": "Abbosek Fayzullaev",
         "club": "Istanbul Basaksehir",
-        "sofascore_id": "1118429"
+        "sofascore_id": "1118429",
+        "age": 22
       },
       {
         "name": "Jaloliddin Masharipov",
@@ -7263,8 +7378,197 @@
     "manager_sofascore_id": "795312"
   },
   "England": {
-    "released": false,
     "manager": "Thomas Tuchel",
+    "goalkeepers": [
+      {
+        "name": "Jordan Pickford",
+        "club": "Everton",
+        "age": 32,
+        "espn_id": "159443",
+        "sofascore_id": "138530"
+      },
+      {
+        "name": "Dean Henderson",
+        "club": "Crystal Palace",
+        "age": 29,
+        "espn_id": "234172",
+        "sofascore_id": "788134"
+      },
+      {
+        "name": "James Trafford",
+        "club": "Man City",
+        "age": 23,
+        "espn_id": "307118",
+        "sofascore_id": "980643"
+      }
+    ],
+    "defenders": [
+      {
+        "name": "Reece James",
+        "club": "Chelsea",
+        "age": 26,
+        "espn_id": "189007",
+        "sofascore_id": "885908"
+      },
+      {
+        "name": "Ezri Konsa",
+        "club": "Aston Villa",
+        "age": 28,
+        "espn_id": "231859",
+        "sofascore_id": "827679"
+      },
+      {
+        "name": "Jarell Quansah",
+        "club": "Bayer Leverkusen",
+        "age": 23,
+        "espn_id": "298524",
+        "sofascore_id": "1003339"
+      },
+      {
+        "name": "John Stones",
+        "club": "Man City",
+        "age": 31,
+        "espn_id": "157974",
+        "sofascore_id": "152077"
+      },
+      {
+        "name": "Marc Guehi",
+        "club": "Man City",
+        "age": 25,
+        "espn_id": "265907",
+        "sofascore_id": "877994"
+      },
+      {
+        "name": "Dan Burn",
+        "club": "Newcastle",
+        "age": 34,
+        "espn_id": "198138",
+        "sofascore_id": "99090"
+      },
+      {
+        "name": "Nico O'Reilly",
+        "club": "Man City",
+        "age": 21,
+        "espn_id": "328464",
+        "sofascore_id": "1142703"
+      },
+      {
+        "name": "Djed Spence",
+        "club": "Tottenham",
+        "age": 25,
+        "espn_id": "267711",
+        "sofascore_id": "945798"
+      },
+      {
+        "name": "Tino Livramento",
+        "club": "Newcastle",
+        "age": 23,
+        "espn_id": "299641",
+        "sofascore_id": "980634"
+      }
+    ],
+    "midfielders": [
+      {
+        "name": "Declan Rice",
+        "club": "Arsenal",
+        "age": 27,
+        "espn_id": "238262",
+        "sofascore_id": "856714"
+      },
+      {
+        "name": "Elliot Anderson",
+        "club": "Nottingham Forest",
+        "age": 23,
+        "espn_id": "238472",
+        "sofascore_id": "994546"
+      },
+      {
+        "name": "Kobbie Mainoo",
+        "club": "Man Utd",
+        "age": 21,
+        "espn_id": "328466",
+        "sofascore_id": "1142175"
+      },
+      {
+        "name": "Jordan Henderson",
+        "club": "Brentford",
+        "age": 35,
+        "espn_id": "127262",
+        "sofascore_id": "42694"
+      },
+      {
+        "name": "Morgan Rogers",
+        "club": "Aston Villa",
+        "age": 23,
+        "espn_id": "265653",
+        "sofascore_id": "948261"
+      },
+      {
+        "name": "Jude Bellingham",
+        "club": "Real Madrid",
+        "age": 22,
+        "espn_id": "291281",
+        "sofascore_id": "991011"
+      },
+      {
+        "name": "Eberechi Eze",
+        "club": "Arsenal",
+        "age": 27,
+        "espn_id": "251400",
+        "sofascore_id": "864921"
+      }
+    ],
+    "forwards": [
+      {
+        "name": "Harry Kane",
+        "club": "Bayern Munich",
+        "age": 32,
+        "espn_id": "142200",
+        "sofascore_id": "108579"
+      },
+      {
+        "name": "Ivan Toney",
+        "club": "Al-Ahli",
+        "age": 30,
+        "espn_id": "180639",
+        "sofascore_id": "290927"
+      },
+      {
+        "name": "Ollie Watkins",
+        "club": "Aston Villa",
+        "age": 30,
+        "espn_id": "198825",
+        "sofascore_id": "555386"
+      },
+      {
+        "name": "Bukayo Saka",
+        "club": "Arsenal",
+        "age": 24,
+        "espn_id": "280555",
+        "sofascore_id": "934235"
+      },
+      {
+        "name": "Marcus Rashford",
+        "club": "Barcelona",
+        "age": 28,
+        "espn_id": "230945",
+        "sofascore_id": "814590"
+      },
+      {
+        "name": "Anthony Gordon",
+        "club": "Newcastle",
+        "age": 25,
+        "espn_id": "268782",
+        "sofascore_id": "914902"
+      },
+      {
+        "name": "Noni Madueke",
+        "club": "Arsenal",
+        "age": 24,
+        "espn_id": "293236",
+        "sofascore_id": "966547"
+      }
+    ],
     "manager_sofascore_id": "785186"
   },
   "Croatia": {
@@ -7390,7 +7694,8 @@
         "name": "Kristijan Jakic",
         "club": "Augsburg",
         "espn_id": "238929",
-        "sofascore_id": "796206"
+        "sofascore_id": "796206",
+        "age": 29
       },
       {
         "name": "Petar Sucic",
