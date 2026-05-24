@@ -370,7 +370,9 @@ def simulate_once(
             t1, t2 = t2, t1
         third, fourth = _knockout_winner(t1, t2, prob_cache, rng)
         results[third] = "third_place"
-        results[fourth] = "fourth_place"
+        # The public simulation API reports the 3rd-place playoff loser as a
+        # semifinal-stage finish, not as a separate fourth_place bucket.
+        results[fourth] = "semi_final"
 
     # -- Final ----------------------------------------------------------------
     finalist1, finalist2 = match_winners[101], match_winners[102]
@@ -780,7 +782,7 @@ def run_simulation(
 
     all_teams = {t: g["id"] for g in WC2026_GROUPS for t in g["teams"]}
     stage_keys = ["group_exit", "round_of_32", "round_of_16", "quarter_final",
-                  "semi_final", "fourth_place", "third_place", "final", "champion"]
+                  "semi_final", "third_place", "final", "champion"]
     counts: dict[str, dict[str, int]] = {t: {s: 0 for s in stage_keys} for t in all_teams}
 
     # Slots: R32 73-88, R16 89-96, QF 97-100, SF 101-102, Final 103, 3rd-place 104

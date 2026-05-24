@@ -143,8 +143,10 @@ class TeamSimResult(BaseModel):
     group: str
     group_exit: float
     round_of_32: float
+    round_of_16: float
     quarter_final: float
     semi_final: float
+    third_place: float
     final: float
     champion: float
 

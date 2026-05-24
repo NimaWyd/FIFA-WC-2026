@@ -114,12 +114,12 @@ def _build_bracket() -> dict:
     tracker = build_tournament_states(history_df, cfg)
     prob_cache = precompute_all_probabilities(tracker, model, cfg, squad_ratings=_get_squad_ratings())
     modal_match_winners: dict[int, str] = (_simulation_cache or {}).get("modal_match_winners", {})
-    group_standings, all_expected_pts = build_group_standings_from_predict(
-        WC2026_GROUPS, predict, match_date="2026-06-20"
-    )
+    # Use the precomputed 48x47 tournament probability cache for group
+    # standings. Calling predict() for every group fixture rebuilds the full
+    # pre-match feature row repeatedly and makes cold /bracket requests take
+    # several minutes.
     _bracket_cache = _predict_bracket_modal(
         modal_match_winners, prob_cache, _match_winner_counts_cache,
-        group_standings=group_standings, all_expected_pts=all_expected_pts,
     )
     _bracket_cache_ts = _time_module.time()
     return _bracket_cache
