@@ -685,7 +685,7 @@ export default function AboutPage() {
                     {/* Role badge */}
                     <div
                       className="absolute top-4 left-4 text-[9px] font-bold uppercase tracking-[0.25em] px-2.5 py-1 rounded-full"
-                      style={{ background: `${accent.tag}22`, border: `1px solid ${accent.tag}55`, color: accent.tag }}
+                      style={{ background: `${accent.tag}55`, border: `1px solid ${accent.tag}cc`, color: "#fff" }}
                     >
                       Creator
                     </div>

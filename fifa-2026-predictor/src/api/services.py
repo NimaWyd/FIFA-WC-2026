@@ -674,12 +674,7 @@ def _build_explanation(row: dict[str, Any], home_rank: int, away_rank: int) -> d
 
 
 def _get_training_cutoff() -> str:
-    history = _get_history()
-    if history is not None and "date" in history.columns:
-        last = pd.to_datetime(history["date"], errors="coerce").max()
-        if pd.notna(last):
-            return str(last.date())
-    return "unknown"
+    return "2026-05-25"
 
 
 # ---------------------------------------------------------------------------
