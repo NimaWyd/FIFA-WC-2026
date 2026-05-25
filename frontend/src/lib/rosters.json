@@ -4751,9 +4751,179 @@
     "manager_sofascore_id": "784912"
   },
   "Spain": {
-    "released": false,
     "manager": "Luis de la Fuente",
-    "manager_sofascore_id": "331371"
+    "manager_sofascore_id": "331371",
+    "goalkeepers": [
+      {
+        "name": "Unai Simón",
+        "club": "Athletic Club",
+        "age": 28,
+        "sofascore_id": "797291"
+      },
+      {
+        "name": "David Raya",
+        "club": "Arsenal",
+        "age": 30,
+        "sofascore_id": "581310"
+      },
+      {
+        "name": "Joan García",
+        "club": "Barcelona",
+        "age": 25,
+        "sofascore_id": "930267"
+      }
+    ],
+    "defenders": [
+      {
+        "name": "Aymeric Laporte",
+        "club": "Athletic Club",
+        "age": 31,
+        "espn_id": "159317",
+        "sofascore_id": "149734"
+      },
+      {
+        "name": "Marc Cucurella",
+        "club": "Chelsea",
+        "age": 27,
+        "sofascore_id": "794939"
+      },
+      {
+        "name": "Marcos Llorente",
+        "club": "Atlético Madrid",
+        "age": 31,
+        "sofascore_id": "353138"
+      },
+      {
+        "name": "Eric García",
+        "club": "Barcelona",
+        "age": 25,
+        "sofascore_id": "876214"
+      },
+      {
+        "name": "Pedro Porro",
+        "club": "Tottenham",
+        "age": 25,
+        "espn_id": "268533",
+        "sofascore_id": "913654"
+      },
+      {
+        "name": "Alejandro Grimaldo",
+        "club": "Bayer Leverkusen",
+        "age": 30,
+        "sofascore_id": "177177"
+      },
+      {
+        "name": "Pau Cubarsí",
+        "club": "Barcelona",
+        "age": 19,
+        "sofascore_id": "1402913"
+      },
+      {
+        "name": "Marc Pubill",
+        "club": "Atlético Madrid",
+        "age": 22,
+        "espn_id": "332613",
+        "sofascore_id": "1094106"
+      }
+    ],
+    "midfielders": [
+      {
+        "name": "Rodri",
+        "club": "Manchester City",
+        "age": 29,
+        "sofascore_id": "827606"
+      },
+      {
+        "name": "Fabián Ruiz",
+        "club": "PSG",
+        "age": 29,
+        "sofascore_id": "784655"
+      },
+      {
+        "name": "Mikel Merino",
+        "club": "Arsenal",
+        "age": 29,
+        "espn_id": "209581",
+        "sofascore_id": "592010"
+      },
+      {
+        "name": "Pedri",
+        "club": "Barcelona",
+        "age": 23,
+        "sofascore_id": "992587"
+      },
+      {
+        "name": "Gavi",
+        "club": "Barcelona",
+        "age": 22,
+        "sofascore_id": "1103693"
+      },
+      {
+        "name": "Martín Zubimendi",
+        "club": "Arsenal",
+        "age": 27,
+        "sofascore_id": "966837"
+      },
+      {
+        "name": "Álex Baena",
+        "club": "Atlético Madrid",
+        "age": 25,
+        "sofascore_id": "910031"
+      }
+    ],
+    "forwards": [
+      {
+        "name": "Ferran Torres",
+        "club": "Barcelona",
+        "age": 26,
+        "sofascore_id": "855833"
+      },
+      {
+        "name": "Mikel Oyarzabal",
+        "club": "Real Sociedad",
+        "age": 29,
+        "sofascore_id": "823622"
+      },
+      {
+        "name": "Dani Olmo",
+        "club": "Barcelona",
+        "age": 28,
+        "sofascore_id": "789071"
+      },
+      {
+        "name": "Nico Williams",
+        "club": "Athletic Club",
+        "age": 23,
+        "espn_id": "312146",
+        "sofascore_id": "1085400"
+      },
+      {
+        "name": "Lamine Yamal",
+        "club": "Barcelona",
+        "age": 18,
+        "sofascore_id": "1402912"
+      },
+      {
+        "name": "Yéremy Pino",
+        "club": "Crystal Palace",
+        "age": 23,
+        "sofascore_id": "984624"
+      },
+      {
+        "name": "Borja Iglesias",
+        "club": "Celta Vigo",
+        "age": 33,
+        "espn_id": "214995",
+        "sofascore_id": "785989"
+      },
+      {
+        "name": "Víctor Muñoz",
+        "club": "Osasuna",
+        "age": 22,
+        "espn_id": "397545",
+        "sofascore_id": "1145642"
+      }
+    ]
   },
   "Cape Verde Islands": {
     "manager": "Bubista",
