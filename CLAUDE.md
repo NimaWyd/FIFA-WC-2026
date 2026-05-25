@@ -123,7 +123,7 @@ Next.js 14 (App Router), TypeScript, Tailwind CSS, Framer Motion, Headless UI, f
 
 Static JSON with all 48 WC 2026 squads. Each released team has `{ manager, goalkeepers, defenders, midfielders, forwards }`; unreleased teams have `{ released: false, manager? }`. Each player has `{ name, club, age?, espn_id?, sofascore_id? }`.
 
-**Photo priority in `RosterSection.tsx`:** SofaScore CDN first (`https://api.sofascore.com/api/v1/player/{sofascore_id}/image`), ESPN fallback (`https://a.espncdn.com/i/headshots/soccer/players/full/{espn_id}.png`), then initials. Handled via a `stage` state (0/1/2) with `onError` cascading.
+**Photo priority in `RosterSection.tsx`:** SofaScore proxy first (`/api/player-image?id={sofascore_id}&type=player`), ESPN fallback (`https://a.espncdn.com/i/headshots/soccer/players/full/{espn_id}.png`), then initials. Handled via a `stage` state (0/1/2) with `onError` cascading. SofaScore images are fetched server-side via `src/app/api/player-image/route.ts` to bypass their Referer-based hotlink blocking; do not fetch SofaScore image URLs directly from the browser.
 
 **Roster scripts** (run from repo root, require `espn_article.txt` / `espn_player_links.json` inputs):
 - `scripts/parse_rosters.py` — parses ESPN article into rosters.json

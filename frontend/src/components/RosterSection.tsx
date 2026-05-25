@@ -52,7 +52,7 @@ function getInitials(name: string): string {
 
 function PlayerPhoto({ player, accent }: { player: Player; accent: string }) {
   const sofascoreUrl = player.sofascore_id
-    ? `https://api.sofascore.com/api/v1/player/${player.sofascore_id}/image`
+    ? `/api/player-image?id=${player.sofascore_id}&type=player`
     : null;
   const espnUrl = player.espn_id
     ? `https://a.espncdn.com/i/headshots/soccer/players/full/${player.espn_id}.png`
@@ -92,7 +92,7 @@ function PlayerPhoto({ player, accent }: { player: Player; accent: string }) {
 function ManagerPhoto({ sofascoreId }: { sofascoreId?: string }) {
   const [failed, setFailed] = useState(false);
   const photoUrl = sofascoreId
-    ? `https://api.sofascore.com/api/v1/manager/${sofascoreId}/image`
+    ? `/api/player-image?id=${sofascoreId}&type=manager`
     : null;
 
   if (photoUrl && !failed) {
