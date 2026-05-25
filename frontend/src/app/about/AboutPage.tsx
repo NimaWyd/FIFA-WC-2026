@@ -17,7 +17,7 @@ import {
   CircleStackIcon,
   UsersIcon,
 } from "@heroicons/react/24/solid";
-import { fetchModelInfo } from "@/lib/api";
+import { fetchModelInfo, fetchSimulation } from "@/lib/api";
 import FeatureImportanceChart from "@/components/FeatureImportanceChart";
 import type { ModelInfo } from "@/lib/types";
 
@@ -91,29 +91,27 @@ const CREATORS = [
     name: "Nima Abbasi",
     title: "Computer Science Student at Western University",
     initial: "N",
+    photo: "/about/nima.jpeg",
     avatarFrom: "#f5c842",
     avatarTo: "#f59e0b",
     initialColor: "#000",
     github: "https://github.com/NimaWyd",
-    linkedin: "https://linkedin.com/in/nima-abbasi2004",
+    linkedin: "https://linkedin.com/in/nima-abbasi2004?_l=en_US",
   },
   {
     name: "Tareq Kurdiah",
     title: "Computer Science Student at Western University",
     initial: "T",
+    photo: "/about/tareq.jpeg",
     avatarFrom: "#3b82f6",
     avatarTo: "#1d4ed8",
     initialColor: "#fff",
     github: "https://github.com/tareqrwk",
-    linkedin: "https://linkedin.com/in/tareq-kurdiah",
+    linkedin: "https://linkedin.com/in/tareq-kurdiah?_l=en_US",
   },
 ] as const;
 
-const CHAMPION_ODDS = [
-  { team: "Spain",   pct: 22, color: "#f5c842" },
-  { team: "Brazil",  pct: 18, color: "#3b82f6" },
-  { team: "France",  pct: 15, color: "#10b981" },
-];
+const CHAMPION_COLORS = ["#f5c842", "#38bdf8", "#10b981"];
 
 // ─── Animation ──────────────────────────────────────────────────────────────
 
@@ -130,13 +128,48 @@ const fadeUp = {
 
 export default function AboutPage() {
   const [modelInfo, setModelInfo] = useState<ModelInfo | null>(null);
+  const [championOdds, setChampionOdds] = useState<{ team: string; pct: number; color: string }[] | null>(null);
 
   useEffect(() => {
     fetchModelInfo().then(setModelInfo).catch(() => {});
+    fetchSimulation()
+      .then((sim) => {
+        const top3 = [...sim.teams]
+          .sort((a, b) => b.champion - a.champion)
+          .slice(0, 3)
+          .map((t, i) => ({ team: t.team, pct: Math.round(t.champion * 100), color: CHAMPION_COLORS[i] }));
+        setChampionOdds(top3);
+      })
+      .catch(() => {});
   }, []);
 
   return (
     <div className="min-h-screen bg-navy-900 overflow-x-hidden">
+
+      {/* ═══════════════════════════════════════════════════════
+          FULL-BLEED PAGE HERO IMAGE
+      ══════════════════════════════════════════════════════ */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.1, ease: "easeOut" }}
+        className="relative w-full overflow-hidden"
+      >
+        <Image
+          src="/about/hero.png"
+          alt="FIFA World Cup 2026 Predictor"
+          width={1536}
+          height={1024}
+          className="w-full h-auto"
+          priority
+        />
+        {/* Bottom fade into page background */}
+        <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-navy-900 to-transparent" />
+        {/* Subtle top darken */}
+        <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-navy-900/60 to-transparent" />
+        {/* Side vignette */}
+        <div className="absolute inset-0 bg-gradient-to-r from-navy-900/30 via-transparent to-navy-900/30" />
+      </motion.div>
 
       {/* ═══════════════════════════════════════════════════════
           HERO
@@ -226,7 +259,7 @@ export default function AboutPage() {
                 style={{ boxShadow: "0 0 100px rgba(245,200,66,0.09), 0 32px 80px rgba(0,0,0,0.55)" }}
               >
                 <Image
-                  src="/about/hero.png"
+                  src="/about/hero.webp"
                   alt="FIFA World Cup 2026"
                   fill
                   className="object-cover"
@@ -282,16 +315,17 @@ export default function AboutPage() {
           {/* Host badges */}
           <div className="flex items-center justify-center gap-2 flex-wrap">
             {[
-              { flag: "🇺🇸", name: "USA"    },
-              { flag: "🇨🇦", name: "Canada" },
-              { flag: "🇲🇽", name: "Mexico" },
-            ].map(({ flag, name }) => (
+              { iso: "us", name: "USA"    },
+              { iso: "ca", name: "Canada" },
+              { iso: "mx", name: "Mexico" },
+            ].map(({ iso, name }) => (
               <span
                 key={name}
-                className="text-[11px] font-semibold text-sky-300 border border-sky-400/25 rounded-full px-3 py-0.5"
+                className="flex items-center gap-1.5 text-[11px] font-semibold text-sky-300 border border-sky-400/25 rounded-full px-3 py-0.5"
                 style={{ background: "rgba(56,189,248,0.06)" }}
               >
-                {flag} {name}
+                <span className={`fi fi-${iso} rounded-sm`} style={{ fontSize: "14px" }} />
+                {name}
               </span>
             ))}
           </div>
@@ -348,7 +382,7 @@ export default function AboutPage() {
               {["World Cup", "Qualifiers", "Continental Championships", "Nations League", "Friendlies"].map((label) => (
                 <span
                   key={label}
-                  className="text-[10px] font-semibold text-slate-600 uppercase tracking-wider border border-slate-700/80 rounded-full px-3 py-0.5"
+                  className="text-[10px] font-semibold text-slate-200 uppercase tracking-wider border border-slate-400/50 rounded-full px-3 py-0.5 bg-black/30 backdrop-blur-sm"
                 >
                   {label}
                 </span>
@@ -473,23 +507,27 @@ export default function AboutPage() {
               </div>
             </div>
 
-            {/* Illustrative champion probability bars */}
+            {/* Champion probability bars */}
             <div className="border-t border-navy-600 pt-4 flex flex-col gap-3">
               <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">
-                Illustrative champion probability
+                Champion probability · top 3
               </div>
-              {CHAMPION_ODDS.map(({ team, pct, color }) => (
-                <div key={team} className="flex items-center gap-3">
-                  <span className="text-sm text-slate-300 w-14 flex-shrink-0">{team}</span>
-                  <div className="flex-1 bg-navy-700 rounded-full h-1.5">
-                    <div
-                      className="h-1.5 rounded-full"
-                      style={{ width: `${pct}%`, background: color }}
-                    />
+              {championOdds === null ? (
+                <div className="text-[11px] text-slate-500 italic">Loading simulation…</div>
+              ) : (
+                championOdds.map(({ team, pct, color }) => (
+                  <div key={team} className="flex items-center gap-3">
+                    <span className="text-sm text-slate-300 w-20 flex-shrink-0 truncate">{team}</span>
+                    <div className="flex-1 bg-navy-700 rounded-full h-1.5">
+                      <div
+                        className="h-1.5 rounded-full"
+                        style={{ width: `${pct}%`, background: color }}
+                      />
+                    </div>
+                    <span className="text-sm font-semibold w-8 text-right" style={{ color }}>{pct}%</span>
                   </div>
-                  <span className="text-sm font-semibold w-8 text-right" style={{ color }}>{pct}%</span>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </motion.div>
         </motion.section>
@@ -723,61 +761,94 @@ export default function AboutPage() {
           className="flex flex-col gap-5"
         >
           <motion.div variants={fadeUp} className="flex items-center gap-2">
+            <UsersIcon className="h-4 w-4" style={{ color: "rgba(245,200,66,0.7)" }} />
             <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Built by</span>
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {CREATORS.map((c) => (
-              <motion.div
-                key={c.name}
-                variants={fadeUp}
-                className="bg-navy-800 border border-navy-600 rounded-2xl overflow-hidden"
-              >
-                <div className="grid grid-cols-[100px_1fr]">
-                  {/* Avatar panel */}
-                  <div className="bg-navy-700 flex items-center justify-center py-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-2xl mx-auto w-full">
+            {CREATORS.map((c, i) => {
+              const accent = i === 0
+                ? { glow: "rgba(245,200,66,0.18)", border: "rgba(245,200,66,0.35)", tag: "#f5c842" }
+                : { glow: "rgba(59,130,246,0.18)",  border: "rgba(59,130,246,0.35)",  tag: "#3b82f6"  };
+              return (
+                <motion.div
+                  key={c.name}
+                  variants={fadeUp}
+                  whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                  className="relative rounded-2xl overflow-hidden flex flex-col"
+                  style={{
+                    background: "rgba(15,19,36,0.95)",
+                    border: `1px solid ${accent.border}`,
+                    boxShadow: `0 0 40px ${accent.glow}, 0 8px 32px rgba(0,0,0,0.5)`,
+                  }}
+                >
+                  {/* Photo */}
+                  <div className="relative w-full overflow-hidden">
+                    <Image
+                      src={c.photo}
+                      alt={c.name}
+                      width={600}
+                      height={600}
+                      className="w-full h-auto block"
+                      sizes="(max-width: 640px) 50vw, 300px"
+                    />
+                    {/* Bottom gradient */}
+                    <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#0f1324] to-transparent" />
+                    {/* Top accent bar */}
+                    <div className="absolute inset-x-0 top-0 h-0.5" style={{ background: accent.tag }} />
+                    {/* Role badge */}
                     <div
-                      className="w-14 h-14 rounded-full flex items-center justify-center font-anton text-2xl flex-shrink-0"
-                      style={{
-                        background: `linear-gradient(135deg, ${c.avatarFrom}, ${c.avatarTo})`,
-                        color: c.initialColor,
-                      }}
-                    >
-                      {c.initial}
-                    </div>
-                  </div>
-                  {/* Info panel */}
-                  <div className="p-4 flex flex-col gap-2 justify-center">
-                    <div
-                      className="text-[9px] font-bold uppercase tracking-[0.2em]"
-                      style={{ color: "rgba(245,200,66,0.8)" }}
+                      className="absolute top-4 left-4 text-[9px] font-bold uppercase tracking-[0.25em] px-2.5 py-1 rounded-full"
+                      style={{ background: `${accent.tag}22`, border: `1px solid ${accent.tag}55`, color: accent.tag }}
                     >
                       Creator
                     </div>
-                    <div className="text-sm font-bold text-white leading-tight">{c.name}</div>
-                    <div className="text-[10px] text-slate-500 leading-snug">{c.title}</div>
-                    <div className="flex gap-2 mt-1">
+                  </div>
+
+                  {/* Info */}
+                  <div className="px-6 py-5 flex flex-col gap-4">
+                    <div>
+                      <div className="font-anton text-2xl text-white tracking-wide leading-tight">{c.name}</div>
+                      <div className="text-[11px] text-slate-500 mt-1">{c.title}</div>
+                    </div>
+
+                    {/* Links */}
+                    <div className="flex gap-3">
                       <a
                         href={c.github}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full border border-navy-500 bg-navy-700 text-slate-400 hover:text-white hover:border-slate-500 transition-colors"
+                        className="flex items-center gap-2 flex-1 justify-center py-2 rounded-xl text-[11px] font-semibold text-slate-300 hover:text-white transition-all"
+                        style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)" }}
+                        onMouseEnter={e => (e.currentTarget.style.borderColor = accent.border)}
+                        onMouseLeave={e => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)")}
                       >
+                        {/* GitHub icon */}
+                        <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 fill-current" aria-hidden="true">
+                          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.38.6.1.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.08-.73.08-.73 1.2.09 1.83 1.23 1.83 1.23 1.07 1.83 2.8 1.3 3.48 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02 0 2.04.13 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.57C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/>
+                        </svg>
                         GitHub
                       </a>
                       <a
-                        href={`https://linkedin.com/${c.linkedin}`}
+                        href={c.linkedin}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full border border-navy-500 bg-navy-700 text-slate-400 hover:text-white hover:border-slate-500 transition-colors"
+                        className="flex items-center gap-2 flex-1 justify-center py-2 rounded-xl text-[11px] font-semibold transition-all"
+                        style={{ background: `${accent.tag}18`, border: `1px solid ${accent.border}`, color: accent.tag }}
+                        onMouseEnter={e => (e.currentTarget.style.background = `${accent.tag}28`)}
+                        onMouseLeave={e => (e.currentTarget.style.background = `${accent.tag}18`)}
                       >
+                        {/* LinkedIn icon */}
+                        <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 fill-current" aria-hidden="true">
+                          <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/>
+                        </svg>
                         LinkedIn
                       </a>
                     </div>
                   </div>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              );
+            })}
           </div>
         </motion.section>
 
