@@ -19,9 +19,16 @@ import {
 } from "@heroicons/react/24/solid";
 import { fetchModelInfo, fetchSimulation } from "@/lib/api";
 import FeatureImportanceChart from "@/components/FeatureImportanceChart";
-import type { ModelInfo } from "@/lib/types";
+import type { ModelInfo, AccuracyMetrics } from "@/lib/types";
 
 // ─── Data ───────────────────────────────────────────────────────────────────
+
+const STATIC_ACCURACY: AccuracyMetrics = {
+  accuracy: 0.598669,
+  brier_score: 0.512627,
+  log_loss: 0.873619,
+  test_rows: 9167,
+};
 
 const TOP_FEATURES = [
   { feature: "elo_win_prob",        mean_abs_shap: 0.196, label: "Elo Win Probability" },
@@ -432,7 +439,7 @@ export default function AboutPage() {
             <div className="px-6 py-3.5 border-b border-navy-600 bg-navy-700/40">
               <span className="text-[11px] text-slate-500">
                 Chronological backtest
-                {modelInfo?.accuracy_metrics ? ` · ${modelInfo.accuracy_metrics.test_rows.toLocaleString()}-match held-out test set` : ""}
+                {` · ${(modelInfo?.accuracy_metrics ?? STATIC_ACCURACY).test_rows.toLocaleString()}-match held-out test set`}
                 {" "}· Isotonic calibration applied · 3-class H / D / A
               </span>
             </div>
@@ -444,30 +451,27 @@ export default function AboutPage() {
                   className="font-anton text-5xl sm:text-6xl"
                   style={{ color: "rgba(245,200,66,1)", textShadow: "0 0 30px rgba(245,200,66,0.4)" }}
                 >
-                  {modelInfo?.accuracy_metrics
-                    ? `${(modelInfo.accuracy_metrics.accuracy * 100).toFixed(0)}%`
-                    : "—"}
+                  {`${((modelInfo?.accuracy_metrics ?? STATIC_ACCURACY).accuracy * 100).toFixed(0)}%`}
                 </span>
                 <span className="text-xs font-semibold text-slate-400">Test Accuracy</span>
                 <span className="text-[10px] text-slate-600 text-center">Random baseline ~33%</span>
+                <span className="text-[10px] text-slate-500 text-center leading-relaxed">Fraction of matches where the model correctly predicted the outcome (H / D / A).</span>
               </div>
               <div className="p-6 sm:p-8 flex flex-col items-center gap-2">
                 <span className="font-anton text-5xl sm:text-6xl text-sky-400">
-                  {modelInfo?.accuracy_metrics
-                    ? modelInfo.accuracy_metrics.brier_score.toFixed(3)
-                    : "—"}
+                  {(modelInfo?.accuracy_metrics ?? STATIC_ACCURACY).brier_score.toFixed(3)}
                 </span>
                 <span className="text-xs font-semibold text-slate-400">Brier Score</span>
                 <span className="text-[10px] text-slate-600">Lower is better</span>
+                <span className="text-[10px] text-slate-500 text-center leading-relaxed">Measures overall probabilistic accuracy. Perfect = 0, random baseline ~0.64.</span>
               </div>
               <div className="p-6 sm:p-8 flex flex-col items-center gap-2">
                 <span className="font-anton text-5xl sm:text-6xl text-purple-400">
-                  {modelInfo?.accuracy_metrics
-                    ? modelInfo.accuracy_metrics.log_loss.toFixed(2)
-                    : "—"}
+                  {(modelInfo?.accuracy_metrics ?? STATIC_ACCURACY).log_loss.toFixed(2)}
                 </span>
                 <span className="text-xs font-semibold text-slate-400">Log Loss</span>
                 <span className="text-[10px] text-slate-600">Lower is better</span>
+                <span className="text-[10px] text-slate-500 text-center leading-relaxed">Penalises confident wrong predictions. Random baseline ~1.06.</span>
               </div>
             </div>
           </motion.div>
