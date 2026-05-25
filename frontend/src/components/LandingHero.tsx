@@ -39,7 +39,7 @@ export default function LandingHero() {
         {/* Left: text + CTAs + stats */}
         <div className="pt-4 md:pt-9">
           <p className="font-jb text-[12px] tracking-[0.16em] uppercase text-pitch-400">
-            ◆ Knockout predictor · USA · MEX · CAN
+            ◆ World Cup Predictor · USA · MEX · CAN
           </p>
 
           <h1 className="font-anton uppercase leading-[0.86] tracking-[-0.01em] mt-3 text-[72px] sm:text-[96px] md:text-[120px] lg:text-[148px] xl:text-[168px]">
