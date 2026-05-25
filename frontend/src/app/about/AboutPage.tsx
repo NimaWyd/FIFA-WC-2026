@@ -13,6 +13,9 @@ import {
   BeakerIcon,
   BoltIcon,
   CheckCircleIcon,
+  ArrowPathIcon,
+  CircleStackIcon,
+  UsersIcon,
 } from "@heroicons/react/24/solid";
 import { fetchModelInfo } from "@/lib/api";
 import FeatureImportanceChart from "@/components/FeatureImportanceChart";
@@ -81,6 +84,35 @@ const TECH_STACK = [
   { category: "ML & Data",  items: ["Python", "XGBoost", "scikit-learn", "SciPy", "NumPy", "pandas", "SHAP"], cat: "text-green-400",  pill: "bg-green-400/10 border-green-400/20 text-green-300" },
   { category: "API",        items: ["FastAPI", "Uvicorn", "Pydantic", "joblib"],                               cat: "text-sky-400",    pill: "bg-sky-400/10 border-sky-400/20 text-sky-300"       },
   { category: "Frontend",   items: ["Next.js 14", "TypeScript", "Tailwind CSS", "Framer Motion", "Recharts"], cat: "text-purple-400", pill: "bg-purple-400/10 border-purple-400/20 text-purple-300" },
+];
+
+const CREATORS = [
+  {
+    name: "Nima Abbasi",
+    title: "Computer Science Student at Western University",
+    initial: "N",
+    avatarFrom: "#f5c842",
+    avatarTo: "#f59e0b",
+    initialColor: "#000",
+    github: "https://github.com/NimaWyd",
+    linkedin: "https://linkedin.com/in/nima-abbasi2004",
+  },
+  {
+    name: "Tareq Kurdiah",
+    title: "Computer Science Student at Western University",
+    initial: "T",
+    avatarFrom: "#3b82f6",
+    avatarTo: "#1d4ed8",
+    initialColor: "#fff",
+    github: "https://github.com/tareqrwk",
+    linkedin: "https://linkedin.com/in/tareq-kurdiah",
+  },
+] as const;
+
+const CHAMPION_ODDS = [
+  { team: "Spain",   pct: 22, color: "#f5c842" },
+  { team: "Brazil",  pct: 18, color: "#3b82f6" },
+  { team: "France",  pct: 15, color: "#10b981" },
 ];
 
 // ─── Animation ──────────────────────────────────────────────────────────────
@@ -194,8 +226,8 @@ export default function AboutPage() {
                 style={{ boxShadow: "0 0 100px rgba(245,200,66,0.09), 0 32px 80px rgba(0,0,0,0.55)" }}
               >
                 <Image
-                  src="/about/image1.webp"
-                  alt="FIFA World Cup 2026 trophy and official Trionda match ball"
+                  src="/about/hero.png"
+                  alt="FIFA World Cup 2026"
                   fill
                   className="object-cover"
                   priority
@@ -219,6 +251,52 @@ export default function AboutPage() {
         {/* Section bottom fade */}
         <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-navy-900 to-transparent" />
       </section>
+
+      {/* ═══════════════════════════════════════════════════════
+          WC 2026 CONTEXT — STAT STRIP
+      ══════════════════════════════════════════════════════ */}
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: "easeOut", delay: 0.4 }}
+          className="border-t border-b border-navy-600 py-6 flex flex-col gap-4"
+        >
+          {/* Stats row */}
+          <div className="flex items-center justify-around gap-4 flex-wrap">
+            {[
+              { value: "48",       label: "Teams"        },
+              { value: "3",        label: "Host Nations"  },
+              { value: "104",      label: "Matches"       },
+              { value: "Jun–Jul",  label: "2026"          },
+            ].map(({ value, label }, i, arr) => (
+              <div key={label} className="flex items-center gap-4">
+                <div className="text-center">
+                  <div className="font-anton text-4xl sm:text-5xl" style={{ color: "#f5c842" }}>{value}</div>
+                  <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest mt-0.5">{label}</div>
+                </div>
+                {i < arr.length - 1 && <div className="w-px h-10 bg-navy-600 hidden sm:block" />}
+              </div>
+            ))}
+          </div>
+          {/* Host badges */}
+          <div className="flex items-center justify-center gap-2 flex-wrap">
+            {[
+              { flag: "🇺🇸", name: "USA"    },
+              { flag: "🇨🇦", name: "Canada" },
+              { flag: "🇲🇽", name: "Mexico" },
+            ].map(({ flag, name }) => (
+              <span
+                key={name}
+                className="text-[11px] font-semibold text-sky-300 border border-sky-400/25 rounded-full px-3 py-0.5"
+                style={{ background: "rgba(56,189,248,0.06)" }}
+              >
+                {flag} {name}
+              </span>
+            ))}
+          </div>
+        </motion.div>
+      </div>
 
       {/* ═══════════════════════════════════════════════════════
           STADIUM FULL-BLEED BANNER
@@ -364,6 +442,58 @@ export default function AboutPage() {
           </motion.div>
         </motion.section>
 
+        {/* ── MONTE CARLO SIMULATION ── */}
+        <motion.section
+          variants={stagger}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          className="flex flex-col gap-5"
+        >
+          <motion.div variants={fadeUp}>
+            <div className="flex items-center gap-2 mb-1">
+              <ArrowPathIcon className="h-4 w-4 text-sky-400" />
+              <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Monte Carlo Simulation</span>
+            </div>
+            <p className="text-slate-500 text-sm">We run the full 48-team tournament 5,000 times. Each run draws match outcomes from the model&apos;s probability distributions and tracks every team&apos;s path. Final win chances are frequencies across all runs.</p>
+          </motion.div>
+
+          <motion.div variants={fadeUp} className="bg-navy-800 border border-navy-600 rounded-2xl p-6 flex flex-col gap-5">
+            {/* Headline stats */}
+            <div className="grid grid-cols-2 divide-x divide-navy-600">
+              <div className="pr-6 flex flex-col gap-1">
+                <span className="font-anton text-5xl" style={{ color: "#f5c842", textShadow: "0 0 30px rgba(245,200,66,0.35)" }}>5,000</span>
+                <span className="text-xs font-semibold text-slate-400">Simulations per request</span>
+                <span className="text-[10px] text-slate-600">Full tournament, group → final</span>
+              </div>
+              <div className="pl-6 flex flex-col gap-1">
+                <span className="font-anton text-5xl text-sky-400">520K+</span>
+                <span className="text-xs font-semibold text-slate-400">Match outcomes modelled</span>
+                <span className="text-[10px] text-slate-600">5,000 runs × 104 matches</span>
+              </div>
+            </div>
+
+            {/* Illustrative champion probability bars */}
+            <div className="border-t border-navy-600 pt-4 flex flex-col gap-3">
+              <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">
+                Illustrative champion probability
+              </div>
+              {CHAMPION_ODDS.map(({ team, pct, color }) => (
+                <div key={team} className="flex items-center gap-3">
+                  <span className="text-sm text-slate-300 w-14 flex-shrink-0">{team}</span>
+                  <div className="flex-1 bg-navy-700 rounded-full h-1.5">
+                    <div
+                      className="h-1.5 rounded-full"
+                      style={{ width: `${pct}%`, background: color }}
+                    />
+                  </div>
+                  <span className="text-sm font-semibold w-8 text-right" style={{ color }}>{pct}%</span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </motion.section>
+
         {/* ── ACCURACY METRICS ── */}
         <motion.section
           variants={stagger}
@@ -454,6 +584,55 @@ export default function AboutPage() {
           </motion.div>
         </motion.section>
 
+        {/* ── DATA SOURCES + SQUAD TRACKING ── */}
+        <motion.section
+          variants={stagger}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          className="grid grid-cols-1 sm:grid-cols-2 gap-5"
+        >
+          {/* Match Data */}
+          <motion.div variants={fadeUp} className="bg-navy-800 border border-navy-600 rounded-2xl p-6 flex flex-col gap-4">
+            <div className="flex items-center gap-2">
+              <CircleStackIcon className="h-4 w-4 text-emerald-400" />
+              <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Match Data</span>
+            </div>
+            <div>
+              <div className="font-anton text-3xl text-white">49,000+</div>
+              <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest mt-0.5">Historical fixtures</div>
+            </div>
+            <p className="text-sm text-slate-400 leading-relaxed flex-1">
+              International results from 1993–2025 spanning World Cups, qualifiers, continental championships, and friendlies.
+            </p>
+            <span className="self-start text-[11px] font-semibold px-2.5 py-0.5 rounded-full border bg-emerald-400/10 border-emerald-400/20 text-emerald-300">
+              football-data.org
+            </span>
+          </motion.div>
+
+          {/* Live Squads */}
+          <motion.div variants={fadeUp} className="bg-navy-800 border border-navy-600 rounded-2xl p-6 flex flex-col gap-4">
+            <div className="flex items-center gap-2">
+              <UsersIcon className="h-4 w-4" style={{ color: "rgba(245,200,66,0.8)" }} />
+              <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Live Squads</span>
+            </div>
+            <div>
+              <div className="font-anton text-3xl text-white">Official</div>
+              <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest mt-0.5">WC 2026 rosters</div>
+            </div>
+            <p className="text-sm text-slate-400 leading-relaxed flex-1">
+              Player names, ages, clubs, and portraits updated as each nation announces their final 26-man squad.
+            </p>
+            <div className="flex flex-wrap gap-1.5">
+              {["SofaScore", "ESPN", "FotMob"].map((src) => (
+                <span key={src} className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full border bg-yellow-400/10 border-yellow-400/20 text-yellow-300">
+                  {src}
+                </span>
+              ))}
+            </div>
+          </motion.div>
+        </motion.section>
+
         {/* ── GLOSSARY ── */}
         <motion.section
           variants={stagger}
@@ -533,6 +712,73 @@ export default function AboutPage() {
               ))}
             </div>
           </motion.div>
+        </motion.section>
+
+        {/* ── BUILT BY ── */}
+        <motion.section
+          variants={stagger}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          className="flex flex-col gap-5"
+        >
+          <motion.div variants={fadeUp} className="flex items-center gap-2">
+            <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Built by</span>
+          </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {CREATORS.map((c) => (
+              <motion.div
+                key={c.name}
+                variants={fadeUp}
+                className="bg-navy-800 border border-navy-600 rounded-2xl overflow-hidden"
+              >
+                <div className="grid grid-cols-[100px_1fr]">
+                  {/* Avatar panel */}
+                  <div className="bg-navy-700 flex items-center justify-center py-6">
+                    <div
+                      className="w-14 h-14 rounded-full flex items-center justify-center font-anton text-2xl flex-shrink-0"
+                      style={{
+                        background: `linear-gradient(135deg, ${c.avatarFrom}, ${c.avatarTo})`,
+                        color: c.initialColor,
+                      }}
+                    >
+                      {c.initial}
+                    </div>
+                  </div>
+                  {/* Info panel */}
+                  <div className="p-4 flex flex-col gap-2 justify-center">
+                    <div
+                      className="text-[9px] font-bold uppercase tracking-[0.2em]"
+                      style={{ color: "rgba(245,200,66,0.8)" }}
+                    >
+                      Creator
+                    </div>
+                    <div className="text-sm font-bold text-white leading-tight">{c.name}</div>
+                    <div className="text-[10px] text-slate-500 leading-snug">{c.title}</div>
+                    <div className="flex gap-2 mt-1">
+                      <a
+                        href={c.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full border border-navy-500 bg-navy-700 text-slate-400 hover:text-white hover:border-slate-500 transition-colors"
+                      >
+                        GitHub
+                      </a>
+                      <a
+                        href={`https://linkedin.com/${c.linkedin}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full border border-navy-500 bg-navy-700 text-slate-400 hover:text-white hover:border-slate-500 transition-colors"
+                      >
+                        LinkedIn
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </motion.section>
 
         {/* ── GITHUB / MODEL INFO ── */}
