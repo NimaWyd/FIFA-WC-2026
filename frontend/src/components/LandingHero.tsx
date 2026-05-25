@@ -56,8 +56,7 @@ export default function LandingHero() {
           </div>
 
           <p className="max-w-[480px] text-[16px] leading-[1.55] text-[rgba(240,236,226,0.68)] mt-3 md:mt-7">
-            Build your bracket. Track 104 matches across 16 host cities. Climb the leaderboard
-            with predictions that the world will be talking about.
+            Predict outcomes. Simulate the bracket. Discover who the AI thinks wins FIFA World Cup 2026.
           </p>
 
           <div className="flex flex-wrap gap-3 mt-7 md:mt-8">
