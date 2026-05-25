@@ -29,6 +29,10 @@ try:
 except ImportError:
     sys.exit("pip install requests")
 
+# Force UTF-8 output on Windows (avoids cp1252 crashes on accented player names)
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
 ROSTERS_PATH = Path("frontend/src/lib/rosters.json")
 OUT_DIR      = Path("frontend/public/players")
 FAILED_LOG   = OUT_DIR / "_failed.txt"
