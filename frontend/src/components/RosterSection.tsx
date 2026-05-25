@@ -51,20 +51,20 @@ function getInitials(name: string): string {
 }
 
 function PlayerPhoto({ player, accent }: { player: Player; accent: string }) {
-  const sofascoreUrl = player.sofascore_id
-    ? `/api/player-image?id=${player.sofascore_id}&type=player`
-    : null;
   const espnUrl = player.espn_id
     ? `https://a.espncdn.com/i/headshots/soccer/players/full/${player.espn_id}.png`
     : null;
+  const sofascoreUrl = player.sofascore_id
+    ? `/players/p${player.sofascore_id}.jpg`
+    : null;
 
-  // Start at whichever source exists first
-  const [stage, setStage] = useState(() => sofascoreUrl ? 0 : espnUrl ? 1 : 2);
+  // ESPN first (public CDN, no auth), SofaScore static fallback, then initials
+  const [stage, setStage] = useState(() => espnUrl ? 0 : sofascoreUrl ? 1 : 2);
 
-  const photoUrl = stage === 0 ? sofascoreUrl : stage === 1 ? espnUrl : null;
+  const photoUrl = stage === 0 ? espnUrl : stage === 1 ? sofascoreUrl : null;
 
   const handleError = () => {
-    if (stage === 0 && espnUrl) setStage(1);
+    if (stage === 0 && sofascoreUrl) setStage(1);
     else setStage(2);
   };
 
@@ -92,7 +92,7 @@ function PlayerPhoto({ player, accent }: { player: Player; accent: string }) {
 function ManagerPhoto({ sofascoreId }: { sofascoreId?: string }) {
   const [failed, setFailed] = useState(false);
   const photoUrl = sofascoreId
-    ? `/api/player-image?id=${sofascoreId}&type=manager`
+    ? `/players/m${sofascoreId}.jpg`
     : null;
 
   if (photoUrl && !failed) {
