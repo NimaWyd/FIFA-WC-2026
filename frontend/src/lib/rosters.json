@@ -7169,383 +7169,196 @@
     "manager_sofascore_id": "784893"
   },
   "Colombia": {
-    "manager": "Nestor Lorenzo",
+    "manager": "Néstor Lorenzo",
+    "manager_sofascore_id": "138570",
     "goalkeepers": [
+      {
+        "name": "Camilo Vargas",
+        "club": "Atlas",
+        "age": 37,
+        "espn_id": "185147",
+        "sofascore_id": "125787"
+      },
       {
         "name": "David Ospina",
         "club": "Atlético Nacional",
-        "espn_id": "121842",
         "age": 37,
+        "espn_id": "121842",
         "sofascore_id": "33596"
       },
       {
         "name": "Álvaro Montero",
         "club": "Vélez Sarsfield",
-        "espn_id": "166323",
         "age": 31,
+        "espn_id": "166323",
         "sofascore_id": "926238"
-      },
-      {
-        "name": "Camilo Vargas",
-        "club": "Atlas",
-        "espn_id": "185147",
-        "age": 37,
-        "sofascore_id": "125787"
-      },
-      {
-        "name": "Mosquera Marmolejo",
-        "club": "Independiente Santa Fe",
-        "espn_id": "163908",
-        "age": 34,
-        "sofascore_id": "1014835"
-      },
-      {
-        "name": "Aldair Quintana",
-        "club": "Independiente del Valle",
-        "espn_id": "239985",
-        "age": 31
-      },
-      {
-        "name": "Kevin Mier",
-        "club": "Cruz Azul",
-        "espn_id": "266587",
-        "age": 26,
-        "sofascore_id": "1066915"
       }
     ],
     "defenders": [
       {
         "name": "Daniel Muñoz",
         "club": "Crystal Palace",
+        "age": 29,
         "espn_id": "146679",
-        "age": 29,
         "sofascore_id": "870360"
-      },
-      {
-        "name": "Jhon Lucumí",
-        "club": "Bologna",
-        "espn_id": "227697",
-        "age": 27,
-        "sofascore_id": "818481"
-      },
-      {
-        "name": "Álvaro Angulo",
-        "club": "Pumas",
-        "espn_id": "217532",
-        "age": 29,
-        "sofascore_id": "926238"
-      },
-      {
-        "name": "Santiago Arias",
-        "club": "Independiente",
-        "espn_id": "164756",
-        "age": 30,
-        "sofascore_id": "158583"
       },
       {
         "name": "Davinson Sánchez",
         "club": "Galatasaray",
-        "espn_id": "197105",
         "age": 29,
+        "espn_id": "197105",
         "sofascore_id": "566102"
       },
       {
         "name": "Johan Mojica",
         "club": "Mallorca",
-        "espn_id": "173247",
         "age": 33,
+        "espn_id": "173247",
         "sofascore_id": "344847"
+      },
+      {
+        "name": "Jhon Lucumí",
+        "club": "Bologna",
+        "age": 27,
+        "espn_id": "227697",
+        "sofascore_id": "818481"
+      },
+      {
+        "name": "Santiago Arias",
+        "club": "Independiente",
+        "age": 30,
+        "espn_id": "164756",
+        "sofascore_id": "158583"
       },
       {
         "name": "Yerry Mina",
         "club": "Cagliari",
+        "age": 31,
         "espn_id": "196901",
-        "age": 31
-      },
-      {
-        "name": "Cristian Borja",
-        "club": "Club América",
-        "espn_id": "132676",
-        "age": 33
-      },
-      {
-        "name": "Juan Cabal",
-        "club": "Juventus",
-        "espn_id": "24412",
-        "age": 25,
-        "sofascore_id": "988037"
-      },
-      {
-        "name": "Carlos Cuesta",
-        "club": "Vasco da Gama",
-        "espn_id": "235940",
-        "age": 27
+        "sofascore_id": "360396"
       },
       {
         "name": "Willer Ditta",
         "club": "Cruz Azul",
+        "age": 29,
         "espn_id": "270229",
-        "age": 29
-      },
-      {
-        "name": "Junior Hernández",
-        "club": "Deportes Tolima",
-        "espn_id": "178059",
-        "age": 27
+        "sofascore_id": "931705"
       },
       {
         "name": "Deiver Machado",
         "club": "Nantes",
-        "espn_id": "197401",
         "age": 32,
+        "espn_id": "197401",
         "sofascore_id": "822110"
-      },
-      {
-        "name": "Yerson Mosquera",
-        "club": "Wolverhampton Wanderers",
-        "espn_id": "301462",
-        "age": 25,
-        "sofascore_id": "1014835"
-      },
-      {
-        "name": "Édier Ocampo",
-        "club": "Vancouver Whitecaps",
-        "espn_id": "341727",
-        "age": 22
-      },
-      {
-        "name": "Jhohan Romaña",
-        "club": "San Lorenzo",
-        "espn_id": "235956",
-        "age": 27
-      },
-      {
-        "name": "Andrés Román",
-        "club": "Atlético Nacional",
-        "espn_id": "252488",
-        "age": 30,
-        "sofascore_id": "1160386"
       }
     ],
     "midfielders": [
       {
-        "name": "Jorge Carrascal",
-        "club": "Flamengo",
-        "espn_id": "208700",
-        "age": 27,
-        "sofascore_id": "590392"
-      },
-      {
-        "name": "Sebastian Gomez",
-        "club": "Coritiba",
-        "espn_id": "399948",
-        "age": 20,
-        "sofascore_id": "1160386"
-      },
-      {
-        "name": "Nelson Deossa",
-        "club": "Real Betis",
-        "espn_id": "322908",
-        "age": 26
-      },
-      {
-        "name": "Kevin Castaño",
-        "club": "River Plate",
-        "espn_id": "307756",
-        "age": 25,
-        "sofascore_id": "1066915"
-      },
-      {
-        "name": "Gustavo Puerta",
-        "club": "Racing Santander",
-        "espn_id": "341736",
-        "age": 22,
-        "sofascore_id": "1174889"
-      },
-      {
-        "name": "Juan Manuel Rengifo",
-        "club": "Atlético Nacional",
-        "espn_id": "345363",
-        "age": 21
-      },
-      {
-        "name": "Johan Rojas",
-        "club": "Vasco da Gama",
-        "espn_id": "334065",
-        "age": 23,
-        "sofascore_id": "925125"
-      },
-      {
-        "name": "Juan Fernando Quintero",
-        "club": "River Plate",
-        "espn_id": "177780",
-        "age": 33,
-        "sofascore_id": "221162"
-      },
-      {
-        "name": "Juan Portilla",
-        "club": "Athletico Paranaense",
-        "espn_id": "94976",
-        "age": 27,
-        "sofascore_id": "988037"
-      },
-      {
-        "name": "Jordan Barrera",
-        "club": "Botafogo",
-        "espn_id": "360063",
-        "age": 20
-      },
-      {
-        "name": "Jhon Solís",
-        "club": "Birmingham City",
-        "espn_id": "285048",
-        "age": 21,
-        "sofascore_id": "281253"
-      },
-      {
-        "name": "Jefferson Lerma",
-        "club": "Crystal Palace",
-        "espn_id": "197399",
-        "age": 31,
-        "sofascore_id": "355796"
+        "name": "James Rodríguez",
+        "club": "Minnesota United",
+        "age": 34,
+        "espn_id": "82816",
+        "sofascore_id": "107414"
       },
       {
         "name": "Richard Ríos",
         "club": "Benfica",
-        "espn_id": "301520",
         "age": 25,
+        "espn_id": "301520",
         "sofascore_id": "1015292"
       },
       {
         "name": "Jhon Arias",
         "club": "Palmeiras",
-        "espn_id": "239566",
         "age": 28,
+        "espn_id": "239566",
         "sofascore_id": "844096"
       },
       {
-        "name": "Wilmar Barrios",
-        "club": "Zenit St. Petersburg",
-        "espn_id": "182018",
-        "age": 32
+        "name": "Juan Fernando Quintero",
+        "club": "River Plate",
+        "age": 33,
+        "espn_id": "177780",
+        "sofascore_id": "221162"
       },
       {
-        "name": "Juan Cuadrado",
-        "club": "Pisa",
-        "espn_id": "118986",
-        "age": 37,
-        "sofascore_id": "988037"
+        "name": "Gustavo Puerta",
+        "club": "Racing Santander",
+        "age": 22,
+        "espn_id": "341736",
+        "sofascore_id": "1174889"
       },
       {
-        "name": "Yáser Asprilla",
-        "club": "Galatasaray",
-        "espn_id": "311056",
-        "age": 22
+        "name": "Juan Camilo Portilla",
+        "club": "Atlético Paranaense",
+        "age": 27,
+        "sofascore_id": "980580"
       },
       {
-        "name": "James Rodríguez",
-        "club": "Minnesota United",
-        "espn_id": "82816",
-        "age": 34,
-        "sofascore_id": "107414"
+        "name": "Jorge Carrascal",
+        "club": "Flamengo",
+        "age": 27,
+        "espn_id": "208700",
+        "sofascore_id": "590392"
+      },
+      {
+        "name": "Jaminton Campaz",
+        "club": "Rosario Central",
+        "age": 25,
+        "espn_id": "255295",
+        "sofascore_id": "877299"
+      },
+      {
+        "name": "Jefferson Lerma",
+        "club": "Crystal Palace",
+        "age": 31,
+        "espn_id": "197399",
+        "sofascore_id": "355796"
+      },
+      {
+        "name": "Kevin Castaño",
+        "club": "River Plate",
+        "age": 25,
+        "espn_id": "307756",
+        "sofascore_id": "1066915"
       }
     ],
     "forwards": [
       {
         "name": "Luis Díaz",
         "club": "Bayern Munich",
+        "age": 28,
         "espn_id": "257390",
-        "age": 29,
         "sofascore_id": "883537"
-      },
-      {
-        "name": "Jhon Córdoba",
-        "club": "Krasnodar",
-        "espn_id": "176058",
-        "age": 33,
-        "sofascore_id": "281253"
       },
       {
         "name": "Luis Suárez",
         "club": "Sporting CP",
-        "espn_id": "272722",
         "age": 28,
+        "espn_id": "272722",
         "sofascore_id": "914213"
       },
       {
-        "name": "Sebastián Villa",
-        "club": "Independiente Rivadavia",
-        "espn_id": "141790",
-        "age": 30
-      },
-      {
-        "name": "Neyser Villarreal",
-        "club": "Cruzeiro",
-        "espn_id": "370814",
-        "age": 21
-      },
-      {
-        "name": "Kevin Viveros",
-        "club": "Athletico Paranaense",
-        "espn_id": "268476",
-        "age": 26,
-        "sofascore_id": "1066915"
-      },
-      {
-        "name": "Stiven Mendoza",
-        "club": "Athletico Paranaense",
-        "espn_id": "197049",
-        "age": 33
-      },
-      {
-        "name": "Edwuin Cetré",
-        "club": "Estudiantes de La Plata",
-        "espn_id": "264844",
-        "age": 28
-      },
-      {
-        "name": "Jhon Durán",
-        "club": "Zenit St. Petersburg",
-        "espn_id": "285629",
-        "age": 22,
+        "name": "Jhon Córdoba",
+        "club": "Krasnodar",
+        "age": 33,
+        "espn_id": "176058",
         "sofascore_id": "281253"
       },
       {
-        "name": "Andrés Gómez",
-        "club": "Vasco da Gama",
-        "espn_id": "330924",
-        "age": 23,
-        "sofascore_id": "1160386"
-      },
-      {
-        "name": "Rafael Santos Borré",
-        "club": "Internacional",
-        "espn_id": "197052",
-        "age": 30,
-        "sofascore_id": "560116"
-      },
-      {
-        "name": "Jaminton Campaz",
-        "club": "Rosario Central",
-        "espn_id": "255295",
-        "age": 25,
-        "sofascore_id": "877299"
-      },
-      {
-        "name": "Johan Carbonero",
-        "club": "Internacional",
-        "espn_id": "270246",
-        "age": 26,
-        "sofascore_id": "925125"
-      },
-      {
-        "name": "Cucho Hernández",
+        "name": "Juan Camilo Hernández",
         "club": "Real Betis",
-        "espn_id": "336809",
-        "age": 27
+        "age": 27,
+        "sofascore_id": "1607635"
+      },
+      {
+        "name": "Carlos Andrés Gómez",
+        "club": "Vasco da Gama",
+        "age": 23,
+        "espn_id": "330924",
+        "sofascore_id": "1160386"
       }
-    ],
-    "manager_sofascore_id": "795312"
+    ]
   },
   "England": {
     "manager": "Thomas Tuchel",
