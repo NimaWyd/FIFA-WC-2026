@@ -390,18 +390,33 @@ export default function GroupView({ group, onBack, onPredict }: Props) {
                               {displayName(match.home)}
                             </span>
 
-                            {mr ? (
-                              <div className="flex flex-col items-center flex-shrink-0 px-1 gap-0.5">
-                                <span className="text-[12px] font-bold text-white tabular-nums">
-                                  {mr.homeGoals}–{mr.awayGoals}
-                                </span>
-                                <div className="flex w-10 h-0.5 rounded-full overflow-hidden">
-                                  <div className="bg-blue-400/80" style={{ width: `${Math.round(mr.homeWinProb * 100)}%` }} />
-                                  <div className="bg-slate-500/50" style={{ width: `${Math.round(mr.drawProb * 100)}%` }} />
-                                  <div className="bg-red-400/70" style={{ width: `${Math.round(mr.awayWinProb * 100)}%` }} />
+                            {mr ? (() => {
+                              const hw = mr.homeWinProb;
+                              const dw = mr.drawProb;
+                              const aw = mr.awayWinProb;
+                              const isDraw = dw >= hw && dw >= aw;
+                              const winner = hw >= aw ? match.home : match.away;
+                              const winProb = Math.round((isDraw ? dw : Math.max(hw, aw)) * 100);
+                              return (
+                                <div className="flex flex-col items-center flex-shrink-0 px-1 gap-0.5">
+                                  {isDraw ? (
+                                    <span className="text-[11px] font-bold text-slate-300 bg-navy-900/80 px-2 py-0.5 rounded border border-navy-500 whitespace-nowrap">
+                                      Draw · {winProb}%
+                                    </span>
+                                  ) : (
+                                    <div className="flex items-center gap-1 bg-navy-900/80 px-2 py-0.5 rounded border border-fifa-blue/40 shadow-[0_0_8px_rgba(26,63,255,0.15)]">
+                                      <FlagIcon team={winner} className="w-5 h-3.5 rounded-sm flex-shrink-0" />
+                                      <span className="text-[12px] font-bold text-white tabular-nums">{winProb}%</span>
+                                    </div>
+                                  )}
+                                  <div className="flex w-16 h-0.5 rounded-full overflow-hidden">
+                                    <div className="bg-blue-400/80" style={{ width: `${Math.round(hw * 100)}%` }} />
+                                    <div className="bg-slate-500/50" style={{ width: `${Math.round(dw * 100)}%` }} />
+                                    <div className="bg-red-400/70" style={{ width: `${Math.round(aw * 100)}%` }} />
+                                  </div>
                                 </div>
-                              </div>
-                            ) : (
+                              );
+                            })() : (
                               <span className="flex-shrink-0 text-[11px] font-bold text-navy-500 bg-navy-900 px-2 py-0.5 rounded border border-navy-600">
                                 VS
                               </span>
