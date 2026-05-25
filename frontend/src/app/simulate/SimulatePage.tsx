@@ -230,8 +230,6 @@ const CHAMP_PARTICLES = [
 function DChampionCol({ champion, championOdds, delay }: {
   champion: string; championOdds?: number; delay: number;
 }) {
-  const iso = TEAM_ISO[champion] ?? "";
-
   return (
     <div className="shrink-0" style={{ width: D_CHAMP_W }}>
       <div className="flex items-center justify-center" style={{ height: D_HDR_H }}>
