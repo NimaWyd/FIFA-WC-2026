@@ -172,120 +172,6 @@ export default function AboutPage() {
       </motion.div>
 
       {/* ═══════════════════════════════════════════════════════
-          HERO
-      ══════════════════════════════════════════════════════ */}
-      <section className="relative min-h-[60vh] md:min-h-[88vh] flex items-center overflow-hidden">
-        {/* Atmospheric glows */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div
-            className="absolute top-1/2 right-0 w-[900px] h-[900px] rounded-full blur-[160px] -translate-y-1/2 translate-x-1/3"
-            style={{ background: "rgba(245,200,66,0.055)" }}
-          />
-          <div
-            className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full blur-[120px]"
-            style={{ background: "rgba(26,63,255,0.04)" }}
-          />
-        </div>
-
-        <div className="relative max-w-4xl mx-auto px-4 py-10 md:py-24 w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_430px] gap-14 items-center">
-
-            {/* ── Text ── */}
-            <motion.div
-              initial={{ opacity: 0, y: 32 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.75, ease: "easeOut" }}
-              className="flex flex-col gap-7"
-            >
-              {/* Eyebrow */}
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-px" style={{ background: "rgba(245,200,66,0.7)" }} />
-                <span
-                  className="text-[11px] font-semibold uppercase tracking-[0.3em]"
-                  style={{ color: "rgba(245,200,66,0.8)" }}
-                >
-                  AI-Powered · FIFA World Cup 2026
-                </span>
-              </div>
-
-              {/* Title */}
-              <div className="leading-none">
-                <div className="font-anton text-6xl sm:text-7xl xl:text-[88px] text-white tracking-wide">
-                  INSIDE
-                </div>
-                <div
-                  className="font-anton text-6xl sm:text-7xl xl:text-[88px] tracking-wide mt-1"
-                  style={{ WebkitTextStroke: "1.5px rgba(245,200,66,0.85)", color: "transparent" }}
-                >
-                  THE MODEL
-                </div>
-              </div>
-
-              {/* Description */}
-              <p className="text-slate-400 text-[15px] leading-relaxed max-w-[420px]">
-                An ensemble machine learning system trained on 49,000 international
-                fixtures — delivering calibrated win probabilities, expected goals,
-                and scoreline forecasts for every FIFA World Cup 2026 match.
-              </p>
-
-              {/* Hero stats */}
-              <div className="flex items-center gap-7 pt-1">
-                <div>
-                  <div className="font-anton text-4xl text-white">49K+</div>
-                  <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest mt-0.5">Training Fixtures</div>
-                </div>
-                <div className="w-px h-12 bg-navy-600" />
-                <div>
-                  <div className="font-anton text-4xl text-white">3</div>
-                  <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest mt-0.5">Models Blended</div>
-                </div>
-                <div className="w-px h-12 bg-navy-600" />
-                <div>
-                  <div className="font-anton text-4xl text-white">48</div>
-                  <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest mt-0.5">Teams Modelled</div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* ── Trophy image ── */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.93, x: 24 }}
-              animate={{ opacity: 1, scale: 1, x: 0 }}
-              transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1], delay: 0.25 }}
-              className="hidden lg:block"
-            >
-              <div
-                className="relative h-[480px] rounded-2xl overflow-hidden"
-                style={{ boxShadow: "0 0 100px rgba(245,200,66,0.09), 0 32px 80px rgba(0,0,0,0.55)" }}
-              >
-                <Image
-                  src="/about/hero.webp"
-                  alt="FIFA World Cup 2026"
-                  fill
-                  className="object-cover"
-                  priority
-                />
-                {/* Left gradient fade */}
-                <div className="absolute inset-0 bg-gradient-to-l from-transparent via-navy-900/10 to-navy-900/65" />
-                {/* Bottom fade */}
-                <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-navy-900 to-transparent" />
-                {/* Gold shimmer */}
-                <div
-                  className="absolute inset-0 opacity-[0.12]"
-                  style={{ background: "linear-gradient(130deg, rgba(245,200,66,0.4) 0%, transparent 50%)" }}
-                />
-                {/* Top highlight */}
-                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
-              </div>
-            </motion.div>
-          </div>
-        </div>
-
-        {/* Section bottom fade */}
-        <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-navy-900 to-transparent" />
-      </section>
-
-      {/* ═══════════════════════════════════════════════════════
           WC 2026 CONTEXT — STAT STRIP
       ══════════════════════════════════════════════════════ */}
       <div className="max-w-4xl mx-auto px-4 py-8">
@@ -301,7 +187,7 @@ export default function AboutPage() {
               { value: "48",       label: "Teams"        },
               { value: "3",        label: "Host Nations"  },
               { value: "104",      label: "Matches"       },
-              { value: "Jun–Jul",  label: "2026"          },
+              { value: "June–July",  label: "2026"          },
             ].map(({ value, label }, i, arr) => (
               <div key={label} className="flex items-center gap-4">
                 <div className="text-center">
@@ -313,20 +199,16 @@ export default function AboutPage() {
             ))}
           </div>
           {/* Host badges */}
-          <div className="flex items-center justify-center gap-2 flex-wrap">
+          <div className="flex items-center justify-center gap-6 flex-wrap">
             {[
               { iso: "us", name: "USA"    },
               { iso: "ca", name: "Canada" },
               { iso: "mx", name: "Mexico" },
             ].map(({ iso, name }) => (
-              <span
-                key={name}
-                className="flex items-center gap-1.5 text-[11px] font-semibold text-sky-300 border border-sky-400/25 rounded-full px-3 py-0.5"
-                style={{ background: "rgba(56,189,248,0.06)" }}
-              >
-                <span className={`fi fi-${iso} rounded-sm`} style={{ fontSize: "14px" }} />
-                {name}
-              </span>
+              <div key={name} className="flex flex-col items-center gap-1.5">
+                <span className={`fi fi-${iso} rounded`} style={{ fontSize: "36px", lineHeight: 1 }} />
+                <span className="text-[11px] font-semibold text-sky-300 uppercase tracking-widest">{name}</span>
+              </div>
             ))}
           </div>
         </motion.div>
