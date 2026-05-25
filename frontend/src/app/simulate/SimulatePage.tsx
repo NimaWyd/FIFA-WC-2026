@@ -3,7 +3,7 @@
 import { useState, useRef, useLayoutEffect, useEffect } from "react";
 import { motion, AnimatePresence, useMotionValue, useTransform, animate } from "framer-motion";
 import dynamic from "next/dynamic";
-import FlagIcon from "@/components/FlagIcon";
+import FlagIcon, { TEAM_ISO } from "@/components/FlagIcon";
 import { useBracket } from "@/hooks/useBracket";
 import { useSimulation } from "@/hooks/useSimulation";
 import type { BracketMatch, BracketRound, TeamSimResult } from "@/lib/types";
@@ -230,12 +230,16 @@ const CHAMP_PARTICLES = [
 function DChampionCol({ champion, championOdds, delay }: {
   champion: string; championOdds?: number; delay: number;
 }) {
+  const iso = TEAM_ISO[champion] ?? "";
+
   return (
     <div className="shrink-0" style={{ width: D_CHAMP_W }}>
       <div className="flex items-center justify-center" style={{ height: D_HDR_H }}>
         <DLabel text="Champion" />
       </div>
+
       <div className="relative flex flex-col items-center justify-center" style={{ height: D_COL_H }}>
+
         {/* Trophy frame */}
         <motion.div
           initial={{ opacity: 0, y: 16, scale: 0.92 }}
@@ -276,8 +280,8 @@ function DChampionCol({ champion, championOdds, delay }: {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: delay + 0.18, duration: 0.32 }}
-          className="font-anton text-[42px] leading-none mt-3 text-center"
-          style={{ color: "#f5c842", textShadow: "0 0 28px rgba(245,200,66,0.3)" }}
+          className="font-anton text-[42px] leading-none mt-3 text-center truncate"
+          style={{ maxWidth: D_CHAMP_W - 8, color: "#f5c842", textShadow: "0 0 28px rgba(245,200,66,0.3)" }}
         >
           {champion}
         </motion.div>
@@ -695,7 +699,7 @@ export default function SimulatePage() {
             {/* ── Desktop bracket ── */}
             <section className="hidden md:block">
               <div
-                className="rounded-xl overflow-hidden"
+                className="relative rounded-xl overflow-hidden"
                 style={{
                   background: "rgba(255,255,255,0.015)",
                   border: "1px solid rgba(255,255,255,0.07)",
@@ -707,7 +711,28 @@ export default function SimulatePage() {
                   className="pointer-events-none"
                   style={{ height: 1, background: "linear-gradient(90deg, transparent 0%, rgba(245,200,66,0.15) 40%, rgba(245,200,66,0.25) 50%, rgba(245,200,66,0.15) 60%, transparent 100%)" }}
                 />
-                <div className="py-6 px-2">
+
+                {/* Champion flag wash */}
+                {champion && TEAM_ISO[champion] && (
+                  <motion.span
+                    className={`fi fi-${TEAM_ISO[champion]} absolute pointer-events-none`}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 0.28 }}
+                    transition={{ delay: 0.9, duration: 1.8, ease: "easeIn" }}
+                    style={{
+                      top: 0, right: 0, bottom: 0,
+                      width: "42%",
+                      display: "block",
+                      backgroundSize: "cover",
+                      backgroundPosition: "center right",
+                      WebkitMaskImage: "linear-gradient(to right, transparent 0%, rgba(0,0,0,0.5) 35%, black 65%, black 100%)",
+                      maskImage: "linear-gradient(to right, transparent 0%, rgba(0,0,0,0.5) 35%, black 65%, black 100%)",
+                      zIndex: 0,
+                    }}
+                  />
+                )}
+
+                <div className="py-6 px-2" style={{ position: "relative", zIndex: 1 }}>
                   <BracketDiagram
                     rounds={bracket.data.rounds}
                     champion={champion}

@@ -2,7 +2,7 @@ import clsx from "clsx";
 
 // Maps backend canonical team names → ISO 3166-1 alpha-2 codes for flag-icons CSS.
 // Includes both canonical and common aliases to handle any name the API returns.
-const TEAM_ISO: Record<string, string> = {
+export const TEAM_ISO: Record<string, string> = {
   // Hosts
   "United States": "us",
   "Canada": "ca",
