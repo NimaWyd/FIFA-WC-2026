@@ -1,5 +1,5 @@
 """
-Download player and manager portrait images from Transfermarkt into frontend/public/players/.
+Download player and manager portrait images from FotMob into frontend/public/players/.
 
 Usage (run from repo root):
     python scripts/download_player_images.py
@@ -11,9 +11,9 @@ Images are saved as:
 Already-downloaded files are skipped. Failed lookups are logged to
 frontend/public/players/_failed.txt so you can retry manually.
 
-Uses Transfermarkt's internal quickselect JSON API — no API key required.
-A 1-second delay between requests keeps well within rate limits.
-With ~1000 players + 48 managers this takes around 20-25 minutes.
+Uses FotMob's public search API — no API key required.
+A 0.5-second delay between requests keeps well within rate limits.
+With ~1000 players + 48 managers this takes around 10-15 minutes.
 """
 
 import json
@@ -33,20 +33,18 @@ ROSTERS_PATH = Path("frontend/src/lib/rosters.json")
 OUT_DIR      = Path("frontend/public/players")
 FAILED_LOG   = OUT_DIR / "_failed.txt"
 
-TM_SEARCH = "https://www.transfermarkt.com/ceapi/quickselect/query/{query}"
-HEADERS   = {
+FOTMOB_SEARCH = "https://apigw.fotmob.com/searchapi/suggest?term={term}"
+FOTMOB_IMAGE  = "https://images.fotmob.com/image_resources/playerimages/{id}.png"
+
+HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
         "AppleWebKit/537.36 (KHTML, like Gecko) "
         "Chrome/124.0.0.0 Safari/537.36"
     ),
-    "Accept": "application/json, text/javascript, */*; q=0.01",
-    "Accept-Language": "en-US,en;q=0.9",
-    "Referer": "https://www.transfermarkt.com/",
-    "X-Requested-With": "XMLHttpRequest",
 }
 
-DELAY       = 1.0
+DELAY       = 0.5
 MAX_RETRIES = 3
 
 
@@ -66,77 +64,67 @@ def token_sim(a: str, b: str) -> float:
     return len(ta & tb) / max(len(ta), len(tb))
 
 
-# ── Transfermarkt API ─────────────────────────────────────────────────────────
+# ── FotMob API ────────────────────────────────────────────────────────────────
 
-def _tm_get(name: str) -> dict | None:
-    """Call TM quickselect, trying original name then ASCII-stripped fallback."""
+def search_fotmob(name: str, is_coach: bool = False) -> str | None:
+    """
+    Search FotMob for a player or coach by name.
+    Returns a FotMob player ID, or None if not found.
+    """
     ascii_ver = normalize(name)
-    queries = list(dict.fromkeys([name, ascii_ver]))  # deduplicate while preserving order
+    queries = list(dict.fromkeys([name, ascii_ver]))  # original then ASCII, deduplicated
 
     for q in queries:
+        url = FOTMOB_SEARCH.format(term=quote(q))
         for attempt in range(MAX_RETRIES):
             try:
-                r = requests.get(
-                    TM_SEARCH.format(query=quote(q)),
-                    headers=HEADERS,
-                    timeout=10,
-                )
+                r = requests.get(url, headers=HEADERS, timeout=10)
                 if r.status_code == 429:
-                    wait = 10 * (attempt + 1)
+                    wait = 5 * (attempt + 1)
                     print(f"    [rate limited] waiting {wait}s …")
                     time.sleep(wait)
                     continue
-                if r.status_code == 200:
-                    return r.json()
+                if r.status_code != 200:
+                    break
+                data = r.json()
                 break
             except Exception:
-                time.sleep(2)
+                time.sleep(1)
+                data = None
+        else:
+            data = None
+
+        if not data:
+            continue
+
+        options = []
+        for group in data.get("squadMemberSuggest", []):
+            options.extend(group.get("options", []))
+
+        # Score each candidate: name similarity + role bonus
+        best_id, best_score = None, 0.0
+        for opt in options:
+            raw_text = opt.get("text", "")
+            # FotMob format: "Player Name|id"
+            candidate_name = raw_text.split("|")[0]
+            payload = opt.get("payload", {})
+
+            sim = token_sim(name, candidate_name)
+            role_match = payload.get("isCoach", False) == is_coach
+            score = sim + (0.1 if role_match else 0.0)
+
+            if score > best_score:
+                best_score = score
+                best_id = payload.get("id")
+
+        if best_id and best_score >= 0.5:
+            return str(best_id)
 
     return None
 
 
-def _best_image(data: dict, name: str, pool_keys: list[str]) -> str | None:
-    """Pick the best-matching entry from TM results and return its image URL."""
-    best_img, best_score = None, 0.0
-
-    for key in pool_keys:
-        for entry in data.get(key, []):
-            entry_name = entry.get("name") or ""
-            score = token_sim(name, entry_name)
-            if score > best_score:
-                best_score = score
-                # TM returns "image" in quickselect; fall back to CDN construction
-                img = entry.get("image") or entry.get("img")
-                if not img:
-                    eid = entry.get("id")
-                    if eid:
-                        img = (
-                            f"https://img.tm-aws.com/image/trainer/medium/t{eid}.jpg"
-                            if key == "trainers"
-                            else f"https://img.tm-aws.com/image/players/medium/p{eid}.jpg"
-                        )
-                best_img = img
-
-    return best_img if best_score >= 0.45 else None
-
-
-def search_tm(name: str, kind: str = "player") -> str | None:
-    """
-    Search Transfermarkt for a player or coach by name.
-    Returns the portrait image URL, or None if not found.
-    kind: "player" | "coach"
-    """
-    data = _tm_get(name)
-    if not data:
-        return None
-
-    # Coaches often appear in "trainers"; players in "players".
-    # If primary pool is empty we also check the other one as fallback.
-    pool_keys = ["trainers", "players"] if kind == "coach" else ["players", "trainers"]
-    return _best_image(data, name, pool_keys)
-
-
-def download_image(url: str, dest: Path) -> bool:
+def download_image(fotmob_id: str, dest: Path) -> bool:
+    url = FOTMOB_IMAGE.format(id=fotmob_id)
     try:
         r = requests.get(url, headers=HEADERS, timeout=15, allow_redirects=True)
         if r.status_code == 200 and len(r.content) > 1500:
@@ -152,11 +140,15 @@ def download_image(url: str, dest: Path) -> bool:
 def main() -> None:
     OUT_DIR.mkdir(parents=True, exist_ok=True)
 
+    # Remove stale test files from development
+    for test_file in OUT_DIR.glob("test_*"):
+        test_file.unlink()
+
     with open(ROSTERS_PATH, encoding="utf-8") as f:
         rosters = json.load(f)
 
-    # (display_label, search_name, dest_path, kind)
-    jobs: list[tuple[str, str, Path, str]] = []
+    # (display_label, search_name, dest_path, is_coach)
+    jobs: list[tuple[str, str, Path, bool]] = []
 
     for team, roster in rosters.items():
         # Manager
@@ -167,13 +159,13 @@ def main() -> None:
                 f"{mgr_name} [{team}] (coach)",
                 mgr_name,
                 OUT_DIR / f"m{mgr_sid}.jpg",
-                "coach",
+                True,
             ))
 
         if roster.get("released") is False:
             continue
 
-        # Players — only those with sofascore_id (ESPN CDN covers the rest)
+        # Players — only those with sofascore_id (ESPN CDN covers the rest live)
         for pos in ("goalkeepers", "defenders", "midfielders", "forwards"):
             for p in roster.get(pos, []):
                 sid = p.get("sofascore_id")
@@ -183,7 +175,7 @@ def main() -> None:
                     f"{p['name']} [{team}]",
                     p["name"],
                     OUT_DIR / f"p{sid}.jpg",
-                    "player",
+                    False,
                 ))
 
     total = len(jobs)
@@ -193,19 +185,19 @@ def main() -> None:
     print(f"Total entries : {total}")
     print(f"Estimated time: {total * DELAY / 60:.0f}–{total * DELAY * 1.5 / 60:.0f} min\n")
 
-    for i, (display, search_name, dest, kind) in enumerate(jobs, 1):
+    for i, (display, search_name, dest, is_coach) in enumerate(jobs, 1):
         if dest.exists():
             skipped += 1
             continue
 
-        img_url = search_tm(search_name, kind)
+        fotmob_id = search_fotmob(search_name, is_coach)
         time.sleep(DELAY)
 
-        if not img_url:
+        if not fotmob_id:
             failed += 1
             failed_names.append(display)
         else:
-            if download_image(img_url, dest):
+            if download_image(fotmob_id, dest):
                 downloaded += 1
                 print(f"  [{i}/{total}] OK   {display}")
             else:
