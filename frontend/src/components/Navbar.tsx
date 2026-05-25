@@ -42,7 +42,7 @@ export default function Navbar() {
               isHome ? "text-[#f0ece2]" : "text-white"
             }`}
           >
-            World Cup 2026
+            World Cup 2026 Predictor
           </span>
         </Link>
 
