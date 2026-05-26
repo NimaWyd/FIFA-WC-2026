@@ -1779,9 +1779,198 @@
     "manager_sofascore_id": "52965"
   },
   "Morocco": {
-    "released": false,
     "manager": "Mohamed Ouahbi",
-    "manager_sofascore_id": "807706"
+    "manager_sofascore_id": "807706",
+    "goalkeepers": [
+      {
+        "name": "Yassine Bounou",
+        "club": "Al Hilal",
+        "age": 35,
+        "espn_id": "175149",
+        "sofascore_id": "970576"
+      },
+      {
+        "name": "Munir El Kajoui",
+        "club": "RS Berkane",
+        "age": 37,
+        "espn_id": "206232",
+        "sofascore_id": "141967"
+      },
+      {
+        "name": "Ahmed Reda Tagnaouti",
+        "club": "FAR Rabat",
+        "age": 30,
+        "espn_id": "195240",
+        "sofascore_id": "359280"
+      }
+    ],
+    "defenders": [
+      {
+        "name": "Achraf Hakimi",
+        "club": "PSG",
+        "age": 27,
+        "espn_id": "240233",
+        "sofascore_id": "814594"
+      },
+      {
+        "name": "Noussair Mazraoui",
+        "club": "Man United",
+        "age": 28,
+        "espn_id": "239350",
+        "sofascore_id": "847030"
+      },
+      {
+        "name": "Issa Diop",
+        "club": "Fulham",
+        "age": 29,
+        "espn_id": "230963",
+        "sofascore_id": "825719"
+      },
+      {
+        "name": "Anass Salah-Eddine",
+        "club": "PSV",
+        "age": 24,
+        "espn_id": "297296",
+        "sofascore_id": "961684"
+      },
+      {
+        "name": "Youssef Belammari",
+        "club": "Al Ahly",
+        "age": 27,
+        "espn_id": "393692",
+        "sofascore_id": "919484"
+      },
+      {
+        "name": "Nayef Aguerd",
+        "club": "Marseille",
+        "age": 30,
+        "espn_id": "245243",
+        "sofascore_id": "877102"
+      },
+      {
+        "name": "Chadi Riad",
+        "club": "Crystal Palace",
+        "age": 22,
+        "espn_id": "307870",
+        "sofascore_id": "1064218"
+      },
+      {
+        "name": "Redouane Halhal",
+        "club": "Mechelen",
+        "age": 23,
+        "espn_id": "328300",
+        "sofascore_id": "1143667"
+      },
+      {
+        "name": "Zakaria El Ouahdi",
+        "club": "Genk",
+        "age": 24,
+        "espn_id": "325024",
+        "sofascore_id": "1134470"
+      }
+    ],
+    "midfielders": [
+      {
+        "name": "Ayyoub Bouaddi",
+        "club": "LOSC",
+        "age": 18,
+        "espn_id": "373927",
+        "sofascore_id": "1564180"
+      },
+      {
+        "name": "Sofyan Amrabat",
+        "club": "Real Betis",
+        "age": 29,
+        "espn_id": "195226",
+        "sofascore_id": "359272"
+      },
+      {
+        "name": "Samir El Mourabet",
+        "club": "Strasbourg",
+        "age": 20,
+        "espn_id": "378491",
+        "sofascore_id": "1605921"
+      },
+      {
+        "name": "Neil El Aynaoui",
+        "club": "Roma",
+        "age": 24,
+        "espn_id": "323807",
+        "sofascore_id": "1128530"
+      },
+      {
+        "name": "Azzedine Ounahi",
+        "club": "Girona",
+        "age": 26,
+        "espn_id": "291552",
+        "sofascore_id": "991421"
+      },
+      {
+        "name": "Bilal El Khannouss",
+        "club": "Stuttgart",
+        "age": 22,
+        "espn_id": "336595",
+        "sofascore_id": "1126569"
+      }
+    ],
+    "forwards": [
+      {
+        "name": "Brahim Díaz",
+        "club": "Real Madrid",
+        "age": 26,
+        "espn_id": "246532",
+        "sofascore_id": "835485"
+      },
+      {
+        "name": "Ayoub El Kaabi",
+        "club": "Olympiacos",
+        "age": 32,
+        "espn_id": "269562",
+        "sofascore_id": "919793"
+      },
+      {
+        "name": "Yassine Gessime",
+        "club": "Strasbourg",
+        "age": 20,
+        "espn_id": "379012",
+        "sofascore_id": "1638338"
+      },
+      {
+        "name": "Ismael Saibari",
+        "club": "PSV",
+        "age": 25,
+        "espn_id": "304572",
+        "sofascore_id": "1063767"
+      },
+      {
+        "name": "Soufiane Rahimi",
+        "club": "Al Ain",
+        "age": 29,
+        "espn_id": "276139",
+        "sofascore_id": "953995"
+      },
+      {
+        "name": "Abdessamad Ezzalzouli",
+        "club": "Real Betis",
+        "age": 24,
+        "espn_id": "300912",
+        "sofascore_id": "1011375"
+      },
+      {
+        "name": "Chemsdine Talbi",
+        "club": "Sunderland",
+        "age": 21,
+        "espn_id": "360062",
+        "sofascore_id": "1142675"
+      },
+      {
+        "name": "Ayoube Amaimouni",
+        "club": "Frankfurt",
+        "age": 21,
+        "espn_id": "416636",
+        "sofascore_id": "1898148"
+      }
+    ]
   },
   "Haiti": {
     "manager": "Sebastien Migne",
@@ -2169,9 +2358,198 @@
     "manager_sofascore_id": "784471"
   },
   "United States": {
-    "released": false,
     "manager": "Mauricio Pochettino",
-    "manager_sofascore_id": "3377"
+    "manager_sofascore_id": "3377",
+    "goalkeepers": [
+      {
+        "name": "Matthew Freese",
+        "club": "New York City FC",
+        "age": 27,
+        "espn_id": "252974",
+        "sofascore_id": "973436"
+      },
+      {
+        "name": "Matt Turner",
+        "club": "New England Revolution",
+        "age": 31,
+        "espn_id": "303794",
+        "sofascore_id": "833943"
+      },
+      {
+        "name": "Chris Brady",
+        "club": "Chicago Fire",
+        "age": 22,
+        "espn_id": "303693",
+        "sofascore_id": "1024293"
+      }
+    ],
+    "defenders": [
+      {
+        "name": "Chris Richards",
+        "club": "Crystal Palace",
+        "age": 26,
+        "espn_id": "272585",
+        "sofascore_id": "931844"
+      },
+      {
+        "name": "Tim Ream",
+        "club": "Charlotte FC",
+        "age": 38,
+        "espn_id": "146290",
+        "sofascore_id": "118179"
+      },
+      {
+        "name": "Mark McKenzie",
+        "club": "Toulouse",
+        "age": 27,
+        "espn_id": "77072",
+        "sofascore_id": "922759"
+      },
+      {
+        "name": "Auston Trusty",
+        "club": "Celtic",
+        "age": 27,
+        "espn_id": "228619",
+        "sofascore_id": "822459"
+      },
+      {
+        "name": "Antonee Robinson",
+        "club": "Fulham",
+        "age": 28,
+        "espn_id": "222396",
+        "sofascore_id": "803174"
+      },
+      {
+        "name": "Sergiño Dest",
+        "club": "PSV",
+        "age": 25,
+        "espn_id": "266291",
+        "sofascore_id": "906021"
+      },
+      {
+        "name": "Alex Freeman",
+        "club": "Villarreal",
+        "age": 21,
+        "espn_id": "248276",
+        "sofascore_id": "1184541"
+      },
+      {
+        "name": "Joe Scally",
+        "club": "Gladbach",
+        "age": 23,
+        "espn_id": "272135",
+        "sofascore_id": "1002920"
+      },
+      {
+        "name": "Maximilian Arfsten",
+        "club": "Columbus Crew",
+        "age": 25,
+        "espn_id": "359542",
+        "sofascore_id": "1471659"
+      },
+      {
+        "name": "Miles Robinson",
+        "club": "Cincinnati",
+        "age": 29,
+        "espn_id": "249768",
+        "sofascore_id": "868843"
+      }
+    ],
+    "midfielders": [
+      {
+        "name": "Tyler Adams",
+        "club": "Bournemouth",
+        "age": 27,
+        "espn_id": "222776",
+        "sofascore_id": "800419"
+      },
+      {
+        "name": "Weston McKennie",
+        "club": "Juventus",
+        "age": 27,
+        "espn_id": "256715",
+        "sofascore_id": "881931"
+      },
+      {
+        "name": "Cristian Roldan",
+        "club": "Seattle Sounders",
+        "age": 30,
+        "espn_id": "216617",
+        "sofascore_id": "790171"
+      },
+      {
+        "name": "Sebastian Berhalter",
+        "club": "Vancouver Whitecaps",
+        "age": 25,
+        "espn_id": "295771",
+        "sofascore_id": "1014845"
+      },
+      {
+        "name": "Brenden Aaronson",
+        "club": "Leeds United",
+        "age": 25,
+        "espn_id": "259653",
+        "sofascore_id": "973431"
+      }
+    ],
+    "forwards": [
+      {
+        "name": "Christian Pulisic",
+        "club": "Milan",
+        "age": 27,
+        "espn_id": "225607",
+        "sofascore_id": "817957"
+      },
+      {
+        "name": "Timothy Weah",
+        "club": "Marseille",
+        "age": 26,
+        "espn_id": "266027",
+        "sofascore_id": "855810"
+      },
+      {
+        "name": "Malik Tillman",
+        "club": "Leverkusen",
+        "age": 23,
+        "espn_id": "301416",
+        "sofascore_id": "975798"
+      },
+      {
+        "name": "Giovanni Reyna",
+        "club": "Gladbach",
+        "age": 23,
+        "espn_id": "290230",
+        "sofascore_id": "989056"
+      },
+      {
+        "name": "Alejandro Zendejas",
+        "club": "Club América",
+        "age": 28,
+        "espn_id": "212824",
+        "sofascore_id": "790108"
+      },
+      {
+        "name": "Folarin Balogun",
+        "club": "Monaco",
+        "age": 24,
+        "espn_id": "282643",
+        "sofascore_id": "934237"
+      },
+      {
+        "name": "Ricardo Pepi",
+        "club": "PSV",
+        "age": 23,
+        "espn_id": "289120",
+        "sofascore_id": "986395"
+      },
+      {
+        "name": "Haji Wright",
+        "club": "Coventry",
+        "age": 28,
+        "espn_id": "220474",
+        "sofascore_id": "818391"
+      }
+    ]
   },
   "Australia": {
     "released": false,
