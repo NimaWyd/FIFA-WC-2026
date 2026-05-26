@@ -45,7 +45,7 @@ const TOP_FEATURES = [
 
 
 const PIPELINE_STEPS = [
-  { num: "01", title: "Data Ingestion",       desc: "49,000+ international fixtures from 1993–2025, spanning WC, qualifiers, continental championships, and friendlies.", accent: "sky" },
+  { num: "01", title: "Data Ingestion",       desc: "49,000+ international fixtures from 1993–2026, spanning WC, qualifiers, continental championships, and friendlies.", accent: "sky" },
   { num: "02", title: "Feature Engineering",  desc: "Elo ratings, rolling form windows, H2H records, defence ratings, rest days, and contextual flags built pre-match.", accent: "emerald" },
   { num: "03", title: "Chronological Split",  desc: "Train / val / test split preserving time order. No future information leaks into training features.", accent: "violet" },
   { num: "04", title: "Model Training",       desc: "XGBoost, Logistic Regression, and MLP trained independently on identical feature vectors with sample weighting.", accent: "orange" },
@@ -527,7 +527,7 @@ export default function AboutPage() {
               <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest mt-0.5">Historical fixtures</div>
             </div>
             <p className="text-sm text-slate-400 leading-relaxed flex-1">
-              International results from 1993–2025 spanning World Cups, qualifiers, continental championships, and friendlies.
+              International results from 1993–2026 spanning World Cups, qualifiers, continental championships, and friendlies.
             </p>
             <span className="self-start text-[11px] font-semibold px-2.5 py-0.5 rounded-full border bg-emerald-400/10 border-emerald-400/20 text-emerald-300">
               football-data.org
@@ -541,8 +541,8 @@ export default function AboutPage() {
               <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Live Squads</span>
             </div>
             <div>
-              <div className="font-anton text-3xl text-white">Official</div>
-              <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest mt-0.5">WC 2026 rosters</div>
+              <div className="font-anton text-3xl text-white">37 <span className="text-slate-500 text-xl">/ 48</span></div>
+              <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest mt-0.5">Squads announced</div>
             </div>
             <p className="text-sm text-slate-400 leading-relaxed flex-1">
               Player names, ages, clubs, and portraits updated as each nation announces their final 26-man squad.
