@@ -163,7 +163,7 @@ export default function AboutPage() {
         className="relative w-full overflow-hidden"
       >
         <Image
-          src="/about/hero.png"
+          src="/about/hero1.png"
           alt="FIFA World Cup 2026 Predictor"
           width={1536}
           height={1024}
@@ -177,49 +177,6 @@ export default function AboutPage() {
         {/* Side vignette */}
         <div className="absolute inset-0 bg-gradient-to-r from-navy-900/30 via-transparent to-navy-900/30" />
       </motion.div>
-
-      {/* ═══════════════════════════════════════════════════════
-          WC 2026 CONTEXT — STAT STRIP
-      ══════════════════════════════════════════════════════ */}
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut", delay: 0.4 }}
-          className="border-t border-b border-navy-600 py-6 flex flex-col gap-4"
-        >
-          {/* Stats row */}
-          <div className="flex items-center justify-around gap-4 flex-wrap">
-            {[
-              { value: "48",       label: "Teams"        },
-              { value: "3",        label: "Host Nations"  },
-              { value: "104",      label: "Matches"       },
-              { value: "June–July",  label: "2026"          },
-            ].map(({ value, label }, i, arr) => (
-              <div key={label} className="flex items-center gap-4">
-                <div className="text-center">
-                  <div className="font-anton text-4xl sm:text-5xl" style={{ color: "#f5c842" }}>{value}</div>
-                  <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest mt-0.5">{label}</div>
-                </div>
-                {i < arr.length - 1 && <div className="w-px h-10 bg-navy-600 hidden sm:block" />}
-              </div>
-            ))}
-          </div>
-          {/* Host badges */}
-          <div className="flex items-center justify-center gap-6 flex-wrap">
-            {[
-              { iso: "us", name: "USA"    },
-              { iso: "ca", name: "Canada" },
-              { iso: "mx", name: "Mexico" },
-            ].map(({ iso, name }) => (
-              <div key={name} className="flex flex-col items-center gap-1.5">
-                <span className={`fi fi-${iso} rounded`} style={{ fontSize: "36px", lineHeight: 1 }} />
-                <span className="text-[11px] font-semibold text-sky-300 uppercase tracking-widest">{name}</span>
-              </div>
-            ))}
-          </div>
-        </motion.div>
-      </div>
 
       {/* ═══════════════════════════════════════════════════════
           STADIUM FULL-BLEED BANNER
