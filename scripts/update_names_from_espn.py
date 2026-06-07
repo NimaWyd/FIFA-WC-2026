@@ -165,9 +165,9 @@ def parse_espn(text: str) -> dict[str, dict[str, list[str]]]:
             names = []
             for entry in players_raw.split(","):
                 entry = entry.strip()
-                # Strip club in parentheses: "Name (Club)"
-                name = re.sub(r"\s*\([^)]*\)\s*$", "", entry).strip()
-                if name:
+                # Strip club in parentheses: "Name (Club)" or "Name (Club)." or unclosed "Name (Club"
+                name = re.sub(r"\s*\([^)]*\)?\s*$", "", entry).strip().rstrip(".")
+                if name and "(" not in name:
                     names.append(name)
             squads.setdefault(current_team, {})[current_pos] = names
             continue
@@ -241,45 +241,48 @@ def main() -> None:
                 print(f"  MGR  {espn_team}: '{old}' → '{new}'")
                 updated += 1
 
+        # Build a flat index of all players in this team across all positions
+        # so we can match even when ESPN and our data disagree on position.
+        # flat_index: list of (pos_key, player_dict, list_ref)
+        flat_index: list[tuple[str, dict, list]] = []
+        for pos_key in ("goalkeepers", "defenders", "midfielders", "forwards"):
+            for p in roster.get(pos_key, []):
+                flat_index.append((pos_key, p, roster[pos_key]))
+
+        matched_players: set[int] = set()  # indices into flat_index
+
         for pos_key, espn_names in espn_data.items():
             if pos_key == "manager":
                 continue
-            roster_players = roster.get(pos_key, [])
-            if not roster_players:
-                continue
-
-            already_matched: set[int] = set()
 
             for espn_name in espn_names:
-                # Find best unmatched roster player
-                best_idx, best_score = -1, 0.0
-                for i, p in enumerate(roster_players):
-                    if i in already_matched:
+                best_fi, best_score = -1, 0.0
+                for fi, (_, p, _) in enumerate(flat_index):
+                    if fi in matched_players:
                         continue
                     s = combined_sim(espn_name, p["name"])
                     if s > best_score:
                         best_score = s
-                        best_idx = i
+                        best_fi = fi
 
-                if best_idx == -1:
+                if best_fi == -1:
                     unmatched.append(f"{espn_team} / {pos_key} / {espn_name} (no candidates)")
                     continue
 
                 if best_score >= 0.35:
-                    already_matched.add(best_idx)
-                    old_name = roster_players[best_idx]["name"]
+                    matched_players.add(best_fi)
+                    _, player, _ = flat_index[best_fi]
+                    old_name = player["name"]
                     if old_name != espn_name:
-                        roster_players[best_idx]["name"] = espn_name
-                        # Clear stale fotmob_name if it was set for nickname matching
-                        # (ESPN name IS the display name now)
-                        if "fotmob_name" in roster_players[best_idx]:
-                            del roster_players[best_idx]["fotmob_name"]
-                        print(f"  NAME {espn_team}/{pos_key}: '{old_name}' → '{espn_name}'")
+                        player["name"] = espn_name
+                        player.pop("fotmob_name", None)
+                        print(f"  NAME {espn_team}: '{old_name}' → '{espn_name}'")
                         updated += 1
                 else:
+                    _, best_p, _ = flat_index[best_fi]
                     unmatched.append(
                         f"{espn_team} / {pos_key} / {espn_name} "
-                        f"(best={roster_players[best_idx]['name']} score={best_score:.2f})"
+                        f"(best={best_p['name']} score={best_score:.2f})"
                     )
 
     with open(ROSTERS_PATH, "w", encoding="utf-8") as f:
