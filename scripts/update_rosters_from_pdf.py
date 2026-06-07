@@ -224,7 +224,10 @@ def main() -> None:
     tmp_fd, tmp_path = tempfile.mkstemp(suffix=".pdf")
     try:
         os.write(tmp_fd, response.content)
+    finally:
         os.close(tmp_fd)
+
+    try:
         print(f"  Downloaded {len(response.content) // 1024} KB → {tmp_path}")
 
         # ── 3. Parse all 48 pages ────────────────────────────────────────────────
