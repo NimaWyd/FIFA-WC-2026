@@ -189,22 +189,51 @@ def parse_player_words(words: list[dict], ref_date: date,
     }
 
 
-def parse_coach_words(words: list[dict], col_bounds: tuple[float, float, float, float]) -> str:
+def parse_coach_words(words: list[dict], col_bounds: tuple[float, float] = (181, 267)) -> str:
     """
-    Parse the 'Head coach' row using column boundaries from the page header.
+    Parse the 'Head coach' row using coach-specific column boundaries.
 
-    The coach row uses the same column layout as player rows.
+    Coach columns differ from player columns. Algeria reference positions:
+      - Coach first_names: x ∈ [181, 267)
+      - Coach last_name:   x ∈ [267, 351)
+      - Nationality:       x ≥ 351
+
+    Empirically other teams shift first/last starting positions by ±20px
+    (e.g. Argentina first=168/last=263, Spain first=162/last=238). We widen
+    the acceptance bands so all 48 coaches parse correctly while still
+    excluding the leftmost display-name columns (x < 160) and the
+    rightmost nationality column (x ≥ 345).
     """
     tokens = [(w["x0"], w["text"].replace("\x00", "")) for w in words]
-    x_12, x_23, x_34, x_dob = col_bounds
+    x_first, x_last = col_bounds
+    # Widen first-name lower bound to admit teams whose name col starts left of 181
+    # (e.g. Argentina=168, Mexico=159, Spain=162, Korea=169). Anything below 155
+    # is still in the leftmost display-name column.
+    x_first_lo = min(x_first, 155)
+    x_last_lo = min(x_last, 230)
+
+    # Detect nationality column: the last big horizontal gap (>40 px) between
+    # consecutive tokens with x >= x_first_lo marks the start of nationality.
+    # Some teams have nationality starting as low as x≈310 (Bosnia) which
+    # overlaps the static [230, 345) last-name band, so use the gap instead.
+    sorted_right = sorted(((x, t) for x, t in tokens if x >= x_first_lo), key=lambda p: p[0])
+    x_nat: float = float("inf")
+    for i in range(1, len(sorted_right)):
+        prev_x = sorted_right[i - 1][0]
+        cur_x = sorted_right[i][0]
+        if cur_x - prev_x > 40 and prev_x >= x_last_lo:
+            x_nat = cur_x
+            break
+    if x_nat == float("inf"):
+        x_nat = 345  # fallback
 
     first_parts: list[str] = []
     last_parts: list[str] = []
 
     for x, t in tokens:
-        if x_12 <= x < x_23:
+        if x_first_lo <= x < x_last_lo:
             first_parts.append(t)
-        elif x_23 <= x < x_34:
+        elif x_last_lo <= x < x_nat:
             last_parts.append(t)
 
     last = title_case_name(" ".join(last_parts))
@@ -313,7 +342,7 @@ def parse_page(page, ref_date: date) -> dict | None:
         # Coach row: starts with "Head"
         elif first == "Head":
             try:
-                manager = parse_coach_words(line_words, col_bounds)
+                manager = parse_coach_words(line_words, (181, 267))
             except Exception as exc:
                 print(f"  WARN: failed to parse coach row: {exc}")
 

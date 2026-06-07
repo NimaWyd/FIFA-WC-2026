@@ -117,28 +117,35 @@ PETKOVIC_WORDS = [
     {"text": "Switzerland", "x0": 351},
 ]
 
+# Algeria page player col_bounds: (x_12, x_23, x_34, x_dob)
+# x_23 = 181 (left edge of LAST NAME col), x_34 = 227 (left edge of SHIRT col)
+# x_12 = midpoint between PLAYER NAME and FIRST NAME headers (~102)
+# x_dob = 282 (DOB column start)
+ALGERIA_PLAYER_BOUNDS = (102, 181, 227, 282)
+ALGERIA_COACH_BOUNDS = (181, 267)
+
 class TestParsePlayerWords:
     def test_simple_name(self):
-        r = parse_player_words(MANDI_WORDS, TOURNAMENT)
+        r = parse_player_words(MANDI_WORDS, TOURNAMENT, ALGERIA_PLAYER_BOUNDS)
         assert r["name"] == "Aissa Mandi"
         assert r["position_key"] == "defenders"
         assert r["age"] == 34
         assert r["club"] == "Lille OSC"
 
     def test_compound_last_name(self):
-        r = parse_player_words(HADJ_MOUSSA_WORDS, TOURNAMENT)
+        r = parse_player_words(HADJ_MOUSSA_WORDS, TOURNAMENT, ALGERIA_PLAYER_BOUNDS)
         assert r["name"] == "Anis Hadj Moussa"
         assert r["position_key"] == "forwards"
         assert r["club"] == "Feyenoord Rotterdam"
 
     def test_accented_last_name_uses_last_name_col(self):
-        r = parse_player_words(BELAID_WORDS, TOURNAMENT)
+        r = parse_player_words(BELAID_WORDS, TOURNAMENT, ALGERIA_PLAYER_BOUNDS)
         # LAST NAME col has BELAÏD (accented), SHIRT col has BELAID — use LAST NAME
         assert r["name"] == "Zineddine Belaïd"
 
 class TestParseCoachWords:
     def test_coach_name(self):
-        assert parse_coach_words(PETKOVIC_WORDS) == "Vladimir Petković"
+        assert parse_coach_words(PETKOVIC_WORDS, ALGERIA_COACH_BOUNDS) == "Vladimir Petković"
 
 from scripts.update_rosters_from_pdf import find_best_match, resolve_team_key
 
