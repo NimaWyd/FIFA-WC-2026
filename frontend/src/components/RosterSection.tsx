@@ -11,6 +11,7 @@ interface Player {
   age?: number;
   espn_id?: string;
   sofascore_id?: string;
+  fotmob_id?: string;
 }
 
 interface TeamRoster {
@@ -57,15 +58,22 @@ function PlayerPhoto({ player, accent }: { player: Player; accent: string }) {
   const sofascoreUrl = player.sofascore_id
     ? `/players/p${player.sofascore_id}.jpg`
     : null;
+  const fotmobUrl = player.fotmob_id
+    ? `/players/pf${player.fotmob_id}.jpg`
+    : null;
 
-  // ESPN first (public CDN, no auth), SofaScore static fallback, then initials
-  const [stage, setStage] = useState(() => espnUrl ? 0 : sofascoreUrl ? 1 : 2);
+  // ESPN first, SofaScore static fallback, FotMob static fallback, then initials
+  const [stage, setStage] = useState(() =>
+    espnUrl ? 0 : sofascoreUrl ? 1 : fotmobUrl ? 2 : 3
+  );
 
-  const photoUrl = stage === 0 ? espnUrl : stage === 1 ? sofascoreUrl : null;
+  const photoUrl = stage === 0 ? espnUrl : stage === 1 ? sofascoreUrl : stage === 2 ? fotmobUrl : null;
 
   const handleError = () => {
     if (stage === 0 && sofascoreUrl) setStage(1);
-    else setStage(2);
+    else if (stage === 0 && fotmobUrl) setStage(2);
+    else if (stage === 1 && fotmobUrl) setStage(2);
+    else setStage(3);
   };
 
   if (photoUrl) {

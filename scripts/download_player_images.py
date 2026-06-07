@@ -151,8 +151,9 @@ def main() -> None:
     with open(ROSTERS_PATH, encoding="utf-8") as f:
         rosters = json.load(f)
 
-    # (display_label, search_name, dest_path, is_coach)
-    jobs: list[tuple[str, str, Path, bool]] = []
+    # (display_label, search_name, dest_path, is_coach, roster_key)
+    # roster_key: None for sofascore-keyed players, (team, pos, idx) for fotmob-keyed players
+    jobs: list[tuple[str, str, Path, bool, tuple | None]] = []
 
     for team, roster in rosters.items():
         # Manager
@@ -164,33 +165,59 @@ def main() -> None:
                 mgr_name,
                 OUT_DIR / f"m{mgr_sid}.jpg",
                 True,
+                None,
             ))
 
         if roster.get("released") is False:
             continue
 
-        # Players — only those with sofascore_id (ESPN CDN covers the rest live)
         for pos in ("goalkeepers", "defenders", "midfielders", "forwards"):
-            for p in roster.get(pos, []):
+            for idx, p in enumerate(roster.get(pos, [])):
                 sid = p.get("sofascore_id")
-                if not sid:
-                    continue
-                jobs.append((
-                    f"{p['name']} [{team}]",
-                    p["name"],
-                    OUT_DIR / f"p{sid}.jpg",
-                    False,
-                ))
+                if sid:
+                    # Already has sofascore_id — use existing naming
+                    jobs.append((
+                        f"{p['name']} [{team}]",
+                        p["name"],
+                        OUT_DIR / f"p{sid}.jpg",
+                        False,
+                        None,
+                    ))
+                elif not p.get("fotmob_id"):
+                    # No sofascore_id and no fotmob_id yet — search FotMob and save with pf prefix
+                    jobs.append((
+                        f"{p['name']} [{team}]",
+                        p["name"],
+                        None,  # dest determined after FotMob search
+                        False,
+                        (team, pos, idx),
+                    ))
 
-    total = len(jobs)
-    downloaded = skipped = failed = 0
+    # Split into normal jobs (known dest) and fotmob-lookup jobs
+    normal_jobs  = [(d, s, dest, c, None) for d, s, dest, c, k in jobs if k is None]
+    fotmob_jobs  = [(d, s, dest, c, k)    for d, s, dest, c, k in jobs if k is not None]
+
+    # Filter already-downloaded normal jobs
+    pending_normal = [(d, s, dest, c) for d, s, dest, c, _ in normal_jobs if dest and not dest.exists()]
+    skipped = len(normal_jobs) - len(pending_normal)
+
+    total = len(pending_normal) + len(fotmob_jobs)
+    downloaded = failed = 0
     failed_names: list[str] = []
+    roster_dirty = False
 
-    print(f"Total entries : {total}")
+    print(f"Normal (sofascore-keyed) to download : {len(pending_normal)}")
+    print(f"FotMob lookup (no sofascore_id)      : {len(fotmob_jobs)}")
+    print(f"Already downloaded (skipped)         : {skipped}")
     print(f"Estimated time: {total * DELAY / 60:.0f}–{total * DELAY * 1.5 / 60:.0f} min\n")
 
-    for i, (display, search_name, dest, is_coach) in enumerate(jobs, 1):
-        if dest.exists():
+    all_pending: list[tuple] = (
+        [(d, s, dest, c, None) for d, s, dest, c in pending_normal] +
+        fotmob_jobs
+    )
+
+    for i, (display, search_name, dest, is_coach, roster_key) in enumerate(all_pending, 1):
+        if dest and dest.exists():
             skipped += 1
             continue
 
@@ -200,16 +227,38 @@ def main() -> None:
         if not fotmob_id:
             failed += 1
             failed_names.append(display)
+            continue
+
+        if roster_key:
+            dest = OUT_DIR / f"pf{fotmob_id}.jpg"
+
+        if dest.exists():
+            skipped += 1
+            # Still write fotmob_id back to rosters.json if missing
+            if roster_key:
+                team, pos, idx = roster_key
+                rosters[team][pos][idx]["fotmob_id"] = fotmob_id
+                roster_dirty = True
+            continue
+
+        if download_image(fotmob_id, dest):
+            downloaded += 1
+            print(f"  [{i}/{total}] OK   {display}")
+            if roster_key:
+                team, pos, idx = roster_key
+                rosters[team][pos][idx]["fotmob_id"] = fotmob_id
+                roster_dirty = True
         else:
-            if download_image(fotmob_id, dest):
-                downloaded += 1
-                print(f"  [{i}/{total}] OK   {display}")
-            else:
-                failed += 1
-                failed_names.append(display)
+            failed += 1
+            failed_names.append(display)
 
         if i % 50 == 0 or i == total:
             print(f"  [{i}/{total}] downloaded={downloaded} skipped={skipped} failed={failed}")
+
+    if roster_dirty:
+        with open(ROSTERS_PATH, "w", encoding="utf-8") as f:
+            json.dump(rosters, f, ensure_ascii=False, indent=2)
+        print(f"\nUpdated {ROSTERS_PATH} with fotmob_id fields.")
 
     if failed_names:
         FAILED_LOG.write_text("\n".join(failed_names), encoding="utf-8")
