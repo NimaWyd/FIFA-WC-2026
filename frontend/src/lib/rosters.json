@@ -1115,7 +1115,7 @@
         "name": "Éderson",
         "club": "Fenerbahçe SK",
         "age": 32,
-        "fotmob_id": "1759878"
+        "fotmob_id": "363364"
       }
     ],
     "defenders": [
@@ -1170,8 +1170,7 @@
       {
         "name": "Roger Ibañez",
         "club": "Al Ahli FC",
-        "age": 27,
-        "fotmob_id": "1283094"
+        "age": 27
       }
     ],
     "midfielders": [
@@ -1188,10 +1187,10 @@
         "fotmob_id": "476772"
       },
       {
-        "name": "Fabio Henrique Tavares",
+        "name": "Fabinho",
         "club": "Al Ittihad",
         "age": 32,
-        "fotmob_id": "961314"
+        "fotmob_id": "359188"
       },
       {
         "name": "Danilo Santos",
@@ -1203,7 +1202,7 @@
         "name": "Lucas Paquetá",
         "club": "CR Flamengo",
         "age": 28,
-        "fotmob_id": "268257"
+        "fotmob_id": "766435"
       }
     ],
     "forwards": [
@@ -1235,7 +1234,7 @@
         "name": "Endrick",
         "club": "Olympique Lyonnais",
         "age": 19,
-        "fotmob_id": "1248050"
+        "fotmob_id": "1406729"
       },
       {
         "name": "Luiz Henrique",
@@ -1253,13 +1252,12 @@
         "name": "Igor Thiago",
         "club": "Brentford FC",
         "age": 24,
-        "fotmob_id": "684246"
+        "fotmob_id": "1302005"
       },
       {
         "name": "Rayan",
         "club": "AFC Bournemouth",
-        "age": 19,
-        "fotmob_id": "1104053"
+        "age": 19
       }
     ]
   },
@@ -7214,7 +7212,7 @@
         "name": "Pau Cubarsí",
         "club": "FC Barcelona",
         "age": 19,
-        "fotmob_id": "1191407"
+        "fotmob_id": "1532137"
       },
       {
         "name": "Marc Cucurella",
@@ -7241,7 +7239,7 @@
         "name": "Gavi",
         "club": "FC Barcelona",
         "age": 21,
-        "fotmob_id": "1838575"
+        "fotmob_id": "1279040"
       },
       {
         "name": "Rodri",
