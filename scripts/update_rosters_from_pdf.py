@@ -58,3 +58,55 @@ def normalize_for_match(name: str) -> str:
     ascii_name = "".join(c for c in nfkd if not unicodedata.combining(c))
     tokens = sorted(re.sub(r"[^a-z0-9 ]", "", ascii_name.lower()).split())
     return " ".join(tokens)
+
+
+def parse_player_words(words: list[dict], ref_date: date) -> dict:
+    """
+    Parse one player row (list of word dicts with 'text' and 'x0') into structured data.
+    Column boundaries determined from Algeria page of the actual PDF:
+      first_names x∈[102,180)  last_name x∈[180,227)  dob x∈[282,310)  club x∈[310,405)
+    """
+    pos = None
+    first_names: list[str] = []
+    last_name_parts: list[str] = []
+    dob: str | None = None
+    club_parts: list[str] = []
+
+    for w in words:
+        x, t = w["x0"], w["text"].replace("\x00", "")
+        if t in POS_TO_KEY:
+            pos = t
+        elif 102 <= x < 180:
+            first_names.append(t)
+        elif 180 <= x < 227:
+            last_name_parts.append(t)
+        elif 282 <= x < 310:
+            dob = t
+        elif 310 <= x < 405:
+            club_parts.append(t)
+
+    last = title_case_name(" ".join(last_name_parts))
+    display_name = (" ".join(first_names) + " " + last).strip()
+    return {
+        "name": display_name,
+        "position_key": POS_TO_KEY[pos],
+        "age": calc_age(dob, ref_date),
+        "club": strip_club_country(" ".join(club_parts)),
+    }
+
+
+def parse_coach_words(words: list[dict]) -> str:
+    """
+    Parse the 'Head coach' row. Coach column boundaries:
+      first_names x∈[181,267)  last_name x∈[267,351)
+    """
+    first_names: list[str] = []
+    last_name_parts: list[str] = []
+    for w in words:
+        x, t = w["x0"], w["text"].replace("\x00", "")
+        if 181 <= x < 267:
+            first_names.append(t)
+        elif 267 <= x < 351:
+            last_name_parts.append(t)
+    last = title_case_name(" ".join(last_name_parts))
+    return (" ".join(first_names) + " " + last).strip()
