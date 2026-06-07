@@ -60,33 +60,127 @@ def normalize_for_match(name: str) -> str:
     return " ".join(tokens)
 
 
-def parse_player_words(words: list[dict], ref_date: date) -> dict:
+DOB_RE = re.compile(r"^\d{2}/\d{2}/\d{4}$")
+COUNTRY_CODE_RE = re.compile(r"^\([A-Z]{3}\)$")
+
+
+def extract_col_bounds(header_words: list[dict]) -> tuple[float, float, float, float]:
     """
-    Parse one player row (list of word dicts with 'text' and 'x0') into structured data.
-    Column boundaries determined from Algeria page of the actual PDF:
-      first_names x∈[102,180)  last_name x∈[180,227)  dob x∈[282,310)  club x∈[310,405)
+    Extract column x-boundaries from the table header row.
+
+    The header row contains tokens like:
+      '#' 'POS' 'PLAYER' 'NAME' 'FIRST' 'NAME(S)' 'LAST' 'NAME(S)' 'NAME' 'ON' 'SHIRT' 'DOB' ...
+
+    Column data is left-aligned within each column and sits up to ~40 px to the
+    LEFT of its header label.  We apply fixed left-guards when computing boundaries:
+
+      first-last boundary = x_last - 40  (last-name data can be 36 px left of 'LAST')
+      last-shirt boundary = x_shirt - 30 (shirt-name data is 0-23 px left of 'SHIRT')
+
+    Returns (x_12, x_23, x_34, x_dob):
+      x_12  = boundary between PLAYER-NAME and FIRST-NAME zones
+      x_23  = boundary between FIRST-NAME and LAST-NAME zones  (x_last - 40)
+      x_34  = boundary between LAST-NAME and SHIRT-NAME zones  (x_shirt - 30)
+      x_dob = hard right boundary (DOB column start)
     """
+    tokens = sorted(header_words, key=lambda w: w["x0"])
+    x_player = x_first = x_last = x_shirt = x_dob = None
+    for w in tokens:
+        t = w["text"]
+        if t == "PLAYER" and x_player is None:
+            x_player = w["x0"]
+        elif t == "FIRST" and x_first is None:
+            x_first = w["x0"]
+        elif t == "LAST" and x_last is None:
+            x_last = w["x0"]
+        elif t == "SHIRT" and x_shirt is None:
+            x_shirt = w["x0"]
+        elif t == "DOB" and x_dob is None:
+            x_dob = w["x0"]
+    if None in (x_player, x_first, x_last, x_shirt, x_dob):
+        raise ValueError(f"Cannot extract col bounds from header: {[w['text'] for w in tokens]}")
+    x_12 = (x_player + x_first) / 2  # midpoint — no data lives here, so exact value matters less
+    x_23 = x_last - 40               # left edge of last-name data (max 36 px left of 'LAST' header)
+    x_34 = x_shirt - 30              # left edge of shirt-name data (max 23 px left of 'SHIRT' header)
+    return x_12, x_23, x_34, x_dob
+
+
+def parse_player_words(words: list[dict], ref_date: date,
+                       col_bounds: tuple[float, float, float, float]) -> dict:
+    """
+    Parse one player row using column boundaries derived from the page header.
+
+    col_bounds = (x_12, x_23, x_34, x_dob) from extract_col_bounds().
+
+    Column assignment (left → right):
+      x < x_12            → shirt# / POS → skip
+      x_12 <= x < x_23   → PLAYER-NAME display → skip
+      x_23 <= x < x_34   → FIRST NAME(S) → keep as first_names
+      x_34 <= x < x_23+Δ → LAST NAME(S) → keep as last_name_parts
+                            (x_23+Δ chosen so LAST data falls here; anything ≥ x_34 is shirt-name)
+
+    Wait — re-reading the layout:
+      Col 1 = PLAYER NAME (display)   → x < x_23
+      Col 2 = FIRST NAME(S)           → x_23 <= x < x_34   (between left of LAST and left of SHIRT)
+
+    Actually: data columns are:
+      Display  [left of x_first data start]
+      First    [x_first data start .. x_last data start)
+      Last     [x_last data start  .. x_shirt data start)
+      Shirt    [x_shirt data start .. DOB)
+
+    x_23 = x_last - 40  → left edge of last-name = right edge of first-name
+    x_34 = x_shirt - 30 → left edge of shirt-name = right edge of last-name
+
+    So:
+      first_names:  x_12 <= x < x_23   (after display, before last-name)
+      last_names:   x_23 <= x < x_34   (after last-name start, before shirt-name)
+    """
+    x_12, x_23, x_34, x_dob = col_bounds
+
+    tokens = [(w["x0"], w["text"].replace("\x00", "")) for w in words]
+
     pos = None
+    dob: str | None = None
+    dob_idx = None
+
+    for i, (x, t) in enumerate(tokens):
+        if t in POS_TO_KEY and pos is None:
+            pos = t
+        if DOB_RE.match(t):
+            dob = t
+            dob_idx = i
+            break
+
+    if pos is None or dob is None or dob_idx is None:
+        raise ValueError(f"Could not locate POS or DOB in row: {tokens}")
+
     first_names: list[str] = []
     last_name_parts: list[str] = []
-    dob: str | None = None
-    club_parts: list[str] = []
 
-    for w in words:
-        x, t = w["x0"], w["text"].replace("\x00", "")
-        if t in POS_TO_KEY:
-            pos = t
-        elif 102 <= x < 180:
+    for i, (x, t) in enumerate(tokens):
+        if i >= dob_idx:
+            break
+        if x_12 <= x < x_23:
             first_names.append(t)
-        elif 180 <= x < 227:
+        elif x_23 <= x < x_34:
             last_name_parts.append(t)
-        elif 282 <= x < 310:
-            dob = t
-        elif 310 <= x < 405:
-            club_parts.append(t)
+        # x < x_12   → shirt# / POS → skip
+        # x >= x_34  → shirt-name → skip
+
+    # Club: tokens after DOB, skipping country code (XXX) and HEIGHT (integer)
+    club_parts: list[str] = []
+    for i in range(dob_idx + 1, len(tokens)):
+        x, t = tokens[i]
+        if COUNTRY_CODE_RE.match(t):
+            continue
+        if re.match(r"^\d{2,3}$", t):  # HEIGHT cm
+            break
+        club_parts.append(t)
 
     last = title_case_name(" ".join(last_name_parts))
     display_name = (" ".join(first_names) + " " + last).strip()
+
     return {
         "name": display_name,
         "position_key": POS_TO_KEY[pos],
@@ -95,21 +189,26 @@ def parse_player_words(words: list[dict], ref_date: date) -> dict:
     }
 
 
-def parse_coach_words(words: list[dict]) -> str:
+def parse_coach_words(words: list[dict], col_bounds: tuple[float, float, float, float]) -> str:
     """
-    Parse the 'Head coach' row. Coach column boundaries:
-      first_names x∈[181,267)  last_name x∈[267,351)
+    Parse the 'Head coach' row using column boundaries from the page header.
+
+    The coach row uses the same column layout as player rows.
     """
-    first_names: list[str] = []
-    last_name_parts: list[str] = []
-    for w in words:
-        x, t = w["x0"], w["text"].replace("\x00", "")
-        if 181 <= x < 267:
-            first_names.append(t)
-        elif 267 <= x < 351:
-            last_name_parts.append(t)
-    last = title_case_name(" ".join(last_name_parts))
-    return (" ".join(first_names) + " " + last).strip()
+    tokens = [(w["x0"], w["text"].replace("\x00", "")) for w in words]
+    x_12, x_23, x_34, x_dob = col_bounds
+
+    first_parts: list[str] = []
+    last_parts: list[str] = []
+
+    for x, t in tokens:
+        if x_12 <= x < x_23:
+            first_parts.append(t)
+        elif x_23 <= x < x_34:
+            last_parts.append(t)
+
+    last = title_case_name(" ".join(last_parts))
+    return (" ".join(first_parts) + " " + last).strip()
 
 
 def find_best_match(new_name: str, existing_players: list[dict]) -> dict:
@@ -174,6 +273,22 @@ def parse_page(page, ref_date: date) -> dict | None:
     if not team_name:
         return None
 
+    # Extract column boundaries from the header row (contains '#', 'FIRST', 'LAST', 'DOB')
+    col_bounds: tuple[float, float, float] | None = None
+    for y in sorted_ys:
+        line_words = sorted(lines[y], key=lambda w: w["x0"])
+        texts = [w["text"] for w in line_words]
+        if "FIRST" in texts and "LAST" in texts and "DOB" in texts:
+            try:
+                col_bounds = extract_col_bounds(line_words)
+            except Exception:
+                pass
+            break
+
+    if col_bounds is None:
+        print(f"  WARN: could not extract column bounds for {team_name}")
+        return None
+
     players: dict[str, list] = {k: [] for k in POS_TO_KEY.values()}
     manager: str | None = None
 
@@ -186,7 +301,7 @@ def parse_page(page, ref_date: date) -> dict | None:
         # Player row: first token is shirt number 1-26
         if re.match(r"^\d{1,2}$", first) and 1 <= int(first) <= 26:
             try:
-                row = parse_player_words(line_words, ref_date)
+                row = parse_player_words(line_words, ref_date, col_bounds)
                 players[row["position_key"]].append({
                     "name": row["name"],
                     "club": row["club"],
@@ -198,7 +313,7 @@ def parse_page(page, ref_date: date) -> dict | None:
         # Coach row: starts with "Head"
         elif first == "Head":
             try:
-                manager = parse_coach_words(line_words)
+                manager = parse_coach_words(line_words, col_bounds)
             except Exception as exc:
                 print(f"  WARN: failed to parse coach row: {exc}")
 
