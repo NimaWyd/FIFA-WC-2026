@@ -1,10 +1,10 @@
 {
   "Algeria": {
-    "manager": "Vladimir Petković",
+    "manager": "Vladimir Petkovic",
     "manager_sofascore_id": "52898",
     "goalkeepers": [
       {
-        "name": "Melvin Feycal Mastil",
+        "name": "Melvin Masstil",
         "club": "FC Stade Nyonnais",
         "age": 26,
         "fotmob_id": "1285492"
@@ -16,7 +16,7 @@
         "fotmob_id": "1116034"
       },
       {
-        "name": "Luca Zinedine Zidane",
+        "name": "Luca Zidane",
         "club": "Granada CF",
         "age": 28,
         "fotmob_id": "770880"
@@ -42,35 +42,36 @@
         "fotmob_id": "1131925"
       },
       {
-        "name": "Zineddine Belaïd",
+        "name": "Zinedine Belaid",
         "club": "JS Kabylie",
         "age": 27,
         "fotmob_id": "1118823"
       },
       {
-        "name": "Jaouen Djimmy Hadjam",
+        "name": "Jaouen Hadjam",
         "club": "BSC Young Boys",
         "age": 23,
         "fotmob_id": "1178324"
       },
       {
-        "name": "Rayan Aït-Nouri",
+        "name": "Rayan Ait Nouri",
         "club": "Manchester City FC",
         "age": 25,
         "fotmob_id": "933845"
       },
       {
-        "name": "Rak Belghali",
+        "name": "Rafik Belghali",
         "club": "Hellas Verona FC",
         "age": 24
       },
       {
-        "name": "Amir Selmane Rami Bensebaini",
+        "name": "Ramy Bensebaini",
         "club": "Borussia Dortmund",
-        "age": 31
+        "age": 31,
+        "fotmob_id": "559065"
       },
       {
-        "name": "Samir Sophian Chergui",
+        "name": "Samir Chergui",
         "club": "Paris FC",
         "age": 27,
         "fotmob_id": "1039219"
@@ -78,13 +79,13 @@
     ],
     "midfielders": [
       {
-        "name": "Ramiz Larbi Zerrouki",
+        "name": "Ramiz Zerrouki",
         "club": "FC Twente",
         "age": 28,
         "fotmob_id": "1074967"
       },
       {
-        "name": "Houssem-Eddine Chaabane Aouar",
+        "name": "Houssem Aouar",
         "club": "Al Ittihad",
         "age": 27
       },
@@ -113,20 +114,21 @@
         "fotmob_id": "1457626"
       },
       {
-        "name": "Yassine M E G Titraoui",
+        "name": "Yassine Titraoui",
         "club": "Sporting Charleroi",
-        "age": 22
+        "age": 22,
+        "fotmob_id": "1288907"
       }
     ],
     "forwards": [
       {
-        "name": "Riyad Karim Mahrez",
+        "name": "Riyad Mahrez",
         "club": "Al Ahli FC",
         "age": 35,
         "fotmob_id": "278343"
       },
       {
-        "name": "Amine Ferid Ghouiri",
+        "name": "Amine Gouiri",
         "club": "Olympique Marseille",
         "age": 26,
         "fotmob_id": "844437"
@@ -138,7 +140,7 @@
         "fotmob_id": "1576876"
       },
       {
-        "name": "Ahmed Nadhir Benbouali",
+        "name": "Nadir Benbouali",
         "club": "Györi ETO FC",
         "age": 26
       },
@@ -163,25 +165,25 @@
     ]
   },
   "Argentina": {
-    "manager": "Lionel Sebastián Scaloni",
+    "manager": "Lionel Scaloni",
     "manager_sofascore_id": "790728",
     "goalkeepers": [
       {
-        "name": "Juan Agustín Musso",
+        "name": "Juan Musso",
         "club": "Atlético De Madrid",
         "age": 32,
         "espn_id": "177927",
         "sofascore_id": "263651"
       },
       {
-        "name": "Geronimo Rulli",
+        "name": "Gerónimo Rulli",
         "club": "Olympique Marseille",
         "age": 34,
         "espn_id": "167192",
         "sofascore_id": "128383"
       },
       {
-        "name": "Damián Emiliano Martínez",
+        "name": "Emiliano Martínez",
         "club": "Aston Villa FC",
         "age": 33,
         "espn_id": "158626",
@@ -190,19 +192,20 @@
     ],
     "defenders": [
       {
-        "name": "Leonardo Julián Balerdi Rosa",
+        "name": "Leonardo Balerdi",
         "club": "Olympique Marseille",
-        "age": 27
+        "age": 27,
+        "fotmob_id": "1357723"
       },
       {
-        "name": "Nicolás Alejandro Tagliafico",
+        "name": "Nicolás Tagliafico",
         "club": "Olympique Lyonnais",
         "age": 33,
         "espn_id": "145190",
         "sofascore_id": "158243"
       },
       {
-        "name": "Gonzalo Ariel Montiel",
+        "name": "Gonzalo Montiel",
         "club": "CA River Plate",
         "age": 29,
         "espn_id": "228262",
@@ -216,27 +219,27 @@
         "sofascore_id": "859999"
       },
       {
-        "name": "Cristian Gabriel Romero",
+        "name": "Cristian Romero",
         "club": "Tottenham Hotspur FC",
         "age": 28,
         "espn_id": "96970",
         "sofascore_id": "829932"
       },
       {
-        "name": "Nicolas Hernan Gonzalo Otamendi",
+        "name": "Nicolás Otamendi",
         "club": "SL Benca",
         "age": 38,
         "fotmob_id": "174321"
       },
       {
-        "name": "Facundo Axel Medina",
+        "name": "Facundo Medina",
         "club": "Olympique Marseille",
         "age": 27,
         "espn_id": "249663",
         "fotmob_id": "812652"
       },
       {
-        "name": "Nahuel Molina Lucero",
+        "name": "Nahuel Molina",
         "club": "Atlético De Madrid",
         "age": 28,
         "espn_id": "164826",
@@ -245,21 +248,21 @@
     ],
     "midfielders": [
       {
-        "name": "Leandro Daniel Paredes",
+        "name": "Leandro Paredes",
         "club": "CA Boca Juniors",
         "age": 31,
         "espn_id": "153115",
         "sofascore_id": "255389"
       },
       {
-        "name": "Rodrigo Javier De Paul",
+        "name": "Rodrigo De Paul",
         "club": "Inter Miami CF",
         "age": 32,
         "espn_id": "174466",
         "sofascore_id": "249399"
       },
       {
-        "name": "Valentin Barco",
+        "name": "Valentín Barco",
         "club": "RC Strasbourg",
         "age": 21,
         "espn_id": "320760",
@@ -273,7 +276,7 @@
         "sofascore_id": "798835"
       },
       {
-        "name": "Exequiel Alejandro Palacios",
+        "name": "Exequiel Palacios",
         "club": "Bayer",
         "age": 27,
         "espn_id": "228393",
@@ -294,7 +297,7 @@
         "sofascore_id": "895324"
       },
       {
-        "name": "Enzo Jeremías Fernández",
+        "name": "Enzo Fernández",
         "club": "Chelsea FC",
         "age": 25,
         "espn_id": "285450",
@@ -310,14 +313,14 @@
         "sofascore_id": "944656"
       },
       {
-        "name": "Lionel Andrés Messi",
+        "name": "Lionel Messi",
         "club": "Inter Miami CF",
         "age": 38,
         "espn_id": "45843",
         "sofascore_id": "12994"
       },
       {
-        "name": "Thiago Ezequiel Almada",
+        "name": "Thiago Almada",
         "club": "Atlético De Madrid",
         "age": 25,
         "espn_id": "277208",
@@ -331,21 +334,21 @@
         "sofascore_id": "1099352"
       },
       {
-        "name": "Nicolas Paz Martínez",
+        "name": "Nico Paz",
         "club": "Como",
         "age": 21,
         "espn_id": "336737",
         "sofascore_id": "1171451"
       },
       {
-        "name": "Jose Manuel Alberto Lopez",
+        "name": "Jose Manuel López",
         "club": "SE Palmeiras",
         "age": 25,
         "espn_id": "409297",
         "sofascore_id": "1094179"
       },
       {
-        "name": "Lautaro Javier Martínez",
+        "name": "Lautaro Martínez",
         "club": "FC Internazionale Milano",
         "age": 28,
         "espn_id": "219713",
@@ -358,19 +361,19 @@
     "manager_sofascore_id": "635",
     "goalkeepers": [
       {
-        "name": "Mathew David Ryan",
+        "name": "Mathew Ryan",
         "club": "Levante UD",
         "age": 34,
         "fotmob_id": "185644"
       },
       {
-        "name": "Paul David Izzo",
+        "name": "Paul Izzo",
         "club": "Randers FC",
         "age": 31,
         "fotmob_id": "302176"
       },
       {
-        "name": "Patrick Thomas Beach",
+        "name": "Patrick Beach",
         "club": "Melbourne City FC",
         "age": 22,
         "fotmob_id": "1335765"
@@ -390,25 +393,25 @@
         "fotmob_id": "1318686"
       },
       {
-        "name": "Jacob Michael Italiano",
+        "name": "Jacob Italiano",
         "club": "Grazer AK",
         "age": 24,
         "fotmob_id": "889093"
       },
       {
-        "name": "Jordan Jacob Bos",
+        "name": "Jordan Bos",
         "club": "Feyenoord Rotterdam",
         "age": 23,
         "fotmob_id": "1316930"
       },
       {
-        "name": "Jason Kato Geria",
+        "name": "Jason Geria",
         "club": "Albirex Niigata",
         "age": 33,
         "fotmob_id": "418799"
       },
       {
-        "name": "Kai Clifton Trewin",
+        "name": "Kai Trewin",
         "club": "New York City FC",
         "age": 25,
         "fotmob_id": "1101030"
@@ -420,13 +423,13 @@
         "fotmob_id": "192735"
       },
       {
-        "name": "Harry James Souttar",
+        "name": "Harry Souttar",
         "club": "Leicester City FC",
         "age": 27,
         "fotmob_id": "671518"
       },
       {
-        "name": "Cameron Robert Burgess",
+        "name": "Cameron Burgess",
         "club": "Swansea City AFC",
         "age": 30,
         "fotmob_id": "564842"
@@ -446,25 +449,25 @@
         "fotmob_id": "885870"
       },
       {
-        "name": "Aiden Connor O'neill",
+        "name": "Aiden O'Neill",
         "club": "New York City FC",
         "age": 27,
         "fotmob_id": "785377"
       },
       {
-        "name": "Cameron Peter Devlin",
+        "name": "Cameron Devlin",
         "club": "Heart Of Midlothian FC",
         "age": 28,
         "fotmob_id": "970544"
       },
       {
-        "name": "Jackson Alexander Irvine",
+        "name": "Jackson Irvine",
         "club": "FC St. Pauli",
         "age": 33,
         "fotmob_id": "369742"
       },
       {
-        "name": "Paul Michael Junior Okon-Engstler",
+        "name": "Paul Okon Jr",
         "club": "Sydney FC",
         "age": 21,
         "fotmob_id": "1527363"
@@ -472,13 +475,13 @@
     ],
     "forwards": [
       {
-        "name": "Mathew Allan Leckie",
+        "name": "Mathew Leckie",
         "club": "Melbourne City FC",
         "age": 35,
         "fotmob_id": "185014"
       },
       {
-        "name": "Mohamed A Toure",
+        "name": "Mohamed Toure",
         "club": "Norwich City FC",
         "age": 22,
         "fotmob_id": "1132069"
@@ -490,7 +493,7 @@
         "fotmob_id": "675762"
       },
       {
-        "name": "Awer Bul Mabil",
+        "name": "Awer Mabil",
         "club": "CD Castellón",
         "age": 30,
         "fotmob_id": "421328"
@@ -508,13 +511,13 @@
         "fotmob_id": "1308909"
       },
       {
-        "name": "Nishan Matthew Velupillay",
+        "name": "Nishan Velupillay",
         "club": "Melbourne Victory FC",
         "age": 25,
         "fotmob_id": "1250885"
       },
       {
-        "name": "Tete Owen Yengi",
+        "name": "Tete Yengi",
         "club": "FC Machida Zelvia",
         "age": 25,
         "fotmob_id": "1220549"
@@ -522,7 +525,7 @@
     ]
   },
   "Austria": {
-    "manager": "Ralf Dietrich Rangnick",
+    "manager": "Ralf Rangnick",
     "manager_sofascore_id": "785379",
     "goalkeepers": [
       {
@@ -549,7 +552,7 @@
     ],
     "defenders": [
       {
-        "name": "David Leopold Affengruber",
+        "name": "David Affengruber",
         "club": "Elche CF",
         "age": 25,
         "espn_id": "313230",
@@ -584,7 +587,7 @@
         "sofascore_id": "576266"
       },
       {
-        "name": "Phillip Mwene",
+        "name": "Philipp Mwene",
         "club": "1. FSV Mainz",
         "age": 32,
         "fotmob_id": "423812"
@@ -634,7 +637,7 @@
         "sofascore_id": "186719"
       },
       {
-        "name": "Carney Chibueze Chukwuemeka",
+        "name": "Carney Chukwuemeka",
         "club": "Borussia Dortmund",
         "age": 22,
         "espn_id": "294317",
@@ -676,7 +679,7 @@
         "sofascore_id": "1146018"
       },
       {
-        "name": "Alessandro Andre Schöpf",
+        "name": "Alessandro Schopf",
         "club": "Wolfsberger AC",
         "age": 32,
         "espn_id": "203868",
@@ -699,7 +702,7 @@
         "sofascore_id": "111483"
       },
       {
-        "name": "Saša Kalajdžić",
+        "name": "Sasa Kalajdzic",
         "club": "LASK Linz",
         "age": 28,
         "espn_id": "259131",
@@ -715,11 +718,11 @@
     ]
   },
   "Belgium": {
-    "manager": "Rudi José Garcia",
+    "manager": "Rudi Garcia",
     "manager_sofascore_id": "53059",
     "goalkeepers": [
       {
-        "name": "Thibaut Nicolas M Courtois",
+        "name": "Thibaut Courtois",
         "club": "Real Madrid C. F.",
         "age": 34,
         "fotmob_id": "170323"
@@ -732,7 +735,7 @@
         "sofascore_id": "964753"
       },
       {
-        "name": "Mike Louis Penders",
+        "name": "Mike Penders",
         "club": "RC Strasbourg",
         "age": 20,
         "espn_id": "332343",
@@ -741,34 +744,34 @@
     ],
     "defenders": [
       {
-        "name": "Zeno Koen Debast",
+        "name": "Zeno Debast",
         "club": "Sporting CP",
         "age": 22,
         "espn_id": "314473",
         "sofascore_id": "1126512"
       },
       {
-        "name": "Arthur Nicolas R Theate",
+        "name": "Arthur Theate",
         "club": "Eintracht Frankfurt",
         "age": 26,
         "fotmob_id": "1173250"
       },
       {
-        "name": "Brandon Erik Mechele",
+        "name": "Brandon Mechele",
         "club": "Club Brugge",
         "age": 33,
         "espn_id": "191222",
         "sofascore_id": "248331"
       },
       {
-        "name": "Maxim Peter M De Cuyper",
+        "name": "Maxim De Cuyper",
         "club": "Brighton & Hove Albion FC",
         "age": 25,
         "espn_id": "301327",
         "sofascore_id": "997152"
       },
       {
-        "name": "Thomas Andre A Meunier",
+        "name": "Thomas Meunier",
         "club": "Lille OSC",
         "age": 34,
         "fotmob_id": "277771"
@@ -781,7 +784,7 @@
         "sofascore_id": "1001828"
       },
       {
-        "name": "Joaquin Ronny Seys",
+        "name": "Joaquin Seys",
         "club": "Club Brugge",
         "age": 21,
         "espn_id": "363068",
@@ -804,7 +807,7 @@
     ],
     "midfielders": [
       {
-        "name": "Axel Laurent A Witsel",
+        "name": "Axel Witsel",
         "club": "Girona FC",
         "age": 37,
         "fotmob_id": "39591"
@@ -817,7 +820,7 @@
         "sofascore_id": "70996"
       },
       {
-        "name": "Youri Marion A Tielemans",
+        "name": "Youri Tielemans",
         "club": "Aston Villa FC",
         "age": 29,
         "fotmob_id": "465960"
@@ -842,13 +845,13 @@
         "fotmob_id": "921341"
       },
       {
-        "name": "Nicolas Thierry Y Raskin",
+        "name": "Nicolas Raskin",
         "club": "Rangers FC",
         "age": 25,
         "fotmob_id": "863869"
       },
       {
-        "name": "Amadou Ba Z Mvom Onana",
+        "name": "Amadou Onana",
         "club": "Aston Villa FC",
         "age": 24,
         "fotmob_id": "1185748"
@@ -856,7 +859,7 @@
     ],
     "forwards": [
       {
-        "name": "Romelu Lukaku Bolingoli",
+        "name": "Romelu Lukaku",
         "club": "SSC Napoli",
         "age": 33,
         "espn_id": "139437",
@@ -870,21 +873,21 @@
         "sofascore_id": "135666"
       },
       {
-        "name": "Jeremy Baffour Doku",
+        "name": "Jérémy Doku",
         "club": "Manchester City FC",
         "age": 24,
         "espn_id": "283672",
         "sofascore_id": "934386"
       },
       {
-        "name": "Dodi Lukebakio Ngandoli",
+        "name": "Dodi Lukebakio",
         "club": "SL Benca",
         "age": 28,
         "espn_id": "229443",
         "sofascore_id": "823631"
       },
       {
-        "name": "Charles Marc S De Ketelaere",
+        "name": "Charles De Ketelaere",
         "club": "Atalanta Bergamo",
         "age": 25,
         "espn_id": "296319",
@@ -931,7 +934,7 @@
         "sofascore_id": "858004"
       },
       {
-        "name": "Dennis Hadžikadunić",
+        "name": "Dennis Hadzikadunic",
         "club": "UC Sampdoria",
         "age": 27,
         "espn_id": "246836",
@@ -945,7 +948,7 @@
         "sofascore_id": "1118177"
       },
       {
-        "name": "Sead Kolašinac",
+        "name": "Sead Kolasinac",
         "club": "Atalanta Bergamo",
         "age": 32,
         "espn_id": "170553",
@@ -1003,35 +1006,35 @@
         "sofascore_id": "1049701"
       },
       {
-        "name": "Ivan Šunjić",
+        "name": "Ivan Sunjic",
         "club": "Pafos FC",
         "age": 29,
         "espn_id": "194767",
         "sofascore_id": "283833"
       },
       {
-        "name": "Amar Memić",
+        "name": "Amar Memic",
         "club": "FC Viktoria Plzeň",
         "age": 25,
         "espn_id": "338199",
         "sofascore_id": "1129610"
       },
       {
-        "name": "Amir Hadžiahmetović",
+        "name": "Amir Hadziahmetovic",
         "club": "Hull City FC",
         "age": 29,
         "espn_id": "221961",
         "sofascore_id": "795421"
       },
       {
-        "name": "Dženis Burnić",
+        "name": "Dzenis Burnic",
         "club": "Karlsruher SC",
         "age": 28,
         "espn_id": "225571",
         "sofascore_id": "844447"
       },
       {
-        "name": "Ermin Mahmić",
+        "name": "Ermin Mahmic",
         "club": "FC Slovan Liberec",
         "age": 21,
         "espn_id": "414676",
@@ -1040,21 +1043,21 @@
     ],
     "forwards": [
       {
-        "name": "Samed Baždar",
+        "name": "Samed Bazdar",
         "club": "Jagiellonia Białystok",
         "age": 22,
         "espn_id": "322244",
         "sofascore_id": "1100965"
       },
       {
-        "name": "Ermedin Demirović",
+        "name": "Ermedin Demirovic",
         "club": "VfB Stuttgart",
         "age": 28,
         "espn_id": "269136",
         "sofascore_id": "878081"
       },
       {
-        "name": "Edin Džeko",
+        "name": "Edin Dzeko",
         "club": "FC Schalke",
         "age": 40,
         "espn_id": "102337",
@@ -1094,83 +1097,83 @@
     "manager_sofascore_id": "52965",
     "goalkeepers": [
       {
-        "name": "Álisson Ramsés Becker",
+        "name": "Alisson",
         "club": "Liverpool FC",
         "age": 33,
         "fotmob_id": "319784"
       },
       {
-        "name": "Weverton Pereira Da Silva",
+        "name": "Weverton",
         "club": "Grêmio FBPA",
         "age": 38
       },
       {
-        "name": "Ederson Santana De Moraes",
+        "name": "Éderson",
         "club": "Fenerbahçe SK",
-        "age": 32
+        "age": 32,
+        "fotmob_id": "1759878"
       }
     ],
     "defenders": [
       {
-        "name": "Wesley Vinícius França Lima",
+        "name": "Wesley",
         "club": "AS Roma",
         "age": 22
       },
       {
-        "name": "Gabriel Dos Santos Magalhães",
+        "name": "Gabriel Magalhães",
         "club": "Arsenal FC",
         "age": 28
       },
       {
-        "name": "Marcos Aoas Correa",
+        "name": "Marquinhos",
         "club": "Paris Saint-Germain",
-        "age": 32,
-        "fotmob_name": "Marquinhos"
+        "age": 32
       },
       {
-        "name": "Alex Sandro Lobo Silva",
+        "name": "Alex Sandro",
         "club": "CR Flamengo",
         "age": 35,
         "fotmob_id": "496391"
       },
       {
-        "name": "Danilo Luiz Da Silva",
+        "name": "Danilo",
         "club": "CR Flamengo",
         "age": 34,
         "fotmob_id": "172129"
       },
       {
-        "name": "Gleison Bremer Silva Nascimento",
+        "name": "Bremer",
         "club": "Juventus FC",
         "age": 29,
-        "fotmob_name": "Bremer"
+        "fotmob_id": "1355574"
       },
       {
-        "name": "Leonardo Pereira",
+        "name": "Léo Pereira",
         "club": "CR Flamengo",
         "age": 30,
         "fotmob_id": "114846"
       },
       {
-        "name": "Douglas Dos Santos Justino De Melo",
+        "name": "Douglas Santos",
         "club": "FC Zenit St. Petersburg",
         "age": 32
       },
       {
-        "name": "Roger Ibañez Da Silva",
+        "name": "Roger Ibañez",
         "club": "Al Ahli FC",
-        "age": 27
+        "age": 27,
+        "fotmob_id": "488139"
       }
     ],
     "midfielders": [
       {
-        "name": "Carlos Henrique Casimiro",
+        "name": "Casemiro",
         "club": "Manchester United FC",
-        "age": 34,
-        "fotmob_name": "Casemiro"
+        "age": 34
       },
       {
-        "name": "Bruno Guimarães Rodriguez Moura",
+        "name": "Bruno Guimarães",
         "club": "Newcastle United FC",
         "age": 28,
         "fotmob_id": "476772"
@@ -1182,13 +1185,13 @@
         "fotmob_id": "961314"
       },
       {
-        "name": "Danilo Dos Santos De Oliveira",
+        "name": "Danilo Santos",
         "club": "Botafogo",
         "age": 25,
         "fotmob_id": "1927470"
       },
       {
-        "name": "Lucas Tolentino Coelho De Lima",
+        "name": "Lucas Paquetá",
         "club": "CR Flamengo",
         "age": 28,
         "fotmob_id": "268257"
@@ -1196,75 +1199,77 @@
     ],
     "forwards": [
       {
-        "name": "Vinicius José Paixão De Oliveira Júnior",
+        "name": "Vinícius Júnior",
         "club": "Real Madrid C. F.",
         "age": 25,
         "fotmob_id": "846033"
       },
       {
-        "name": "Matheus Santos Carneiro Da Cunha",
+        "name": "Matheus Cunha",
         "club": "Manchester United FC",
         "age": 27,
         "fotmob_id": "863098"
       },
       {
-        "name": "Neymar Da Silva Santos Júnior",
+        "name": "Neymar",
         "club": "Santos FC",
-        "age": 34
+        "age": 34,
+        "fotmob_id": "846033"
       },
       {
-        "name": "Raphael Dias Belloli",
+        "name": "Raphinha",
         "club": "FC Barcelona",
-        "age": 29,
-        "fotmob_name": "Raphinha"
+        "age": 29
       },
       {
-        "name": "Endrick Felipe Moreira De Sousa Pessoa",
+        "name": "Endrick",
         "club": "Olympique Lyonnais",
-        "age": 19
+        "age": 19,
+        "fotmob_id": "1248050"
       },
       {
-        "name": "Luiz Henrique André Rosa Da Silva",
+        "name": "Luiz Henrique",
         "club": "FC Zenit St. Petersburg",
         "age": 25,
         "fotmob_id": "497518"
       },
       {
-        "name": "Gabriel Teodoro Martinelli Silva",
+        "name": "Gabriel Martinelli",
         "club": "Arsenal FC",
         "age": 24,
         "fotmob_id": "1173684"
       },
       {
-        "name": "Igor Thiago Nascimento Rodrigues",
+        "name": "Igor Thiago",
         "club": "Brentford FC",
         "age": 24,
         "fotmob_id": "684246"
       },
       {
-        "name": "Rayan Vitor Simplicio Rocha",
+        "name": "Rayan",
         "club": "AFC Bournemouth",
         "age": 19
       }
     ]
   },
   "Cape Verde Islands": {
-    "manager": "Pedro Leitão Brito",
+    "manager": "Bubista",
     "manager_sofascore_id": "794980",
     "goalkeepers": [
       {
         "name": "Josimar José Évora Dias",
         "club": "GD Chaves",
-        "age": 40
+        "age": 40,
+        "fotmob_id": "614006"
       },
       {
-        "name": "Márcio Salomão Brazão Da Rosa",
+        "name": "Marcio Rosa",
         "club": "PFC Montana",
         "age": 29,
         "fotmob_id": "639795"
       },
       {
-        "name": "Carlos Joaquim Antunes Dos Santos",
+        "name": "CJ dos Santos",
         "club": "San Diego FC",
         "age": 25
       }
@@ -1273,12 +1278,14 @@
       {
         "name": "Ianique Dos Santos Tavares",
         "club": "SCU Torreense",
-        "age": 38
+        "age": 38,
+        "fotmob_id": "957118"
       },
       {
         "name": "Edilson Alberto Monteiro Sanches Borges",
         "club": "Al Bataeh Club",
-        "age": 31
+        "age": 31,
+        "fotmob_id": "1080520"
       },
       {
         "name": "Roberto Carlos Lopes",
@@ -1287,7 +1294,7 @@
         "fotmob_id": "230134"
       },
       {
-        "name": "Logan Evans Costa",
+        "name": "Logan Costa",
         "club": "Villarreal CF",
         "age": 25,
         "espn_id": "271129",
@@ -1307,13 +1314,13 @@
         "sofascore_id": "287833"
       },
       {
-        "name": "Wagner Fabricio Cardoso De Pina",
+        "name": "Wagner Pina",
         "club": "Trabzonspor",
         "age": 23,
         "fotmob_id": "1460591"
       },
       {
-        "name": "Kelvin Spencer Pires",
+        "name": "Kelvin Pires",
         "club": "SJK",
         "age": 26,
         "sofascore_id": "1048591"
@@ -1321,7 +1328,7 @@
     ],
     "midfielders": [
       {
-        "name": "Kevin Lenini Gonçalves Pereira De Pina",
+        "name": "Kevin Pina",
         "club": "FC Krasnodar",
         "age": 29,
         "fotmob_id": "890503"
@@ -1339,7 +1346,7 @@
         "fotmob_id": "1793486"
       },
       {
-        "name": "Jamiro Gregory Monteiro Alvarenga",
+        "name": "Jamiro Monteiro",
         "club": "PEC Zwolle",
         "age": 32
       },
@@ -1351,30 +1358,31 @@
         "sofascore_id": "787429"
       },
       {
-        "name": "Deroy D'encarnação Duarte",
+        "name": "Deroy Duarte",
         "club": "PFC Ludogorets Razgrad",
         "age": 26,
         "espn_id": "246442",
         "sofascore_id": "921089"
       },
       {
-        "name": "Laros Michael D'encarnação Duarte",
+        "name": "Laros Duarte",
         "club": "Puskás Akadémia FC",
         "age": 29,
         "fotmob_id": "665167"
       },
       {
-        "name": "Jair Semedo Monteiro",
+        "name": "Yannick Semedo",
         "club": "SC Farense",
         "age": 30
       },
       {
         "name": "Willy Johnson Semedo Afonso",
         "club": "AC Omonia",
-        "age": 32
+        "age": 32,
+        "fotmob_id": "1367047"
       },
       {
-        "name": "Telmo Emanuel Gomes Arcanjo",
+        "name": "Telmo Arcanjo",
         "club": "Vitória SC",
         "age": 24,
         "fotmob_id": "1165477"
@@ -1395,20 +1403,20 @@
     ],
     "forwards": [
       {
-        "name": "Gilson Benchimol Tavares",
+        "name": "Gilson Benchimol",
         "club": "FC Akron Tolyatti",
         "age": 24,
         "sofascore_id": "1111215"
       },
       {
-        "name": "Dailon Rocha Livramento",
+        "name": "Dailon Livramento",
         "club": "Casa Pia AC",
         "age": 25,
         "espn_id": "330211",
         "sofascore_id": "1155358"
       },
       {
-        "name": "Ryan Isaac Da Graca Mendes",
+        "name": "Ryan Mendes",
         "club": "Iğdır FK",
         "age": 36,
         "fotmob_id": "172615"
@@ -1416,11 +1424,11 @@
     ]
   },
   "Canada": {
-    "manager": "Jesse Alan Marsch",
+    "manager": "Jesse Marsch",
     "manager_sofascore_id": "784568",
     "goalkeepers": [
       {
-        "name": "Dayne Tristan St. Clair",
+        "name": "Dayne St. Clair",
         "club": "Inter Miami CF",
         "age": 29,
         "fotmob_id": "1026105"
@@ -1432,7 +1440,7 @@
         "fotmob_id": "464919"
       },
       {
-        "name": "Owen Olamidayo Goodman",
+        "name": "Owen Goodman",
         "club": "Barnsley",
         "age": 22,
         "fotmob_id": "1415372"
@@ -1440,52 +1448,52 @@
     ],
     "defenders": [
       {
-        "name": "Alistair William Johnston",
+        "name": "Alistair Johnston",
         "club": "Celtic FC",
         "age": 27,
         "fotmob_id": "1055426"
       },
       {
-        "name": "Ale Charles Jones",
+        "name": "Alfie Jones",
         "club": "Middlesbrough FC",
         "age": 28
       },
       {
-        "name": "Luc Rollet De Fougerolles",
+        "name": "Luc De Fougerolles",
         "club": "FCV Dender EH",
         "age": 20,
         "fotmob_id": "1399943"
       },
       {
-        "name": "Joel Robert Waterman",
+        "name": "Joel Waterman",
         "club": "Chicago Fire FC",
         "age": 30,
         "fotmob_id": "1100258"
       },
       {
-        "name": "Derek Austin Cornelius",
+        "name": "Derek Cornelius",
         "club": "Rangers FC",
         "age": 28,
         "fotmob_id": "847629"
       },
       {
-        "name": "Moïse Bombito Lumpungu",
+        "name": "Moïse Bombito",
         "club": "OGC Nice",
         "age": 26
       },
       {
-        "name": "Alphonso Boyle Davies",
+        "name": "Alphonso Davies",
         "club": "FC Bayern München",
         "age": 25,
         "fotmob_id": "751202"
       },
       {
-        "name": "Richmond Mamah Laryea",
+        "name": "Richie Laryea",
         "club": "Toronto FC",
         "age": 31
       },
       {
-        "name": "Niko Kristian Sigur",
+        "name": "Niko Sigur",
         "club": "HNK Hajduk Split",
         "age": 22,
         "fotmob_id": "1494508"
@@ -1499,25 +1507,25 @@
         "fotmob_id": "943428"
       },
       {
-        "name": "Stephen Antunes Eustáquio",
+        "name": "Stephen Eustáquio",
         "club": "LAFC",
         "age": 29,
         "fotmob_id": "816223"
       },
       {
-        "name": "Ismael Kenneth Jordan Koné",
+        "name": "Ismaël Koné",
         "club": "US Sassuolo",
         "age": 23,
         "fotmob_id": "1288119"
       },
       {
-        "name": "Liam Alan Millar",
+        "name": "Liam Millar",
         "club": "Hull City FC",
         "age": 26,
         "fotmob_id": "932308"
       },
       {
-        "name": "Jacob Everett Shaffelburg",
+        "name": "Jacob Shaffelburg",
         "club": "LAFC",
         "age": 26,
         "fotmob_id": "1023943"
@@ -1529,7 +1537,7 @@
         "fotmob_id": "432605"
       },
       {
-        "name": "Nathan-Dylan Saliba",
+        "name": "Nathan Saliba",
         "club": "RSC Anderlecht",
         "age": 22
       },
@@ -1542,19 +1550,19 @@
     ],
     "forwards": [
       {
-        "name": "Cyle Christopher Larin",
+        "name": "Cyle Larin",
         "club": "Southampton FC",
         "age": 31,
         "fotmob_id": "544312"
       },
       {
-        "name": "Jonathan Christian David",
+        "name": "Jonathan David",
         "club": "Juventus FC",
         "age": 26,
         "fotmob_id": "939569"
       },
       {
-        "name": "Tanitoluwa Oluwatimilehin Oluwaseyi",
+        "name": "Tani Oluwaseyi",
         "club": "Villarreal CF",
         "age": 26
       },
@@ -1571,7 +1579,7 @@
         "fotmob_id": "1359536"
       },
       {
-        "name": "Promise Oluwatobi Emmanuel David",
+        "name": "Promise David",
         "club": "Royale Union Saint-Gilloise",
         "age": 24,
         "fotmob_id": "1252132"
@@ -1579,49 +1587,51 @@
     ]
   },
   "Colombia": {
-    "manager": "Nestor Gabriel Lorenzo",
+    "manager": "Nestor Lorenzo",
     "manager_sofascore_id": "138570",
     "goalkeepers": [
       {
-        "name": "David Ospina Ramirez",
+        "name": "David Ospina",
         "club": "Atlético Nacional",
         "age": 37,
         "espn_id": "121842",
         "sofascore_id": "33596"
       },
       {
-        "name": "Camilo Andres Vargas Gil",
+        "name": "Camilo Vargas",
         "club": "Atlas FC",
         "age": 37
       },
       {
-        "name": "Álvaro David Montero Perales",
+        "name": "Álvaro Montero",
         "club": "CA Vélez Sarseld",
-        "age": 31
+        "age": 31,
+        "fotmob_id": "791268"
       }
     ],
     "defenders": [
       {
-        "name": "Daniel Muñoz Mejia",
+        "name": "Daniel Muñoz",
         "club": "Crystal Palace FC",
         "age": 30,
         "espn_id": "146679",
         "sofascore_id": "870360"
       },
       {
-        "name": "Jhon Janer Lucumi Bonilla",
+        "name": "Jhon Lucumí",
         "club": "Bologna FC",
-        "age": 27
+        "age": 27,
+        "fotmob_id": "1648192"
       },
       {
-        "name": "Santiago Arias Naranjo",
+        "name": "Santiago Arias",
         "club": "CA Independiente",
         "age": 34,
         "espn_id": "164756",
         "sofascore_id": "158583"
       },
       {
-        "name": "Yerry Fernando Mina Gonzalez",
+        "name": "Yerry Mina",
         "club": "Cagliari",
         "age": 31
       },
@@ -1631,24 +1641,24 @@
         "age": 22
       },
       {
-        "name": "Johan Andrés Mojica Palacio",
+        "name": "Johan Mojica",
         "club": "RCD Mallorca",
         "age": 33
       },
       {
-        "name": "Willer Emilio Ditta Perez",
+        "name": "Willer Ditta",
         "club": "CF Cruz Azul",
         "age": 28
       },
       {
-        "name": "Deiver Machado Mena",
+        "name": "Deiver Machado",
         "club": "FC Nantes",
         "age": 32,
         "espn_id": "197401",
         "sofascore_id": "822110"
       },
       {
-        "name": "Davinson Sánchez Mina",
+        "name": "Davinson Sánchez",
         "club": "Galatasaray SK",
         "age": 29,
         "espn_id": "197105",
@@ -1657,45 +1667,48 @@
     ],
     "midfielders": [
       {
-        "name": "Kevin Duvan Castaño Gil",
+        "name": "Kevin Castaño",
         "club": "CA River Plate",
         "age": 25
       },
       {
-        "name": "Richard Ríos Montoya",
+        "name": "Richard Ríos",
         "club": "SL Benca",
         "age": 26,
         "espn_id": "301520",
         "sofascore_id": "1015292"
       },
       {
-        "name": "Jorge Andres Carrascal Guardo",
+        "name": "Jorge Carrascal",
         "club": "CR Flamengo",
         "age": 28
       },
       {
-        "name": "James David Rodríguez Rubio",
+        "name": "James Rodríguez",
         "club": "Minnesota United FC",
-        "age": 34
+        "age": 34,
+        "fotmob_id": "938564"
       },
       {
-        "name": "Jhon Adolfo Arias Andrade",
+        "name": "Jhon Arias",
         "club": "SE Palmeiras",
-        "age": 28
+        "age": 28,
+        "fotmob_id": "1137457"
       },
       {
-        "name": "Juan Camilo Portilla Orozco",
+        "name": "Juan Portilla",
         "club": "Athletico Paranaense",
         "age": 27,
         "sofascore_id": "980580"
       },
       {
-        "name": "Jefferson Andrés Lerma Solis",
+        "name": "Jefferson Lerma",
         "club": "Crystal Palace FC",
-        "age": 31
+        "age": 31,
+        "fotmob_id": "1433032"
       },
       {
-        "name": "Juan Fernando Quintero Paniagua",
+        "name": "Juan Fernando Quintero",
         "club": "CA River Plate",
         "age": 33,
         "espn_id": "177780",
@@ -1704,17 +1717,19 @@
     ],
     "forwards": [
       {
-        "name": "Luis Fernando Díaz Marulanda",
+        "name": "Luis Díaz",
         "club": "FC Bayern München",
-        "age": 29
+        "age": 29,
+        "fotmob_id": "937974"
       },
       {
-        "name": "Jhon Andrés Córdoba Copete",
+        "name": "Jhon Córdoba",
         "club": "FC Krasnodar",
-        "age": 33
+        "age": 33,
+        "fotmob_id": "896402"
       },
       {
-        "name": "Juan Camilo Hernandez Suarez",
+        "name": "Cucho Hernández",
         "club": "Real Betis",
         "age": 27,
         "sofascore_id": "1607635"
@@ -1727,12 +1742,12 @@
         "sofascore_id": "877299"
       },
       {
-        "name": "Luis Javier Suárez Charris",
+        "name": "Luis Suárez",
         "club": "Sporting CP",
         "age": 28
       },
       {
-        "name": "Carlos Andrés Gómez Hinestroza",
+        "name": "Andrés Gómez",
         "club": "CR Vasco Da Gama",
         "age": 23,
         "espn_id": "330924",
@@ -1741,23 +1756,23 @@
     ]
   },
   "DR Congo": {
-    "manager": "Sebastien Serge Louis Desabre",
+    "manager": "Sebastien Desabre",
     "manager_sofascore_id": "789575",
     "goalkeepers": [
       {
-        "name": "Lionel Nzau Mpasi",
+        "name": "Lionel Mpasi",
         "club": "Le Havre AC",
         "age": 31,
         "sofascore_id": "599192"
       },
       {
-        "name": "Timothy Bruce Munzoko Fayulu",
+        "name": "Timothy Fayulu",
         "club": "FC Noah",
         "age": 26,
         "fotmob_id": "976996"
       },
       {
-        "name": "Matthieu Luka Epolo",
+        "name": "Matthieu Epolo",
         "club": "Standard Liège",
         "age": 21,
         "espn_id": "319371",
@@ -1766,12 +1781,13 @@
     ],
     "defenders": [
       {
-        "name": "Wan Bissaka",
+        "name": "Aaron Wan-Bissaka",
         "club": "West Ham United FC",
-        "age": 28
+        "age": 28,
+        "fotmob_id": "760320"
       },
       {
-        "name": "Steve Nkanu Kapuadi",
+        "name": "Steve Kapuadi",
         "club": "Widzew Łódź",
         "age": 28,
         "espn_id": "369201",
@@ -1785,39 +1801,40 @@
         "sofascore_id": "817979"
       },
       {
-        "name": "Dylan Buduka Batubinsika",
+        "name": "Dylan Batubinsika",
         "club": "AEL FC",
         "age": 30,
         "espn_id": "260228",
         "sofascore_id": "352912"
       },
       {
-        "name": "Joris Kayembe-Ditu",
+        "name": "Joris Kayembe",
         "club": "KRC Genk",
-        "age": 31
+        "age": 31,
+        "fotmob_id": "500932"
       },
       {
-        "name": "Mangulu Chancel Mbemba",
+        "name": "Chancel Mbemba",
         "club": "Lille OSC",
         "age": 31,
         "espn_id": "174322",
         "sofascore_id": "238612"
       },
       {
-        "name": "Gédéon Tchingoma Kyatengwa Kalulu",
+        "name": "Gedeon Kalulu",
         "club": "Aris Limassol FC",
         "age": 28,
         "fotmob_id": "1022309"
       },
       {
-        "name": "Arthur Fuka Masuaku Kawela",
+        "name": "Arthur Masuaku",
         "club": "RC Lens",
         "age": 32
       }
     ],
     "midfielders": [
       {
-        "name": "Ngal’ayel Mukau",
+        "name": "Ngal'ayel Mukau",
         "club": "Lille OSC",
         "age": 21,
         "espn_id": "345988",
@@ -1831,20 +1848,20 @@
         "sofascore_id": "963399"
       },
       {
-        "name": "Samuel Alain Moutoussamy",
+        "name": "Samuel Moutoussamy",
         "club": "Atromitos FC",
         "age": 29,
         "espn_id": "260932",
         "sofascore_id": "892624"
       },
       {
-        "name": "Theo Mbulofeko Batombo Bongonda",
+        "name": "Théo Bongonda",
         "club": "FC Spartak Moscow",
         "age": 30,
         "fotmob_id": "466132"
       },
       {
-        "name": "Noah Junior Sadiki",
+        "name": "Noah Sadiki",
         "club": "Sunderland AFC",
         "age": 21,
         "espn_id": "340240",
@@ -1858,14 +1875,14 @@
         "sofascore_id": "353602"
       },
       {
-        "name": "Charles Monginda Pickel",
+        "name": "Charles Pickel",
         "club": "RCD Espanyol",
         "age": 29,
         "espn_id": "235875",
         "sofascore_id": "758664"
       },
       {
-        "name": "Edo Kayembe Kayembe",
+        "name": "Edo Kayembe",
         "club": "Watford FC",
         "age": 28,
         "espn_id": "268986",
@@ -1883,7 +1900,8 @@
       {
         "name": "Mambenga Gaël Roméo Kakuta",
         "club": "AEL FC",
-        "age": 34
+        "age": 34,
+        "fotmob_id": "163205"
       },
       {
         "name": "Meschack Lina Elia",
@@ -1892,14 +1910,14 @@
         "fotmob_id": "694060"
       },
       {
-        "name": "Cedric Bakambu",
+        "name": "Cédric Bakambu",
         "club": "Real Betis",
         "age": 35,
         "espn_id": "147193",
         "sofascore_id": "115665"
       },
       {
-        "name": "Mayele Fiston Kalala",
+        "name": "Fiston Mayele",
         "club": "Pyramids FC",
         "age": 31,
         "espn_id": "299324",
@@ -1913,7 +1931,7 @@
         "sofascore_id": "805123"
       },
       {
-        "name": "Simon Bokote Banza",
+        "name": "Simon Banza",
         "club": "Al Jazira",
         "age": 29,
         "espn_id": "231161",
@@ -1922,7 +1940,7 @@
     ]
   },
   "Côte d'Ivoire": {
-    "manager": "Emerse Fae",
+    "manager": "Emerse Faé",
     "manager_sofascore_id": "803796",
     "goalkeepers": [
       {
@@ -1933,14 +1951,14 @@
         "sofascore_id": "877977"
       },
       {
-        "name": "Mohamed Kone",
+        "name": "Mohamed Koné",
         "club": "Sporting Charleroi",
         "age": 24,
         "espn_id": "385004",
         "sofascore_id": "1131009"
       },
       {
-        "name": "Alban-Marc Lafont",
+        "name": "Alban Lafont",
         "club": "Panathinaikos FC",
         "age": 27
       }
@@ -1954,23 +1972,24 @@
         "sofascore_id": "1394342"
       },
       {
-        "name": "N'clomande Ghislain Konan",
+        "name": "Ghislain Konan",
         "club": "Gil Vicente FC",
         "age": 30,
         "espn_id": "250888",
         "sofascore_id": "831781"
       },
       {
-        "name": "Wilfried Stephane Singo",
+        "name": "Wilfried Singo",
         "club": "Galatasaray SK",
         "age": 25,
         "espn_id": "286569",
         "sofascore_id": "978285"
       },
       {
-        "name": "Kouakou Odilon Dorgeless Kossounou",
+        "name": "Odilon Kossounou",
         "club": "Atalanta Bergamo",
-        "age": 25
+        "age": 25,
+        "fotmob_id": "1014496"
       },
       {
         "name": "Christopher Tea Domoraud Operi",
@@ -1979,19 +1998,20 @@
         "fotmob_id": "802462"
       },
       {
-        "name": "Guela Maho-Lewis Doue",
+        "name": "Guela Doué",
         "club": "RC Strasbourg",
         "age": 23,
         "espn_id": "346636",
         "sofascore_id": "1002033"
       },
       {
-        "name": "Badobre Emmanuel Elysee Djedje Agbadou",
+        "name": "Emmanuel Agbadou",
         "club": "Beşiktaş JK",
-        "age": 28
+        "age": 28,
+        "fotmob_id": "1114979"
       },
       {
-        "name": "Obite Evan Ndicka",
+        "name": "Evan Ndicka",
         "club": "AS Roma",
         "age": 26,
         "espn_id": "242593",
@@ -2000,28 +2020,28 @@
     ],
     "midfielders": [
       {
-        "name": "Jean Michael Seri",
+        "name": "Jean Michaël Seri",
         "club": "NK Maribor",
         "age": 34,
         "espn_id": "193539",
         "sofascore_id": "305282"
       },
       {
-        "name": "Seko Mohamed Fofana",
+        "name": "Seko Fofana",
         "club": "FC Porto",
         "age": 31,
         "espn_id": "184118",
         "sofascore_id": "191188"
       },
       {
-        "name": "Franck Yannick Kessie",
+        "name": "Franck Kessié",
         "club": "Al Ahli FC",
         "age": 29,
         "espn_id": "194711",
         "sofascore_id": "359226"
       },
       {
-        "name": "Ibrahim Sangare",
+        "name": "Ibrahim Sangaré",
         "club": "Nottingham Forest FC",
         "age": 28,
         "espn_id": "213718",
@@ -2035,7 +2055,7 @@
         "sofascore_id": "1030459"
       },
       {
-        "name": "Christ Ravynel Inao Oulai",
+        "name": "Christ Inao Oulaï",
         "club": "Trabzonspor",
         "age": 20,
         "espn_id": "386989",
@@ -2044,7 +2064,7 @@
     ],
     "forwards": [
       {
-        "name": "Ange-Yoan Laurent Bonny",
+        "name": "Ange-Yoan Bonny",
         "club": "FC Internazionale Milano",
         "age": 22,
         "espn_id": "309185",
@@ -2065,12 +2085,13 @@
         "sofascore_id": "2087085"
       },
       {
-        "name": "Sepe Elye Delmas Wahi",
+        "name": "Elye Wahi",
         "club": "OGC Nice",
-        "age": 23
+        "age": 23,
+        "fotmob_id": "1213430"
       },
       {
-        "name": "Oumar Diakite",
+        "name": "Oumar Diakité",
         "club": "Cercle Brugge",
         "age": 22,
         "espn_id": "329483",
@@ -2084,20 +2105,20 @@
         "sofascore_id": "971037"
       },
       {
-        "name": "Nicolas Pepe",
+        "name": "Nicolas Pépé",
         "club": "Villarreal CF",
         "age": 31,
         "espn_id": "210397",
         "sofascore_id": "593526"
       },
       {
-        "name": "Evann Ludovic Vidjannagni Guessand",
+        "name": "Evann Guessand",
         "club": "Crystal Palace FC",
         "age": 24,
         "fotmob_id": "1087966"
       },
       {
-        "name": "Bazoumana Toure",
+        "name": "Bazoumana Touré",
         "club": "TSG Hoffenheim",
         "age": 20,
         "espn_id": "359108",
@@ -2106,11 +2127,11 @@
     ]
   },
   "Croatia": {
-    "manager": "Zlatko Dalić",
+    "manager": "Zlatko Dalic",
     "manager_sofascore_id": "784902",
     "goalkeepers": [
       {
-        "name": "Dominik Livaković",
+        "name": "Dominik Livakovic",
         "club": "GNK Dinamo Zagreb",
         "age": 31,
         "espn_id": "187946",
@@ -2133,35 +2154,35 @@
     ],
     "defenders": [
       {
-        "name": "Josip Stanišić",
+        "name": "Josip Stanisic",
         "club": "FC Bayern München",
         "age": 26,
         "espn_id": "276329",
         "sofascore_id": "927407"
       },
       {
-        "name": "Marin Pongračić",
+        "name": "Marin Pongracic",
         "club": "ACF Fiorentina",
         "age": 28,
         "espn_id": "255650",
         "sofascore_id": "847467"
       },
       {
-        "name": "Joško Gvardiol",
+        "name": "Josko Gvardiol",
         "club": "Manchester City FC",
         "age": 24,
         "espn_id": "299910",
         "sofascore_id": "964994"
       },
       {
-        "name": "Duje Ćaleta-Car",
+        "name": "Duje Caleta-Car",
         "club": "Real Sociedad",
         "age": 29,
         "espn_id": "194766",
         "sofascore_id": "257091"
       },
       {
-        "name": "Josip Šutalo",
+        "name": "Josip Sutalo",
         "club": "AFC Ajax",
         "age": 26,
         "espn_id": "305552",
@@ -2175,14 +2196,14 @@
         "sofascore_id": "796206"
       },
       {
-        "name": "Luka Vušković",
+        "name": "Luka Vuskovic",
         "club": "Hamburger SV",
         "age": 19,
         "espn_id": "364962",
         "sofascore_id": "1405212"
       },
       {
-        "name": "Martin Erlić",
+        "name": "Martin Erlic",
         "club": "FC Midtjylland",
         "age": 28,
         "espn_id": "216579",
@@ -2198,28 +2219,28 @@
         "sofascore_id": "814882"
       },
       {
-        "name": "Mateo Kovačić",
+        "name": "Mateo Kovacic",
         "club": "Manchester City FC",
         "age": 32,
         "espn_id": "154595",
         "sofascore_id": "136710"
       },
       {
-        "name": "Luka Modrić",
+        "name": "Luka Modric",
         "club": "AC Milan",
         "age": 40,
         "espn_id": "76762",
         "sofascore_id": "15466"
       },
       {
-        "name": "Nikola Vlašić",
+        "name": "Nikola Vlasic",
         "club": "Torino FC",
         "age": 28,
         "espn_id": "206378",
         "sofascore_id": "357596"
       },
       {
-        "name": "Mario Pašalić",
+        "name": "Mario Pasalic",
         "club": "Atalanta Bergamo",
         "age": 31,
         "espn_id": "189668",
@@ -2233,7 +2254,7 @@
         "sofascore_id": "1090019"
       },
       {
-        "name": "Petar Sučić",
+        "name": "Petar Sucic",
         "club": "FC Internazionale Milano",
         "age": 22,
         "espn_id": "341494",
@@ -2247,7 +2268,7 @@
         "sofascore_id": "916183"
       },
       {
-        "name": "Luka Sučić",
+        "name": "Luka Sucic",
         "club": "Real Sociedad",
         "age": 23,
         "espn_id": "306263",
@@ -2256,7 +2277,7 @@
     ],
     "forwards": [
       {
-        "name": "Andrej Kramarić",
+        "name": "Andrej Kramaric",
         "club": "TSG Hoffenheim",
         "age": 34,
         "espn_id": "139520",
@@ -2270,21 +2291,21 @@
         "sofascore_id": "37318"
       },
       {
-        "name": "Ivan Perišić",
+        "name": "Ivan Perisic",
         "club": "PSV Eindhoven",
         "age": 37,
         "espn_id": "103485",
         "sofascore_id": "38710"
       },
       {
-        "name": "Igor Matanović",
+        "name": "Igor Matanovic",
         "club": "SC Freiburg",
         "age": 23,
         "espn_id": "310883",
         "sofascore_id": "1019321"
       },
       {
-        "name": "Marco Pašalić",
+        "name": "Marco Pasalic",
         "club": "Orlando City SC",
         "age": 25,
         "espn_id": "324270",
@@ -2300,25 +2321,25 @@
     ]
   },
   "Curaçao": {
-    "manager": "Dirk Nicolaas Advocaat",
+    "manager": "Dick Advocaat",
     "manager_sofascore_id": "53298",
     "goalkeepers": [
       {
-        "name": "Eloy Victor Room",
+        "name": "Eloy Room",
         "club": "Miami FC",
         "age": 37,
         "espn_id": "127444",
         "sofascore_id": "40859"
       },
       {
-        "name": "Tyrick Jeremy Bodak",
+        "name": "Tyrick Bodak",
         "club": "SC Telstar",
         "age": 24,
         "espn_id": "297542",
         "sofascore_id": "1049270"
       },
       {
-        "name": "Trevor Irving Doornbusch",
+        "name": "Trevor Doornbusch",
         "club": "VVV Venlo",
         "age": 26,
         "espn_id": "262109",
@@ -2327,53 +2348,53 @@
     ],
     "defenders": [
       {
-        "name": "Shurandy Ruggerio Sambo",
+        "name": "Shurandy Sambo",
         "club": "Sparta Rotterdam",
         "age": 24,
         "espn_id": "301456",
         "sofascore_id": "916926"
       },
       {
-        "name": "Juriën Godfried Juan Gaari",
+        "name": "Jurien Gaari",
         "club": "Abha Club",
         "age": 32,
         "fotmob_id": "708738"
       },
       {
-        "name": "Roshon Felix Romar Jordan Van Eijma",
+        "name": "Roshon van Eijma",
         "club": "RKC Waalwijk",
         "age": 28,
         "fotmob_id": "924844"
       },
       {
-        "name": "Sherel Constancio Floranus",
+        "name": "Sherel Floranus",
         "club": "PEC Zwolle",
         "age": 27,
         "espn_id": "224786",
         "sofascore_id": "803021"
       },
       {
-        "name": "Armando Maria Obispo",
+        "name": "Armando Obispo",
         "club": "PSV Eindhoven",
         "age": 27,
         "espn_id": "245918",
         "sofascore_id": "825838"
       },
       {
-        "name": "Joshua Benjamin Brenet",
+        "name": "Joshua Brenet",
         "club": "Kayserispor",
         "age": 32,
         "sofascore_id": "296438"
       },
       {
-        "name": "Riechedly Guillermo Bazoer",
+        "name": "Riechedly Bazoer",
         "club": "Konyaspor",
         "age": 29,
         "espn_id": "188411",
         "sofascore_id": "227196"
       },
       {
-        "name": "Deveron Lenny Fonville",
+        "name": "Deveron Fonville",
         "club": "NEC Nijmegen",
         "age": 23,
         "espn_id": "335203",
@@ -2389,26 +2410,26 @@
         "sofascore_id": "825849"
       },
       {
-        "name": "Juninho Gracielo Bacuna",
+        "name": "Juninho Bacuna",
         "club": "FC Volendam",
         "age": 28,
         "espn_id": "216287",
         "sofascore_id": "788971"
       },
       {
-        "name": "Livano Shyron Liomar Comenencia",
+        "name": "Livano Comenencia",
         "club": "FC Zürich",
         "age": 22,
         "fotmob_id": "1243246"
       },
       {
-        "name": "Leandro Jones Johan Bacuna",
+        "name": "Leandro Bacuna",
         "club": "Iğdır FK",
         "age": 34,
         "fotmob_id": "183500"
       },
       {
-        "name": "Ar'jany Jainel Archenir Martha",
+        "name": "Ar'jany Martha",
         "club": "Rotherham United FC",
         "age": 22,
         "fotmob_id": "1180735"
@@ -2420,7 +2441,7 @@
         "fotmob_id": "751066"
       },
       {
-        "name": "Kevin Antonio Felida",
+        "name": "Kevin Felida",
         "club": "FC Den Bosch",
         "age": 26,
         "espn_id": "262738",
@@ -2429,21 +2450,22 @@
     ],
     "forwards": [
       {
-        "name": "Jürgen Leonardo Locadia",
+        "name": "Jurgen Locadia",
         "club": "Miami FC",
         "age": 32,
         "sofascore_id": "97409"
       },
       {
-        "name": "Jeremy Cornelis Jacobus Antonisse",
+        "name": "Jeremy Antonisse",
         "club": "AE Kisia FC",
         "age": 24,
         "fotmob_id": "1210947"
       },
       {
-        "name": "Misjonne Juniffer Naigelino Hansen",
+        "name": "Sontje Hansen",
         "club": "Middlesbrough FC",
-        "age": 24
+        "age": 24,
+        "fotmob_id": "1050160"
       },
       {
         "name": "Tyrese Yurvencey Noslin",
@@ -2453,27 +2475,27 @@
         "sofascore_id": "1469336"
       },
       {
-        "name": "Kenji Joel Gorre",
+        "name": "Kenji Gorre",
         "club": "Maccabi Haifa FC",
         "age": 31,
         "espn_id": "188452",
         "sofascore_id": "796142"
       },
       {
-        "name": "Jearl Erwin Margaritha",
+        "name": "Jearl Margaritha",
         "club": "SK Beveren",
         "age": 26,
         "espn_id": "301441",
         "sofascore_id": "1036004"
       },
       {
-        "name": "Brandley Mack-Olien Kuwas",
+        "name": "Brandley Kuwas",
         "club": "FC Volendam",
         "age": 33,
         "sofascore_id": "252885"
       },
       {
-        "name": "Gervane Zjandric Adonnis Kastaneer",
+        "name": "Gervane Kastaneer",
         "club": "Terengganu FC",
         "age": 30,
         "fotmob_id": "380942"
@@ -2675,108 +2697,120 @@
     ]
   },
   "Ecuador": {
-    "manager": "Sebastián Andrés Beccacece",
+    "manager": "Sebastián Beccacece",
     "manager_sofascore_id": "786550",
     "goalkeepers": [
       {
-        "name": "Hernán Ismael Galíndez",
+        "name": "Hernán Galíndez",
         "club": "CA Huracán",
         "age": 39,
         "fotmob_id": "146801"
       },
       {
-        "name": "Wellington Moisés Ramírez Preciado",
+        "name": "Moisés Ramírez",
         "club": "AE Kisia FC",
-        "age": 25
+        "age": 25,
+        "fotmob_id": "848593"
       },
       {
-        "name": "Gonzalo Roberto Valle Bustamante",
+        "name": "Gonzalo Valle",
         "club": "LDU Quito",
-        "age": 30
+        "age": 30,
+        "fotmob_id": "950973"
       }
     ],
     "defenders": [
       {
-        "name": "Félix Eduardo Torres Caicedo",
+        "name": "Félix Torres",
         "club": "SC Internacional",
-        "age": 29
+        "age": 29,
+        "fotmob_id": "1137668"
       },
       {
-        "name": "Piero Martin Hincapié Reyna",
+        "name": "Piero Hincapié",
         "club": "Arsenal FC",
-        "age": 24
+        "age": 24,
+        "fotmob_id": "1071179"
       },
       {
-        "name": "Joel Leandro Ordóñez Guerrero",
+        "name": "Joel Ordóñez",
         "club": "Club Brugge",
-        "age": 22
+        "age": 22,
+        "fotmob_id": "1054132"
       },
       {
-        "name": "Willian Joel Pacho Tenorio",
+        "name": "Willian Pacho",
         "club": "Paris Saint-Germain",
-        "age": 24
+        "age": 24,
+        "fotmob_id": "497329"
       },
       {
-        "name": "Pervis Josue Estupiñán Tenorio",
+        "name": "Pervis Estupiñán",
         "club": "AC Milan",
-        "age": 28
+        "age": 28,
+        "fotmob_id": "497329"
       },
       {
-        "name": "Ángelo Smit Preciado Quiñonez",
+        "name": "Ángelo Preciado",
         "club": "Atlético Mineiro",
         "age": 28,
         "fotmob_id": "737494"
       },
       {
-        "name": "Jackson Gabriel Porozo Vernaza",
+        "name": "Jackson Porozo",
         "club": "Club Tijuana",
         "age": 25
       },
       {
-        "name": "Yaimar Abel Medina Ortiz",
+        "name": "Yaimar Medina",
         "club": "KRC Genk",
-        "age": 21
+        "age": 21,
+        "fotmob_id": "1580522"
       }
     ],
     "midfielders": [
       {
-        "name": "Jordy Jose Alcívar Macías",
+        "name": "Jordy Alcivar",
         "club": "Independiente Del Valle",
-        "age": 26
+        "age": 26,
+        "fotmob_id": "861901"
       },
       {
         "name": "Anthony Lenin Valencia Bajaña",
         "club": "Royal Antwerp FC",
-        "age": 22
+        "age": 22,
+        "fotmob_id": "1411830"
       },
       {
-        "name": "Ray Kendry Paez Andrade",
+        "name": "Kendry Páez",
         "club": "CA River Plate",
-        "age": 19
+        "age": 19,
+        "fotmob_id": "1137457"
       },
       {
-        "name": "Alan Steve Minda Garcia",
+        "name": "Alan Minda",
         "club": "Atlético Mineiro",
         "age": 23,
         "fotmob_id": "1299714"
       },
       {
-        "name": "Pedro Jeampierre Vite Uca",
+        "name": "Pedro Vite",
         "club": "Pumas UNAM",
         "age": 24
       },
       {
-        "name": "Denil Daniel Castillo Preciado",
+        "name": "Denil Castillo",
         "club": "FC Midtjylland",
-        "age": 22
+        "age": 22,
+        "fotmob_id": "848593"
       },
       {
-        "name": "Alan Steven Franco Palma",
+        "name": "Alan Franco",
         "club": "Atlético Mineiro",
         "age": 27
       },
       {
-        "name": "Moisés Isaac Caicedo Corozo",
+        "name": "Moisés Caicedo",
         "club": "Chelsea FC",
         "age": 24,
         "fotmob_id": "851645"
@@ -2789,20 +2823,21 @@
         "age": 25
       },
       {
-        "name": "Kevin Jose Rodríguez Cortez",
+        "name": "Kevin Rodríguez",
         "club": "Royale Union Saint-Gilloise",
         "age": 26,
         "fotmob_id": "1445451"
       },
       {
-        "name": "Enner Remberto Valencia Lastra",
+        "name": "Anthony Valencia",
         "club": "CF Pachuca",
         "age": 36
       },
       {
-        "name": "Jordy Josue Caicedo Medina",
+        "name": "Jordy Caicedo",
         "club": "CA Huracán",
-        "age": 28
+        "age": 28,
+        "fotmob_id": "812652"
       },
       {
         "name": "Gonzalo Jordy Plata Jimenez",
@@ -2817,14 +2852,14 @@
         "fotmob_id": "1710895"
       },
       {
-        "name": "Jeremy Alberto Arevalo Mera",
+        "name": "Jeremy Arévalo",
         "club": "VfB Stuttgart",
         "age": 21
       }
     ]
   },
   "Egypt": {
-    "manager": "Hossam Hassan Hassanein Hassan",
+    "manager": "Hossam Hassan",
     "manager_sofascore_id": "790139",
     "goalkeepers": [
       {
@@ -2833,98 +2868,100 @@
         "age": 37
       },
       {
-        "name": "Mahdy Mohamed Soliman Ibrahim",
+        "name": "El Mahdy Soliman",
         "club": "Zamalek SC",
-        "age": 39
+        "age": 39,
+        "fotmob_id": "1593857"
       },
       {
-        "name": "Mostafa Ahmed Abdelaziz Mohame Shoubir",
+        "name": "Mostafa Shobeir",
         "club": "Al Ahly FC",
         "age": 26
       },
       {
-        "name": "Mohamed Alaaeldin Soliman M Ahmed",
+        "name": "Mohamed Alaa",
         "club": "El Gouna FC",
         "age": 27
       }
     ],
     "defenders": [
       {
-        "name": "Yasser Ahmed Ibrahim Elhanafy",
+        "name": "Yasser Ibrahim",
         "club": "Al Ahly FC",
         "age": 33
       },
       {
-        "name": "Mohamed Hany Gamal Eldemerdash",
+        "name": "Mohamed Hany",
         "club": "Al Ahly FC",
         "age": 30
       },
       {
-        "name": "Hossam Abdelmegeed Abdelsalam Abdelmegeed",
+        "name": "Hossam Abdelmaguid",
         "club": "Zamalek SC",
         "age": 25
       },
       {
-        "name": "Ramy Hisham Abdelaziz Moustafa Rabia",
+        "name": "Ramy Rabia",
         "club": "Al Ain FC",
         "age": 33,
         "fotmob_id": "505872"
       },
       {
-        "name": "Mohamed Abdelmoneim Elsayed M Ahmed",
+        "name": "Mohamed Abdelmonem",
         "club": "OGC Nice",
         "age": 27
       },
       {
-        "name": "Ahmed Mohamed Aboelfetouh Mohamed",
+        "name": "Ahmed Fatouh",
         "club": "Zamalek SC",
         "age": 28
       },
       {
-        "name": "Karim Hafez Ramadan Seifeldin",
+        "name": "Karim Hafez",
         "club": "Pyramids FC",
         "age": 30
       },
       {
-        "name": "Tarek Alaa Abdelghaffar Abdel Elgebaly",
+        "name": "Tarek Alaa",
         "club": "ZED FC",
         "age": 24
       }
     ],
     "midfielders": [
       {
-        "name": "Emam Ashour Metwaly Abdelghany",
+        "name": "Emam Ashour",
         "club": "Al Ahly FC",
         "age": 28
       },
       {
-        "name": "Mostafa Mohamed Zaky Abdelraouf",
+        "name": "Mostafa Ziko",
         "club": "Pyramids FC",
         "age": 29
       },
       {
         "name": "Hamdy Fathy Abdelhalim Abdelfattah",
         "club": "Al Wakrah SC",
-        "age": 31
+        "age": 31,
+        "fotmob_id": "1435086"
       },
       {
-        "name": "Mohanad Mostafa Ahmed A Lashin",
+        "name": "Mohanad Lasheen",
         "club": "Pyramids FC",
         "age": 30
       },
       {
-        "name": "Nabil Emad Aly Elmahdy Aly",
+        "name": "Nabil Emad",
         "club": "Al Najmah SC",
         "age": 30,
         "fotmob_id": "951486"
       },
       {
-        "name": "Marawan Attia Fahim Ghallab",
+        "name": "Marwan Attia",
         "club": "Al Ahly FC",
         "age": 27
       },
       {
-        "name": "Mahmoud Saber Abdelmohsen H Abdelmohsen",
+        "name": "Mahmoud Saber",
         "club": "ZED FC",
         "age": 24
       }
@@ -2936,12 +2973,13 @@
         "age": 31
       },
       {
-        "name": "Hamza Mohamed Abdelkarim E Selim",
+        "name": "Hamza Abdelkarim",
         "club": "FC Barcelona",
-        "age": 18
+        "age": 18,
+        "fotmob_id": "1747804"
       },
       {
-        "name": "Mohamed Salah Hamed Mahrous Ghaly",
+        "name": "Mohamed Salah",
         "club": "Liverpool FC",
         "age": 33
       },
@@ -2958,7 +2996,7 @@
         "fotmob_id": "525486"
       },
       {
-        "name": "Omar Khaled Mohamed Abdelsalam Marmoush",
+        "name": "Omar Marmoush",
         "club": "Manchester City FC",
         "age": 27,
         "fotmob_id": "839204"
@@ -2976,21 +3014,21 @@
     "manager_sofascore_id": "785186",
     "goalkeepers": [
       {
-        "name": "Jordan Lee Pickford",
+        "name": "Jordan Pickford",
         "club": "Everton FC",
         "age": 32,
         "espn_id": "159443",
         "sofascore_id": "138530"
       },
       {
-        "name": "Dean Bradley Henderson",
+        "name": "Dean Henderson",
         "club": "Crystal Palace FC",
         "age": 29,
         "espn_id": "234172",
         "sofascore_id": "788134"
       },
       {
-        "name": "James Harrington Trafford",
+        "name": "James Trafford",
         "club": "Manchester City FC",
         "age": 23,
         "espn_id": "307118",
@@ -2999,14 +3037,14 @@
     ],
     "defenders": [
       {
-        "name": "Ezri Ngoyo Konsa",
+        "name": "Ezri Konsa",
         "club": "Aston Villa FC",
         "age": 28,
         "espn_id": "231859",
         "sofascore_id": "827679"
       },
       {
-        "name": "Nico O'reilly",
+        "name": "Nico O'Reilly",
         "club": "Manchester City FC",
         "age": 21,
         "espn_id": "328464",
@@ -3020,36 +3058,38 @@
         "sofascore_id": "152077"
       },
       {
-        "name": "Addji Keaninkin Marc-Isreal Guehi",
+        "name": "Marc Guéhi",
         "club": "Manchester City FC",
-        "age": 25
+        "age": 25,
+        "fotmob_id": "844425"
       },
       {
-        "name": "Valentino Francisco Livramento",
+        "name": "Tino Livramento",
         "club": "Newcastle United FC",
         "age": 23,
         "fotmob_id": "1107910"
       },
       {
-        "name": "Daniel Johnson Burn",
+        "name": "Dan Burn",
         "club": "Newcastle United FC",
         "age": 34,
         "fotmob_id": "188058"
       },
       {
-        "name": "Reece Lewis James",
+        "name": "Reece James",
         "club": "Chelsea FC",
         "age": 26,
         "espn_id": "189007",
         "sofascore_id": "885908"
       },
       {
-        "name": "Diop Tehuti Djed-Hotep Spence",
+        "name": "Djed Spence",
         "club": "Tottenham Hotspur FC",
-        "age": 25
+        "age": 25,
+        "fotmob_id": "894803"
       },
       {
-        "name": "Jarell Amorin Quansah",
+        "name": "Jarell Quansah",
         "club": "Bayer",
         "age": 23,
         "espn_id": "298524",
@@ -3065,41 +3105,41 @@
         "sofascore_id": "856714"
       },
       {
-        "name": "Elliot Junior Anderson",
+        "name": "Elliot Anderson",
         "club": "Nottingham Forest FC",
         "age": 23,
         "espn_id": "238472",
         "sofascore_id": "994546"
       },
       {
-        "name": "Jude Victor William Bellingham",
+        "name": "Jude Bellingham",
         "club": "Real Madrid C. F.",
         "age": 22,
         "fotmob_id": "1077894"
       },
       {
-        "name": "Jordan Brian Henderson",
+        "name": "Jordan Henderson",
         "club": "Brentford FC",
         "age": 35,
         "espn_id": "127262",
         "sofascore_id": "42694"
       },
       {
-        "name": "Kobbie Boateng Mainoo",
+        "name": "Kobbie Mainoo",
         "club": "Manchester United FC",
         "age": 21,
         "espn_id": "328466",
         "sofascore_id": "1142175"
       },
       {
-        "name": "Morgan Elliot Rogers",
+        "name": "Morgan Rogers",
         "club": "Aston Villa FC",
         "age": 23,
         "espn_id": "265653",
         "sofascore_id": "948261"
       },
       {
-        "name": "Eberechi Oluchi Eze",
+        "name": "Eberechi Eze",
         "club": "Arsenal FC",
         "age": 27,
         "espn_id": "251400",
@@ -3108,14 +3148,14 @@
     ],
     "forwards": [
       {
-        "name": "Bukayo Ayoyinka Saka",
+        "name": "Bukayo Saka",
         "club": "Arsenal FC",
         "age": 24,
         "espn_id": "280555",
         "sofascore_id": "934235"
       },
       {
-        "name": "Harry Edward Kane",
+        "name": "Harry Kane",
         "club": "FC Bayern München",
         "age": 32,
         "espn_id": "142200",
@@ -3129,24 +3169,26 @@
         "sofascore_id": "814590"
       },
       {
-        "name": "Anthony Michael Gordon",
+        "name": "Anthony Gordon",
         "club": "Newcastle United FC",
         "age": 25,
         "espn_id": "268782",
         "sofascore_id": "914902"
       },
       {
-        "name": "Oliver George Arthur Watkins",
+        "name": "Ollie Watkins",
         "club": "Aston Villa FC",
-        "age": 30
+        "age": 30,
+        "fotmob_id": "540088"
       },
       {
-        "name": "Chukwunonso Azuka Tristan Madueke",
+        "name": "Noni Madueke",
         "club": "Arsenal FC",
-        "age": 24
+        "age": 24,
+        "fotmob_id": "1084981"
       },
       {
-        "name": "Ivan Benjamin Elijah Toney",
+        "name": "Ivan Toney",
         "club": "Al Ahli FC",
         "age": 30,
         "fotmob_id": "408987"
@@ -3154,25 +3196,25 @@
     ]
   },
   "France": {
-    "manager": "Didier Claude Deschamps",
+    "manager": "Didier Deschamps",
     "manager_sofascore_id": "69075",
     "goalkeepers": [
       {
-        "name": "Brice Lauriche Samba",
+        "name": "Brice Samba",
         "club": "Stade Rennais FC",
         "age": 32,
         "espn_id": "164126",
         "sofascore_id": "164055"
       },
       {
-        "name": "Mike Peterson Maignan",
+        "name": "Mike Maignan",
         "club": "AC Milan",
         "age": 30,
         "espn_id": "189026",
         "sofascore_id": "191210"
       },
       {
-        "name": "Robin François Philippe Risser",
+        "name": "Robin Risser",
         "club": "RC Lens",
         "age": 21,
         "fotmob_id": "1390336"
@@ -3180,7 +3222,7 @@
     ],
     "defenders": [
       {
-        "name": "Malo Arthur Gusto",
+        "name": "Malo Gusto",
         "club": "Chelsea FC",
         "age": 23,
         "espn_id": "308947",
@@ -3194,12 +3236,12 @@
         "sofascore_id": "96538"
       },
       {
-        "name": "Dayotchanculle Oswald Upamecano",
+        "name": "Dayot Upamecano",
         "club": "FC Bayern München",
         "age": 27
       },
       {
-        "name": "Jules Olivier Kounde",
+        "name": "Jules Koundé",
         "club": "FC Barcelona",
         "age": 27,
         "espn_id": "231692",
@@ -3213,25 +3255,25 @@
         "sofascore_id": "826215"
       },
       {
-        "name": "William Alain André Gabriel Saliba",
+        "name": "William Saliba",
         "club": "Arsenal FC",
         "age": 25,
         "fotmob_id": "955406"
       },
       {
-        "name": "Théo Bernard François Hernandez",
+        "name": "Theo Hernández",
         "club": "Al Hilal SC",
         "age": 28,
         "fotmob_id": "724371"
       },
       {
-        "name": "Lucas Francois Bernard Hernandez",
+        "name": "Lucas Hernández",
         "club": "Paris Saint-Germain",
         "age": 30,
         "fotmob_id": "504606"
       },
       {
-        "name": "Maxence Guy Lacroix",
+        "name": "Maxence Lacroix",
         "club": "Crystal Palace FC",
         "age": 26,
         "espn_id": "265918",
@@ -3240,33 +3282,33 @@
     ],
     "midfielders": [
       {
-        "name": "Kouadio Emmanuel Boris Kone",
+        "name": "Manu Koné",
         "club": "AS Roma",
         "age": 25,
         "fotmob_id": "1016132"
       },
       {
-        "name": "Aurélien Djani Tchouameni",
+        "name": "Aurélien Tchouaméni",
         "club": "Real Madrid C. F.",
         "age": 26,
         "espn_id": "265919",
         "sofascore_id": "859025"
       },
       {
-        "name": "N'golo Kante",
+        "name": "N'Golo Kanté",
         "club": "Fenerbahçe SK",
         "age": 35,
         "espn_id": "173556",
         "sofascore_id": "234148"
       },
       {
-        "name": "Adrien Thibault Marie Rabiot",
+        "name": "Adrien Rabiot",
         "club": "AC Milan",
         "age": 31,
         "fotmob_id": "352879"
       },
       {
-        "name": "Warren Marie Jean-Pierre Zaïre-Emery",
+        "name": "Warren Zaïre-Emery",
         "club": "Paris Saint-Germain",
         "age": 20,
         "fotmob_id": "1367615"
@@ -3288,39 +3330,39 @@
     ],
     "forwards": [
       {
-        "name": "Masour Ousmane Dembele",
+        "name": "Ousmane Dembélé",
         "club": "Paris Saint-Germain",
         "age": 29,
         "espn_id": "229744",
         "sofascore_id": "818244"
       },
       {
-        "name": "Marcus Lilian Thuram-Ulien",
+        "name": "Marcus Thuram",
         "club": "FC Internazionale Milano",
         "age": 28
       },
       {
-        "name": "Kylian Mbappe Lottin",
+        "name": "Kylian Mbappé",
         "club": "Real Madrid C. F.",
         "age": 27,
         "espn_id": "231388",
         "sofascore_id": "826643"
       },
       {
-        "name": "Michael Akpovie Olise",
+        "name": "Michael Olise",
         "club": "FC Bayern München",
         "age": 24,
         "espn_id": "286831",
         "sofascore_id": "978838"
       },
       {
-        "name": "Bradley Jean-Manuel Essolisa A Barcola",
+        "name": "Bradley Barcola",
         "club": "Paris Saint-Germain",
         "age": 23,
         "fotmob_id": "1297165"
       },
       {
-        "name": "Désiré Nonka-Maho Doue",
+        "name": "Désiré Doué",
         "club": "Paris Saint-Germain",
         "age": 21,
         "espn_id": "336388",
@@ -3340,7 +3382,7 @@
     "manager_sofascore_id": "786670",
     "goalkeepers": [
       {
-        "name": "Manuel Peter Neuer",
+        "name": "Manuel Neuer",
         "club": "FC Bayern München",
         "age": 40,
         "espn_id": "84774",
@@ -3377,7 +3419,7 @@
         "sofascore_id": "799046"
       },
       {
-        "name": "Jonathan Glao Tah",
+        "name": "Jonathan Tah",
         "club": "FC Bayern München",
         "age": 30,
         "espn_id": "188052",
@@ -3391,14 +3433,14 @@
         "sofascore_id": "259117"
       },
       {
-        "name": "Nico Cédric Schlotterbeck",
+        "name": "Nico Schlotterbeck",
         "club": "Borussia Dortmund",
         "age": 26,
         "espn_id": "286828",
         "sofascore_id": "940871"
       },
       {
-        "name": "Nathaniel Christopher Brown",
+        "name": "Nathaniel Brown",
         "club": "Eintracht Frankfurt",
         "age": 22,
         "espn_id": "120829",
@@ -3421,21 +3463,21 @@
     ],
     "midfielders": [
       {
-        "name": "Aleksandar Pavlović",
+        "name": "Aleksandar Pavlovic",
         "club": "FC Bayern München",
         "age": 22,
         "espn_id": "359370",
         "sofascore_id": "1142251"
       },
       {
-        "name": "Leon Christoph Goretzka",
+        "name": "Leon Goretzka",
         "club": "FC Bayern München",
         "age": 31,
         "espn_id": "174550",
         "sofascore_id": "184661"
       },
       {
-        "name": "Jamie Jaleel Jeremy Leweling",
+        "name": "Jamie Leweling",
         "club": "VfB Stuttgart",
         "age": 25,
         "fotmob_id": "1074968"
@@ -3448,20 +3490,20 @@
         "sofascore_id": "1010231"
       },
       {
-        "name": "Pascal Alexander Groß",
+        "name": "Pascal Gross",
         "club": "Brighton & Hove Albion FC",
         "age": 34,
         "fotmob_id": "167008"
       },
       {
-        "name": "Angelo Nicolas Stiller",
+        "name": "Angelo Stiller",
         "club": "VfB Stuttgart",
         "age": 25,
         "espn_id": "290232",
         "sofascore_id": "901882"
       },
       {
-        "name": "Florian Richard Wirtz",
+        "name": "Florian Wirtz",
         "club": "Liverpool FC",
         "age": 23,
         "espn_id": "303748",
@@ -3481,7 +3523,7 @@
         "fotmob_id": "614449"
       },
       {
-        "name": "Felix Kalu Nmecha",
+        "name": "Felix Nmecha",
         "club": "Borussia Dortmund",
         "age": 25,
         "espn_id": "281122",
@@ -3497,7 +3539,7 @@
     ],
     "forwards": [
       {
-        "name": "Kai Lukas Havertz",
+        "name": "Kai Havertz",
         "club": "Arsenal FC",
         "age": 27,
         "espn_id": "231182",
@@ -3527,16 +3569,17 @@
     ]
   },
   "Ghana": {
-    "manager": "Carlos Manuel Brito Leal De Queiroz",
+    "manager": "Carlos Queiroz",
     "manager_sofascore_id": "53636",
     "goalkeepers": [
       {
-        "name": "Lawrence Ati Zigi",
+        "name": "Lawrence Ati-Zigi",
         "club": "FC St. Gallen",
-        "age": 29
+        "age": 29,
+        "fotmob_id": "615411"
       },
       {
-        "name": "Joseph Tetteh Anang",
+        "name": "Joseph Anang",
         "club": "St Patrick's Athletic FC",
         "age": 26,
         "fotmob_id": "963812"
@@ -3556,13 +3599,13 @@
         "fotmob_id": "1177779"
       },
       {
-        "name": "Jonas Adjei Adjetey",
+        "name": "Jonas Adjetey",
         "club": "VfL Wolfsburg",
         "age": 22,
         "fotmob_id": "1432344"
       },
       {
-        "name": "Abdul Mumin Suleman",
+        "name": "Abdul Mumin",
         "club": "Rayo Vallecano",
         "age": 28
       },
@@ -3573,7 +3616,7 @@
         "fotmob_id": "771630"
       },
       {
-        "name": "Abdul Rahaman Baba",
+        "name": "Baba Abdul Rahman",
         "club": "PAOK Saloniki",
         "age": 31,
         "fotmob_id": "324910"
@@ -3585,7 +3628,7 @@
         "fotmob_id": "873227"
       },
       {
-        "name": "Kojo Peprah Oppong",
+        "name": "Kojo Oppong Peprah",
         "club": "OGC Nice",
         "age": 22,
         "fotmob_id": "1429607"
@@ -3597,7 +3640,7 @@
         "fotmob_id": "562801"
       },
       {
-        "name": "Marvin Elom Senaya",
+        "name": "Marvin Senaya",
         "club": "AJ Auxerre",
         "age": 25,
         "fotmob_id": "1201760"
@@ -3605,13 +3648,13 @@
     ],
     "midfielders": [
       {
-        "name": "Caleb Marfo Yirenkyi",
+        "name": "Caleb Yirenkyi",
         "club": "FC Nordsjælland",
         "age": 20,
         "fotmob_id": "1615927"
       },
       {
-        "name": "Thomas Teye Partey",
+        "name": "Thomas Partey",
         "club": "Villarreal CF",
         "age": 32,
         "fotmob_id": "434325"
@@ -3648,15 +3691,16 @@
         "age": 22
       },
       {
-        "name": "Jordan Pierre Ayew",
+        "name": "Jordan Ayew",
         "club": "Leicester City FC",
         "age": 34,
         "fotmob_id": "154280"
       },
       {
-        "name": "Solomon Brandon Michael Clarke Thomas-Asante",
+        "name": "Brandon Thomas-Asante",
         "club": "Coventry City FC",
-        "age": 27
+        "age": 27,
+        "fotmob_id": "776184"
       },
       {
         "name": "Christopher Bonsu Baah",
@@ -3665,7 +3709,7 @@
         "fotmob_id": "1452385"
       },
       {
-        "name": "Inaki Williams Arthuer",
+        "name": "Iñaki Williams",
         "club": "Athletic Club",
         "age": 31
       },
@@ -3675,7 +3719,7 @@
         "age": 24
       },
       {
-        "name": "Ernest Nuamah Appiah",
+        "name": "Ernest Nuamah",
         "club": "Olympique Lyonnais",
         "age": 22
       },
@@ -3688,7 +3732,7 @@
     ]
   },
   "Haiti": {
-    "manager": "Sébastien Bernard Henri C Migné",
+    "manager": "Sebastien Migne",
     "manager_sofascore_id": "790200",
     "goalkeepers": [
       {
@@ -3699,7 +3743,7 @@
         "sofascore_id": "37224"
       },
       {
-        "name": "Alexandre Jr Pierre",
+        "name": "Alexandre Pierre",
         "club": "FC Sochaux-Montbéliard",
         "age": 25,
         "espn_id": "310715",
@@ -3715,7 +3759,7 @@
     ],
     "defenders": [
       {
-        "name": "Carlens Jean Fedlaire Ruby Arcus",
+        "name": "Carlens Arcus",
         "club": "Angers SCO",
         "age": 29,
         "fotmob_id": "634110"
@@ -3728,38 +3772,38 @@
         "sofascore_id": "1544387"
       },
       {
-        "name": "Ricardo Ade",
+        "name": "Ricardo Adé",
         "club": "LDU Quito",
         "age": 36,
         "espn_id": "188106",
         "sofascore_id": "839638"
       },
       {
-        "name": "Hannes Piterson D Delcroix",
+        "name": "Hannes Delcroix",
         "club": "FC Lugano",
         "age": 27,
         "fotmob_id": "822716"
       },
       {
-        "name": "Martin Yves Roberns Didier Experience",
+        "name": "Martin Expérience",
         "club": "AS Nancy",
         "age": 27,
         "fotmob_id": "1181438"
       },
       {
-        "name": "Markhus Lacroix",
+        "name": "Duke Lacroix",
         "club": "Colorado Springs Switchbacks FC",
         "age": 32
       },
       {
-        "name": "Jean-Kévin Duverne",
+        "name": "Jean-Kévin Duverne",
         "club": "KAA Gent",
         "age": 28,
         "espn_id": "241032",
         "sofascore_id": "845930"
       },
       {
-        "name": "Wilguens Raphael Polynice Paugain",
+        "name": "Wilguens Paugain",
         "club": "SV Zulte Waregem",
         "age": 24,
         "fotmob_id": "1394254"
@@ -3767,16 +3811,17 @@
     ],
     "midfielders": [
       {
-        "name": "Carl Fred Sainte",
+        "name": "Carl Fred Sainté",
         "club": "El Paso Locomotive FC",
         "age": 23,
         "espn_id": "297177",
         "sofascore_id": "1002387"
       },
       {
-        "name": "Jean Ricner Bellegarde",
+        "name": "Jean-Ricner Bellegarde",
         "club": "Wolverhampton Wanderers FC",
-        "age": 27
+        "age": 27,
+        "fotmob_id": "769166"
       },
       {
         "name": "Leverton Pierre",
@@ -3793,14 +3838,14 @@
         "sofascore_id": "1173167"
       },
       {
-        "name": "Dominique Celidor Simon",
+        "name": "Dominique Simon",
         "club": "FC Tatran Prešov",
         "age": 25,
         "espn_id": "342631",
         "sofascore_id": "1187376"
       },
       {
-        "name": "Olivier Woodensky Pierre",
+        "name": "Woodensky Pierre",
         "club": "Violette AC",
         "age": 21,
         "espn_id": "359946",
@@ -3809,7 +3854,7 @@
     ],
     "forwards": [
       {
-        "name": "Derrick Burckley Etienne Jr",
+        "name": "Derrick Etienne",
         "club": "Toronto FC",
         "age": 29,
         "fotmob_id": "743185"
@@ -3822,21 +3867,21 @@
         "sofascore_id": "796023"
       },
       {
-        "name": "Don Louicius Deedson",
+        "name": "Don Deedson Louicius",
         "club": "FC Dallas",
         "age": 25,
         "espn_id": "291608",
         "sofascore_id": "991451"
       },
       {
-        "name": "Ruben Fritzner Providence",
+        "name": "Ruben Providence",
         "club": "Almere City FC",
         "age": 24,
         "espn_id": "307861",
         "sofascore_id": "954066"
       },
       {
-        "name": "Lenny Alvin Pico Joseph",
+        "name": "Lenny Joseph",
         "club": "Ferencvárosi TC",
         "age": 25,
         "fotmob_id": "1242314"
@@ -3849,7 +3894,7 @@
         "sofascore_id": "877980"
       },
       {
-        "name": "Yassin Enzo Fortune",
+        "name": "Yassin Fortuné",
         "club": "FC Vizela",
         "age": 27,
         "espn_id": "275007",
@@ -3863,7 +3908,7 @@
         "sofascore_id": "943278"
       },
       {
-        "name": "Josue Jeremie Casimir",
+        "name": "Josué Casimir",
         "club": "AJ Auxerre",
         "age": 24,
         "espn_id": "304212",
@@ -4033,46 +4078,48 @@
     ]
   },
   "Iraq": {
-    "manager": "Graham James Arnold",
+    "manager": "Graham Arnold",
     "manager_sofascore_id": "53524",
     "goalkeepers": [
       {
-        "name": "Fahad Talib Raheem Raheem",
+        "name": "Fahad Talib",
         "club": "Al Talaba SC",
-        "age": 31
+        "age": 31,
+        "fotmob_id": "246575"
       },
       {
-        "name": "Jalal Hasan Hachim Hachim",
+        "name": "Jalal Hassan",
         "club": "Al Zawra'a SC",
         "age": 35
       },
       {
-        "name": "Ahmed Basil Fadhil Al-Fadhli",
+        "name": "Ahmed Basil",
         "club": "Al Shorta SC",
         "age": 29
       }
     ],
     "defenders": [
       {
-        "name": "Rebin Ghareeb Solaka Adhamat",
+        "name": "Rebin Sulaka",
         "club": "Port FC",
         "age": 34
       },
       {
-        "name": "Hussein Haydar Hussein Ali",
+        "name": "Hussein Ali",
         "club": "Pogoń Szczecin",
         "age": 24,
         "fotmob_id": "877275"
       },
       {
-        "name": "Zaid Tahseen Abd Zaid Hantoosh",
+        "name": "Zaid Tahseen",
         "club": "Pakhtakor Tashkent FK",
         "age": 25
       },
       {
-        "name": "Akam Hashim Rahman Rahman",
+        "name": "Akam Hashem",
         "club": "Al Zawra'a SC",
-        "age": 27
+        "age": 27,
+        "fotmob_id": "1032892"
       },
       {
         "name": "Munaf Younus Hashim Al-Tekreeti",
@@ -4080,58 +4127,59 @@
         "age": 29
       },
       {
-        "name": "Ahmed Yahya Mhmood Al-Hajjaj",
+        "name": "Ahmed Yahya",
         "club": "Al Shorta SC",
         "age": 30
       },
       {
-        "name": "Merchas Ghazi Salih Salih",
+        "name": "Merchas Doski",
         "club": "FC Viktoria Plzeň",
-        "age": 26
+        "age": 26,
+        "fotmob_id": "738064"
       },
       {
-        "name": "Mustafa Saadoon Abbood Al Korji",
+        "name": "Mustafa Saadoon",
         "club": "Al Shorta SC",
         "age": 25
       },
       {
-        "name": "Frans Dhia Jirjis Haddad",
+        "name": "Frans Putros",
         "club": "Persib Bandung",
         "age": 32
       }
     ],
     "midfielders": [
       {
-        "name": "Youssef Wali Faeq Amyn",
+        "name": "Youssef Amyn",
         "club": "AEK Larnaca FC",
         "age": 22,
         "fotmob_id": "1235623"
       },
       {
-        "name": "Ibrahim Bayesh Kamil Al-Kaabawi",
+        "name": "Ibrahim Bayesh",
         "club": "Al Dhafra SCC",
         "age": 26
       },
       {
-        "name": "Zidane Aamar Iqbal Iqbal",
+        "name": "Zidane Iqbal",
         "club": "FC Utrecht",
         "age": 23,
         "fotmob_id": "1138592"
       },
       {
-        "name": "Amir Fouad Aboud Al-Ammari",
+        "name": "Amir Al-Ammari",
         "club": "KS Cracovia",
         "age": 28,
         "fotmob_id": "858340"
       },
       {
-        "name": "Kevin Enkido Yakob William William",
+        "name": "Kevin Yakob",
         "club": "Aarhus GF",
         "age": 25,
         "fotmob_id": "1614742"
       },
       {
-        "name": "Aimar Hazar Anwar Sher",
+        "name": "Aimar Sher",
         "club": "Sarpsborg",
         "age": 23,
         "fotmob_id": "1042511"
@@ -4144,14 +4192,15 @@
     ],
     "forwards": [
       {
-        "name": "Ali Ibrahim Karim Alzubaidi",
+        "name": "Ali Yousef",
         "club": "Luton Town FC",
         "age": 24
       },
       {
-        "name": "Mohanad Ali Kadhim Al-Shammari",
+        "name": "Ali Al-Hamadi",
         "club": "Dibba FC",
-        "age": 25
+        "age": 25,
+        "fotmob_id": "1296548"
       },
       {
         "name": "Ahmed Ihab Ahmed Ahmed",
@@ -4160,17 +4209,17 @@
         "fotmob_id": "519362"
       },
       {
-        "name": "Ali Yousif Hashim Najatee",
+        "name": "Mohanad Ali",
         "club": "Al Talaba SC",
         "age": 30
       },
       {
-        "name": "Ali Jasim Elaibi Al-Tameemi",
+        "name": "Ali Jasim",
         "club": "Al Najmah SC",
         "age": 22
       },
       {
-        "name": "Aymen Hussein Ghadhban Ghadhban",
+        "name": "Aymen Hussein",
         "club": "Al Karma SC",
         "age": 30
       },
@@ -4223,13 +4272,13 @@
         "sofascore_id": "386958"
       },
       {
-        "name": "Kou Itakura",
+        "name": "Ko Itakura",
         "club": "AFC Ajax",
         "age": 29,
         "fotmob_id": "620917"
       },
       {
-        "name": "Yuto Nagatomo",
+        "name": "Yūto Nagatomo",
         "club": "FC Tokyo",
         "age": 39,
         "espn_id": "119082",
@@ -4329,7 +4378,7 @@
         "sofascore_id": "794338"
       },
       {
-        "name": "Yuito Suzuki",
+        "name": "Junnosuke Suzuki",
         "club": "SC Freiburg",
         "age": 24,
         "espn_id": "303031",
@@ -4379,13 +4428,13 @@
     "manager_sofascore_id": "793874",
     "goalkeepers": [
       {
-        "name": "Yazeed Mo'ien Hasan Abulaila",
+        "name": "Yazid Abulaila",
         "club": "Al Hussein SC",
         "age": 33,
         "fotmob_id": "734654"
       },
       {
-        "name": "Noureddin Zaid Khaleel Bani Ateyah",
+        "name": "Nour Bani Attiah",
         "club": "Al Faisaly SC",
         "age": 33
       },
@@ -4402,28 +4451,28 @@
         "age": 31
       },
       {
-        "name": "Abdallah Mousa Musallam Nasib",
+        "name": "Abdallah Nasib",
         "club": "Al Zawra'a SC",
         "age": 32,
         "fotmob_id": "1312681"
       },
       {
-        "name": "Husam Ali Mohammad Abudahab",
+        "name": "Husam Abu Dahab",
         "club": "Al Faisaly SC",
         "age": 26
       },
       {
-        "name": "Yazan Mousa Mahmoud Alarab",
+        "name": "Yazan Al-Arab",
         "club": "FC Seoul",
         "age": 30
       },
       {
-        "name": "Mohammad Majed Jamil Abualnadi",
+        "name": "Mohammad Abualnadi",
         "club": "Selangor FC",
         "age": 25
       },
       {
-        "name": "Saleem Amer Saleem Obaid",
+        "name": "Saleem Obaid",
         "club": "Al Hussein SC",
         "age": 34,
         "espn_id": "289005",
@@ -4435,13 +4484,13 @@
         "age": 29
       },
       {
-        "name": "Ehsan Manel Farhan Haddad",
+        "name": "Ihsan Haddad",
         "club": "Al Hussein SC",
         "age": 32,
         "fotmob_id": "546201"
       },
       {
-        "name": "Anas Said Ghazi Badawi",
+        "name": "Anas Badawi",
         "club": "Al Faisaly SC",
         "age": 28,
         "fotmob_id": "1991034"
@@ -4449,39 +4498,41 @@
     ],
     "midfielders": [
       {
-        "name": "Amer Rasem Adel Jamous",
+        "name": "Amer Jamous",
         "club": "Al Zawra'a SC",
         "age": 23,
         "fotmob_id": "1213678"
       },
       {
-        "name": "Noor Al-Deen Mahmoud Ali Al Rawabdeh",
+        "name": "Noor Al-Rawabdeh",
         "club": "Selangor FC",
         "age": 29,
         "fotmob_id": "1036253"
       },
       {
-        "name": "Raja'ei Ayed Fadel Hasan",
+        "name": "Rajaei Ayed",
         "club": "Al Hussein SC",
-        "age": 32
+        "age": 32,
+        "fotmob_id": "431215"
       },
       {
-        "name": "Ibrahim Mohammad Sami Sa'deh",
+        "name": "Ibrahim Sadeh",
         "club": "Al Karma SC",
         "age": 26,
         "fotmob_id": "1202924"
       },
       {
-        "name": "Mohannad Mahmoud Saleh Abu Taha",
+        "name": "Mohannad Abu Taha",
         "club": "Al-Quwa Al-Jawiya",
         "age": 23,
         "espn_id": "317847",
         "sofascore_id": "1114775"
       },
       {
-        "name": "Nizar Mahmoud Ahmed Al-Rashdan",
+        "name": "Nizar Al-Rashdan",
         "club": "Qatar SC",
-        "age": 27
+        "age": 27,
+        "fotmob_id": "1195369"
       },
       {
         "name": "Mohammad Ratib Mohammad Aldaoud",
@@ -4496,7 +4547,7 @@
         "age": 28
       },
       {
-        "name": "Ali Iyad Ali Olwan",
+        "name": "Ali Olwan",
         "club": "Al Sailiya SC",
         "age": 26,
         "espn_id": "320908",
@@ -4505,7 +4556,8 @@
       {
         "name": "Mousa Mohammad Mousa Suleiman",
         "club": "Stade Rennais FC",
-        "age": 29
+        "age": 29,
+        "fotmob_id": "1374055"
       },
       {
         "name": "Odeh Burhan Shehadeh Fakhoury",
@@ -4513,18 +4565,18 @@
         "age": 20
       },
       {
-        "name": "Mahmoud Nayef Ahmad Almardi",
+        "name": "Mahmoud Al-Mardi",
         "club": "Al Hussein SC",
         "age": 32
       },
       {
-        "name": "Ibrahim Mohammad Abdallah Sabra",
+        "name": "Ibrahim Sabra",
         "club": "NK Lokomotiva Zagreb",
         "age": 20,
         "fotmob_id": "1642791"
       },
       {
-        "name": "Ali Ahmad Ali Azaizeh",
+        "name": "Ali Azaizeh",
         "club": "Al Shabab FC",
         "age": 22,
         "sofascore_id": "1652199"
@@ -4532,18 +4584,18 @@
     ]
   },
   "Korea Republic": {
-    "manager": "Myung Bo Hong",
+    "manager": "Hong Myung-Bo",
     "manager_sofascore_id": "786586",
     "goalkeepers": [
       {
-        "name": "Seunggyu Kim",
+        "name": "Kim Seung-Gyu",
         "club": "FC Tokyo",
         "age": 35,
         "espn_id": "175921",
         "sofascore_id": "235686"
       },
       {
-        "name": "Bumkeun Song",
+        "name": "Song Bum-Keun",
         "club": "Jeonbuk Hyundai Motors FC",
         "age": 28,
         "espn_id": "256724",
@@ -4557,27 +4609,27 @@
     ],
     "defenders": [
       {
-        "name": "Hanbeom Lee",
+        "name": "Lee Han-Beom",
         "club": "FC Midtjylland",
         "age": 23,
         "espn_id": "297788",
         "sofascore_id": "1002448"
       },
       {
-        "name": "Minjae Kim",
+        "name": "Kim Min-Jae",
         "club": "FC Bayern München",
         "age": 29,
         "espn_id": "157688",
         "sofascore_id": "896569"
       },
       {
-        "name": "Taehyeon Kim",
+        "name": "Kim Tae-Hyun",
         "club": "Kashima Antlers",
         "age": 25,
         "fotmob_id": "1053477"
       },
       {
-        "name": "Taeseok Lee",
+        "name": "Lee Tae-Seok",
         "club": "FK Austria Wien",
         "age": 23,
         "espn_id": "297270",
@@ -4589,20 +4641,20 @@
         "age": 24
       },
       {
-        "name": "Moonhwan Kim",
+        "name": "Kim Moon-Hwan",
         "club": "Daejeon Hana Citizen FC",
         "age": 30,
         "espn_id": "280060",
         "sofascore_id": "921263"
       },
       {
-        "name": "Jinseob Park",
+        "name": "Park Jin-Seop",
         "club": "Zhejiang FC",
         "age": 30,
         "fotmob_id": "925647"
       },
       {
-        "name": "Youngwoo Seol",
+        "name": "Seol Young-Woo",
         "club": "FK Crvena Zvezda",
         "age": 27,
         "espn_id": "302793",
@@ -4630,45 +4682,47 @@
         "sofascore_id": "889689"
       },
       {
-        "name": "Seungho Paik",
+        "name": "Paik Seung-Ho",
         "club": "Birmingham City FC",
         "age": 29,
         "espn_id": "256598",
         "sofascore_id": "881307"
       },
       {
-        "name": "Jae Sung Lee",
+        "name": "Lee Jae-Sung",
         "club": "1. FSV Mainz",
-        "age": 33
+        "age": 33,
+        "fotmob_id": "523749"
       },
       {
-        "name": "Hee Chan Hwang",
+        "name": "Hwang Hee-Chan",
         "club": "Wolverhampton Wanderers FC",
-        "age": 30
+        "age": 30,
+        "fotmob_id": "620026"
       },
       {
-        "name": "Junho Bae",
+        "name": "Bae Jun-Ho",
         "club": "Stoke City FC",
         "age": 22,
         "espn_id": "362208",
         "sofascore_id": "1185869"
       },
       {
-        "name": "Kangin Lee",
+        "name": "Lee Kang-In",
         "club": "Paris Saint-Germain",
         "age": 25,
         "espn_id": "274197",
         "sofascore_id": "917087"
       },
       {
-        "name": "Hyunjun Yang",
+        "name": "Yang Hyun-Jun",
         "club": "Celtic FC",
         "age": 24,
         "espn_id": "350711",
         "sofascore_id": "1103531"
       },
       {
-        "name": "Jingyu Kim",
+        "name": "Kim Jin-Kyu",
         "club": "Jeonbuk Hyundai Motors FC",
         "age": 29
       },
@@ -4679,7 +4733,7 @@
         "fotmob_id": "1107283"
       },
       {
-        "name": "Donggyeong Lee",
+        "name": "Lee Dong-Gyeong",
         "club": "Ulsan HD",
         "age": 28,
         "espn_id": "271702",
@@ -4688,9 +4742,10 @@
     ],
     "forwards": [
       {
-        "name": "Heung Min Son",
+        "name": "Son Heung-Min",
         "club": "LAFC",
-        "age": 33
+        "age": 33,
+        "fotmob_id": "212867"
       },
       {
         "name": "Guesung Cho",
@@ -4706,108 +4761,113 @@
     ]
   },
   "Mexico": {
-    "manager": "Javier Aguirre Onaindia",
+    "manager": "Javier Aguirre",
     "manager_sofascore_id": "784504",
     "goalkeepers": [
       {
-        "name": "José Raúl Rangel Aguilar",
+        "name": "Raúl Rangel",
         "club": "CD Guadalajara",
         "age": 26
       },
       {
-        "name": "Carlos Acevedo López",
+        "name": "Carlos Acevedo",
         "club": "Club Santos Laguna",
         "age": 30,
         "espn_id": "236368",
         "sofascore_id": "840519"
       },
       {
-        "name": "Francisco Guillermo Ochoa Magaña",
+        "name": "Guillermo Ochoa",
         "club": "AEL Limassol",
         "age": 40
       }
     ],
     "defenders": [
       {
-        "name": "Jorge Eduardo Sánchez Ramos",
+        "name": "Jorge Sánchez",
         "club": "PAOK Saloniki",
         "age": 28,
         "fotmob_id": "207580"
       },
       {
-        "name": "César Jasib Montes Castro",
+        "name": "César Montes",
         "club": "FC Lokomotiv Moscow",
         "age": 29
       },
       {
         "name": "Edson Omar Álvarez Velázquez",
         "club": "Fenerbahçe SK",
-        "age": 28
+        "age": 28,
+        "fotmob_id": "1504620"
       },
       {
-        "name": "Johan Felipe Vásquez Ibarra",
+        "name": "Johan Vásquez",
         "club": "Genoa CFC",
-        "age": 27
+        "age": 27,
+        "fotmob_id": "1075405"
       },
       {
-        "name": "Israel Reyes Romero",
+        "name": "Israel Reyes",
         "club": "Club América",
         "age": 26,
         "espn_id": "290414",
         "sofascore_id": "989236"
       },
       {
-        "name": "Mateo Chávez García",
+        "name": "Mateo Chávez",
         "club": "AZ Alkmaar",
         "age": 22,
         "espn_id": "379193",
         "sofascore_id": "1638685"
       },
       {
-        "name": "Jesús Daniel Gallardo Vasconcelos",
+        "name": "Jesús Gallardo",
         "club": "Deportivo Toluca FC",
-        "age": 31
+        "age": 31,
+        "fotmob_id": "1507906"
       }
     ],
     "midfielders": [
       {
-        "name": "Erik Antonio Lira Méndez",
+        "name": "Erik Lira",
         "club": "CF Cruz Azul",
         "age": 26
       },
       {
-        "name": "Luis Francisco Romo Barrón",
+        "name": "Luis Romo",
         "club": "CD Guadalajara",
-        "age": 31
+        "age": 31,
+        "fotmob_id": "1068643"
       },
       {
-        "name": "Álvaro Fidalgo Fernández",
+        "name": "Álvaro Fidalgo",
         "club": "Real Betis",
         "age": 29,
         "espn_id": "283827",
         "sofascore_id": "838629"
       },
       {
-        "name": "Orbelín Pineda Alvarado",
+        "name": "Orbelín Pineda",
         "club": "AEK Athens",
         "age": 30,
         "espn_id": "207011",
         "sofascore_id": "850404"
       },
       {
-        "name": "Obed Goméz Vargas",
+        "name": "Obed Vargas",
         "club": "Atlético De Madrid",
         "age": 20,
         "espn_id": "318554",
         "sofascore_id": "1119345"
       },
       {
-        "name": "Gilberto Rafael Mora Zambrano",
+        "name": "Gilberto Mora",
         "club": "Club Tijuana",
-        "age": 17
+        "age": 17,
+        "fotmob_id": "1477418"
       },
       {
-        "name": "Luis Gerardo Chávez Magallón",
+        "name": "Luis Chávez",
         "club": "FC Dynamo Moscow",
         "age": 30
       },
@@ -4821,32 +4881,33 @@
     ],
     "forwards": [
       {
-        "name": "Raúl Alonso Jiménez Rodríguez",
+        "name": "Raúl Jiménez",
         "club": "Fulham FC",
         "age": 35,
         "fotmob_id": "230993"
       },
       {
-        "name": "Ernesto Alexis Vega Rojas",
+        "name": "Alexis Vega",
         "club": "Deportivo Toluca FC",
-        "age": 28
+        "age": 28,
+        "fotmob_id": "1888865"
       },
       {
-        "name": "Santiago Tomás Gimenez",
+        "name": "Santiago Gimenez",
         "club": "AC Milan",
         "age": 25,
         "espn_id": "260775",
         "fotmob_id": "954092"
       },
       {
-        "name": "Armando González Alba",
+        "name": "Armando González",
         "club": "CD Guadalajara",
         "age": 23,
         "espn_id": "376110",
         "sofascore_id": "1595162"
       },
       {
-        "name": "Julián Andrés Quiñones Quiñones",
+        "name": "Julián Quiñones",
         "club": "Al Qadsiah FC",
         "age": 29,
         "espn_id": "233075",
@@ -4855,10 +4916,11 @@
       {
         "name": "César Saúl Huerta Valera",
         "club": "RSC Anderlecht",
-        "age": 25
+        "age": 25,
+        "fotmob_id": "1102708"
       },
       {
-        "name": "Guillermo Martínez Ayala",
+        "name": "Guillermo Martínez",
         "club": "Pumas UNAM",
         "age": 31,
         "espn_id": "193566",
@@ -4884,14 +4946,14 @@
         "sofascore_id": "970576"
       },
       {
-        "name": "Monir El Kajoui",
+        "name": "Munir El Kajoui",
         "club": "RS Berkane",
         "age": 37,
         "espn_id": "206232",
         "sofascore_id": "141967"
       },
       {
-        "name": "Ahmed Reda Tagnaouti",
+        "name": "Reda Tagnaouti",
         "club": "ASFAR",
         "age": 30,
         "espn_id": "195240",
@@ -4928,7 +4990,7 @@
         "sofascore_id": "1134470"
       },
       {
-        "name": "Issa Laye Lucas Jean Diop",
+        "name": "Issa Diop",
         "club": "Fulham FC",
         "age": 29,
         "fotmob_id": "696443"
@@ -4955,9 +5017,10 @@
         "sofascore_id": "1143667"
       },
       {
-        "name": "Anass Salah Eddine",
+        "name": "Anass Salah-Eddine",
         "club": "PSV Eindhoven",
-        "age": 24
+        "age": 24,
+        "fotmob_id": "1050838"
       }
     ],
     "midfielders": [
@@ -4983,7 +5046,7 @@
         "sofascore_id": "1142675"
       },
       {
-        "name": "Azz-Eddine Ounahi",
+        "name": "Azzedine Ounahi",
         "club": "Girona FC",
         "age": 26
       },
@@ -5015,7 +5078,7 @@
         "sofascore_id": "1126569"
       },
       {
-        "name": "Neil Yoni El Aynaoui",
+        "name": "Neil El Aynaoui",
         "club": "AS Roma",
         "age": 24,
         "espn_id": "323807",
@@ -5024,19 +5087,19 @@
     ],
     "forwards": [
       {
-        "name": "Souane Rahimi",
+        "name": "Soufiane Rahimi",
         "club": "Al Ain FC",
         "age": 30
       },
       {
-        "name": "Brahim Abdelkader Diaz",
+        "name": "Brahim Díaz",
         "club": "Real Madrid C. F.",
         "age": 26,
         "espn_id": "246532",
         "sofascore_id": "835485"
       },
       {
-        "name": "Abdessamad Ezzalzouli",
+        "name": "Abde Ezzalzouli",
         "club": "Real Betis",
         "age": 24,
         "espn_id": "300912",
@@ -5069,13 +5132,13 @@
         "fotmob_id": "1131987"
       },
       {
-        "name": "Robin Gerardus Petrus Roefs",
+        "name": "Robin Roefs",
         "club": "Sunderland AFC",
         "age": 23,
         "fotmob_id": "1125720"
       },
       {
-        "name": "Mark Maria Hubertus Flekken",
+        "name": "Mark Flekken",
         "club": "Bayer",
         "age": 32,
         "fotmob_id": "330643"
@@ -5083,25 +5146,25 @@
     ],
     "defenders": [
       {
-        "name": "Jurriën David Norman Timber",
+        "name": "Jurriën Timber",
         "club": "Arsenal FC",
         "age": 24,
         "fotmob_id": "942381"
       },
       {
-        "name": "Virgil Van Dijk",
+        "name": "Virgil van Dijk",
         "club": "Liverpool FC",
         "age": 34,
         "fotmob_id": "209405"
       },
       {
-        "name": "Nathan Benjamin Aké",
+        "name": "Nathan Aké",
         "club": "Manchester City FC",
         "age": 31,
         "fotmob_id": "417068"
       },
       {
-        "name": "Jan-Paul Van Hecke",
+        "name": "Jan Paul van Hecke",
         "club": "Brighton & Hove Albion FC",
         "age": 26,
         "fotmob_id": "974618"
@@ -5113,19 +5176,19 @@
         "fotmob_id": "970243"
       },
       {
-        "name": "Micky Van De Ven",
+        "name": "Micky van de Ven",
         "club": "Tottenham Hotspur FC",
         "age": 25,
         "fotmob_id": "1097466"
       },
       {
-        "name": "Denzel Justus Morris Dumfries",
+        "name": "Denzel Dumfries",
         "club": "FC Internazionale Milano",
         "age": 30,
         "fotmob_id": "593118"
       },
       {
-        "name": "Jorrel Evan Hato",
+        "name": "Jorrel Hato",
         "club": "Chelsea FC",
         "age": 20,
         "fotmob_id": "1413846"
@@ -5133,7 +5196,7 @@
     ],
     "midfielders": [
       {
-        "name": "Marten Elco De Roon",
+        "name": "Marten de Roon",
         "club": "Atalanta Bergamo",
         "age": 35,
         "fotmob_id": "198559"
@@ -5145,19 +5208,19 @@
         "fotmob_id": "794253"
       },
       {
-        "name": "Ryan Jiro Gravenberch",
+        "name": "Ryan Gravenberch",
         "club": "Liverpool FC",
         "age": 24,
         "fotmob_id": "956683"
       },
       {
-        "name": "Tijjani Martinus Jan Reijnders",
+        "name": "Tijjani Reijnders",
         "club": "Manchester City FC",
         "age": 27,
         "fotmob_id": "868344"
       },
       {
-        "name": "Guus Berend Til",
+        "name": "Guus Til",
         "club": "PSV Eindhoven",
         "age": 28,
         "fotmob_id": "774947"
@@ -5169,13 +5232,13 @@
         "fotmob_id": "866516"
       },
       {
-        "name": "Frenkie De Jong",
+        "name": "Frenkie de Jong",
         "club": "FC Barcelona",
         "age": 29,
         "fotmob_id": "638622"
       },
       {
-        "name": "Quinten Ryan Crispito Timber",
+        "name": "Quinten Timber",
         "club": "Olympique Marseille",
         "age": 24,
         "fotmob_id": "970563"
@@ -5183,7 +5246,7 @@
     ],
     "forwards": [
       {
-        "name": "Wout François Maria Weghorst",
+        "name": "Wout Weghorst",
         "club": "AFC Ajax",
         "age": 33,
         "fotmob_id": "351999"
@@ -5195,13 +5258,13 @@
         "fotmob_id": "303824"
       },
       {
-        "name": "Cody Mathès Gakpo",
+        "name": "Cody Gakpo",
         "club": "Liverpool FC",
         "age": 27,
         "fotmob_id": "806552"
       },
       {
-        "name": "Noa Noëll Lang",
+        "name": "Noa Lang",
         "club": "Galatasaray SK",
         "age": 26,
         "fotmob_id": "837341"
@@ -5213,13 +5276,13 @@
         "fotmob_id": "660301"
       },
       {
-        "name": "Brian Ebenezer Adjei Brobbey",
+        "name": "Brian Brobbey",
         "club": "Sunderland AFC",
         "age": 24,
         "fotmob_id": "940446"
       },
       {
-        "name": "Crysencio Jilbert Sylverio Cir Summerville",
+        "name": "Crysencio Summerville",
         "club": "West Ham United FC",
         "age": 24,
         "fotmob_id": "941213"
@@ -5227,21 +5290,21 @@
     ]
   },
   "New Zealand": {
-    "manager": "Darren Shaun Bazeley",
+    "manager": "Darren Bazeley",
     "manager_sofascore_id": "784912",
     "goalkeepers": [
       {
-        "name": "Maxime Teremoana Crocombe",
+        "name": "Max Crocombe",
         "club": "Millwall FC",
         "age": 32
       },
       {
-        "name": "Alexander Noah Paulsen",
+        "name": "Alex Paulsen",
         "club": "Lechia Gdańsk",
         "age": 23
       },
       {
-        "name": "Michael Cornelis Woud",
+        "name": "Michael Woud",
         "club": "Auckland FC",
         "age": 27,
         "espn_id": "228288",
@@ -5250,7 +5313,7 @@
     ],
     "defenders": [
       {
-        "name": "Timothy John Payne",
+        "name": "Tim Payne",
         "club": "Wellington Phoenix FC",
         "age": 32
       },
@@ -5262,28 +5325,28 @@
         "sofascore_id": "867714"
       },
       {
-        "name": "Tyler Grant Bindon",
+        "name": "Tyler Bindon",
         "club": "Sheeld United FC",
         "age": 21,
         "espn_id": "367427",
         "sofascore_id": "1514870"
       },
       {
-        "name": "Michael Joseph Boxall",
+        "name": "Michael Boxall",
         "club": "Minnesota United FC",
         "age": 37,
         "espn_id": "101934",
         "sofascore_id": "38624"
       },
       {
-        "name": "Liberato Gianpaolo Cacace",
+        "name": "Liberato Cacace",
         "club": "Wrexham AFC",
         "age": 25,
         "espn_id": "266554",
         "fotmob_id": "919671"
       },
       {
-        "name": "Nando Zen Pijnaker",
+        "name": "Nando Pijnaker",
         "club": "Auckland FC",
         "age": 27,
         "espn_id": "288469",
@@ -5297,14 +5360,14 @@
         "sofascore_id": "1167100"
       },
       {
-        "name": "Callan Rennie Elliot",
+        "name": "Callan Elliot",
         "club": "Auckland FC",
         "age": 26,
         "espn_id": "282239",
         "sofascore_id": "959750"
       },
       {
-        "name": "Thomas Jefferson Smith",
+        "name": "Tommy Smith",
         "club": "Braintree Town FC",
         "age": 36,
         "fotmob_id": "182792"
@@ -5312,19 +5375,19 @@
     ],
     "midfielders": [
       {
-        "name": "Joe Zen Robert Bell",
+        "name": "Joe Bell",
         "club": "Viking Stavanger",
         "age": 27,
         "fotmob_id": "848345"
       },
       {
-        "name": "Matthew Jimmy David Garbett",
+        "name": "Matt Garbett",
         "club": "Peterborough United FC",
         "age": 24,
         "fotmob_id": "1108605"
       },
       {
-        "name": "Marko Seufatu Nikola Stamenic",
+        "name": "Marko Stamenic",
         "club": "Swansea City AFC",
         "age": 24,
         "fotmob_id": "1209597"
@@ -5343,7 +5406,7 @@
         "fotmob_id": "1053736"
       },
       {
-        "name": "Alex Arthur Rufer",
+        "name": "Alex Rufer",
         "club": "Wellington Phoenix FC",
         "age": 29,
         "espn_id": "194736",
@@ -5363,7 +5426,7 @@
         "sofascore_id": "822753"
       },
       {
-        "name": "Ryan Jared Thomas",
+        "name": "Ryan Thomas",
         "club": "PEC Zwolle",
         "age": 31,
         "espn_id": "156146",
@@ -5379,7 +5442,7 @@
     ],
     "forwards": [
       {
-        "name": "Christopher Grant Wood",
+        "name": "Chris Wood",
         "club": "Nottingham Forest FC",
         "age": 34,
         "fotmob_id": "987142"
@@ -5392,12 +5455,12 @@
         "sofascore_id": "31857"
       },
       {
-        "name": "Benjamin Peter Waine",
+        "name": "Ben Waine",
         "club": "Port Vale FC",
         "age": 25
       },
       {
-        "name": "Jesse Carmichael Randall",
+        "name": "Jesse Randall",
         "club": "Auckland FC",
         "age": 23,
         "espn_id": "297794",
@@ -5406,11 +5469,11 @@
     ]
   },
   "Norway": {
-    "manager": "Ståle Solbakken",
+    "manager": "Stale Solbakken",
     "manager_sofascore_id": "53102",
     "goalkeepers": [
       {
-        "name": "Ørjan Haskjold Nyland",
+        "name": "Ørjan Nyland",
         "club": "Sevilla FC",
         "age": 35,
         "espn_id": "193610",
@@ -5433,13 +5496,13 @@
     ],
     "defenders": [
       {
-        "name": "Kristoffer Vassbakk Köpp Ajer",
+        "name": "Kristoffer Ajer",
         "club": "Brentford FC",
         "age": 28,
         "fotmob_id": "552718"
       },
       {
-        "name": "Leo Skiri Østigård",
+        "name": "Leo Østigård",
         "club": "Genoa CFC",
         "age": 26,
         "espn_id": "281736",
@@ -5460,28 +5523,28 @@
         "sofascore_id": "795154"
       },
       {
-        "name": "Marcus Holmgren Pedersen",
+        "name": "Marcus Pedersen",
         "club": "Torino FC",
         "age": 25,
         "espn_id": "129285",
         "sofascore_id": "934409"
       },
       {
-        "name": "Torbjørn Lysaker Heggem",
+        "name": "Torbjørn Heggem",
         "club": "Bologna FC",
         "age": 27,
         "espn_id": "272867",
         "sofascore_id": "933264"
       },
       {
-        "name": "Sondre Klingen Langås",
+        "name": "Sondre Langås",
         "club": "Derby County FC",
         "age": 25,
         "espn_id": "366455",
         "fotmob_id": "1127585"
       },
       {
-        "name": "Henrik Sælebakke Falchener",
+        "name": "Henrik Falchener",
         "club": "Viking Stavanger",
         "age": 23,
         "espn_id": "303281",
@@ -5504,13 +5567,13 @@
         "sofascore_id": "355174"
       },
       {
-        "name": "Sander Gard Bolin Berge",
+        "name": "Sander Berge",
         "club": "Fulham FC",
         "age": 28,
         "fotmob_id": "540963"
       },
       {
-        "name": "Martín Ødegaard",
+        "name": "Martin Ødegaard",
         "club": "Arsenal FC",
         "age": 27,
         "espn_id": "203669",
@@ -5531,12 +5594,12 @@
         "sofascore_id": "924973"
       },
       {
-        "name": "Thelonious Gerard Aasgaard",
+        "name": "Thelo Aasgaard",
         "club": "Rangers FC",
         "age": 24
       },
       {
-        "name": "Andreas Rædergård Schjelderup",
+        "name": "Andreas Schjelderup",
         "club": "SL Benca",
         "age": 22,
         "espn_id": "313415",
@@ -5566,7 +5629,7 @@
         "sofascore_id": "309078"
       },
       {
-        "name": "Erling Braut Haaland",
+        "name": "Erling Haaland",
         "club": "Manchester City FC",
         "age": 25,
         "espn_id": "253989",
@@ -5595,17 +5658,17 @@
     ]
   },
   "Panama": {
-    "manager": "Thomas Christiansen Tarin",
+    "manager": "Thomas Christiansen",
     "manager_sofascore_id": "396",
     "goalkeepers": [
       {
-        "name": "Luis Ricardo Mejía Cajar",
+        "name": "Luis Mejía",
         "club": "Club Nacional",
         "age": 35,
         "fotmob_id": "1707164"
       },
       {
-        "name": "César Jair Samudio Murillo",
+        "name": "César Samudio",
         "club": "CD Marathón",
         "age": 32,
         "fotmob_id": "1082876"
@@ -5619,30 +5682,32 @@
     ],
     "defenders": [
       {
-        "name": "César Rodolfo Blackman Camarena",
+        "name": "César Blackman",
         "club": "ŠK Slovan Bratislava",
-        "age": 28
+        "age": 28,
+        "fotmob_id": "1707164"
       },
       {
-        "name": "Jose Angel Córdoba Chambers",
+        "name": "José Córdoba",
         "club": "Norwich City FC",
         "age": 25,
         "fotmob_id": "1335477"
       },
       {
-        "name": "Fidel Escobar Mendieta",
+        "name": "Fidel Escobar",
         "club": "Deportivo Saprissa",
         "age": 31
       },
       {
-        "name": "Edgardo Issac Fariña Wynter",
+        "name": "Edgardo Fariña",
         "club": "FC Pari Nizhny Novgorod",
         "age": 24
       },
       {
-        "name": "Jiovany Javier Ramos Diaz",
+        "name": "Jiovany Ramos",
         "club": "Puerto Cabello CF",
-        "age": 29
+        "age": 29,
+        "fotmob_id": "860914"
       },
       {
         "name": "Carlos Miguel Harvey Cesneros",
@@ -5651,48 +5716,52 @@
         "fotmob_id": "429345"
       },
       {
-        "name": "Eric Javier Davis Grajales",
+        "name": "Éric Davis",
         "club": "CD Plaza Amador",
         "age": 35
       },
       {
-        "name": "Andres Alberto Andrade Cedeno",
+        "name": "Andrés Andrade",
         "club": "LASK Linz",
-        "age": 27
+        "age": 27,
+        "fotmob_id": "1541926"
       },
       {
-        "name": "Michael Amir Murillo Bermudez",
+        "name": "Amir Murillo",
         "club": "Beşiktaş JK",
         "age": 30,
         "fotmob_id": "1580696"
       },
       {
-        "name": "Roderick Alonso Miller Molina",
+        "name": "Roderick Miller",
         "club": "Turan Tovuz",
-        "age": 34
+        "age": 34,
+        "fotmob_id": "726345"
       },
       {
-        "name": "Jorge Abdiel Gutierrez Cornejo",
+        "name": "Jorge Gutiérrez",
         "club": "Deportivo La Guaira",
-        "age": 27
+        "age": 27,
+        "fotmob_id": "492920"
       }
     ],
     "midfielders": [
       {
-        "name": "Cristian Jesus Martínez",
+        "name": "Cristian Martínez",
         "club": "Hapoel Kiryat Shmona FC",
         "age": 29,
         "fotmob_id": "727101"
       },
       {
-        "name": "José Luis Rodríguez Francis",
+        "name": "José Luis Rodríguez",
         "club": "FC Juárez",
         "age": 27
       },
       {
-        "name": "Adalberto Eliecer Carrasquilla Alcazar",
+        "name": "Adalberto Carrasquilla",
         "club": "Pumas UNAM",
-        "age": 27
+        "age": 27,
+        "fotmob_id": "1324100"
       },
       {
         "name": "Ismael Díaz De Leon",
@@ -5701,115 +5770,122 @@
         "fotmob_id": "1253117"
       },
       {
-        "name": "Édgar Yoel Bárcenas Herrera",
+        "name": "Yoel Bárcenas",
         "club": "Mazatlán FC",
         "age": 32
       },
       {
-        "name": "Alberto Abdiel Quintero Medina",
+        "name": "Alberto Quintero",
         "club": "CD Plaza Amador",
         "age": 38,
         "fotmob_id": "30573"
       },
       {
-        "name": "Aníbal Casis Godoy Lemus",
+        "name": "Aníbal Godoy",
         "club": "San Diego FC",
-        "age": 36
+        "age": 36,
+        "fotmob_id": "1288280"
       },
       {
-        "name": "César Augusto Yanis Velasco",
+        "name": "César Yanis",
         "club": "CD Cobresal",
-        "age": 30
+        "age": 30,
+        "fotmob_id": "1053392"
       }
     ],
     "forwards": [
       {
-        "name": "Tomas Abdiel Rodriguez Mena",
+        "name": "Tomás Rodríguez",
         "club": "Deportivo Saprissa",
         "age": 27,
         "fotmob_id": "1326041"
       },
       {
-        "name": "José Fajardo Nelson",
+        "name": "José Fajardo",
         "club": "CD Universidad Católica",
         "age": 32
       },
       {
-        "name": "Cecilio Alfonso Waterman Ruiz",
+        "name": "Cecilio Waterman",
         "club": "CD Universidad De Concepción",
-        "age": 35
+        "age": 35,
+        "fotmob_id": "605654"
       },
       {
         "name": "Azarias Emmanuel Londoño Gonzalez",
         "club": "CD Universidad Católica",
-        "age": 24
+        "age": 24,
+        "fotmob_id": "1280132"
       }
     ]
   },
   "Paraguay": {
-    "manager": "Gustavo Julio Alfaro",
+    "manager": "Gustavo Alfaro",
     "manager_sofascore_id": "53366",
     "goalkeepers": [
       {
-        "name": "Roberto Junior Fernandez Torres",
+        "name": "Roberto Fernández",
         "club": "Cerro Porteño",
         "age": 38,
         "fotmob_id": "300623"
       },
       {
-        "name": "Orlando Daniel Gill Noldin",
+        "name": "Orlando Gill",
         "club": "CA San Lorenzo",
         "age": 26
       },
       {
-        "name": "Gastón Hernán Olveira Echeverria",
+        "name": "Gastón Olveira",
         "club": "Club Olimpia",
-        "age": 33
+        "age": 33,
+        "fotmob_id": "517555"
       }
     ],
     "defenders": [
       {
-        "name": "Víctor Gustavo Velázquez Ramos",
+        "name": "Gustavo Velázquez",
         "club": "Cerro Porteño",
         "age": 35,
         "fotmob_id": "159888"
       },
       {
-        "name": "Omar Federico Alderete Fernández",
+        "name": "Omar Alderete",
         "club": "Sunderland AFC",
         "age": 29,
         "fotmob_id": "579659"
       },
       {
-        "name": "Juan Jose Caceres",
+        "name": "Juan Caceres",
         "club": "FC Dynamo Moscow",
         "age": 26,
         "espn_id": "34323",
         "sofascore_id": "989801"
       },
       {
-        "name": "Fabián Cornelio Balbuena González",
+        "name": "Fabián Balbuena",
         "club": "Grêmio FBPA",
         "age": 34,
         "fotmob_id": "466630"
       },
       {
-        "name": "Júnior Osmar Ignacio Alonso Mujica",
+        "name": "Júnior Alonso",
         "club": "Atlético Mineiro",
-        "age": 33
+        "age": 33,
+        "fotmob_id": "741103"
       },
       {
-        "name": "Jose Maria Canale Dominguez",
+        "name": "Jose Canale",
         "club": "CA Lanús",
         "age": 29
       },
       {
-        "name": "Gustavo Raul Gómez Portillo",
+        "name": "Gustavo Gómez",
         "club": "SE Palmeiras",
-        "age": 33
+        "age": 33,
+        "fotmob_id": "1226758"
       },
       {
-        "name": "Alexandro Maidana Mendieta",
+        "name": "Alexandro Maidana",
         "club": "CA Talleres",
         "age": 20,
         "espn_id": "399687",
@@ -5818,47 +5894,49 @@
     ],
     "midfielders": [
       {
-        "name": "Ramón Sosa Acosta",
+        "name": "Ramón Sosa",
         "club": "SE Palmeiras",
         "age": 26,
         "espn_id": "301653",
         "sofascore_id": "1015733"
       },
       {
-        "name": "Diego Alexander Gomez Amarilla",
+        "name": "Diego Gómez",
         "club": "Brighton & Hove Albion FC",
-        "age": 23
+        "age": 23,
+        "fotmob_id": "497400"
       },
       {
-        "name": "Miguel Angel Almirón Rejala",
+        "name": "Miguel Almirón",
         "club": "Atlanta United FC",
         "age": 32
       },
       {
-        "name": "Mauricio Magalhães Prado",
+        "name": "Maurício",
         "club": "SE Palmeiras",
         "age": 24,
         "sofascore_id": "986233"
       },
       {
-        "name": "Adrián Andrés Cubas",
+        "name": "Andrés Cubas",
         "club": "Vancouver Whitecaps FC",
         "age": 30,
         "espn_id": "202501"
       },
       {
-        "name": "Damián Josue Bobadilla Benitez",
+        "name": "Damián Bobadilla",
         "club": "São Paulo FC",
-        "age": 24
+        "age": 24,
+        "fotmob_id": "448897"
       },
       {
-        "name": "Braian Oscar Ojeda Rodriguez",
+        "name": "Braian Ojeda",
         "club": "Orlando City SC",
         "age": 25,
         "fotmob_id": "128298"
       },
       {
-        "name": "Matias Galarza Fonda",
+        "name": "Matías Galarza",
         "club": "Atlanta United FC",
         "age": 24,
         "espn_id": "297328",
@@ -5873,57 +5951,60 @@
     ],
     "forwards": [
       {
-        "name": "Arnaldo Antonio Sanabria Ayala",
+        "name": "Antonio Sanabria",
         "club": "US Cremonese",
-        "age": 30
+        "age": 30,
+        "fotmob_id": "1118540"
       },
       {
         "name": "Alejandro Sebastian Romero Gamarra",
         "club": "Al Ain FC",
-        "age": 31
+        "age": 31,
+        "fotmob_id": "1031770"
       },
       {
-        "name": "Alex Adrian Arce Barrios",
+        "name": "Alex Arce",
         "club": "CS Independiente Rivadavia",
-        "age": 30
+        "age": 30,
+        "fotmob_id": "1338192"
       },
       {
-        "name": "Julio Cesar Enciso Espinola",
+        "name": "Julio Enciso",
         "club": "RC Strasbourg",
         "age": 22
       },
       {
-        "name": "Gabriel Avalos Stumpfs",
+        "name": "Gabriel Ávalos",
         "club": "CA Independiente",
         "age": 35,
         "espn_id": "176853",
         "sofascore_id": "789453"
       },
       {
-        "name": "Isidro Miguel Pitta Saldivar",
+        "name": "Isidro Pitta",
         "club": "Red Bull Bragantino",
         "age": 26
       }
     ]
   },
   "Portugal": {
-    "manager": "Roberto Martínez Montoliu",
+    "manager": "Roberto Martinez",
     "manager_sofascore_id": "19518",
     "goalkeepers": [
       {
-        "name": "Diogo Meireles Da Costa",
+        "name": "Diogo Costa",
         "club": "FC Porto",
         "age": 26,
         "fotmob_id": "795630"
       },
       {
-        "name": "José Pedro Malheiro De Sá",
+        "name": "José Sá",
         "club": "Wolverhampton Wanderers FC",
         "age": 33,
         "fotmob_id": "416175"
       },
       {
-        "name": "Rui Tiago Dantas Da Silva",
+        "name": "Rui Silva",
         "club": "Sporting CP",
         "age": 32,
         "fotmob_id": "361717"
@@ -5931,44 +6012,44 @@
     ],
     "defenders": [
       {
-        "name": "Nélson Cabral Semedo",
+        "name": "Nélson Semedo",
         "club": "Fenerbahçe SK",
         "age": 32,
         "espn_id": "222670",
         "sofascore_id": "252821"
       },
       {
-        "name": "Rúben Dos Santos Gato Alves Dias",
+        "name": "Rúben Dias",
         "club": "Manchester City FC",
         "age": 29,
         "fotmob_id": "614006"
       },
       {
-        "name": "Tomás Lemos Araújo",
+        "name": "Tomás Araújo",
         "club": "SL Benca",
         "age": 24,
         "sofascore_id": "983542"
       },
       {
-        "name": "José Diogo Dalot Teixeira",
+        "name": "Diogo Dalot",
         "club": "Manchester United FC",
         "age": 27
       },
       {
-        "name": "Renato Da Palma Veiga",
+        "name": "Renato Veiga",
         "club": "Villarreal CF",
         "age": 22,
         "fotmob_id": "1343750"
       },
       {
-        "name": "Gonçalo Bernardo Inácio",
+        "name": "Gonçalo Inacio",
         "club": "Sporting CP",
         "age": 24,
         "espn_id": "304106",
         "sofascore_id": "1001196"
       },
       {
-        "name": "João Pedro Cavaco Cancelo",
+        "name": "João Cancelo",
         "club": "FC Barcelona",
         "age": 32,
         "fotmob_id": "361757"
@@ -5979,7 +6060,7 @@
         "age": 25
       },
       {
-        "name": "Nuno Alexandre Tavares Mendes",
+        "name": "Nuno Mendes",
         "club": "Paris Saint-Germain",
         "age": 23,
         "fotmob_id": "1158945"
@@ -5994,25 +6075,25 @@
         "sofascore_id": "945122"
       },
       {
-        "name": "Bruno Miguel Borges Fernandes",
+        "name": "Bruno Fernandes",
         "club": "Manchester United FC",
         "age": 31,
         "fotmob_id": "422685"
       },
       {
-        "name": "Bernardo Mota Veiga De Carvalho E Silva",
+        "name": "Bernardo Silva",
         "club": "Manchester City FC",
         "age": 31,
         "fotmob_id": "488139"
       },
       {
-        "name": "João Pedro Gonçalves Neves",
+        "name": "João Neves",
         "club": "Paris Saint-Germain",
         "age": 21,
         "fotmob_id": "1342757"
       },
       {
-        "name": "Rúben Diogo Da Silva Neves",
+        "name": "Rúben Neves",
         "club": "Al Hilal SC",
         "age": 29,
         "fotmob_id": "534684"
@@ -6025,50 +6106,51 @@
     ],
     "forwards": [
       {
-        "name": "Cristiano Ronaldo Dos Santos Aveiro",
+        "name": "Cristiano Ronaldo",
         "club": "Al Nassr FC",
         "age": 41
       },
       {
-        "name": "Gonçalo Matias Ramos",
+        "name": "Gonçalo Ramos",
         "club": "Paris Saint-Germain",
         "age": 24,
         "espn_id": "288896",
         "sofascore_id": "934510"
       },
       {
-        "name": "João Félix Sequeira",
+        "name": "João Félix",
         "club": "Al Nassr FC",
         "age": 26,
         "espn_id": "276350",
         "sofascore_id": "851671"
       },
       {
-        "name": "Francisco António Machado Mota De Castro Trincão",
+        "name": "Francisco Trincão (Sporting Lisbon).",
         "club": "Sporting CP",
-        "age": 26
+        "age": 26,
+        "fotmob_id": "732282"
       },
       {
-        "name": "Rafael Alexandre Da Conceição Leão",
+        "name": "Rafael Leão",
         "club": "AC Milan",
         "age": 27,
         "fotmob_id": "848844"
       },
       {
-        "name": "Pedro Lomba Neto",
+        "name": "Pedro Neto",
         "club": "Chelsea FC",
         "age": 26,
         "espn_id": "256115",
         "sofascore_id": "879349"
       },
       {
-        "name": "Gonçalo Manuel Ganchinho Guedes",
+        "name": "Gonçalo Guedes",
         "club": "Real Sociedad",
         "age": 29,
         "fotmob_id": "536455"
       },
       {
-        "name": "Francisco Fernandes Da Conceição",
+        "name": "Francisco Conceição",
         "club": "Juventus FC",
         "age": 23,
         "fotmob_id": "1185336"
@@ -6076,22 +6158,22 @@
     ]
   },
   "Qatar": {
-    "manager": "Julian Lopetegui Argote",
+    "manager": "Julen Lopetegui",
     "manager_sofascore_id": "138570",
     "goalkeepers": [
       {
-        "name": "Mahmoud Ibrahim M Abunada",
+        "name": "Mahmoud Abunada",
         "club": "Al Rayyan SC",
         "age": 26,
         "fotmob_id": "1213141"
       },
       {
-        "name": "Salah Zakaria M M Hassan",
+        "name": "Salah Zakaria",
         "club": "Al Duhail SC",
         "age": 27
       },
       {
-        "name": "Meshaal Aissa M Barsham",
+        "name": "Meshaal Barsham",
         "club": "Al Sadd SC",
         "age": 28,
         "fotmob_id": "922387"
@@ -6099,12 +6181,12 @@
     ],
     "defenders": [
       {
-        "name": "Pedro Miguel D D Correia",
+        "name": "Pedro Miguel",
         "club": "Al Sadd SC",
         "age": 35
       },
       {
-        "name": "Lucas Michel Mendes",
+        "name": "Lucas Mendes",
         "club": "Al Wakrah SC",
         "age": 35,
         "espn_id": "125617",
@@ -6128,7 +6210,8 @@
       {
         "name": "Homam Elamin M Ahmed",
         "club": "Cultural Leonesa",
-        "age": 26
+        "age": 26,
+        "fotmob_id": "887139"
       },
       {
         "name": "Boualem Khoukhi",
@@ -6138,9 +6221,10 @@
         "sofascore_id": "233746"
       },
       {
-        "name": "Sultan Hussain M H Al-Brake",
+        "name": "Sultan Al Brake",
         "club": "Al Duhail SC",
-        "age": 30
+        "age": 30,
+        "fotmob_id": "644014"
       },
       {
         "name": "Alhashmi Alhussein A Mohialdin",
@@ -6152,7 +6236,8 @@
       {
         "name": "Abdelaziz Hatim A Mohamed",
         "club": "Al Rayyan SC",
-        "age": 36
+        "age": 36,
+        "fotmob_id": "292462"
       },
       {
         "name": "Karim Boudiaf",
@@ -6162,7 +6247,7 @@
         "sofascore_id": "303826"
       },
       {
-        "name": "Ahmed Mohamed H K Alganehi",
+        "name": "Ahmed Fathi",
         "club": "Al Gharafa SC",
         "age": 25
       },
@@ -6173,7 +6258,7 @@
         "fotmob_id": "1439393"
       },
       {
-        "name": "Assim Omer A Madibo",
+        "name": "Assim Madibo",
         "club": "Al Wakrah SC",
         "age": 29,
         "fotmob_id": "615414"
@@ -6181,17 +6266,18 @@
     ],
     "forwards": [
       {
-        "name": "Ahmed Alaaeldin B M Abdelmotaal",
+        "name": "Ahmed Alaa",
         "club": "Al Rayyan SC",
         "age": 33
       },
       {
-        "name": "Edmilson Junior P Dasilva",
+        "name": "Edmílson Junior",
         "club": "Al Duhail SC",
-        "age": 31
+        "age": 31,
+        "fotmob_id": "759566"
       },
       {
-        "name": "Mohammed Muntari",
+        "name": "Tahsin Mohammed",
         "club": "Al Gharafa SC",
         "age": 32,
         "espn_id": "185984",
@@ -6203,20 +6289,20 @@
         "age": 35
       },
       {
-        "name": "Akram Hassan A Y Afif",
+        "name": "Akram Afif",
         "club": "Al Sadd SC",
         "age": 29,
         "fotmob_id": "613792"
       },
       {
-        "name": "Yusuf Abdurisag Yusuf",
+        "name": "Yusuf Abdurisag",
         "club": "Al Wakrah SC",
         "age": 26,
         "espn_id": "274164",
         "sofascore_id": "985156"
       },
       {
-        "name": "Almoez Ali Zainelabdeen M Abdulla",
+        "name": "Almoez Ali",
         "club": "Al Duhail SC",
         "age": 29
       },
@@ -6237,53 +6323,54 @@
     "manager_sofascore_id": "53300",
     "goalkeepers": [
       {
-        "name": "Nawaf Dhahi F Alaqidi",
+        "name": "Nawaf Al Aqidi",
         "club": "Al Nassr FC",
         "age": 26,
         "fotmob_id": "1125083"
       },
       {
-        "name": "Mohammed Khalil I Alowais",
+        "name": "Mohammed Al Owais",
         "club": "Al Ula Saudi FC",
         "age": 34
       },
       {
-        "name": "Ahmed Ali H Alkassar",
+        "name": "Ahmed Al Kassar",
         "club": "Al Qadsiah FC",
-        "age": 35
+        "age": 35,
+        "fotmob_id": "544589"
       }
     ],
     "defenders": [
       {
-        "name": "Ali Hassan M Majrashi",
+        "name": "Hassan Tambakti",
         "club": "Al Ahli FC",
         "age": 26,
         "fotmob_id": "910986"
       },
       {
-        "name": "Ali Mohammed A Lajami",
+        "name": "Ali Lajami",
         "club": "Al Hilal SC",
         "age": 30,
         "fotmob_id": "640284"
       },
       {
-        "name": "Abdulelah Ali A Alamri",
+        "name": "Abdulelah Al Amri",
         "club": "Al Nassr FC",
         "age": 29
       },
       {
-        "name": "Hassan Mohammed O Altambakti",
+        "name": "Hassan Kadesh",
         "club": "Al Hilal SC",
         "age": 27
       },
       {
-        "name": "Saud Abdullah S Abdulhamid",
+        "name": "Saud Abdulhamid",
         "club": "RC Lens",
         "age": 26,
         "fotmob_id": "1002617"
       },
       {
-        "name": "Nawaf Meshari M Bu Washl",
+        "name": "Nawaf Boushal",
         "club": "Al Nassr FC",
         "age": 26
       },
@@ -6293,50 +6380,51 @@
         "age": 33
       },
       {
-        "name": "Moteb Saad S Alharbi",
+        "name": "Moteb Al Harbi",
         "club": "Al Hilal SC",
         "age": 26,
         "fotmob_id": "1138003"
       },
       {
-        "name": "Jehad Abdullatif A Thikri",
+        "name": "Jehad Thikri",
         "club": "Al Qadsiah FC",
         "age": 24,
         "fotmob_id": "1232530"
       },
       {
-        "name": "Mohammed Waheeb S Abu Alshamat",
+        "name": "Mohammed Abu Al Shamat",
         "club": "Al Qadsiah FC",
-        "age": 23
+        "age": 23,
+        "fotmob_id": "1543647"
       }
     ],
     "midfielders": [
       {
-        "name": "Nasser Essa S Aldawsari",
+        "name": "Nasser Al Dawsari",
         "club": "Al Hilal SC",
         "age": 27,
         "fotmob_id": "848612"
       },
       {
-        "name": "Musab Fahad Z Aljuwayr",
+        "name": "Musab Al Juwayr",
         "club": "Al Qadsiah FC",
         "age": 22,
         "fotmob_id": "1235341"
       },
       {
-        "name": "Abdullah Mohammed H Alkhaibari",
+        "name": "Mohammed Kanno",
         "club": "Al Nassr FC",
         "age": 29,
         "fotmob_id": "823457"
       },
       {
-        "name": "Ziyad Mubarak E Aljohani",
+        "name": "Ziyad Al Johani",
         "club": "Al Ahli FC",
         "age": 24,
         "fotmob_id": "1174962"
       },
       {
-        "name": "Ala Mohsen A Alhajji",
+        "name": "Alaa Al Hajji",
         "club": "Neom SC",
         "age": 30
       },
@@ -6351,7 +6439,8 @@
       {
         "name": "Aiman Yahya Y Ahmed",
         "club": "Al Nassr FC",
-        "age": 25
+        "age": 25,
+        "fotmob_id": "887139"
       },
       {
         "name": "Feras Tariq N Albrikan",
@@ -6365,7 +6454,7 @@
         "fotmob_id": "307753"
       },
       {
-        "name": "Saleh Khalid M Alshehri",
+        "name": "Saleh Al Shehri",
         "club": "Al Ittihad",
         "age": 32,
         "fotmob_id": "384407"
@@ -6389,24 +6478,24 @@
     ]
   },
   "Scotland": {
-    "manager": "Stephen Clarke",
+    "manager": "Steve Clarke",
     "manager_sofascore_id": "784471",
     "goalkeepers": [
       {
-        "name": "Angus Fraser James Gunn",
+        "name": "Angus Gunn",
         "club": "Nottingham Forest FC",
         "age": 30,
         "fotmob_id": "760746"
       },
       {
-        "name": "Liam Patrick Kelly",
+        "name": "Liam Kelly",
         "club": "Rangers FC",
         "age": 30,
         "espn_id": "16264",
         "sofascore_id": "287555"
       },
       {
-        "name": "Craig Sinclair Gordon",
+        "name": "Craig Gordon",
         "club": "Heart Of Midlothian FC",
         "age": 43,
         "espn_id": "17617",
@@ -6415,20 +6504,20 @@
     ],
     "defenders": [
       {
-        "name": "Aaron Buchanan Hickey",
+        "name": "Aaron Hickey",
         "club": "Brentford FC",
         "age": 24,
         "espn_id": "283940",
         "sofascore_id": "966869"
       },
       {
-        "name": "Andrew Henry Robertson",
+        "name": "Andy Robertson",
         "club": "Liverpool FC",
         "age": 32,
         "fotmob_id": "357880"
       },
       {
-        "name": "Grant Campbell Hanley",
+        "name": "Grant Hanley",
         "club": "Hibernian FC",
         "age": 34,
         "espn_id": "146577",
@@ -6442,27 +6531,27 @@
         "sofascore_id": "366592"
       },
       {
-        "name": "Jack William Hendry",
+        "name": "Jack Hendry",
         "club": "Al Ettifaq FC",
         "age": 31,
         "espn_id": "207454",
         "sofascore_id": "795696"
       },
       {
-        "name": "John Francis Souttar",
+        "name": "John Souttar",
         "club": "Rangers FC",
         "age": 29,
         "espn_id": "181394",
         "sofascore_id": "287563"
       },
       {
-        "name": "Dominic John Hyam",
+        "name": "Dom Hyam",
         "club": "Wrexham AFC",
         "age": 30,
         "fotmob_id": "694558"
       },
       {
-        "name": "Nathan Kenneth Patterson",
+        "name": "Nathan Patterson",
         "club": "Everton FC",
         "age": 24,
         "espn_id": "271191",
@@ -6476,7 +6565,7 @@
         "sofascore_id": "840227"
       },
       {
-        "name": "Scott Fraser Mckenna",
+        "name": "Scott McKenna",
         "club": "GNK Dinamo Zagreb",
         "age": 29,
         "espn_id": "191450",
@@ -6485,14 +6574,14 @@
     ],
     "midfielders": [
       {
-        "name": "Scott Francis Mctominay",
+        "name": "Scott McTominay",
         "club": "SSC Napoli",
         "age": 29,
         "espn_id": "255850",
         "sofascore_id": "879346"
       },
       {
-        "name": "John Mcginn",
+        "name": "John McGinn",
         "club": "Aston Villa FC",
         "age": 31,
         "espn_id": "162843",
@@ -6519,27 +6608,27 @@
         "sofascore_id": "907152"
       },
       {
-        "name": "Kenneth Mclean",
+        "name": "Kenny McLean",
         "club": "Norwich City FC",
         "age": 34
       }
     ],
     "forwards": [
       {
-        "name": "Lyndon John Dykes",
+        "name": "Lyndon Dykes",
         "club": "Charlton Athletic FC",
         "age": 30,
         "espn_id": "207538",
         "sofascore_id": "846204"
       },
       {
-        "name": "Che Sac Everton Fred Adams",
+        "name": "Ché Adams",
         "club": "Torino FC",
         "age": 29,
         "fotmob_id": "599353"
       },
       {
-        "name": "Ross Cameron Stewart",
+        "name": "Ross Stewart",
         "club": "Southampton FC",
         "age": 29,
         "espn_id": "251936",
@@ -6552,7 +6641,7 @@
         "fotmob_id": "1739006"
       },
       {
-        "name": "George David Eric Hirst",
+        "name": "George Hirst",
         "club": "Ipswich Town FC",
         "age": 27,
         "fotmob_id": "750033"
@@ -6573,17 +6662,17 @@
     ]
   },
   "Senegal": {
-    "manager": "Pape Bouna Thiaw",
+    "manager": "Pape Thiaw",
     "manager_sofascore_id": "798718",
     "goalkeepers": [
       {
-        "name": "Yehvann Djibril Victor Diouf",
+        "name": "Yehvann Diouf",
         "club": "OGC Nice",
         "age": 26,
         "fotmob_id": "766574"
       },
       {
-        "name": "Edouard Osoque Mendy",
+        "name": "Édouard Mendy",
         "club": "Al Ahli FC",
         "age": 34,
         "espn_id": "238362",
@@ -6620,7 +6709,7 @@
         "sofascore_id": "583896"
       },
       {
-        "name": "Ismail Joshua Jakobs",
+        "name": "Ismail Jakobs",
         "club": "Galatasaray SK",
         "age": 26,
         "espn_id": "268796",
@@ -6641,7 +6730,7 @@
         "sofascore_id": "758168"
       },
       {
-        "name": "Antoine Alpha Mendy",
+        "name": "Antoine Mendy",
         "club": "OGC Nice",
         "age": 22,
         "espn_id": "319161",
@@ -6663,7 +6752,7 @@
         "sofascore_id": "106337"
       },
       {
-        "name": "Ismaila Pathe Ciss",
+        "name": "Pathé Ciss",
         "club": "Rayo Vallecano",
         "age": 32,
         "espn_id": "294228",
@@ -6684,9 +6773,10 @@
         "sofascore_id": "1002711"
       },
       {
-        "name": "Mouhamadou Habib Mbacke Diarra",
+        "name": "Habib Diarra",
         "club": "Sunderland AFC",
-        "age": 22
+        "age": 22,
+        "fotmob_id": "1510394"
       },
       {
         "name": "Bara Sapoko Ndiaye",
@@ -6696,7 +6786,7 @@
         "sofascore_id": "2427970"
       },
       {
-        "name": "Pape Alassane Gueye",
+        "name": "Pape Gueye",
         "club": "Villarreal CF",
         "age": 27,
         "espn_id": "255889",
@@ -6712,7 +6802,7 @@
         "sofascore_id": "1493689"
       },
       {
-        "name": "Cheikh Ahmadou Bamba Mbacke Dieng",
+        "name": "Bamba Dieng",
         "club": "FC Lorient",
         "age": 26
       },
@@ -6731,20 +6821,20 @@
         "sofascore_id": "1085381"
       },
       {
-        "name": "Pape Cherif Ndiaye",
+        "name": "Cherif Ndiaye",
         "club": "Samsunspor",
         "age": 30,
         "espn_id": "251924",
         "sofascore_id": "868268"
       },
       {
-        "name": "Iliman Cheikh Baroy Ndiaye",
+        "name": "Iliman Ndiaye",
         "club": "Everton FC",
         "age": 26,
         "fotmob_id": "965764"
       },
       {
-        "name": "Ismaila Sarr",
+        "name": "Ismaïla Sarr",
         "club": "Crystal Palace FC",
         "age": 28,
         "espn_id": "241012",
@@ -6760,30 +6850,30 @@
     ]
   },
   "South Africa": {
-    "manager": "Hugo Henri Broos",
+    "manager": "Hugo Broos",
     "manager_sofascore_id": "786568",
     "goalkeepers": [
       {
-        "name": "Ronwen Hayden Williams",
+        "name": "Ronwen Williams",
         "club": "Mamelodi Sundowns FC",
         "age": 34,
         "fotmob_id": "253991"
       },
       {
-        "name": "Sipho Justin Chaine",
+        "name": "Sipho Chaine",
         "club": "Orlando Pirates FC",
         "age": 29,
         "fotmob_id": "787099"
       },
       {
-        "name": "Stuart Ricardo Goss",
+        "name": "Ricardo Goss",
         "club": "Siwelele FC",
         "age": 32
       }
     ],
     "defenders": [
       {
-        "name": "Tholo Thabang Matuludi",
+        "name": "Thabang Matuludi",
         "club": "Polokwane City FC",
         "age": 27
       },
@@ -6794,49 +6884,49 @@
         "fotmob_id": "1680696"
       },
       {
-        "name": "Aubrey Maphosa Modiba",
+        "name": "Aubrey Modiba",
         "club": "Mamelodi Sundowns FC",
         "age": 30,
         "fotmob_id": "616179"
       },
       {
-        "name": "Mbekezeli Mfanukile Mbokazi",
+        "name": "Mbekezeli Mbokazi",
         "club": "Chicago Fire FC",
         "age": 20,
         "fotmob_id": "1719066"
       },
       {
-        "name": "Samukele Alucious Kabini",
+        "name": "Samukelo Kabini",
         "club": "Molde FK",
         "age": 22,
         "fotmob_id": "1680659"
       },
       {
-        "name": "Nkosinathi Emmanuel Sibisi",
+        "name": "Nkosinathi Sibisi",
         "club": "Orlando Pirates FC",
         "age": 30,
         "fotmob_id": "716819"
       },
       {
-        "name": "Khuliso Johnson Mudau",
+        "name": "Khuliso Mudau",
         "club": "Mamelodi Sundowns FC",
         "age": 31,
         "fotmob_id": "940010"
       },
       {
-        "name": "Ime Daniel Okon",
+        "name": "Ime Okon",
         "club": "Hannover",
         "age": 22,
         "fotmob_id": "1600334"
       },
       {
-        "name": "Olwethu Mpilwenhle Makhanya",
+        "name": "Olwethu Makhanya",
         "club": "Philadelphia Union",
         "age": 22,
         "fotmob_id": "1469826"
       },
       {
-        "name": "Bradley Paul Cross",
+        "name": "Bradley Cross",
         "club": "Kaizer Chiefs FC",
         "age": 25,
         "fotmob_id": "1202481"
@@ -6850,7 +6940,7 @@
         "fotmob_id": "848361"
       },
       {
-        "name": "Thalente Wandile Mbatha",
+        "name": "Thalente Mbatha",
         "club": "Orlando Pirates FC",
         "age": 26,
         "fotmob_id": "1124424"
@@ -6862,13 +6952,13 @@
         "fotmob_id": "303609"
       },
       {
-        "name": "Sphephelo S'miso Sithole",
+        "name": "Yaya Sithole",
         "club": "CD Tondela",
         "age": 27,
         "fotmob_id": "1107735"
       },
       {
-        "name": "Jayden Oswin Adams",
+        "name": "Jayden Adams",
         "club": "Mamelodi Sundowns FC",
         "age": 25,
         "fotmob_id": "1178629"
@@ -6876,7 +6966,7 @@
     ],
     "forwards": [
       {
-        "name": "Oswin Reagan Appollis",
+        "name": "Oswin Appollis",
         "club": "Orlando Pirates FC",
         "age": 24,
         "fotmob_id": "1054166"
@@ -6888,7 +6978,7 @@
         "fotmob_id": "1289611"
       },
       {
-        "name": "Lyle Brent Foster",
+        "name": "Lyle Foster",
         "club": "Burnley FC",
         "age": 25,
         "fotmob_id": "881500"
@@ -6912,7 +7002,7 @@
         "fotmob_id": "1076668"
       },
       {
-        "name": "Sekotori Evidence Makgopa",
+        "name": "Evidence Makgopa",
         "club": "Orlando Pirates FC",
         "age": 26
       },
@@ -6925,23 +7015,23 @@
     ]
   },
   "Spain": {
-    "manager": "Luis De La Fuente Castillo",
+    "manager": "Luis de la Fuente",
     "manager_sofascore_id": "331371",
     "goalkeepers": [
       {
-        "name": "David Raya Martín",
+        "name": "David Raya",
         "club": "Arsenal FC",
         "age": 30,
         "sofascore_id": "581310"
       },
       {
-        "name": "Joan Garcia Pons",
+        "name": "Joan García",
         "club": "FC Barcelona",
         "age": 25,
         "sofascore_id": "930267"
       },
       {
-        "name": "Unai Simón Mendibil",
+        "name": "Unai Simón",
         "club": "Athletic Club",
         "age": 29,
         "sofascore_id": "797291"
@@ -6949,49 +7039,50 @@
     ],
     "defenders": [
       {
-        "name": "Marc Pubill Pages",
+        "name": "Marc Pubill",
         "club": "Atlético De Madrid",
         "age": 22,
         "espn_id": "332613",
         "sofascore_id": "1094106"
       },
       {
-        "name": "Alejandro Grimaldo García",
+        "name": "Álex Grimaldo",
         "club": "Bayer",
         "age": 30,
         "sofascore_id": "177177"
       },
       {
-        "name": "Eric García Martret",
+        "name": "Eric García",
         "club": "FC Barcelona",
         "age": 25,
         "sofascore_id": "876214"
       },
       {
-        "name": "Marcos Llorente Moreno",
+        "name": "Marcos Llorente",
         "club": "Atlético De Madrid",
         "age": 31,
         "sofascore_id": "353138"
       },
       {
-        "name": "Pedro Antonio Porro Sauceda",
+        "name": "Pedro Porro",
         "club": "Tottenham Hotspur FC",
         "age": 26
       },
       {
-        "name": "Aymeric Laporte Fevre",
+        "name": "Aymeric Laporte",
         "club": "Athletic Club",
         "age": 32,
         "espn_id": "159317",
         "sofascore_id": "149734"
       },
       {
-        "name": "Pau Cubarsi I Paredes",
+        "name": "Pau Cubarsí",
         "club": "FC Barcelona",
-        "age": 19
+        "age": 19,
+        "fotmob_id": "1191407"
       },
       {
-        "name": "Marc Cucurella Saseta",
+        "name": "Marc Cucurella",
         "club": "Chelsea FC",
         "age": 27,
         "sofascore_id": "794939"
@@ -6999,26 +7090,26 @@
     ],
     "midfielders": [
       {
-        "name": "Mikel Merino Zazón",
+        "name": "Mikel Merino",
         "club": "Arsenal FC",
         "age": 29,
         "espn_id": "209581",
         "sofascore_id": "592010"
       },
       {
-        "name": "Fabian Ruiz Peña",
+        "name": "Fabián Ruiz",
         "club": "Paris Saint-Germain",
         "age": 30,
         "sofascore_id": "784655"
       },
       {
-        "name": "Pablo Paez Gavira",
+        "name": "Gavi",
         "club": "FC Barcelona",
         "age": 21,
         "fotmob_id": "1838575"
       },
       {
-        "name": "Alejandro Baena Rodríguez",
+        "name": "Rodri",
         "club": "Atlético De Madrid",
         "age": 24,
         "fotmob_id": "1513661"
@@ -7029,7 +7120,7 @@
         "age": 29
       },
       {
-        "name": "Martin Zubimendi Ibañez",
+        "name": "Martín Zubimendi",
         "club": "Arsenal FC",
         "age": 27,
         "sofascore_id": "966837"
@@ -7043,47 +7134,48 @@
     ],
     "forwards": [
       {
-        "name": "Ferran Torres García",
+        "name": "Ferran Torres",
         "club": "FC Barcelona",
         "age": 26,
         "sofascore_id": "855833"
       },
       {
-        "name": "Daniel Olmo Carvajal",
+        "name": "Dani Olmo",
         "club": "FC Barcelona",
         "age": 28,
         "fotmob_id": "282674"
       },
       {
-        "name": "Yeremy Jesús Pino Santos",
+        "name": "Yéremy Pino",
         "club": "Crystal Palace FC",
-        "age": 23
+        "age": 23,
+        "fotmob_id": "1372921"
       },
       {
-        "name": "Nicholas Williams Arthuer",
+        "name": "Nico Williams",
         "club": "Athletic Club",
         "age": 23
       },
       {
-        "name": "Lamine Yamal Nasraoui Ebana",
+        "name": "Lamine Yamal",
         "club": "FC Barcelona",
         "age": 18
       },
       {
-        "name": "Mikel Oyarzabal Ugarte",
+        "name": "Mikel Oyarzabal",
         "club": "Real Sociedad",
         "age": 29,
         "sofascore_id": "823622"
       },
       {
-        "name": "Victor Muñoz Villanueva",
+        "name": "Víctor Muñoz",
         "club": "CA Osasuna",
         "age": 22,
         "espn_id": "397545",
         "sofascore_id": "1145642"
       },
       {
-        "name": "Borja Iglesias Quintás",
+        "name": "Borja Iglesias",
         "club": "RC Celta Vigo",
         "age": 33,
         "espn_id": "214995",
@@ -7092,25 +7184,25 @@
     ]
   },
   "Sweden": {
-    "manager": "Graham Stephen Potter",
+    "manager": "Graham Potter",
     "manager_sofascore_id": "309534",
     "goalkeepers": [
       {
-        "name": "Jacob Mikael Widell Zetterström",
+        "name": "Jacob Widell Zetterstrom",
         "club": "Derby County FC",
         "age": 27,
         "espn_id": "286810",
         "sofascore_id": "978728"
       },
       {
-        "name": "Tobias Viktor Johansson",
+        "name": "Viktor Johansson",
         "club": "Stoke City FC",
         "age": 27,
         "espn_id": "258902",
         "sofascore_id": "561430"
       },
       {
-        "name": "Bo Kristoffer Nordfeldt",
+        "name": "Kristoffer Nordfeldt",
         "club": "AIK Stockholm",
         "age": 36,
         "espn_id": "133993",
@@ -7119,26 +7211,26 @@
     ],
     "defenders": [
       {
-        "name": "Gustaf Johan Lagerbielke",
+        "name": "Gustaf Lagerbielke",
         "club": "SC Braga",
         "age": 26,
         "espn_id": "324930",
         "sofascore_id": "965263"
       },
       {
-        "name": "Victor Jörgen Nilsson Lindelöf",
+        "name": "Victor Lindelöf",
         "club": "Aston Villa FC",
         "age": 31,
         "fotmob_id": "258269"
       },
       {
-        "name": "Isak Malcolm Kwaku Hien",
+        "name": "Isak Hien",
         "club": "Atalanta Bergamo",
         "age": 27,
         "fotmob_id": "939780"
       },
       {
-        "name": "Gabriel Johan Gudmundsson",
+        "name": "Gabriel Gudmundsson",
         "club": "Leeds United FC",
         "age": 27,
         "espn_id": "250166",
@@ -7151,7 +7243,7 @@
         "fotmob_id": "946703"
       },
       {
-        "name": "Daniel Jonathan Svensson",
+        "name": "Daniel Svensson",
         "club": "Borussia Dortmund",
         "age": 24,
         "espn_id": "310709",
@@ -7165,13 +7257,13 @@
         "sofascore_id": "875360"
       },
       {
-        "name": "Carl Anders Theodor Starfelt",
+        "name": "Carl Starfelt",
         "club": "RC Celta Vigo",
         "age": 31,
         "fotmob_id": "497662"
       },
       {
-        "name": "Eric Anders Smith",
+        "name": "Erik Smith",
         "club": "FC St. Pauli",
         "age": 29,
         "fotmob_id": "531327"
@@ -7184,7 +7276,7 @@
         "sofascore_id": "980916"
       },
       {
-        "name": "Elliot Karl Stroud",
+        "name": "Elliot Stroud",
         "club": "Mjällby AIF",
         "age": 23,
         "espn_id": "357145",
@@ -7193,7 +7285,7 @@
     ],
     "midfielders": [
       {
-        "name": "Lucas Erik Holger Bergvall",
+        "name": "Lucas Bergvall",
         "club": "Tottenham Hotspur FC",
         "age": 20,
         "fotmob_id": "1386775"
@@ -7213,7 +7305,7 @@
         "sofascore_id": "319847"
       },
       {
-        "name": "Jesper Kewe Karlström",
+        "name": "Jesper Karlström",
         "club": "Udinese",
         "age": 30,
         "espn_id": "237055",
@@ -7227,7 +7319,7 @@
         "sofascore_id": "1036269"
       },
       {
-        "name": "Mattias Olof Svanberg",
+        "name": "Mattias Svanberg",
         "club": "VfL Wolfsburg",
         "age": 27,
         "espn_id": "220120",
@@ -7243,27 +7335,27 @@
     ],
     "forwards": [
       {
-        "name": "Alexander Isak",
+        "name": "Alexander Bernhardsson",
         "club": "Liverpool FC",
         "age": 26,
         "espn_id": "235662",
         "sofascore_id": "823941"
       },
       {
-        "name": "Anthony David Junior Elanga",
+        "name": "Anthony Elanga",
         "club": "Newcastle United FC",
         "age": 24,
         "fotmob_id": "1050166"
       },
       {
-        "name": "Viktor Einar Gyökeres",
+        "name": "Viktor Gyökeres",
         "club": "Arsenal FC",
         "age": 28,
         "espn_id": "258906",
         "sofascore_id": "804508"
       },
       {
-        "name": "Håkan Gustaf Nilsson",
+        "name": "Gustaf Nilsson",
         "club": "Club Brugge",
         "age": 29,
         "espn_id": "238183",
@@ -7290,7 +7382,7 @@
         "sofascore_id": "556866"
       },
       {
-        "name": "Yvon Landry Mvogo Nganoma",
+        "name": "Yvon Mvogo",
         "club": "FC Lorient",
         "age": 32
       },
@@ -7304,13 +7396,13 @@
     ],
     "defenders": [
       {
-        "name": "Miro Max Maria Muheim",
+        "name": "Miro Muheim",
         "club": "Hamburger SV",
         "age": 28,
         "fotmob_id": "759817"
       },
       {
-        "name": "Silvan Dominic Widmer",
+        "name": "Silvan Widmer",
         "club": "1. FSV Mainz",
         "age": 33,
         "espn_id": "175905",
@@ -7324,33 +7416,34 @@
         "sofascore_id": "282229"
       },
       {
-        "name": "Manuel Obafemi Akanji",
+        "name": "Manuel Akanji",
         "club": "FC Internazionale Milano",
         "age": 30,
         "espn_id": "214562",
         "sofascore_id": "383560"
       },
       {
-        "name": "Ricardo Ivan Rodriguez Araya",
+        "name": "Ricardo Rodriguez",
         "club": "Real Betis",
-        "age": 33
+        "age": 33,
+        "fotmob_id": "1537809"
       },
       {
-        "name": "Eray Ervin Cömert",
+        "name": "Eray Cömert",
         "club": "Valencia CF",
         "age": 28,
         "espn_id": "231697",
         "sofascore_id": "814023"
       },
       {
-        "name": "Aurèle Florian Amenda",
+        "name": "Aurèle Amenda",
         "club": "Eintracht Frankfurt",
         "age": 22,
         "espn_id": "319404",
         "sofascore_id": "999276"
       },
       {
-        "name": "Luca Antony Jaquez",
+        "name": "Luca Jaquez",
         "club": "VfB Stuttgart",
         "age": 23,
         "espn_id": "332574",
@@ -7359,20 +7452,20 @@
     ],
     "midfielders": [
       {
-        "name": "Denis Lemi Zakaria Lako Lado",
+        "name": "Denis Zakaria",
         "club": "AS Monaco",
         "age": 29,
         "fotmob_id": "762871"
       },
       {
-        "name": "Remo Marco Freuler",
+        "name": "Remo Freuler",
         "club": "Bologna FC",
         "age": 34,
         "espn_id": "152600",
         "sofascore_id": "115516"
       },
       {
-        "name": "Johan Kula Manzambi",
+        "name": "Johan Manzambi",
         "club": "SC Freiburg",
         "age": 20,
         "espn_id": "386992",
@@ -7393,9 +7486,10 @@
         "sofascore_id": "1034082"
       },
       {
-        "name": "Mohameth Djibril Ibrahima Sow",
+        "name": "Djibril Sow",
         "club": "Sevilla FC",
-        "age": 29
+        "age": 29,
+        "fotmob_id": "707970"
       },
       {
         "name": "Michel Aebischer",
@@ -7414,7 +7508,7 @@
     ],
     "forwards": [
       {
-        "name": "Breel Donald Embolo",
+        "name": "Breel Embolo",
         "club": "Stade Rennais FC",
         "age": 29,
         "espn_id": "202099",
@@ -7441,21 +7535,21 @@
         "fotmob_id": "37656"
       },
       {
-        "name": "Noah Arinzechukwu Okafor",
+        "name": "Noah Okafor",
         "club": "Leeds United FC",
         "age": 26,
         "espn_id": "270641",
         "sofascore_id": "865523"
       },
       {
-        "name": "Mohamed Zeki Amdouni",
+        "name": "Zeki Amdouni",
         "club": "Burnley FC",
         "age": 25,
         "espn_id": "320757",
         "sofascore_id": "990550"
       },
       {
-        "name": "Cedric Jan Itten",
+        "name": "Cedric Itten",
         "club": "Fortuna Düsseldorf",
         "age": 29,
         "espn_id": "234153",
@@ -7482,7 +7576,7 @@
         "sofascore_id": "1198374"
       },
       {
-        "name": "Sabri Ben Hsan",
+        "name": "Sabri Ben Hessen",
         "club": "Étoile Du Sahel",
         "age": 29,
         "sofascore_id": "359312"
@@ -7490,12 +7584,12 @@
     ],
     "defenders": [
       {
-        "name": "Ali Elabdi",
+        "name": "Ali Abdi",
         "club": "OGC Nice",
         "age": 32
       },
       {
-        "name": "Montassar Omar Talbi",
+        "name": "Montassar Talbi",
         "club": "FC Lorient",
         "age": 28,
         "espn_id": "265099",
@@ -7516,7 +7610,7 @@
         "sofascore_id": "2018238"
       },
       {
-        "name": "Dylan Daniel Mahmoud Bronn",
+        "name": "Dylan Bronn",
         "club": "Servette FC",
         "age": 30,
         "fotmob_id": "771686"
@@ -7536,7 +7630,7 @@
         "sofascore_id": "826202"
       },
       {
-        "name": "Mohamed Amine Ben Hmida",
+        "name": "Mohamed Amine Ben Hamida",
         "club": "Espérance De Tunisie",
         "age": 30,
         "espn_id": "296982",
@@ -7587,13 +7681,13 @@
         "sofascore_id": "1606568"
       },
       {
-        "name": "Mohamed Belhadj Mahmoud",
+        "name": "Hadj Mahmoud",
         "club": "FC Lugano",
         "age": 26,
         "fotmob_id": "970189"
       },
       {
-        "name": "Ellyes Joris Skhiri",
+        "name": "Ellyes Skhiri",
         "club": "Eintracht Frankfurt",
         "age": 31,
         "espn_id": "209595",
@@ -7616,7 +7710,7 @@
     ],
     "forwards": [
       {
-        "name": "Mohamed Elyes Achouri",
+        "name": "Elias Achouri",
         "club": "FC København",
         "age": 27
       },
@@ -7655,7 +7749,7 @@
     "manager_sofascore_id": "1774",
     "goalkeepers": [
       {
-        "name": "Fehmi Mert Günok",
+        "name": "Mert Gunok",
         "club": "Fenerbahçe SK",
         "age": 37,
         "espn_id": "124880",
@@ -7669,7 +7763,7 @@
         "sofascore_id": "815890"
       },
       {
-        "name": "Uğurcan Çakir",
+        "name": "Ugurcan Cakir",
         "club": "Galatasaray SK",
         "age": 30,
         "espn_id": "222922",
@@ -7678,56 +7772,56 @@
     ],
     "defenders": [
       {
-        "name": "Mehmet Zeki Çelik",
+        "name": "Zeki Celik",
         "club": "AS Roma",
         "age": 29,
         "espn_id": "271873",
         "sofascore_id": "893008"
       },
       {
-        "name": "Merih Demi̇ral",
+        "name": "Merih Demiral",
         "club": "Al Ahli FC",
         "age": 28,
         "espn_id": "267178",
         "sofascore_id": "806968"
       },
       {
-        "name": "Çağlar Söyüncü",
+        "name": "Caglar Soyuncu",
         "club": "Fenerbahçe SK",
         "age": 30,
         "espn_id": "230757",
         "sofascore_id": "758608"
       },
       {
-        "name": "Evren Eren Elmali",
+        "name": "Eren Elmali",
         "club": "Galatasaray SK",
         "age": 25,
         "espn_id": "287678",
         "sofascore_id": "981483"
       },
       {
-        "name": "Abdülkerİm Bardakci",
+        "name": "Abdulkerim Bardakci",
         "club": "Galatasaray SK",
         "age": 31,
         "espn_id": "193149",
         "sofascore_id": "178963"
       },
       {
-        "name": "Ozan Muhammed Kabak",
+        "name": "Ozan Kabak",
         "club": "TSG Hoffenheim",
         "age": 26,
         "espn_id": "266565",
         "sofascore_id": "857740"
       },
       {
-        "name": "Mert Müldür",
+        "name": "Mert Muldur",
         "club": "Fenerbahçe SK",
         "age": 27,
         "espn_id": "266002",
         "sofascore_id": "836683"
       },
       {
-        "name": "Ferdi Erenay Kadioğlu",
+        "name": "Ferdi Kadioglu",
         "club": "Brighton & Hove Albion FC",
         "age": 26,
         "espn_id": "238318",
@@ -7743,13 +7837,13 @@
     ],
     "midfielders": [
       {
-        "name": "Salih Özcan",
+        "name": "Salih Ozcan",
         "club": "Borussia Dortmund",
         "age": 28,
         "sofascore_id": "795005"
       },
       {
-        "name": "Orkun Kökçü",
+        "name": "Orkun Kokcu",
         "club": "Beşiktaş JK",
         "age": 25,
         "espn_id": "272700",
@@ -7762,7 +7856,7 @@
         "fotmob_id": "304733"
       },
       {
-        "name": "İsmaİl Yüksek",
+        "name": "Ismail Yuksek",
         "club": "Fenerbahçe SK",
         "age": 27,
         "espn_id": "305629",
@@ -7778,21 +7872,21 @@
     ],
     "forwards": [
       {
-        "name": "Muhammed Kerem Aktürkoğlu",
+        "name": "Kerem Akturkoglu",
         "club": "Fenerbahçe SK",
         "age": 27,
         "espn_id": "306789",
         "sofascore_id": "903324"
       },
       {
-        "name": "Arda Güler",
+        "name": "Arda Guler",
         "club": "Real Madrid C. F.",
         "age": 21,
         "espn_id": "310452",
         "sofascore_id": "1091116"
       },
       {
-        "name": "Deniz Daniel Gül",
+        "name": "Deniz Gul",
         "club": "FC Porto",
         "age": 21,
         "espn_id": "350513",
@@ -7806,14 +7900,14 @@
         "sofascore_id": "1149011"
       },
       {
-        "name": "İrfan Kahveci̇",
+        "name": "Irfan Can Kahveci",
         "club": "Kasımpaşa SK",
         "age": 30,
         "espn_id": "211923",
         "sofascore_id": "226986"
       },
       {
-        "name": "Yunus Akgün",
+        "name": "Yunus Akgun",
         "club": "Galatasaray SK",
         "age": 25,
         "espn_id": "266575",
@@ -7827,14 +7921,14 @@
         "sofascore_id": "904096"
       },
       {
-        "name": "Oğuz Aydin",
+        "name": "Oguz Aydin",
         "club": "Fenerbahçe SK",
         "age": 25,
         "espn_id": "322813",
         "sofascore_id": "999396"
       },
       {
-        "name": "Can Yılmaz Uzun",
+        "name": "Can Uzun",
         "club": "Eintracht Frankfurt",
         "age": 20,
         "espn_id": "355369",
@@ -7843,104 +7937,106 @@
     ]
   },
   "Uruguay": {
-    "manager": "Marcelo Alberto Bielsa",
+    "manager": "Marcelo Bielsa",
     "manager_sofascore_id": "53560",
     "goalkeepers": [
       {
-        "name": "Sergio Ramón Rochet Alvarez",
+        "name": "Sergio Rochet",
         "club": "SC Internacional",
         "age": 33,
         "fotmob_id": "202639"
       },
       {
-        "name": "Santiago Andres Mele Castañero",
+        "name": "Santiago Mele",
         "club": "CF Monterrey",
         "age": 28
       },
       {
-        "name": "Nestor Fernando Muslera Micol",
+        "name": "Fernando Muslera",
         "club": "Estudiantes LP",
         "age": 39
       }
     ],
     "defenders": [
       {
-        "name": "José María Giménez De Vargas",
+        "name": "José María Giménez",
         "club": "Atlético De Madrid",
         "age": 31
       },
       {
-        "name": "Sebastián Enzo Cáceres Ramos",
+        "name": "Sebastián Cáceres",
         "club": "Club América",
         "age": 26
       },
       {
-        "name": "Ronald Federico Araújo Da Silva",
+        "name": "Ronald Araújo",
         "club": "FC Barcelona",
         "age": 27
       },
       {
-        "name": "Guillermo Varela Olivera",
+        "name": "Guillermo Varela",
         "club": "CR Flamengo",
         "age": 33
       },
       {
-        "name": "Mathías Olivera Miramontes",
+        "name": "Mathías Olivera",
         "club": "SSC Napoli",
         "age": 28
       },
       {
-        "name": "Matías Nicolas Viña Susperreguy",
+        "name": "Matías Viña",
         "club": "CA River Plate",
         "age": 28
       },
       {
-        "name": "Santiago Ignacio Bueno Sciutto",
+        "name": "Santiago Bueno",
         "club": "Wolverhampton Wanderers FC",
         "age": 27
       }
     ],
     "midfielders": [
       {
-        "name": "Manuel Ugarte Ribeiro",
+        "name": "Manuel Ugarte",
         "club": "Manchester United FC",
         "age": 25
       },
       {
-        "name": "Rodrigo Bentancur Colmán",
+        "name": "Rodrigo Bentancur",
         "club": "Tottenham Hotspur FC",
         "age": 28
       },
       {
-        "name": "Diego Nicolás De La Cruz Arcosa",
+        "name": "Nicolás De La Cruz",
         "club": "CR Flamengo",
         "age": 29
       },
       {
-        "name": "Federico Santiago Valverde Dipetta",
+        "name": "Federico Valverde",
         "club": "Real Madrid C. F.",
         "age": 27
       },
       {
-        "name": "Giorgian Daniel De Arrascaeta Benedetti",
+        "name": "Giorgian De Arrascaeta",
         "club": "CR Flamengo",
-        "age": 32
+        "age": 32,
+        "fotmob_id": "1658202"
       },
       {
-        "name": "Agustin Canobbio",
+        "name": "Agustín Canobbio",
         "club": "Fluminense FC",
         "age": 27,
         "fotmob_id": "840212"
       },
       {
-        "name": "Emiliano Martínez Toranza",
+        "name": "Emiliano Martínez",
         "club": "SE Palmeiras",
         "age": 26
       },
       {
-        "name": "Maximiliano Javier Araújo Vilches",
+        "name": "Maximiliano Araújo",
         "club": "Sporting CP",
-        "age": 26
+        "age": 26,
+        "fotmob_id": "164521"
       },
       {
         "name": "Joaquin Piquerez Moreira",
@@ -7953,16 +8049,17 @@
         "age": 26
       },
       {
-        "name": "Radrigo Zalazar Martinez",
+        "name": "Rodrigo Zalazar",
         "club": "SC Braga",
         "age": 26
       }
     ],
     "forwards": [
       {
-        "name": "Darwin Gabriel Nuñez Ribeiro",
+        "name": "Darwin Núñez",
         "club": "Al Hilal SC",
-        "age": 26
+        "age": 26,
+        "fotmob_id": "1186553"
       },
       {
         "name": "Facundo Pellistri Rebollo",
@@ -7972,51 +8069,54 @@
       {
         "name": "Paul Brian Rodríguez Bravo",
         "club": "Club América",
-        "age": 26
+        "age": 26,
+        "fotmob_id": "1272272"
       },
       {
-        "name": "Rodrigo Sebastian Aguirre Soto",
+        "name": "Rodrigo Aguirre",
         "club": "Tigres UANL",
         "age": 31
       },
       {
-        "name": "Federico Sebastian Viñas Barboza",
+        "name": "Federico Viñas",
         "club": "Real Oviedo",
-        "age": 27
+        "age": 27,
+        "fotmob_id": "657969"
       }
     ]
   },
   "United States": {
-    "manager": "Mauricio Roberto Pochettino Trossero",
+    "manager": "Mauricio Pochettino",
     "manager_sofascore_id": "3377",
     "goalkeepers": [
       {
-        "name": "Matthew Charles Turner",
+        "name": "Matt Turner",
         "club": "New England Revolution",
         "age": 31,
         "fotmob_id": "1558320"
       },
       {
-        "name": "Matthew Andrew Geary Freese",
+        "name": "Matt Freese",
         "club": "New York City FC",
-        "age": 27
+        "age": 27,
+        "fotmob_id": "1026065"
       },
       {
-        "name": "Christopher Keith Brady",
+        "name": "Chris Brady",
         "club": "Chicago Fire FC",
         "age": 22
       }
     ],
     "defenders": [
       {
-        "name": "Sergiño Gianni Dest",
+        "name": "Sergiño Dest",
         "club": "PSV Eindhoven",
         "age": 25,
         "espn_id": "266291",
         "sofascore_id": "906021"
       },
       {
-        "name": "Christopher Jeffrey Richards",
+        "name": "Chris Richards",
         "club": "Crystal Palace FC",
         "age": 26
       },
@@ -8028,45 +8128,45 @@
         "sofascore_id": "803174"
       },
       {
-        "name": "Auston Levi-Jesaiah Trusty",
+        "name": "Auston Trusty",
         "club": "Celtic FC",
         "age": 27,
         "espn_id": "228619",
         "sofascore_id": "822459"
       },
       {
-        "name": "Miles Gordon Robinson",
+        "name": "Miles Robinson",
         "club": "FC Cincinnatti",
         "age": 29,
         "espn_id": "249768",
         "sofascore_id": "868843"
       },
       {
-        "name": "Timothy Michael Ream",
+        "name": "Tim Ream",
         "club": "Charlotte FC",
         "age": 38
       },
       {
-        "name": "Alexander Michael Freeman",
+        "name": "Alex Freeman",
         "club": "Villarreal CF",
         "age": 21
       },
       {
-        "name": "Maximilian Michael Arfsten",
+        "name": "Max Arfsten",
         "club": "Columbus Crew",
         "age": 25,
         "espn_id": "359542",
         "sofascore_id": "1471659"
       },
       {
-        "name": "Mark Alexander Mckenzie",
+        "name": "Mark McKenzie",
         "club": "Toulouse FC",
         "age": 27,
         "espn_id": "77072",
         "sofascore_id": "922759"
       },
       {
-        "name": "Joseph Michael Scally",
+        "name": "Joe Scally",
         "club": "Borussia Mönchengladbach",
         "age": 23,
         "fotmob_id": "959696"
@@ -8074,26 +8174,27 @@
     ],
     "midfielders": [
       {
-        "name": "Tyler Shaan Adams",
+        "name": "Tyler Adams (AFC Bournemouth",
         "club": "AFC Bournemouth",
         "age": 27,
         "espn_id": "222776",
         "sofascore_id": "800419"
       },
       {
-        "name": "Giovanni Alejandro Reyna",
+        "name": "Alejandro Zendejas",
         "club": "Borussia Mönchengladbach",
         "age": 23,
         "espn_id": "290230",
         "sofascore_id": "989056"
       },
       {
-        "name": "Weston James Earl Mc Kennie",
+        "name": "Weston McKennie",
         "club": "Juventus FC",
-        "age": 27
+        "age": 27,
+        "fotmob_id": "174119"
       },
       {
-        "name": "Sebastian Matthew Berhalter",
+        "name": "Sebastian Berhalter",
         "club": "Vancouver Whitecaps FC",
         "age": 25,
         "espn_id": "295771",
@@ -8107,7 +8208,7 @@
         "sofascore_id": "790171"
       },
       {
-        "name": "Malik Leon Tillman",
+        "name": "Malik Tillman",
         "club": "Bayer",
         "age": 24,
         "espn_id": "301416",
@@ -8116,14 +8217,14 @@
     ],
     "forwards": [
       {
-        "name": "Ricardo Daniel Pepi",
+        "name": "Ricardo Pepi",
         "club": "PSV Eindhoven",
         "age": 23,
         "espn_id": "289120",
         "sofascore_id": "986395"
       },
       {
-        "name": "Christian Mate Pulisic",
+        "name": "Christian Pulisic",
         "club": "AC Milan",
         "age": 27,
         "espn_id": "225607",
@@ -8137,14 +8238,14 @@
         "sofascore_id": "973431"
       },
       {
-        "name": "Haji Amir Wright",
+        "name": "Haji Wright",
         "club": "Coventry City FC",
         "age": 28,
         "espn_id": "220474",
         "sofascore_id": "818391"
       },
       {
-        "name": "Folarin Jolaoluwa Balogun",
+        "name": "Folarin Balogun",
         "club": "AS Monaco",
         "age": 24,
         "espn_id": "282643",
@@ -8178,7 +8279,7 @@
         "sofascore_id": "791592"
       },
       {
-        "name": "Abduvakhid Nematov",
+        "name": "Abduvokhid Nematov",
         "club": "Nasaf Qarshi FC",
         "age": 25
       },
@@ -8240,12 +8341,12 @@
         "sofascore_id": "954524"
       },
       {
-        "name": "Behruzjon Karimov",
+        "name": "Behruz Karimov",
         "club": "Surkhon FK",
         "age": 18
       },
       {
-        "name": "Avazbek Ulmasaliyev",
+        "name": "Avazbek Ulmasaliev",
         "club": "OKMK FK",
         "age": 26
       },
@@ -8311,7 +8412,7 @@
         "sofascore_id": "793857"
       },
       {
-        "name": "Abbosbek Fayzullaev",
+        "name": "Abbosek Fayzullaev",
         "club": "Başakşehir FK",
         "age": 22,
         "fotmob_id": "1249993"
