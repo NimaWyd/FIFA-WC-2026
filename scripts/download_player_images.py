@@ -83,14 +83,16 @@ def search_fotmob(name: str, is_coach: bool = False) -> str | None:
     ascii_ver = normalize(name)
     parts = name.split()
 
-    # Build query variants: original, ascii, first+last, last-only (for long names)
+    # Build query variants: original, ascii, first+last, first-only, last-only
     candidates = [name, ascii_ver]
+    if len(parts) >= 2:
+        # First name alone — catches Brazilian mononyms (Neymar, Ederson, Weverton)
+        candidates += [parts[0], normalize(parts[0])]
     if len(parts) >= 3:
         first_last = f"{parts[0]} {parts[-1]}"
         candidates += [first_last, normalize(first_last)]
     if len(parts) >= 4:
-        # Last name alone catches cases like "Bensebaini" or "Bensebaini" where
-        # first names differ between FIFA records and FotMob nicknames
+        # Last name alone — catches players where first names differ (Bensebaini, etc.)
         candidates += [parts[-1], normalize(parts[-1])]
     queries = list(dict.fromkeys(candidates))  # deduplicated, order preserved
 
@@ -204,9 +206,11 @@ def main() -> None:
                     ))
                 elif not p.get("fotmob_id"):
                     # No sofascore_id and no fotmob_id yet — search FotMob and save with pf prefix
+                    # Use fotmob_name override if set (e.g. Brazilian nicknames)
+                    search_name = p.get("fotmob_name") or p["name"]
                     jobs.append((
                         f"{p['name']} [{team}]",
-                        p["name"],
+                        search_name,
                         None,  # dest determined after FotMob search
                         False,
                         (team, pos, idx),

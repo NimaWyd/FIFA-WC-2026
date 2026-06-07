@@ -1124,7 +1124,8 @@
       {
         "name": "Marcos Aoas Correa",
         "club": "Paris Saint-Germain",
-        "age": 32
+        "age": 32,
+        "fotmob_name": "Marquinhos"
       },
       {
         "name": "Alex Sandro Lobo Silva",
@@ -1141,7 +1142,8 @@
       {
         "name": "Gleison Bremer Silva Nascimento",
         "club": "Juventus FC",
-        "age": 29
+        "age": 29,
+        "fotmob_name": "Bremer"
       },
       {
         "name": "Leonardo Pereira",
@@ -1164,7 +1166,8 @@
       {
         "name": "Carlos Henrique Casimiro",
         "club": "Manchester United FC",
-        "age": 34
+        "age": 34,
+        "fotmob_name": "Casemiro"
       },
       {
         "name": "Bruno Guimarães Rodriguez Moura",
@@ -1212,7 +1215,8 @@
       {
         "name": "Raphael Dias Belloli",
         "club": "FC Barcelona",
-        "age": 29
+        "age": 29,
+        "fotmob_name": "Raphinha"
       },
       {
         "name": "Endrick Felipe Moreira De Sousa Pessoa",
