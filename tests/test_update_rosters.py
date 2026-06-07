@@ -139,3 +139,48 @@ class TestParsePlayerWords:
 class TestParseCoachWords:
     def test_coach_name(self):
         assert parse_coach_words(PETKOVIC_WORDS) == "Vladimir Petković"
+
+from scripts.update_rosters_from_pdf import find_best_match, resolve_team_key
+
+class TestFindBestMatch:
+    POOL = [
+        {"name": "Aissa Mandi",  "espn_id": "111", "sofascore_id": "222"},
+        {"name": "Riyad Mahrez", "espn_id": "333"},
+    ]
+
+    def test_exact_match(self):
+        r = find_best_match("Aissa Mandi", self.POOL)
+        assert r == {"espn_id": "111", "sofascore_id": "222"}
+
+    def test_fuzzy_match_accent(self):
+        # Belaïd vs Belaid — same after accent-strip
+        pool = [{"name": "Zineddine Belaid", "espn_id": "999", "sofascore_id": "888"}]
+        r = find_best_match("Zineddine Belaïd", pool)
+        assert r == {"espn_id": "999", "sofascore_id": "888"}
+
+    def test_no_match_returns_empty(self):
+        assert find_best_match("Completely Different", self.POOL) == {}
+
+    def test_returns_only_existing_ids(self):
+        # Mahrez has espn_id but no sofascore_id — don't add None
+        r = find_best_match("Riyad Mahrez", self.POOL)
+        assert r == {"espn_id": "333"}
+        assert "sofascore_id" not in r
+
+class TestResolveTeamKey:
+    ROSTERS = {"Algeria": {}, "Cape Verde Islands": {}, "Bosnia and Herzegovina": {}, "Turkey": {}}
+
+    def test_direct_match(self):
+        assert resolve_team_key("Algeria", self.ROSTERS) == "Algeria"
+
+    def test_override_cabo_verde(self):
+        assert resolve_team_key("Cabo Verde", self.ROSTERS) == "Cape Verde Islands"
+
+    def test_override_turkey(self):
+        assert resolve_team_key("Türkiye", self.ROSTERS) == "Turkey"
+
+    def test_case_insensitive_fallback(self):
+        assert resolve_team_key("ALGERIA", self.ROSTERS) == "Algeria"
+
+    def test_unmapped_returns_none(self):
+        assert resolve_team_key("Atlantis", self.ROSTERS) is None

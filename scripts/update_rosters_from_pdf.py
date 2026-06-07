@@ -110,3 +110,96 @@ def parse_coach_words(words: list[dict]) -> str:
             last_name_parts.append(t)
     last = title_case_name(" ".join(last_name_parts))
     return (" ".join(first_names) + " " + last).strip()
+
+
+def find_best_match(new_name: str, existing_players: list[dict]) -> dict:
+    """
+    Fuzzy-match new_name against existing player list.
+    Returns dict of IDs to copy (espn_id, sofascore_id) — empty dict if no match.
+    Threshold: token-set similarity ≥ 0.6 after accent-stripping.
+    """
+    key_new = normalize_for_match(new_name)
+    tokens_new = set(key_new.split())
+    best_score, best_player = 0.0, None
+    for p in existing_players:
+        tokens_old = set(normalize_for_match(p.get("name", "")).split())
+        if not tokens_new or not tokens_old:
+            continue
+        sim = len(tokens_new & tokens_old) / max(len(tokens_new), len(tokens_old))
+        if sim > best_score:
+            best_score, best_player = sim, p
+    if best_score < 0.6 or best_player is None:
+        return {}
+    return {k: best_player[k] for k in ("espn_id", "sofascore_id") if best_player.get(k)}
+
+
+def resolve_team_key(pdf_name: str, rosters: dict) -> str | None:
+    """Map a PDF team name to the corresponding rosters.json key."""
+    if pdf_name in PDF_NAME_OVERRIDES:
+        candidate = PDF_NAME_OVERRIDES[pdf_name]
+        return candidate if candidate in rosters else None
+    if pdf_name in rosters:
+        return pdf_name
+    pdf_lower = pdf_name.lower()
+    for key in rosters:
+        if key.lower() == pdf_lower:
+            return key
+    return None
+
+
+def parse_page(page, ref_date: date) -> dict | None:
+    """
+    Parse one PDF page into {team_name, players, manager}.
+    players is a dict keyed by position (goalkeepers/defenders/midfielders/forwards).
+    """
+    words_raw = page.extract_words(x_tolerance=3, y_tolerance=3)
+    if not words_raw:
+        return None
+
+    lines: defaultdict[int, list] = defaultdict(list)
+    for w in words_raw:
+        lines[round(w["top"])].append(w)
+
+    sorted_ys = sorted(lines)
+
+    # Find team name: line matching "Team Name (XXX)"
+    team_name = None
+    for y in sorted_ys[:8]:
+        line_words = sorted(lines[y], key=lambda w: w["x0"])
+        text = " ".join(w["text"] for w in line_words)
+        m = re.search(r"^(.+?)\s+\([A-Z]{3}\)$", text.strip())
+        if m:
+            team_name = m.group(1).strip()
+            break
+    if not team_name:
+        return None
+
+    players: dict[str, list] = {k: [] for k in POS_TO_KEY.values()}
+    manager: str | None = None
+
+    for y in sorted_ys:
+        line_words = sorted(lines[y], key=lambda w: w["x0"])
+        if not line_words:
+            continue
+        first = line_words[0]["text"]
+
+        # Player row: first token is shirt number 1-26
+        if re.match(r"^\d{1,2}$", first) and 1 <= int(first) <= 26:
+            try:
+                row = parse_player_words(line_words, ref_date)
+                players[row["position_key"]].append({
+                    "name": row["name"],
+                    "club": row["club"],
+                    "age":  row["age"],
+                })
+            except Exception as exc:
+                print(f"  WARN: failed to parse player row '{first}': {exc}")
+
+        # Coach row: starts with "Head"
+        elif first == "Head":
+            try:
+                manager = parse_coach_words(line_words)
+            except Exception as exc:
+                print(f"  WARN: failed to parse coach row: {exc}")
+
+    return {"team_name": team_name, "players": players, "manager": manager}
