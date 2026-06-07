@@ -74,3 +74,6 @@ players_chunk_*.json
 fifa-2026-predictor/reports/
 fifa-2026-predictor/feature_importance_output.json
 fifa-2026-predictor/data/processed/evaluation/
+
+
+*.txt 
