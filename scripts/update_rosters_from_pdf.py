@@ -203,3 +203,102 @@ def parse_page(page, ref_date: date) -> dict | None:
                 print(f"  WARN: failed to parse coach row: {exc}")
 
     return {"team_name": team_name, "players": players, "manager": manager}
+
+
+def main() -> None:
+    # ── 1. Load existing rosters for ID preservation ────────────────────────────
+    with open(ROSTERS_PATH, encoding="utf-8") as f:
+        old_rosters: dict = json.load(f)
+
+    all_old_players_by_team: dict[str, list] = {}
+    for team, roster in old_rosters.items():
+        pool = []
+        for pos in ("goalkeepers", "defenders", "midfielders", "forwards"):
+            pool.extend(roster.get(pos, []))
+        all_old_players_by_team[team] = pool
+
+    # ── 2. Download PDF ─────────────────────────────────────────────────────────
+    print(f"Downloading PDF from {PDF_URL} …")
+    response = requests.get(PDF_URL, timeout=60)
+    response.raise_for_status()
+    tmp_fd, tmp_path = tempfile.mkstemp(suffix=".pdf")
+    try:
+        os.write(tmp_fd, response.content)
+        os.close(tmp_fd)
+        print(f"  Downloaded {len(response.content) // 1024} KB → {tmp_path}")
+
+        # ── 3. Parse all 48 pages ────────────────────────────────────────────────
+        new_rosters: dict = {}
+        unmapped: list[str] = []
+
+        with pdfplumber.open(tmp_path) as pdf:
+            for i, page in enumerate(pdf.pages, 1):
+                data = parse_page(page, TOURNAMENT_DATE)
+                if not data:
+                    print(f"  [page {i:2}] SKIP (no data)")
+                    continue
+
+                roster_key = resolve_team_key(data["team_name"], old_rosters)
+                if not roster_key:
+                    print(f"  [page {i:2}] UNMAPPED: {data['team_name']!r}")
+                    unmapped.append(data["team_name"])
+                    continue
+
+                old_pool = all_old_players_by_team.get(roster_key, [])
+
+                # ── 4. Merge IDs into new players ────────────────────────────────
+                for player_list in data["players"].values():
+                    for player in player_list:
+                        player.update(find_best_match(player["name"], old_pool))
+
+                old = old_rosters.get(roster_key, {})
+                entry: dict = {"manager": data["manager"] or old.get("manager")}
+                if old.get("manager_sofascore_id"):
+                    entry["manager_sofascore_id"] = old["manager_sofascore_id"]
+                entry.update(data["players"])
+                new_rosters[roster_key] = entry
+
+                n_players = sum(len(v) for v in data["players"].values())
+                n_with_id = sum(
+                    1 for v in data["players"].values()
+                    for p in v if p.get("sofascore_id")
+                )
+                print(f"  [page {i:2}] {roster_key}: {n_players} players, {n_with_id} with sofascore_id")
+
+    finally:
+        os.unlink(tmp_path)
+
+    # ── 5. Write updated rosters.json ───────────────────────────────────────────
+    with open(ROSTERS_PATH, "w", encoding="utf-8") as f:
+        json.dump(new_rosters, f, ensure_ascii=False, indent=2)
+
+    total = sum(
+        len(t.get(p, []))
+        for t in new_rosters.values()
+        for p in ("goalkeepers", "defenders", "midfielders", "forwards")
+    )
+    with_sid = sum(
+        1
+        for t in new_rosters.values()
+        for p in ("goalkeepers", "defenders", "midfielders", "forwards")
+        for pl in t.get(p, [])
+        if pl.get("sofascore_id")
+    )
+
+    print(f"\n{'─'*60}")
+    print(f"Teams   : {len(new_rosters)} / 48")
+    print(f"Players : {total}")
+    print(f"With sofascore_id : {with_sid}  ({total - with_sid} without)")
+    if unmapped:
+        print(f"UNMAPPED teams    : {unmapped}")
+    print(f"Saved → {ROSTERS_PATH}")
+
+    # ── 6. Offer FotMob download ─────────────────────────────────────────────────
+    print()
+    ans = input("Run download_player_images.py now? (takes ~15–20 min) [y/N]: ").strip().lower()
+    if ans == "y":
+        subprocess.run([sys.executable, "scripts/download_player_images.py"], check=False)
+
+
+if __name__ == "__main__":
+    main()
