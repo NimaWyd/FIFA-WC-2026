@@ -61,8 +61,13 @@ def normalize(name: str) -> str:
     )).strip().lower()
 
 
+def tokenize(name: str) -> set[str]:
+    # Split on whitespace AND hyphens so "Son Heung-min" → {"son","heung","min"}
+    return set(re.split(r"[\s\-]+", normalize(name)))
+
+
 def token_sim(a: str, b: str) -> float:
-    ta, tb = set(normalize(a).split()), set(normalize(b).split())
+    ta, tb = tokenize(a), tokenize(b)
     if not ta or not tb:
         return 0.0
     return len(ta & tb) / max(len(ta), len(tb))
@@ -78,11 +83,15 @@ def search_fotmob(name: str, is_coach: bool = False) -> str | None:
     ascii_ver = normalize(name)
     parts = name.split()
 
-    # Build query variants: original, ascii, first+last (for long names)
+    # Build query variants: original, ascii, first+last, last-only (for long names)
     candidates = [name, ascii_ver]
     if len(parts) >= 3:
         first_last = f"{parts[0]} {parts[-1]}"
         candidates += [first_last, normalize(first_last)]
+    if len(parts) >= 4:
+        # Last name alone catches cases like "Bensebaini" or "Bensebaini" where
+        # first names differ between FIFA records and FotMob nicknames
+        candidates += [parts[-1], normalize(parts[-1])]
     queries = list(dict.fromkeys(candidates))  # deduplicated, order preserved
 
     for q in queries:
