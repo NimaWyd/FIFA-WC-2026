@@ -76,7 +76,14 @@ def search_fotmob(name: str, is_coach: bool = False) -> str | None:
     Returns a FotMob player ID, or None if not found.
     """
     ascii_ver = normalize(name)
-    queries = list(dict.fromkeys([name, ascii_ver]))  # original then ASCII, deduplicated
+    parts = name.split()
+
+    # Build query variants: original, ascii, first+last (for long names)
+    candidates = [name, ascii_ver]
+    if len(parts) >= 3:
+        first_last = f"{parts[0]} {parts[-1]}"
+        candidates += [first_last, normalize(first_last)]
+    queries = list(dict.fromkeys(candidates))  # deduplicated, order preserved
 
     for q in queries:
         url = FOTMOB_SEARCH.format(term=quote(q))
@@ -105,7 +112,10 @@ def search_fotmob(name: str, is_coach: bool = False) -> str | None:
         for group in data.get("squadMemberSuggest", []):
             options.extend(group.get("options", []))
 
-        # Score each candidate: name similarity + role bonus
+        # Score against both original name and current query — take the max.
+        # This ensures a shortened query like "Riyad Mahrez" correctly scores
+        # a FotMob result of "Riyad Mahrez" as 1.0 even when the full stored
+        # name is "Riyad Karim Mahrez" (which would only score 0.67).
         best_id, best_score = None, 0.0
         for opt in options:
             raw_text = opt.get("text", "")
@@ -113,7 +123,7 @@ def search_fotmob(name: str, is_coach: bool = False) -> str | None:
             candidate_name = raw_text.split("|")[0]
             payload = opt.get("payload", {})
 
-            sim = token_sim(name, candidate_name)
+            sim = max(token_sim(name, candidate_name), token_sim(q, candidate_name))
             role_match = payload.get("isCoach", False) == is_coach
             score = sim + (0.1 if role_match else 0.0)
 
