@@ -916,10 +916,9 @@
         "sofascore_id": "325061"
       },
       {
-        "name": "Mladen Jurkas",
-        "club": "FK Borac Banja Luka",
-        "age": 18,
-        "fotmob_id": "1726288"
+        "name": "Osman Hadzikic",
+        "club": "NK Slaven Belupo",
+        "fotmob_id": "488207"
       },
       {
         "name": "Martin Zlomislic",
@@ -1043,6 +1042,19 @@
         "age": 21,
         "espn_id": "414676",
         "sofascore_id": "1149353"
+      },
+      {
+        "name": "Kerim Alajbegovic",
+        "club": "FC Red Bull Salzburg",
+        "age": 18,
+        "sofascore_id": "1425366"
+      },
+      {
+        "name": "Esmir Bajraktarevic",
+        "club": "PSV Eindhoven",
+        "age": 21,
+        "espn_id": "325410",
+        "sofascore_id": "1136110"
       }
     ],
     "forwards": [
@@ -1066,19 +1078,6 @@
         "age": 40,
         "espn_id": "102337",
         "sofascore_id": "14990"
-      },
-      {
-        "name": "Kerim Alajbegovic",
-        "club": "FC Red Bull Salzburg",
-        "age": 18,
-        "sofascore_id": "1425366"
-      },
-      {
-        "name": "Esmir Bajraktarevic",
-        "club": "PSV Eindhoven",
-        "age": 21,
-        "espn_id": "325410",
-        "sofascore_id": "1136110"
       },
       {
         "name": "Haris Tabakovic",
@@ -2534,21 +2533,19 @@
     "manager_sofascore_id": "68799",
     "goalkeepers": [
       {
-        "name": "Matěj Kovář",
-        "club": "PSV Eindhoven",
-        "age": 26,
-        "espn_id": "277313",
-        "sofascore_id": "927366"
+        "name": "Jan Koutny",
+        "club": "FC Sigma Olomouc",
+        "fotmob_id": "1664964"
       },
       {
-        "name": "Jindřich Staněk",
+        "name": "Jindrich Stanek",
         "club": "SK Slavia Praha",
         "age": 30,
         "espn_id": "199988",
         "sofascore_id": "280601"
       },
       {
-        "name": "Lukáš Horníček",
+        "name": "Lukas Hornicek",
         "club": "SC Braga",
         "age": 23,
         "espn_id": "319267",
@@ -2622,21 +2619,21 @@
     ],
     "midfielders": [
       {
-        "name": "Vladimír Darida",
+        "name": "Vladimir Darida",
         "club": "FC Hradec Králové",
         "age": 35,
         "espn_id": "165637",
         "sofascore_id": "109002"
       },
       {
-        "name": "Lukáš Červ",
+        "name": "Lukás Cerv",
         "club": "FC Viktoria Plzeň",
         "age": 25,
         "espn_id": "326596",
         "sofascore_id": "952114"
       },
       {
-        "name": "Lukáš Provod",
+        "name": "Lukás Provod",
         "club": "SK Slavia Praha",
         "age": 29,
         "espn_id": "294618",
@@ -2701,11 +2698,9 @@
         "sofascore_id": "826049"
       },
       {
-        "name": "Pavel Šulc",
-        "club": "Olympique Lyonnais",
-        "age": 25,
-        "espn_id": "305545",
-        "sofascore_id": "957604"
+        "name": "Matej Vydra",
+        "club": "FC Viktoria Plzen",
+        "fotmob_id": "196308"
       },
       {
         "name": "Tomáš Chorý",
@@ -3975,23 +3970,23 @@
     ]
   },
   "IR Iran": {
-    "manager": "Ardeshir Ghalehnoy",
+    "manager": "Amir Ghalenoei",
     "manager_sofascore_id": "785362",
     "goalkeepers": [
       {
-        "name": "Ali Reza Safarbeiranvand",
+        "name": "Alireza Beiranvand",
         "club": "Tractor Sazi Tabriz FC",
         "age": 33,
         "fotmob_id": "505313"
       },
       {
-        "name": "Seyedpayam Niazmand",
+        "name": "Payam Niazmand",
         "club": "Persepolis FC",
         "age": 31,
         "fotmob_id": "872590"
       },
       {
-        "name": "Seyedhossein Hosseini",
+        "name": "Hossein Hosseini",
         "club": "Sepahan SC",
         "age": 33,
         "fotmob_id": "431418"
@@ -3999,56 +3994,50 @@
     ],
     "defenders": [
       {
-        "name": "Saleh Hardani Kherad",
+        "name": "Saleh Hardani",
         "club": "Esteghlal Tehran FC",
         "age": 27,
         "espn_id": "317748",
         "sofascore_id": "1836024"
       },
       {
-        "name": "Ehsan Haji Safi",
+        "name": "Ehsan Hajsafi",
         "club": "Sepahan SC",
         "age": 36,
         "fotmob_id": "117222"
       },
       {
-        "name": "Shojae Khalilzadeh",
+        "name": "Shoka Khalilzadeh",
         "club": "Tractor Sazi Tabriz FC",
         "age": 37,
         "fotmob_id": "511397"
       },
       {
-        "name": "Milad Mohammadikeshmarzi",
+        "name": "Milad Mohammadi",
         "club": "Persepolis FC",
         "age": 32,
         "fotmob_id": "630459"
       },
       {
-        "name": "Mohammadhossein Kanani Zadegan",
+        "name": "Hossein Kanaani",
         "club": "Persepolis FC",
         "age": 32,
         "fotmob_id": "1745617"
       },
       {
-        "name": "Arya Yousefi",
-        "club": "Sepahan SC",
-        "age": 24,
-        "fotmob_id": "1350138"
-      },
-      {
-        "name": "Ali Nemati",
+        "name": "Ali Nemati Omid Noorafkan",
         "club": "Foolad Khuzestan FC",
         "age": 30,
         "fotmob_id": "872575"
       },
       {
-        "name": "Ramin Rezaeiansemeskandi",
+        "name": "Ramin Rezaeian",
         "club": "Foolad Khuzestan FC",
         "age": 36,
         "fotmob_id": "505959"
       },
       {
-        "name": "Danial Iri",
+        "name": "Danial Eiri",
         "club": "Malavan Anzali FC",
         "age": 22,
         "fotmob_id": "1268992"
@@ -4056,39 +4045,39 @@
     ],
     "midfielders": [
       {
-        "name": "Saeid Ezatolahi Afagh",
+        "name": "Saeid Ezatolahi",
         "club": "Shabab Al Ahli Club",
         "age": 29,
         "espn_id": "194863",
         "sofascore_id": "359334"
       },
       {
-        "name": "Alireza Jahanbakhsh Jirandeh",
+        "name": "Alireza Jahanbakhsh",
         "club": "FCV Dender EH",
         "age": 32,
         "espn_id": "188055",
         "sofascore_id": "331837"
       },
       {
-        "name": "Mohammad Mohebbi",
+        "name": "Mohammad Mohebi",
         "club": "FC Rostov",
         "age": 27,
         "fotmob_id": "1227853"
       },
       {
-        "name": "Seyed Saman Ghoddoos",
+        "name": "Saman Ghoddos",
         "club": "Al Ittihad Kalba SCC",
         "age": 32,
         "fotmob_id": "532220"
       },
       {
-        "name": "Roozbeh Cheshmi",
+        "name": "Rouzbeh Cheshmi",
         "club": "Esteghlal Tehran FC",
         "age": 32,
         "fotmob_id": "505385"
       },
       {
-        "name": "Mahdi Torabi",
+        "name": "Mehdi Torabi",
         "club": "Tractor Sazi Tabriz FC",
         "age": 31,
         "fotmob_id": "621519"
@@ -4101,10 +4090,22 @@
         "sofascore_id": "1171024"
       },
       {
-        "name": "Amirmohammad Razaghinia",
+        "name": "Amir Mohammad Razzaghinia",
         "club": "Esteghlal Tehran FC",
         "age": 20,
         "fotmob_id": "1583232"
+      },
+      {
+        "name": "Aria Yousefi",
+        "club": "Sepahan SC",
+        "age": 24,
+        "fotmob_id": "1350138"
+      },
+      {
+        "name": "Mehdi Ghaedi",
+        "club": "Al Nasr SC",
+        "age": 27,
+        "fotmob_id": "848314"
       }
     ],
     "forwards": [
@@ -4116,34 +4117,27 @@
         "sofascore_id": "812533"
       },
       {
-        "name": "Mehdi Ghayedi",
-        "club": "Al Nasr SC",
-        "age": 27,
-        "fotmob_id": "848314"
-      },
-      {
-        "name": "Ali Alipourghara",
+        "name": "Ali Alipour",
         "club": "Persepolis FC",
         "age": 30,
         "fotmob_id": "505960"
       },
       {
-        "name": "Amirhossein Hosseinzadehtazehgheshlagh",
+        "name": "Amirhossein Hosseinzadeh",
         "club": "Tractor Sazi Tabriz FC",
         "age": 25,
         "fotmob_id": "1031319"
-      },
-      {
-        "name": "Shahriyar Moghanloo",
-        "club": "Al Ittihad Kalba SCC",
-        "age": 31,
-        "fotmob_id": "641121"
       },
       {
         "name": "Dennis Dargahi",
         "club": "Standard Liège",
         "age": 29,
         "fotmob_id": "805767"
+      },
+      {
+        "name": "Amirhossein Mahmoudi",
+        "club": "Persepolis FC",
+        "fotmob_id": "1844610"
       }
     ]
   },
@@ -4695,7 +4689,7 @@
         "sofascore_id": "940057"
       },
       {
-        "name": "Hyeonwoo Jo",
+        "name": "Jo Hyun-Woo",
         "club": "Ulsan HD",
         "age": 34,
         "fotmob_id": "433265"
@@ -4730,10 +4724,10 @@
         "sofascore_id": "1002355"
       },
       {
-        "name": "Wije Cho",
-        "club": "Jeonbuk Hyundai Motors FC",
-        "age": 24,
-        "fotmob_id": "1326507"
+        "name": "Jo Yu-Min",
+        "club": "Sharjah FC",
+        "age": 22,
+        "sofascore_id": "1026122"
       },
       {
         "name": "Kim Moon-Hwan",
@@ -4761,17 +4755,17 @@
         "age": 22,
         "espn_id": "304793",
         "sofascore_id": "1019312"
+      },
+      {
+        "name": "Lee Ki-Hyeok",
+        "club": "Gangwon FC",
+        "age": 25,
+        "fotmob_id": "1232264"
       }
     ],
     "midfielders": [
       {
-        "name": "Gihyuk Lee",
-        "club": "Gangwon FC",
-        "age": 25,
-        "fotmob_id": "1232264"
-      },
-      {
-        "name": "Inbeom Hwang",
+        "name": "Hwang In-Beom",
         "club": "Feyenoord Rotterdam",
         "age": 29,
         "espn_id": "280061",
@@ -4824,7 +4818,7 @@
         "fotmob_id": "622980"
       },
       {
-        "name": "Jisung Eom",
+        "name": "Um Ji-Sung",
         "club": "Swansea City AFC",
         "age": 24,
         "fotmob_id": "1107283"
@@ -4845,13 +4839,13 @@
         "fotmob_id": "212867"
       },
       {
-        "name": "Guesung Cho",
+        "name": "Cho Kyu-Sung",
         "club": "FC Midtjylland",
         "age": 28,
         "fotmob_id": "1026781"
       },
       {
-        "name": "Hyeongyu Oh",
+        "name": "Oh Hyun-Kyu",
         "club": "Beşiktaş JK",
         "age": 25,
         "fotmob_id": "1044299"
@@ -6320,19 +6314,13 @@
         "sofascore_id": "243199"
       },
       {
-        "name": "Gueye Seydinaissalaye",
+        "name": "Issa Laye",
         "club": "Al Arabi SC",
         "age": 28,
-        "fotmob_id": "844544"
+        "fotmob_id": "1839745"
       },
       {
-        "name": "Jassim Gaber",
-        "club": "Al Rayyan SC",
-        "age": 24,
-        "fotmob_id": "1195865"
-      },
-      {
-        "name": "Ayoub Mohamed Aloui",
+        "name": "Ayoub Al-Alawi",
         "club": "Al Gharafa SC",
         "age": 21,
         "fotmob_id": "1656600"
@@ -6384,16 +6372,23 @@
         "fotmob_id": "898424"
       },
       {
-        "name": "Ahmed Fathy M Abdoulla",
-        "club": "Al Arabi SC",
-        "age": 33,
-        "fotmob_id": "1439393"
-      },
-      {
         "name": "Assim Madibo",
         "club": "Al Wakrah SC",
         "age": 29,
         "fotmob_id": "615414"
+      },
+      {
+        "name": "Jassim Gaber",
+        "club": "Al Rayyan SC",
+        "age": 24,
+        "fotmob_id": "1195865"
+      },
+      {
+        "name": "Mohammed Mannai",
+        "club": "Al Gharafa SC",
+        "age": 32,
+        "espn_id": "185984",
+        "sofascore_id": "326185"
       }
     ],
     "forwards": [
@@ -6408,13 +6403,6 @@
         "club": "Al Duhail SC",
         "age": 31,
         "fotmob_id": "759566"
-      },
-      {
-        "name": "Mohammed Mannai",
-        "club": "Al Gharafa SC",
-        "age": 32,
-        "espn_id": "185984",
-        "sofascore_id": "326185"
       },
       {
         "name": "Hassan Al-Haydos",
@@ -6448,9 +6436,14 @@
         "fotmob_id": "1648351"
       },
       {
-        "name": "Mohamed Naceur Manai",
-        "club": "Al Shamal SC",
-        "age": 23
+        "name": "Ahmed Al-Ganehi",
+        "club": "Al-Gharafa SC",
+        "fotmob_id": "1210913"
+      },
+      {
+        "name": "Mohammed Muntari",
+        "club": "Al-Gharafa SC",
+        "fotmob_id": "431151"
       }
     ]
   },
@@ -6585,7 +6578,7 @@
         "fotmob_id": "1095207"
       },
       {
-        "name": "Firas Al-Buraikan",
+        "name": "Firas Al Buraikan",
         "club": "Al Ahli FC",
         "age": 26,
         "fotmob_id": "844226"
