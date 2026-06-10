@@ -1170,7 +1170,8 @@
       {
         "name": "Roger Ibañez",
         "club": "Al Ahli FC",
-        "age": 27
+        "age": 27,
+        "sofascore_id": "888949"
       }
     ],
     "midfielders": [
@@ -6726,12 +6727,6 @@
         "sofascore_id": "250223"
       },
       {
-        "name": "Tyler Robert Fletcher",
-        "club": "Manchester United FC",
-        "age": 19,
-        "fotmob_id": "1676985"
-      },
-      {
         "name": "Ryan Christie",
         "club": "AFC Bournemouth",
         "age": 31,
@@ -6750,6 +6745,23 @@
         "club": "Norwich City FC",
         "age": 34,
         "fotmob_id": "190851"
+      },
+      {
+        "name": "Billy Gilmour",
+        "club": "Napoli",
+        "fotmob_id": "942549"
+      },
+      {
+        "name": "Ben Gannon-Doak",
+        "club": "AFC Bournemouth",
+        "age": 20,
+        "fotmob_id": "1739006"
+      },
+      {
+        "name": "Finlay Curtis",
+        "club": "Kilmarnock FC",
+        "age": 20,
+        "fotmob_id": "1558461"
       }
     ],
     "forwards": [
@@ -6774,12 +6786,6 @@
         "sofascore_id": "886117"
       },
       {
-        "name": "Ben Gannon-Doak",
-        "club": "AFC Bournemouth",
-        "age": 20,
-        "fotmob_id": "1739006"
-      },
-      {
         "name": "George Hirst",
         "club": "Ipswich Town FC",
         "age": 27,
@@ -6791,12 +6797,6 @@
         "age": 30,
         "espn_id": "173306",
         "sofascore_id": "237098"
-      },
-      {
-        "name": "Finlay Curtis",
-        "club": "Kilmarnock FC",
-        "age": 20,
-        "fotmob_id": "1558461"
       }
     ]
   },
