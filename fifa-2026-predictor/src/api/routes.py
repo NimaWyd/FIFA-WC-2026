@@ -203,6 +203,21 @@ def live_matches() -> schemas.LiveMatchesResponse:
 
 
 # ---------------------------------------------------------------------------
+# /stats
+# ---------------------------------------------------------------------------
+
+@router.get("/stats", response_model=schemas.StatsResponse, tags=["meta"])
+async def stats(request: Request) -> schemas.StatsResponse:
+    """Return model accuracy against completed WC matches with per-match detail (cached 5 min)."""
+    result = await run_in_threadpool(services.get_match_accuracy)
+    return schemas.StatsResponse(
+        correct=result["correct"],
+        total=result["total"],
+        matches=[schemas.MatchAccuracyDetail(**m) for m in result["matches"]],
+    )
+
+
+# ---------------------------------------------------------------------------
 # /refresh
 # ---------------------------------------------------------------------------
 

@@ -56,8 +56,20 @@ _bracket_cache_ts: float = 0.0
 _match_winner_counts_cache: Optional[dict] = None
 _squad_ratings: dict = {}
 _squad_ratings_loaded: bool = False
+_accuracy_cache: Optional[dict] = None
+_accuracy_cache_ts: float = 0.0
 
 _CACHE_TTL_SECONDS: float = 3600.0
+_ACCURACY_CACHE_TTL: float = 300.0  # 5 minutes
+
+_STAGE_NAME_MAP: dict[str, str] = {
+    "GROUP_STAGE": "Group Stage",
+    "LAST_16": "Round of 16",
+    "QUARTER_FINALS": "Quarter-final",
+    "SEMI_FINALS": "Semi-final",
+    "THIRD_PLACE": "Third Place",
+    "FINAL": "Final",
+}
 _CACHE_REFRESH_THRESHOLD: float = 0.80  # start refresh at 80% of TTL (48 min)
 _refresh_in_progress: bool = False
 _refresh_lock = threading.Lock()
@@ -800,6 +812,84 @@ _matches_cache: dict[str, Any] = {"data": None, "ts": 0.0}
 _MATCHES_TTL_LIVE = 60        # seconds — poll quickly when in-play
 _MATCHES_TTL_IDLE = 300       # seconds — no active matches
 _matches_throttle_until: float = 0.0  # epoch time; back off until this point
+
+
+def get_match_accuracy() -> dict[str, Any]:
+    """Return how many completed WC matches the model predicted correctly, with per-match detail (cached 5 min).
+
+    Returns empty immediately if the simulation warmup hasn't completed yet, so we don't
+    race with the simulation thread on a cold start.
+    """
+    global _accuracy_cache, _accuracy_cache_ts
+    now = _time_module.time()
+    if _accuracy_cache is not None and (now - _accuracy_cache_ts) < _ACCURACY_CACHE_TTL:
+        return _accuracy_cache
+
+    # Don't compete with the simulation warmup thread — return empty until it's done.
+    if _simulation_cache is None:
+        return {"correct": 0, "total": 0, "matches": []}
+
+    live = get_live_matches()
+    finished = [
+        m for m in live["matches"]
+        if m.get("status") == "FINISHED"
+        and m.get("home_score") is not None
+        and m.get("away_score") is not None
+        and m.get("home_team") not in ("TBD", "", "None")
+        and m.get("away_team") not in ("TBD", "", "None")
+    ]
+
+    correct = 0
+    total = len(finished)
+    match_details: list[dict[str, Any]] = []
+
+    for m in finished:
+        try:
+            stage = _STAGE_NAME_MAP.get(m.get("stage", ""), "Group Stage")
+            pred_result = predict(
+                home_team=m["home_team"],
+                away_team=m["away_team"],
+                match_date=m["local_date"],
+                competition="FIFA World Cup",
+                neutral=True,
+                home_confederation=None,
+                away_confederation=None,
+                home_fifa_rank=None,
+                away_fifa_rank=None,
+                tournament_stage=stage,
+            )
+        except Exception:
+            total -= 1
+            continue
+
+        probs = pred_result["probabilities"]
+        predicted = max(probs, key=lambda k: probs[k])  # "home_win", "draw", or "away_win"
+
+        hs, as_ = int(m["home_score"]), int(m["away_score"])
+        actual = "home_win" if hs > as_ else ("away_win" if as_ > hs else "draw")
+        is_correct = predicted == actual
+
+        if is_correct:
+            correct += 1
+
+        match_details.append({
+            "home_team": m["home_team"],
+            "away_team": m["away_team"],
+            "match_date": m["local_date"],
+            "home_score": hs,
+            "away_score": as_,
+            "predicted": predicted,
+            "actual": actual,
+            "correct": is_correct,
+        })
+
+    # Sort by date ascending
+    match_details.sort(key=lambda x: x["match_date"])
+
+    result_dict: dict[str, Any] = {"correct": correct, "total": total, "matches": match_details}
+    _accuracy_cache = result_dict
+    _accuracy_cache_ts = now
+    return result_dict
 
 
 def get_live_matches() -> dict[str, Any]:

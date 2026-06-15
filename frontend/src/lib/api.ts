@@ -111,3 +111,19 @@ export async function fetchLiveMatches(): Promise<LiveMatchesResponse> {
   const res = await fetchWithTimeout(`${BASE}/matches`, {}, 20_000);
   return handleResponse<LiveMatchesResponse>(res);
 }
+
+export interface MatchAccuracyDetail {
+  home_team: string;
+  away_team: string;
+  match_date: string;
+  home_score: number;
+  away_score: number;
+  predicted: "home_win" | "draw" | "away_win";
+  actual: "home_win" | "draw" | "away_win";
+  correct: boolean;
+}
+
+export async function fetchStats(): Promise<{ correct: number; total: number; matches: MatchAccuracyDetail[] }> {
+  const res = await fetchWithTimeout(`${BASE}/stats`, {}, 30_000);
+  return handleResponse<{ correct: number; total: number; matches: MatchAccuracyDetail[] }>(res);
+}
