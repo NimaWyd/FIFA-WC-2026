@@ -210,3 +210,24 @@ class LiveMatchesResponse(BaseModel):
     source: str
     fetched_at: str
     has_live: bool
+
+
+# ---------------------------------------------------------------------------
+# /stats
+# ---------------------------------------------------------------------------
+
+class MatchAccuracyDetail(BaseModel):
+    home_team: str
+    away_team: str
+    match_date: str
+    home_score: int
+    away_score: int
+    predicted: str   # "home_win" | "draw" | "away_win"
+    actual: str      # "home_win" | "draw" | "away_win"
+    correct: bool
+
+
+class StatsResponse(BaseModel):
+    correct: int
+    total: int
+    matches: list[MatchAccuracyDetail]

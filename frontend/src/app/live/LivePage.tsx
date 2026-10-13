@@ -8,6 +8,8 @@ import StadiumCard from "@/components/StadiumCard";
 import { WC2026_GROUPS } from "@/lib/wc2026Groups";
 import { WC2026_STADIUMS } from "@/lib/wc2026Stadiums";
 import { useLiveMatches } from "@/hooks/useLiveMatches";
+import { fetchStats } from "@/lib/api";
+import type { MatchAccuracyDetail } from "@/lib/api";
 import type { LiveMatch, LiveMatchesResponse } from "@/lib/types";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -1068,7 +1070,15 @@ export default function LivePage() {
   const { data, loading, error, lastRefresh, refresh } = useLiveMatches();
   const [selectedDate, setSelectedDate] = useState<string>(defaultDate);
   const [expandedKey, setExpandedKey] = useState<string | null>(null);
+  const [accuracy, setAccuracy] = useState<{ correct: number; total: number; matches: MatchAccuracyDetail[] } | null>(null);
+  const [showAccuracyModal, setShowAccuracyModal] = useState(false);
   const today = todayStr();
+
+  useEffect(() => {
+    fetchStats()
+      .then((s) => setAccuracy(s))
+      .catch(() => {});
+  }, []);
 
   const liveByKey = useMemo(() => {
     const map = new Map<string, LiveMatch>();
@@ -1129,6 +1139,30 @@ export default function LivePage() {
             <h1 className="font-anton text-4xl md:text-5xl text-white tracking-wide">
               MATCH CENTRE
             </h1>
+
+            {accuracy !== null && accuracy.total > 0 && (
+              <motion.button
+                initial={{ opacity: 0, scale: 0.92 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.35, delay: 0.25 }}
+                onClick={() => setShowAccuracyModal(true)}
+                className="mt-5 inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-navy-800 border border-navy-700 hover:border-navy-500 hover:bg-navy-700/60 transition-colors text-sm cursor-pointer"
+              >
+                <svg className="w-3.5 h-3.5 text-pitch-400 shrink-0" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M13 4L6.5 11 3 7.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                <span className="font-bold text-white tabular-nums">
+                  {accuracy.correct}
+                  <span className="text-slate-500 font-normal"> / {accuracy.total}</span>
+                </span>
+                <span className="text-slate-500 text-xs uppercase tracking-[0.12em] font-semibold">
+                  predicted correctly
+                </span>
+                <svg className="w-3 h-3 text-slate-600 shrink-0" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8">
+                  <path d="M2 4l4 4 4-4" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </motion.button>
+            )}
           </motion.div>
 
           {/* Countdown — hidden when live matches are happening */}
@@ -1280,6 +1314,129 @@ export default function LivePage() {
           />
         )}
       </div>
+
+      {/* ── Accuracy modal ── */}
+      <AnimatePresence>
+        {showAccuracyModal && accuracy && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              key="backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
+              onClick={() => setShowAccuracyModal(false)}
+            />
+
+            {/* Panel */}
+            <motion.div
+              key="modal"
+              initial={{ opacity: 0, y: 24, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 16, scale: 0.97 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              className="fixed inset-x-4 top-[10vh] z-50 mx-auto max-w-lg rounded-2xl border border-navy-700 bg-navy-900 shadow-2xl shadow-black/60 overflow-hidden"
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between px-5 py-4 border-b border-navy-700">
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 mb-0.5">Model performance</p>
+                  <h2 className="font-anton text-lg text-white tracking-wide">
+                    {accuracy.correct} / {accuracy.total} CORRECT
+                  </h2>
+                </div>
+                <button
+                  onClick={() => setShowAccuracyModal(false)}
+                  className="w-8 h-8 flex items-center justify-center rounded-lg border border-navy-700 hover:border-navy-500 text-slate-500 hover:text-slate-300 transition-colors"
+                >
+                  <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" className="w-3 h-3">
+                    <path d="M2 2l8 8M10 2l-8 8" strokeLinecap="round" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Match list */}
+              <div className="overflow-y-auto max-h-[65vh] divide-y divide-navy-700/50">
+                {accuracy.matches.map((m, i) => {
+                  const predWinner = m.predicted === "home_win" ? m.home_team : m.predicted === "away_win" ? m.away_team : "Draw";
+                  const actualWinner = m.actual === "home_win" ? m.home_team : m.actual === "away_win" ? m.away_team : "Draw";
+                  return (
+                    <div key={i} className={`px-5 py-3.5 flex items-center gap-3 ${m.correct ? "bg-pitch-400/[0.03]" : "bg-red-950/[0.15]"}`}>
+                      {/* Correct / wrong indicator */}
+                      <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${m.correct ? "bg-pitch-400/15 text-pitch-400" : "bg-red-500/15 text-red-400"}`}>
+                        {m.correct ? (
+                          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2.2" className="w-2.5 h-2.5">
+                            <path d="M2 6l3 3 5-5" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        ) : (
+                          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2.2" className="w-2.5 h-2.5">
+                            <path d="M2 2l8 8M10 2l-8 8" strokeLinecap="round" />
+                          </svg>
+                        )}
+                      </div>
+
+                      {/* Teams + score */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <FlagIcon team={m.home_team} className="w-[18px] h-[11px] rounded-[2px] shrink-0" />
+                          <span className={`text-[12px] font-bold uppercase tracking-[0.06em] truncate ${m.actual === "home_win" ? "text-white" : "text-slate-500"}`}>
+                            {m.home_team}
+                          </span>
+                          <span className="text-slate-700 text-[11px] font-bold tabular-nums shrink-0">
+                            {m.home_score} – {m.away_score}
+                          </span>
+                          <span className={`text-[12px] font-bold uppercase tracking-[0.06em] truncate text-right ${m.actual === "away_win" ? "text-white" : "text-slate-500"}`}>
+                            {m.away_team}
+                          </span>
+                          <FlagIcon team={m.away_team} className="w-[18px] h-[11px] rounded-[2px] shrink-0" />
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-[10px] text-slate-600 uppercase tracking-[0.1em]">Predicted:</span>
+                          <span className={`text-[10px] font-semibold ${m.correct ? "text-pitch-400" : "text-red-400"}`}>
+                            {predWinner === "Draw" ? "Draw" : `${predWinner} win`}
+                          </span>
+                          {!m.correct && (
+                            <>
+                              <span className="text-slate-700 text-[10px]">·</span>
+                              <span className="text-[10px] text-slate-600">Actual: <span className="text-slate-400">{actualWinner === "Draw" ? "Draw" : `${actualWinner} win`}</span></span>
+                            </>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Date */}
+                      <span className="text-[10px] text-slate-700 shrink-0 tabular-nums">
+                        {new Date(m.match_date + "T12:00:00Z").toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" })}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Footer */}
+              <div className="px-5 py-3.5 border-t border-navy-700 bg-navy-800/50 flex items-center justify-between">
+                {accuracy.total > 0 ? (
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl font-anton text-white tracking-wide">
+                      {Math.round((accuracy.correct / accuracy.total) * 100)}%
+                    </span>
+                    <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400">
+                      Accuracy
+                    </span>
+                  </div>
+                ) : (
+                  <span className="text-slate-600 text-sm">—</span>
+                )}
+                <span className="text-[11px] text-slate-500 tabular-nums">
+                  {accuracy.total} matches played
+                </span>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </main>
   );
 }

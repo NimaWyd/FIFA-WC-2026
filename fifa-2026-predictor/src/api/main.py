@@ -23,14 +23,16 @@ ENV = os.getenv("ENV", "development").lower()
 
 
 def _warmup_caches() -> None:
-    """Pre-warm simulation and bracket caches. Errors are swallowed so a missing
-    model artifact at startup doesn't crash the server."""
+    """Pre-warm simulation, bracket, and match-accuracy caches. Errors are swallowed so a
+    missing model artifact at startup doesn't crash the server."""
     try:
-        from src.api.services import simulate, predict_bracket
+        from src.api.services import simulate, predict_bracket, get_match_accuracy
         log.info("Cache warmup: starting simulation...")
         simulate()
         log.info("Cache warmup: building bracket...")
         predict_bracket()
+        log.info("Cache warmup: computing match accuracy...")
+        get_match_accuracy()
         log.info("Cache warmup: complete.")
     except Exception as exc:
         log.warning("Cache warmup failed (server still healthy): %s", exc)
