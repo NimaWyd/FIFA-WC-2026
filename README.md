@@ -540,3 +540,29 @@ npm test
 
 
 run backend : cd fifa-2026-predictor py -3.11 -m uvicorn src.api.main:app --reload --port 8001 run frontend : npm run dev
+
+---
+
+## Troubleshooting
+
+### "Failed to fetch" / Frontend can't reach the backend
+
+The frontend calls `http://localhost:8000/api/v1` on every page load. If you see a `TypeError: Failed to fetch` error in the browser, the backend server is not running.
+
+Both processes must be running simultaneously in separate terminals:
+
+**Terminal 1 — Backend:**
+```bash
+cd fifa-2026-predictor
+.venv\Scripts\activate      # Windows
+# source .venv/bin/activate # macOS/Linux
+python -m uvicorn src.api.main:app --reload --port 8000
+```
+
+**Terminal 2 — Frontend:**
+```bash
+cd frontend
+npm run dev
+```
+
+Then open `http://localhost:3000`. The backend must be up before the frontend will function.
